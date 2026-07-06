@@ -29,6 +29,10 @@ function GatheringDetail() {
       navigate({ to: "/auth", search: { mode: "signup", redirect: `/gatherings/${id}` } });
       return;
     }
+    if (!user.email_confirmed_at) {
+      toast.error("Verify your email to join gatherings");
+      return;
+    }
     const { error } = await supabase.from("gathering_attendees").insert({ gathering_id: id, user_id: user.id });
     if (error) return toast.error(error.message);
     toast.success("You're in. Save the date.");
