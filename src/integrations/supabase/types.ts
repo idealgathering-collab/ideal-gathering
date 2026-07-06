@@ -14,16 +14,203 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      businesses: {
+        Row: {
+          address: string | null
+          city: string | null
+          cover_url: string | null
+          created_at: string
+          description: string | null
+          id: string
+          name: string
+          owner_id: string
+        }
+        Insert: {
+          address?: string | null
+          city?: string | null
+          cover_url?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          name: string
+          owner_id: string
+        }
+        Update: {
+          address?: string | null
+          city?: string | null
+          cover_url?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          name?: string
+          owner_id?: string
+        }
+        Relationships: []
+      }
+      gathering_attendees: {
+        Row: {
+          gathering_id: string
+          joined_at: string
+          user_id: string
+        }
+        Insert: {
+          gathering_id: string
+          joined_at?: string
+          user_id: string
+        }
+        Update: {
+          gathering_id?: string
+          joined_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gathering_attendees_gathering_id_fkey"
+            columns: ["gathering_id"]
+            isOneToOne: false
+            referencedRelation: "gatherings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      gatherings: {
+        Row: {
+          business_id: string
+          created_at: string
+          description: string | null
+          host_id: string
+          id: string
+          seats: number
+          starts_at: string
+          status: Database["public"]["Enums"]["gathering_status"]
+          subject: string
+          table_id: string
+        }
+        Insert: {
+          business_id: string
+          created_at?: string
+          description?: string | null
+          host_id: string
+          id?: string
+          seats?: number
+          starts_at: string
+          status?: Database["public"]["Enums"]["gathering_status"]
+          subject: string
+          table_id: string
+        }
+        Update: {
+          business_id?: string
+          created_at?: string
+          description?: string | null
+          host_id?: string
+          id?: string
+          seats?: number
+          starts_at?: string
+          status?: Database["public"]["Enums"]["gathering_status"]
+          subject?: string
+          table_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gatherings_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "businesses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gatherings_table_id_fkey"
+            columns: ["table_id"]
+            isOneToOne: false
+            referencedRelation: "venue_tables"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          display_name: string | null
+          id: string
+        }
+        Insert: {
+          created_at?: string
+          display_name?: string | null
+          id: string
+        }
+        Update: {
+          created_at?: string
+          display_name?: string | null
+          id?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
+      venue_tables: {
+        Row: {
+          business_id: string
+          capacity: number
+          created_at: string
+          id: string
+          label: string
+        }
+        Insert: {
+          business_id: string
+          capacity?: number
+          created_at?: string
+          id?: string
+          label: string
+        }
+        Update: {
+          business_id?: string
+          capacity?: number
+          created_at?: string
+          id?: string
+          label?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "venue_tables_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "businesses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "business_owner" | "user"
+      gathering_status: "proposed" | "approved" | "cancelled"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +337,9 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "business_owner", "user"],
+      gathering_status: ["proposed", "approved", "cancelled"],
+    },
   },
 } as const
