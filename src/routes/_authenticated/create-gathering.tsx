@@ -79,6 +79,7 @@ function CreateGathering() {
       toast.error("Please verify your email first");
       return;
     }
+    try {
       const v = schema.parse(form);
       const iso = new Date(v.starts_at).toISOString();
       if (new Date(iso) < new Date()) {
