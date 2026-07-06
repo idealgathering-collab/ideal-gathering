@@ -132,6 +132,12 @@ function CreateGathering() {
           </div>
         </div>
 
+        {!emailVerified && (
+          <div className="mb-6">
+            <VerifyEmailBanner email={user?.email} />
+          </div>
+        )}
+
         <form onSubmit={submit} className="grid gap-5 rounded-3xl border border-border bg-card p-6 shadow-soft">
           <div className="grid gap-2">
             <Label>Venue</Label>
