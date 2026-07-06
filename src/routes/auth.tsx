@@ -4,6 +4,7 @@ import { z } from "zod";
 import { toast } from "sonner";
 import { Coffee } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { lovable } from "@/integrations/lovable";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -94,7 +95,42 @@ function AuthPage() {
               : "Sign in to host or join gatherings."}
           </p>
 
-          <form onSubmit={handleSubmit} className="mt-6 grid gap-4">
+          <Button
+            type="button"
+            variant="outline"
+            disabled={loading}
+            onClick={async () => {
+              try {
+                setLoading(true);
+                const result = await lovable.auth.signInWithOAuth("google", {
+                  redirect_uri: window.location.origin,
+                });
+                if (result.error) throw result.error;
+                if (result.redirected) return;
+                navigate({ to: redirect ?? "/dashboard" });
+              } catch (err) {
+                const msg = err instanceof Error ? err.message : "Google sign-in failed";
+                toast.error(msg);
+              } finally {
+                setLoading(false);
+              }
+            }}
+            className="mt-6 h-11 w-full rounded-full text-base"
+          >
+            <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24" aria-hidden="true">
+              <path fill="#EA4335" d="M12 10.2v3.9h5.5c-.24 1.44-1.7 4.22-5.5 4.22-3.31 0-6-2.74-6-6.12s2.69-6.12 6-6.12c1.88 0 3.14.8 3.86 1.49l2.63-2.53C16.83 3.5 14.66 2.5 12 2.5 6.75 2.5 2.5 6.75 2.5 12s4.25 9.5 9.5 9.5c5.48 0 9.12-3.85 9.12-9.28 0-.62-.07-1.1-.16-1.52H12z"/>
+            </svg>
+            Continue with Google
+          </Button>
+
+          <div className="my-5 flex items-center gap-3 text-xs text-muted-foreground">
+            <span className="h-px flex-1 bg-border" />
+            <span>or</span>
+            <span className="h-px flex-1 bg-border" />
+          </div>
+
+
+          <form onSubmit={handleSubmit} className="grid gap-4">
             {isSignup && (
               <div className="grid gap-2">
                 <Label htmlFor="name">Your name</Label>
