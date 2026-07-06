@@ -230,8 +230,8 @@ function CreateGathering() {
             </p>
           )}
 
-          <Button type="submit" size="lg" disabled={loading} className="mt-2 h-12 rounded-full">
-            {loading ? "Sending…" : isOwner ? "Publish gathering" : "Propose gathering"}
+          <Button type="submit" size="lg" disabled={loading || !emailVerified} className="mt-2 h-12 rounded-full">
+            {loading ? "Sending…" : !emailVerified ? "Verify email to continue" : isOwner ? "Publish gathering" : "Propose gathering"}
           </Button>
         </form>
       </main>
