@@ -9,38 +9,141 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as GatheringsIdRouteImport } from './routes/gatherings.$id'
+import { Route as AuthenticatedRegisterBusinessRouteImport } from './routes/_authenticated/register-business'
+import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedCreateGatheringRouteImport } from './routes/_authenticated/create-gathering'
+import { Route as AuthenticatedBusinessesIdRouteImport } from './routes/_authenticated/businesses.$id'
 
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const GatheringsIdRoute = GatheringsIdRouteImport.update({
+  id: '/gatherings/$id',
+  path: '/gatherings/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedRegisterBusinessRoute =
+  AuthenticatedRegisterBusinessRouteImport.update({
+    id: '/register-business',
+    path: '/register-business',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedCreateGatheringRoute =
+  AuthenticatedCreateGatheringRouteImport.update({
+    id: '/create-gathering',
+    path: '/create-gathering',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedBusinessesIdRoute =
+  AuthenticatedBusinessesIdRouteImport.update({
+    id: '/businesses/$id',
+    path: '/businesses/$id',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/create-gathering': typeof AuthenticatedCreateGatheringRoute
+  '/dashboard': typeof AuthenticatedDashboardRoute
+  '/register-business': typeof AuthenticatedRegisterBusinessRoute
+  '/gatherings/$id': typeof GatheringsIdRoute
+  '/businesses/$id': typeof AuthenticatedBusinessesIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/create-gathering': typeof AuthenticatedCreateGatheringRoute
+  '/dashboard': typeof AuthenticatedDashboardRoute
+  '/register-business': typeof AuthenticatedRegisterBusinessRoute
+  '/gatherings/$id': typeof GatheringsIdRoute
+  '/businesses/$id': typeof AuthenticatedBusinessesIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/auth': typeof AuthRoute
+  '/_authenticated/create-gathering': typeof AuthenticatedCreateGatheringRoute
+  '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/register-business': typeof AuthenticatedRegisterBusinessRoute
+  '/gatherings/$id': typeof GatheringsIdRoute
+  '/_authenticated/businesses/$id': typeof AuthenticatedBusinessesIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/create-gathering'
+    | '/dashboard'
+    | '/register-business'
+    | '/gatherings/$id'
+    | '/businesses/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/auth'
+    | '/create-gathering'
+    | '/dashboard'
+    | '/register-business'
+    | '/gatherings/$id'
+    | '/businesses/$id'
+  id:
+    | '__root__'
+    | '/'
+    | '/_authenticated'
+    | '/auth'
+    | '/_authenticated/create-gathering'
+    | '/_authenticated/dashboard'
+    | '/_authenticated/register-business'
+    | '/gatherings/$id'
+    | '/_authenticated/businesses/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  AuthRoute: typeof AuthRoute
+  GatheringsIdRoute: typeof GatheringsIdRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,22 +151,67 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/gatherings/$id': {
+      id: '/gatherings/$id'
+      path: '/gatherings/$id'
+      fullPath: '/gatherings/$id'
+      preLoaderRoute: typeof GatheringsIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/register-business': {
+      id: '/_authenticated/register-business'
+      path: '/register-business'
+      fullPath: '/register-business'
+      preLoaderRoute: typeof AuthenticatedRegisterBusinessRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/dashboard': {
+      id: '/_authenticated/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof AuthenticatedDashboardRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/create-gathering': {
+      id: '/_authenticated/create-gathering'
+      path: '/create-gathering'
+      fullPath: '/create-gathering'
+      preLoaderRoute: typeof AuthenticatedCreateGatheringRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/businesses/$id': {
+      id: '/_authenticated/businesses/$id'
+      path: '/businesses/$id'
+      fullPath: '/businesses/$id'
+      preLoaderRoute: typeof AuthenticatedBusinessesIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedCreateGatheringRoute: typeof AuthenticatedCreateGatheringRoute
+  AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedRegisterBusinessRoute: typeof AuthenticatedRegisterBusinessRoute
+  AuthenticatedBusinessesIdRoute: typeof AuthenticatedBusinessesIdRoute
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedCreateGatheringRoute: AuthenticatedCreateGatheringRoute,
+  AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedRegisterBusinessRoute: AuthenticatedRegisterBusinessRoute,
+  AuthenticatedBusinessesIdRoute: AuthenticatedBusinessesIdRoute,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  AuthRoute: AuthRoute,
+  GatheringsIdRoute: GatheringsIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
