@@ -207,6 +207,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      is_email_verified: { Args: { _user_id: string }; Returns: boolean }
     }
     Enums: {
       app_role: "admin" | "business_owner" | "user"
