@@ -5,6 +5,7 @@ import { z } from "zod";
 import { toast } from "sonner";
 import { Sparkles } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
+import { VerifyEmailBanner } from "@/components/verify-email-banner";
 import { supabase } from "@/integrations/supabase/client";
 import { useSession } from "@/hooks/use-session";
 import { Button } from "@/components/ui/button";
@@ -69,9 +70,15 @@ function CreateGathering() {
 
   const isOwner = selectedBiz?.owner_id === user?.id;
 
+  const emailVerified = Boolean(user?.email_confirmed_at);
+
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     if (!user) return;
+    if (!emailVerified) {
+      toast.error("Please verify your email first");
+      return;
+    }
     try {
       const v = schema.parse(form);
       const iso = new Date(v.starts_at).toISOString();
@@ -124,6 +131,12 @@ function CreateGathering() {
             <h1 className="font-display text-3xl">Propose a gathering</h1>
           </div>
         </div>
+
+        {!emailVerified && (
+          <div className="mb-6">
+            <VerifyEmailBanner email={user?.email} />
+          </div>
+        )}
 
         <form onSubmit={submit} className="grid gap-5 rounded-3xl border border-border bg-card p-6 shadow-soft">
           <div className="grid gap-2">
@@ -217,8 +230,8 @@ function CreateGathering() {
             </p>
           )}
 
-          <Button type="submit" size="lg" disabled={loading} className="mt-2 h-12 rounded-full">
-            {loading ? "Sending…" : isOwner ? "Publish gathering" : "Propose gathering"}
+          <Button type="submit" size="lg" disabled={loading || !emailVerified} className="mt-2 h-12 rounded-full">
+            {loading ? "Sending…" : !emailVerified ? "Verify email to continue" : isOwner ? "Publish gathering" : "Propose gathering"}
           </Button>
         </form>
       </main>

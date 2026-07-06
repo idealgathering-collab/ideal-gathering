@@ -3,6 +3,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { CalendarClock, MapPin, Users, ArrowLeft, Coffee } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
+import { VerifyEmailBanner } from "@/components/verify-email-banner";
 import { supabase } from "@/integrations/supabase/client";
 import { useSession } from "@/hooks/use-session";
 import { Button } from "@/components/ui/button";
@@ -26,6 +27,10 @@ function GatheringDetail() {
   async function join() {
     if (!user) {
       navigate({ to: "/auth", search: { mode: "signup", redirect: `/gatherings/${id}` } });
+      return;
+    }
+    if (!user.email_confirmed_at) {
+      toast.error("Verify your email to join gatherings");
       return;
     }
     const { error } = await supabase.from("gathering_attendees").insert({ gathering_id: id, user_id: user.id });
@@ -128,6 +133,12 @@ function GatheringDetail() {
             </div>
           </div>
         </div>
+
+        {user && !user.email_confirmed_at && g.status === "approved" && !isHost && !isOwner && !isAttending && (
+          <div className="mt-6">
+            <VerifyEmailBanner email={user.email} />
+          </div>
+        )}
 
         <div className="mt-6 flex flex-wrap gap-3">
           {g.status === "approved" && !isHost && !isOwner && (
