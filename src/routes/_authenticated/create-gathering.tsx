@@ -70,10 +70,15 @@ function CreateGathering() {
 
   const isOwner = selectedBiz?.owner_id === user?.id;
 
+  const emailVerified = Boolean(user?.email_confirmed_at);
+
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     if (!user) return;
-    try {
+    if (!emailVerified) {
+      toast.error("Please verify your email first");
+      return;
+    }
       const v = schema.parse(form);
       const iso = new Date(v.starts_at).toISOString();
       if (new Date(iso) < new Date()) {
