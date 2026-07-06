@@ -134,6 +134,12 @@ function GatheringDetail() {
           </div>
         </div>
 
+        {user && !user.email_confirmed_at && g.status === "approved" && !isHost && !isOwner && !isAttending && (
+          <div className="mt-6">
+            <VerifyEmailBanner email={user.email} />
+          </div>
+        )}
+
         <div className="mt-6 flex flex-wrap gap-3">
           {g.status === "approved" && !isHost && !isOwner && (
             isAttending ? (
