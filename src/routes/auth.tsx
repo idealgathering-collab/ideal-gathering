@@ -130,7 +130,7 @@ function AuthPage() {
           </div>
 
 
-          <form onSubmit={handleSubmit} className="mt-6 grid gap-4">
+          <form onSubmit={handleSubmit} className="grid gap-4">
             {isSignup && (
               <div className="grid gap-2">
                 <Label htmlFor="name">Your name</Label>
