@@ -5,6 +5,7 @@ import { z } from "zod";
 import { toast } from "sonner";
 import { Sparkles } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
+import { VerifyEmailBanner } from "@/components/verify-email-banner";
 import { supabase } from "@/integrations/supabase/client";
 import { useSession } from "@/hooks/use-session";
 import { Button } from "@/components/ui/button";
