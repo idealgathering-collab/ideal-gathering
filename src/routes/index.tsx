@@ -26,7 +26,7 @@ function Home() {
           className="absolute inset-0 opacity-30 mix-blend-overlay"
           style={{
             backgroundImage:
-              "radial-gradient(circle at 20% 20%, oklch(0.88 0.18 95) 0%, transparent 45%), radial-gradient(circle at 85% 70%, oklch(0.72 0.19 55) 0%, transparent 50%)",
+              "radial-gradient(circle at 20% 20%, oklch(0.85 0.15 25) 0%, transparent 45%), radial-gradient(circle at 85% 70%, oklch(0.65 0.2 25) 0%, transparent 50%)",
           }}
         />
         <div className="relative mx-auto max-w-6xl px-4 pt-16 pb-24 sm:pt-24 sm:pb-32">
