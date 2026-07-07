@@ -61,9 +61,7 @@ export function SiteHeader() {
                 <Link to="/auth">Sign in</Link>
               </Button>
               <Button asChild size="sm" className="rounded-full">
-                <Link to="/auth" search={{ mode: "signup" } as never}>
-                  Join
-                </Link>
+                <Link to="/waitlist">Join</Link>
               </Button>
             </>
           )}

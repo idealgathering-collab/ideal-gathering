@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as WaitlistRouteImport } from './routes/waitlist'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
@@ -18,6 +19,11 @@ import { Route as AuthenticatedDashboardRouteImport } from './routes/_authentica
 import { Route as AuthenticatedCreateGatheringRouteImport } from './routes/_authenticated/create-gathering'
 import { Route as AuthenticatedBusinessesIdRouteImport } from './routes/_authenticated/businesses.$id'
 
+const WaitlistRoute = WaitlistRouteImport.update({
+  id: '/waitlist',
+  path: '/waitlist',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
@@ -64,6 +70,7 @@ const AuthenticatedBusinessesIdRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/waitlist': typeof WaitlistRoute
   '/create-gathering': typeof AuthenticatedCreateGatheringRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/register-business': typeof AuthenticatedRegisterBusinessRoute
@@ -73,6 +80,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/waitlist': typeof WaitlistRoute
   '/create-gathering': typeof AuthenticatedCreateGatheringRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/register-business': typeof AuthenticatedRegisterBusinessRoute
@@ -84,6 +92,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
+  '/waitlist': typeof WaitlistRoute
   '/_authenticated/create-gathering': typeof AuthenticatedCreateGatheringRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/register-business': typeof AuthenticatedRegisterBusinessRoute
@@ -95,6 +104,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/auth'
+    | '/waitlist'
     | '/create-gathering'
     | '/dashboard'
     | '/register-business'
@@ -104,6 +114,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/auth'
+    | '/waitlist'
     | '/create-gathering'
     | '/dashboard'
     | '/register-business'
@@ -114,6 +125,7 @@ export interface FileRouteTypes {
     | '/'
     | '/_authenticated'
     | '/auth'
+    | '/waitlist'
     | '/_authenticated/create-gathering'
     | '/_authenticated/dashboard'
     | '/_authenticated/register-business'
@@ -125,11 +137,19 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
+  WaitlistRoute: typeof WaitlistRoute
   GatheringsIdRoute: typeof GatheringsIdRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/waitlist': {
+      id: '/waitlist'
+      path: '/waitlist'
+      fullPath: '/waitlist'
+      preLoaderRoute: typeof WaitlistRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/auth': {
       id: '/auth'
       path: '/auth'
@@ -210,6 +230,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
+  WaitlistRoute: WaitlistRoute,
   GatheringsIdRoute: GatheringsIdRoute,
 }
 export const routeTree = rootRouteImport
