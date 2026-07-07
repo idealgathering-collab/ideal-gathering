@@ -87,12 +87,12 @@ function AuthPage() {
 
         <div className="rounded-3xl border border-border bg-card p-8 shadow-plum">
           <h1 className="font-display text-3xl">
-            {isSignup ? "Take a seat." : "Welcome back."}
+            {isSignup ? "Set the table." : "Welcome back."}
           </h1>
           <p className="mt-1 text-sm text-muted-foreground">
             {isSignup
-              ? "Create an account to host or join gatherings."
-              : "Sign in to host or join gatherings."}
+              ? "Create a venue account to register your cafe or restaurant and host gatherings. Guests, join the waitlist instead."
+              : "Sign in to manage your venue and gatherings."}
           </p>
 
           <Button
