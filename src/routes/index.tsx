@@ -36,9 +36,9 @@ function Home() {
               Pull up a chair
             </span>
             <h1 className="mt-6 font-display text-5xl leading-[0.95] sm:text-7xl">
-              Meet over coffee,
+              No one will be alone anymore.
               <br />
-              <span className="italic text-sunshine">around a subject.</span>
+              <span className="italic text-sunshine">Just Gather.</span>
             </h1>
             <p className="mt-6 max-w-xl text-lg text-primary-foreground/85">
               Ideal Gathering turns cafes and restaurants into hosts for conversations
