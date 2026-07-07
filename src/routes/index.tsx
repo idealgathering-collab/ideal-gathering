@@ -46,8 +46,8 @@ function Home() {
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Button asChild size="lg" className="rounded-full bg-sunshine text-sunshine-foreground hover:bg-sunshine/90 shadow-tangerine">
-                <Link to="/auth" search={{ mode: "signup" } as never}>
-                  Join a gathering
+                <Link to="/waitlist">
+                  Join the waitlist
                 </Link>
               </Button>
               <Button
