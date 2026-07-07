@@ -6,7 +6,7 @@
 
 /*
  * Ideal Gathering — design system
- * Palette: Purple + Orange + Yellow + White
+ * Palette: Red + White
  * Type: DM Serif Display (display) + Fira Sans (body)
  */
 
@@ -62,57 +62,57 @@
 :root {
   --radius: 1rem;
 
-  --background: oklch(0.99 0.01 90);
-  --foreground: oklch(0.18 0.06 300);
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.18 0.05 25);
 
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.18 0.06 300);
+  --card-foreground: oklch(0.18 0.05 25);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.18 0.06 300);
+  --popover-foreground: oklch(0.18 0.05 25);
 
-  /* Deep plum purple */
-  --primary: oklch(0.38 0.17 300);
-  --primary-foreground: oklch(0.99 0.01 90);
-  --plum: oklch(0.38 0.17 300);
-  --plum-foreground: oklch(0.99 0.01 90);
+  /* Deep crimson */
+  --primary: oklch(0.45 0.2 25);
+  --primary-foreground: oklch(0.99 0.01 35);
+  --plum: oklch(0.45 0.2 25);
+  --plum-foreground: oklch(0.99 0.01 35);
 
-  /* Warm tangerine orange */
-  --secondary: oklch(0.72 0.19 55);
-  --secondary-foreground: oklch(0.18 0.06 300);
-  --tangerine: oklch(0.72 0.19 55);
-  --tangerine-foreground: oklch(0.18 0.06 300);
+  /* Bright scarlet */
+  --secondary: oklch(0.65 0.2 25);
+  --secondary-foreground: oklch(0.99 0.01 35);
+  --tangerine: oklch(0.65 0.2 25);
+  --tangerine-foreground: oklch(0.99 0.01 35);
 
-  /* Sun yellow */
-  --accent: oklch(0.88 0.18 95);
-  --accent-foreground: oklch(0.18 0.06 300);
-  --sunshine: oklch(0.88 0.18 95);
-  --sunshine-foreground: oklch(0.18 0.06 300);
+  /* Coral highlight */
+  --accent: oklch(0.85 0.15 25);
+  --accent-foreground: oklch(0.18 0.05 25);
+  --sunshine: oklch(0.85 0.15 25);
+  --sunshine-foreground: oklch(0.18 0.05 25);
 
-  --muted: oklch(0.96 0.02 90);
-  --muted-foreground: oklch(0.45 0.04 300);
+  --muted: oklch(0.96 0.02 25);
+  --muted-foreground: oklch(0.45 0.05 25);
 
-  --destructive: oklch(0.6 0.22 27);
-  --destructive-foreground: oklch(0.99 0.01 90);
+  --destructive: oklch(0.6 0.22 25);
+  --destructive-foreground: oklch(0.99 0.01 35);
 
-  --border: oklch(0.9 0.03 90);
-  --input: oklch(0.94 0.02 90);
-  --ring: oklch(0.55 0.19 300);
+  --border: oklch(0.9 0.03 25);
+  --input: oklch(0.94 0.02 25);
+  --ring: oklch(0.55 0.2 25);
 
-  --gradient-hero: linear-gradient(135deg, oklch(0.38 0.17 300) 0%, oklch(0.55 0.2 320) 45%, oklch(0.72 0.19 55) 100%);
-  --gradient-warm: linear-gradient(135deg, oklch(0.88 0.18 95) 0%, oklch(0.72 0.19 55) 100%);
-  --gradient-cool: linear-gradient(135deg, oklch(0.38 0.17 300) 0%, oklch(0.28 0.13 290) 100%);
-  --shadow-plum: 0 20px 40px -20px color-mix(in oklab, oklch(0.38 0.17 300) 45%, transparent);
-  --shadow-tangerine: 0 20px 40px -20px color-mix(in oklab, oklch(0.72 0.19 55) 45%, transparent);
-  --shadow-soft: 0 8px 30px -12px color-mix(in oklab, oklch(0.18 0.06 300) 20%, transparent);
+  --gradient-hero: linear-gradient(135deg, oklch(0.45 0.2 25) 0%, oklch(0.55 0.22 25) 45%, oklch(0.75 0.2 25) 100%);
+  --gradient-warm: linear-gradient(135deg, oklch(0.85 0.15 25) 0%, oklch(0.65 0.2 25) 100%);
+  --gradient-cool: linear-gradient(135deg, oklch(0.45 0.2 25) 0%, oklch(0.35 0.15 25) 100%);
+  --shadow-plum: 0 20px 40px -20px color-mix(in oklab, oklch(0.45 0.2 25) 45%, transparent);
+  --shadow-tangerine: 0 20px 40px -20px color-mix(in oklab, oklch(0.65 0.2 25) 45%, transparent);
+  --shadow-soft: 0 8px 30px -12px color-mix(in oklab, oklch(0.18 0.05 25) 20%, transparent);
 
-  --sidebar: oklch(0.99 0.01 90);
-  --sidebar-foreground: oklch(0.18 0.06 300);
-  --sidebar-primary: oklch(0.38 0.17 300);
-  --sidebar-primary-foreground: oklch(0.99 0.01 90);
-  --sidebar-accent: oklch(0.96 0.02 90);
-  --sidebar-accent-foreground: oklch(0.18 0.06 300);
-  --sidebar-border: oklch(0.9 0.03 90);
-  --sidebar-ring: oklch(0.55 0.19 300);
+  --sidebar: oklch(1 0 0);
+  --sidebar-foreground: oklch(0.18 0.05 25);
+  --sidebar-primary: oklch(0.45 0.2 25);
+  --sidebar-primary-foreground: oklch(0.99 0.01 35);
+  --sidebar-accent: oklch(0.96 0.02 25);
+  --sidebar-accent-foreground: oklch(0.18 0.05 25);
+  --sidebar-border: oklch(0.9 0.03 25);
+  --sidebar-ring: oklch(0.55 0.2 25);
 }
 
 @layer base {
