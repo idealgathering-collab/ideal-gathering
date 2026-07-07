@@ -157,6 +157,13 @@ function AuthPage() {
           >
             {isSignup ? "Have an account? Sign in" : "New here? Create an account"}
           </button>
+
+          <div className="mt-3 text-center text-xs text-muted-foreground">
+            Not a venue?{" "}
+            <Link to="/waitlist" className="text-primary hover:underline">
+              Join the guest waitlist
+            </Link>
+          </div>
         </div>
       </div>
     </div>
