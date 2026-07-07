@@ -46,8 +46,8 @@ function Home() {
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Button asChild size="lg" className="rounded-full bg-sunshine text-sunshine-foreground hover:bg-sunshine/90 shadow-tangerine">
-                <Link to="/auth" search={{ mode: "signup" } as never}>
-                  Join a gathering
+                <Link to="/waitlist">
+                  Join the waitlist
                 </Link>
               </Button>
               <Button
@@ -153,11 +153,11 @@ function Home() {
               </div>
               <h3 className="font-display text-2xl">For everyone else</h3>
               <p className="mt-2 text-sm text-muted-foreground">
-                Browse gatherings by subject. Join with a tap. Or propose your own
-                idea at a table you love — the venue confirms.
+                Guests join by invitation. Save your seat on the waitlist and we'll
+                open the door as tables free up in your city.
               </p>
               <Button asChild variant="link" className="mt-3 px-0 text-primary">
-                <Link to="/create-gathering">Host a gathering →</Link>
+                <Link to="/waitlist">Join the waitlist →</Link>
               </Button>
             </div>
           </div>
