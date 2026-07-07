@@ -4,8 +4,8 @@
   "description": "Find a table. Find a topic. Find your people. Cafes and restaurants host gatherings around a subject.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#b91c1c",
+  "background_color": "#fffbf5",
+  "theme_color": "#6b21a8",
   "icons": [
     { "src": "/favicon.ico", "sizes": "any", "type": "image/x-icon" }
   ]
