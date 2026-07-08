@@ -129,8 +129,8 @@ function CreateGathering() {
             <Sparkles className="h-5 w-5 text-primary-foreground" />
           </div>
           <div>
-            <p className="text-xs uppercase tracking-wide text-muted-foreground">Host</p>
-            <h1 className="font-display text-3xl">Propose a gathering</h1>
+            <p className="text-xs uppercase tracking-wide text-muted-foreground">{t("create.eyebrow")}</p>
+            <h1 className="font-display text-3xl">{t("create.title")}</h1>
           </div>
         </div>
 
@@ -142,10 +142,10 @@ function CreateGathering() {
 
         <form onSubmit={submit} className="grid gap-5 rounded-3xl border border-border bg-card p-6 shadow-soft">
           <div className="grid gap-2">
-            <Label>Venue</Label>
+            <Label>{t("create.venue")}</Label>
             <Select value={form.business_id} onValueChange={(v) => setForm({ ...form, business_id: v })}>
               <SelectTrigger>
-                <SelectValue placeholder="Pick a cafe or restaurant" />
+                <SelectValue placeholder={t("create.venuePh")} />
               </SelectTrigger>
               <SelectContent>
                 {(businesses ?? []).map((b) => (
@@ -158,21 +158,21 @@ function CreateGathering() {
             </Select>
             {businesses && businesses.length === 0 && (
               <p className="text-xs text-muted-foreground">
-                No venues registered yet — ask one to sign up, or register your own.
+                {t("create.noVenues")}
               </p>
             )}
           </div>
 
           <div className="grid gap-2">
-            <Label>Table</Label>
+            <Label>{t("create.table")}</Label>
             <Select value={form.table_id} onValueChange={(v) => setForm({ ...form, table_id: v })} disabled={!selectedBiz}>
               <SelectTrigger>
-                <SelectValue placeholder={selectedBiz ? "Pick a table" : "Pick venue first"} />
+                <SelectValue placeholder={selectedBiz ? t("create.tablePh") : t("create.tablePhFirst")} />
               </SelectTrigger>
               <SelectContent>
-                {(selectedBiz?.venue_tables ?? []).map((t) => (
-                  <SelectItem key={t.id} value={t.id}>
-                    Table {t.label} · seats {t.capacity}
+                {(selectedBiz?.venue_tables ?? []).map((tbl) => (
+                  <SelectItem key={tbl.id} value={tbl.id}>
+                    {t("create.table")} {tbl.label} · {t("create.tableSeats")} {tbl.capacity}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -180,31 +180,31 @@ function CreateGathering() {
           </div>
 
           <div className="grid gap-2">
-            <Label htmlFor="subject">Subject</Label>
+            <Label htmlFor="subject">{t("create.subject")}</Label>
             <Input
               id="subject"
               required
               maxLength={120}
               value={form.subject}
-              placeholder="e.g. Books that changed my mind"
+              placeholder={t("create.subjectPh")}
               onChange={(e) => setForm({ ...form, subject: e.target.value })}
             />
           </div>
 
           <div className="grid gap-2">
-            <Label htmlFor="description">Description</Label>
+            <Label htmlFor="description">{t("create.description")}</Label>
             <Textarea
               id="description"
               maxLength={800}
               value={form.description}
               onChange={(e) => setForm({ ...form, description: e.target.value })}
-              placeholder="What's this gathering about? Who should come?"
+              placeholder={t("create.descriptionPh")}
             />
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="grid gap-2">
-              <Label htmlFor="starts_at">Date & time</Label>
+              <Label htmlFor="starts_at">{t("create.datetime")}</Label>
               <Input
                 id="starts_at"
                 type="datetime-local"
@@ -214,7 +214,7 @@ function CreateGathering() {
               />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="seats">Seats</Label>
+              <Label htmlFor="seats">{t("create.seats")}</Label>
               <Input
                 id="seats"
                 type="number"
@@ -228,13 +228,14 @@ function CreateGathering() {
 
           {selectedBiz && !isOwner && (
             <p className="rounded-2xl bg-sunshine/40 px-4 py-3 text-xs text-foreground/80">
-              The venue owner will review and approve your gathering before it appears publicly.
+              {t("create.needsApproval")}
             </p>
           )}
 
           <Button type="submit" size="lg" disabled={loading || !emailVerified} className="mt-2 h-12 rounded-full">
-            {loading ? "Sending…" : !emailVerified ? "Verify email to continue" : isOwner ? "Publish gathering" : "Propose gathering"}
+            {loading ? t("create.sending") : !emailVerified ? t("create.verifyToContinue") : isOwner ? t("create.publish") : t("create.propose")}
           </Button>
+
         </form>
       </main>
     </div>
