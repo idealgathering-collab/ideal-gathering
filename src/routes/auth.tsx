@@ -89,12 +89,10 @@ function AuthPage() {
 
         <div className="rounded-3xl border border-border bg-card p-8 shadow-plum">
           <h1 className="font-display text-3xl">
-            {isSignup ? "Set the table." : "Welcome back."}
+            {isSignup ? t("auth.title.signup") : t("auth.title.signin")}
           </h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            {isSignup
-              ? "Create a venue account to register your cafe or restaurant and host gatherings. Guests, join the waitlist instead."
-              : "Sign in to manage your venue and gatherings."}
+            {isSignup ? t("auth.subtitle.signup") : t("auth.subtitle.signin")}
           </p>
 
           <Button
@@ -111,7 +109,7 @@ function AuthPage() {
                 if (result.redirected) return;
                 navigate({ to: redirect ?? "/dashboard" });
               } catch (err) {
-                const msg = err instanceof Error ? err.message : "Google sign-in failed";
+                const msg = err instanceof Error ? err.message : t("auth.googleFailed");
                 toast.error(msg);
               } finally {
                 setLoading(false);
@@ -122,12 +120,12 @@ function AuthPage() {
             <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24" aria-hidden="true">
               <path fill="#EA4335" d="M12 10.2v3.9h5.5c-.24 1.44-1.7 4.22-5.5 4.22-3.31 0-6-2.74-6-6.12s2.69-6.12 6-6.12c1.88 0 3.14.8 3.86 1.49l2.63-2.53C16.83 3.5 14.66 2.5 12 2.5 6.75 2.5 2.5 6.75 2.5 12s4.25 9.5 9.5 9.5c5.48 0 9.12-3.85 9.12-9.28 0-.62-.07-1.1-.16-1.52H12z"/>
             </svg>
-            Continue with Google
+            {t("auth.google")}
           </Button>
 
           <div className="my-5 flex items-center gap-3 text-xs text-muted-foreground">
             <span className="h-px flex-1 bg-border" />
-            <span>or</span>
+            <span>{t("auth.or")}</span>
             <span className="h-px flex-1 bg-border" />
           </div>
 
@@ -135,20 +133,20 @@ function AuthPage() {
           <form onSubmit={handleSubmit} className="grid gap-4">
             {isSignup && (
               <div className="grid gap-2">
-                <Label htmlFor="name">Your name</Label>
+                <Label htmlFor="name">{t("auth.name")}</Label>
                 <Input id="name" value={name} onChange={(e) => setName(e.target.value)} required maxLength={80} />
               </div>
             )}
             <div className="grid gap-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email">{t("auth.email")}</Label>
               <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required maxLength={255} />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password">{t("auth.password")}</Label>
               <Input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={6} maxLength={72} />
             </div>
             <Button type="submit" disabled={loading} className="mt-2 h-11 rounded-full text-base">
-              {loading ? "…" : isSignup ? "Create account" : "Sign in"}
+              {loading ? t("auth.submitting") : isSignup ? t("auth.signUp") : t("auth.signIn")}
             </Button>
           </form>
 
@@ -157,16 +155,17 @@ function AuthPage() {
             onClick={() => setIsSignup((v) => !v)}
             className="mt-4 w-full text-center text-sm text-muted-foreground hover:text-foreground"
           >
-            {isSignup ? "Have an account? Sign in" : "New here? Create an account"}
+            {isSignup ? `${t("auth.haveAccount")} ${t("auth.switchSignin")}` : `${t("auth.noAccount")} ${t("auth.switchSignup")}`}
           </button>
 
           <div className="mt-3 text-center text-xs text-muted-foreground">
-            Not a venue?{" "}
+            {t("auth.guestHint")}{" "}
             <Link to="/waitlist" className="text-primary hover:underline">
-              Join the guest waitlist
+              {t("auth.guestLink")}
             </Link>
           </div>
         </div>
+
       </div>
     </div>
   );
