@@ -5,12 +5,14 @@ import { SiteHeader } from "@/components/site-header";
 import { GatheringCard } from "@/components/gathering-card";
 import { Button } from "@/components/ui/button";
 import { fetchApprovedGatherings } from "@/lib/gatherings";
+import { useT } from "@/i18n";
 
 export const Route = createFileRoute("/")({
   component: Home,
 });
 
 function Home() {
+  const t = useT();
   const { data: gatherings, isLoading } = useQuery({
     queryKey: ["gatherings", "approved"],
     queryFn: fetchApprovedGatherings,
@@ -33,21 +35,20 @@ function Home() {
           <div className="max-w-3xl text-primary-foreground">
             <span className="inline-flex items-center gap-2 rounded-full border border-primary-foreground/20 bg-primary-foreground/10 px-3 py-1 text-xs font-medium tracking-wide uppercase backdrop-blur">
               <Sparkles className="h-3.5 w-3.5" />
-              Pull up a chair
+              {t("home.hero.badge")}
             </span>
             <h1 className="mt-6 font-display text-5xl leading-[0.95] sm:text-7xl">
-              No one will be alone anymore.
+              {t("home.hero.title1")}
               <br />
-              <span className="italic text-sunshine">Just Gather.</span>
+              <span className="italic text-sunshine">{t("home.hero.title2")}</span>
             </h1>
             <p className="mt-6 max-w-xl text-lg text-primary-foreground/85">
-              Ideal Gathering turns cafes and restaurants into hosts for conversations
-              worth having. Pick a table, pick a topic, show up.
+              {t("home.hero.tagline")}
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Button asChild size="lg" className="rounded-full bg-sunshine text-sunshine-foreground hover:bg-sunshine/90 shadow-tangerine">
                 <Link to="/waitlist">
-                  Join the waitlist
+                  {t("home.hero.joinWaitlist")}
                 </Link>
               </Button>
               <Button
@@ -57,16 +58,16 @@ function Home() {
                 className="rounded-full border-primary-foreground/40 bg-transparent text-primary-foreground hover:bg-primary-foreground/10"
               >
                 <Link to="/register-business">
-                  Register your cafe <ArrowRight className="ml-1 h-4 w-4" />
+                  {t("home.hero.registerCafe")} <ArrowRight className="ml-1 h-4 w-4" />
                 </Link>
               </Button>
             </div>
 
             <dl className="mt-12 grid max-w-lg grid-cols-3 gap-6 text-primary-foreground/90">
               {[
-                { icon: Coffee, label: "Venues", value: "Cafes & restaurants" },
-                { icon: Utensils, label: "Tables", value: "Reserved seats" },
-                { icon: Sparkles, label: "Subjects", value: "Every gathering" },
+                { icon: Coffee, label: t("home.stats.venues"), value: t("home.stats.venuesVal") },
+                { icon: Utensils, label: t("home.stats.tables"), value: t("home.stats.tablesVal") },
+                { icon: Sparkles, label: t("home.stats.subjects"), value: t("home.stats.subjectsVal") },
               ].map(({ icon: Icon, label, value }) => (
                 <div key={label} className="flex flex-col gap-1">
                   <Icon className="h-5 w-5 text-sunshine" />
@@ -83,15 +84,15 @@ function Home() {
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
             <h2 className="font-display text-4xl sm:text-5xl">
-              Upcoming <span className="italic text-primary">gatherings</span>
+              {t("home.upcoming.title1")} <span className="italic text-primary">{t("home.upcoming.title2")}</span>
             </h2>
             <p className="mt-2 text-muted-foreground">
-              Fresh subjects, real tables. Grab a seat before it's taken.
+              {t("home.upcoming.subtitle")}
             </p>
           </div>
           <Button asChild variant="ghost" className="rounded-full">
             <Link to="/create-gathering">
-              Propose your own <ArrowRight className="ml-1 h-4 w-4" />
+              {t("home.upcoming.proposeOwn")} <ArrowRight className="ml-1 h-4 w-4" />
             </Link>
           </Button>
         </div>
@@ -105,16 +106,16 @@ function Home() {
             gatherings.map((g) => <GatheringCard key={g.id} g={g} />)
           ) : (
             <div className="col-span-full rounded-3xl border border-dashed border-border bg-card p-12 text-center">
-              <h3 className="font-display text-2xl">No gatherings yet</h3>
+              <h3 className="font-display text-2xl">{t("home.empty.title")}</h3>
               <p className="mt-2 text-muted-foreground">
-                Be the first to set a table. Register your cafe or propose a subject.
+                {t("home.empty.body")}
               </p>
               <div className="mt-6 flex justify-center gap-3">
                 <Button asChild className="rounded-full">
-                  <Link to="/register-business">Register a venue</Link>
+                  <Link to="/register-business">{t("home.empty.registerVenue")}</Link>
                 </Button>
                 <Button asChild variant="outline" className="rounded-full">
-                  <Link to="/create-gathering">Host a gathering</Link>
+                  <Link to="/create-gathering">{t("home.empty.hostGathering")}</Link>
                 </Button>
               </div>
             </div>
@@ -126,11 +127,10 @@ function Home() {
         <div className="mx-auto grid max-w-6xl gap-10 px-4 py-16 sm:py-24 md:grid-cols-2">
           <div>
             <h2 className="font-display text-4xl sm:text-5xl">
-              Two sides of <span className="italic text-tangerine">the same table.</span>
+              {t("home.two.title1")} <span className="italic text-tangerine">{t("home.two.title2")}</span>
             </h2>
             <p className="mt-4 text-muted-foreground">
-              Whether you're pouring the coffee or pulling up a chair, Ideal Gathering
-              gives you a simple way to bring people together around ideas.
+              {t("home.two.body")}
             </p>
           </div>
           <div className="grid gap-4">
@@ -138,26 +138,24 @@ function Home() {
               <div className="mb-3 grid h-10 w-10 place-items-center rounded-full bg-primary text-primary-foreground">
                 <Utensils className="h-4 w-4" />
               </div>
-              <h3 className="font-display text-2xl">For cafes & restaurants</h3>
+              <h3 className="font-display text-2xl">{t("home.two.cafes.title")}</h3>
               <p className="mt-2 text-sm text-muted-foreground">
-                Register your venue, set up your tables, approve gatherings guests
-                propose, or host your own. Fill quiet hours with meaningful traffic.
+                {t("home.two.cafes.body")}
               </p>
               <Button asChild variant="link" className="mt-3 px-0 text-primary">
-                <Link to="/register-business">Register your business →</Link>
+                <Link to="/register-business">{t("home.two.cafes.cta")}</Link>
               </Button>
             </div>
             <div className="rounded-3xl border border-border bg-card p-6 shadow-soft">
               <div className="mb-3 grid h-10 w-10 place-items-center rounded-full bg-tangerine text-tangerine-foreground">
                 <Sparkles className="h-4 w-4" />
               </div>
-              <h3 className="font-display text-2xl">For everyone else</h3>
+              <h3 className="font-display text-2xl">{t("home.two.guests.title")}</h3>
               <p className="mt-2 text-sm text-muted-foreground">
-                Guests join by invitation. Save your seat on the waitlist and we'll
-                open the door as tables free up in your city.
+                {t("home.two.guests.body")}
               </p>
               <Button asChild variant="link" className="mt-3 px-0 text-primary">
-                <Link to="/waitlist">Join the waitlist →</Link>
+                <Link to="/waitlist">{t("home.two.guests.cta")}</Link>
               </Button>
             </div>
           </div>
@@ -169,7 +167,7 @@ function Home() {
           <div className="font-display text-lg text-foreground">
             Ideal <span className="italic text-primary">Gathering</span>
           </div>
-          <div>© {new Date().getFullYear()} — Set the table. Set the subject.</div>
+          <div>© {new Date().getFullYear()} — {t("home.footer.tagline")}</div>
         </div>
       </footer>
     </div>
