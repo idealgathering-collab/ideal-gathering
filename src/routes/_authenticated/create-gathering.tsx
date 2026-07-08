@@ -38,6 +38,7 @@ function CreateGathering() {
   const { user } = useSession();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const t = useT();
   const [form, setForm] = useState({
     business_id: "",
     table_id: "",
@@ -77,14 +78,14 @@ function CreateGathering() {
     e.preventDefault();
     if (!user) return;
     if (!emailVerified) {
-      toast.error("Please verify your email first");
+      toast.error(t("create.verifyFirst"));
       return;
     }
     try {
       const v = schema.parse(form);
       const iso = new Date(v.starts_at).toISOString();
       if (new Date(iso) < new Date()) {
-        toast.error("Pick a future date & time");
+        toast.error(t("create.futureTime"));
         return;
       }
       setLoading(true);
@@ -107,13 +108,13 @@ function CreateGathering() {
       // If the host owns the venue, auto-approve.
       if (isOwner) {
         await supabase.from("gatherings").update({ status: "approved" }).eq("id", data.id);
-        toast.success("Gathering published");
+        toast.success(t("create.published"));
       } else {
-        toast.success("Gathering proposed — awaiting venue approval");
+        toast.success(t("create.proposed"));
       }
       navigate({ to: "/gatherings/$id", params: { id: data.id } });
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Failed");
+      toast.error(err instanceof Error ? err.message : t("create.failed"));
     } finally {
       setLoading(false);
     }
