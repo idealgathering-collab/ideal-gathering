@@ -9,6 +9,7 @@ import { useSession } from "@/hooks/use-session";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { formatDateTime } from "@/lib/gatherings";
+import { useT } from "@/i18n";
 
 export const Route = createFileRoute("/_authenticated/businesses/$id")({
   component: BusinessManage,
@@ -19,6 +20,7 @@ function BusinessManage() {
   const { user } = useSession();
   const navigate = useNavigate();
   const qc = useQueryClient();
+  const t = useT();
   const [newLabel, setNewLabel] = useState("");
   const [newCap, setNewCap] = useState(4);
 
@@ -39,7 +41,7 @@ function BusinessManage() {
     return (
       <div className="min-h-screen bg-background">
         <SiteHeader />
-        <div className="mx-auto max-w-2xl px-4 py-16 text-center text-muted-foreground">Loading…</div>
+        <div className="mx-auto max-w-2xl px-4 py-16 text-center text-muted-foreground">{t("common.loading")}</div>
       </div>
     );
   }
@@ -56,29 +58,29 @@ function BusinessManage() {
     });
     if (error) return toast.error(error.message);
     setNewLabel("");
-    toast.success("Table added");
+    toast.success(t("biz.tableAdded"));
     qc.invalidateQueries({ queryKey: ["business", id] });
   }
 
   async function removeTable(tableId: string) {
     const { error } = await supabase.from("venue_tables").delete().eq("id", tableId);
     if (error) return toast.error(error.message);
-    toast.success("Table removed");
+    toast.success(t("biz.tableRemoved"));
     qc.invalidateQueries({ queryKey: ["business", id] });
   }
 
   async function setStatus(gid: string, status: "approved" | "cancelled") {
     const { error } = await supabase.from("gatherings").update({ status }).eq("id", gid);
     if (error) return toast.error(error.message);
-    toast.success(`Gathering ${status}`);
+    toast.success(status === "approved" ? t("biz.gatheringApproved") : t("biz.gatheringCancelled"));
     qc.invalidateQueries({ queryKey: ["business", id] });
   }
 
   async function deleteBusiness() {
-    if (!confirm("Delete this business and all its tables & gatherings?")) return;
+    if (!confirm(t("biz.deleteConfirm"))) return;
     const { error } = await supabase.from("businesses").delete().eq("id", id);
     if (error) return toast.error(error.message);
-    toast.success("Business deleted");
+    toast.success(t("biz.deleted"));
     navigate({ to: "/dashboard" });
   }
 
@@ -96,14 +98,14 @@ function BusinessManage() {
             </div>
             <div>
               <p className="text-xs uppercase tracking-wide text-muted-foreground">
-                {biz.city ?? "Venue"}
+                {biz.city ?? t("biz.venue")}
               </p>
               <h1 className="font-display text-3xl">{biz.name}</h1>
             </div>
           </div>
           {isOwner && (
             <Button variant="outline" onClick={deleteBusiness} className="rounded-full">
-              <Trash2 className="mr-1.5 h-4 w-4" /> Delete
+              <Trash2 className="mr-1.5 h-4 w-4" /> {t("biz.delete")}
             </Button>
           )}
         </div>
@@ -111,16 +113,16 @@ function BusinessManage() {
         {biz.description && <p className="mt-4 max-w-2xl text-muted-foreground">{biz.description}</p>}
 
         <section className="mt-10">
-          <h2 className="font-display text-2xl">Tables</h2>
+          <h2 className="font-display text-2xl">{t("biz.tables")}</h2>
           <div className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-            {(biz.venue_tables ?? []).map((t) => (
-              <div key={t.id} className="flex items-center justify-between rounded-2xl border border-border bg-card p-4">
+            {(biz.venue_tables ?? []).map((tbl) => (
+              <div key={tbl.id} className="flex items-center justify-between rounded-2xl border border-border bg-card p-4">
                 <div>
-                  <div className="font-display text-xl">Table {t.label}</div>
-                  <div className="text-xs text-muted-foreground">{t.capacity} seats</div>
+                  <div className="font-display text-xl">{t("biz.tableLabel")} {tbl.label}</div>
+                  <div className="text-xs text-muted-foreground">{tbl.capacity} {t("biz.tableSeats")}</div>
                 </div>
                 {isOwner && (
-                  <Button size="icon" variant="ghost" onClick={() => removeTable(t.id)} aria-label="Remove table">
+                  <Button size="icon" variant="ghost" onClick={() => removeTable(tbl.id)} aria-label={t("biz.removeTable")}>
                     <Trash2 className="h-4 w-4" />
                   </Button>
                 )}
@@ -131,15 +133,15 @@ function BusinessManage() {
           {isOwner && (
             <form onSubmit={addTable} className="mt-4 flex flex-wrap items-end gap-2 rounded-2xl border border-dashed border-border bg-muted/40 p-4">
               <div className="grid gap-1">
-                <label className="text-xs text-muted-foreground">Label</label>
-                <Input value={newLabel} onChange={(e) => setNewLabel(e.target.value)} maxLength={20} placeholder="e.g. 7 or Window" className="w-32" />
+                <label className="text-xs text-muted-foreground">{t("biz.newLabel")}</label>
+                <Input value={newLabel} onChange={(e) => setNewLabel(e.target.value)} maxLength={20} placeholder={t("biz.newLabelPh")} className="w-32" />
               </div>
               <div className="grid gap-1">
-                <label className="text-xs text-muted-foreground">Capacity</label>
+                <label className="text-xs text-muted-foreground">{t("biz.newCapacity")}</label>
                 <Input type="number" min={1} max={20} value={newCap} onChange={(e) => setNewCap(Number(e.target.value))} className="w-24" />
               </div>
               <Button type="submit" className="rounded-full">
-                <Plus className="mr-1 h-4 w-4" /> Add table
+                <Plus className="mr-1 h-4 w-4" /> {t("biz.addTable")}
               </Button>
             </form>
           )}
@@ -148,7 +150,7 @@ function BusinessManage() {
         {isOwner && (
           <section className="mt-10">
             <h2 className="font-display text-2xl">
-              Proposed gatherings{" "}
+              {t("biz.proposed")}{" "}
               {proposed.length > 0 && (
                 <span className="ml-2 rounded-full bg-sunshine px-2 py-0.5 text-xs text-sunshine-foreground align-middle">
                   {proposed.length}
@@ -156,20 +158,20 @@ function BusinessManage() {
               )}
             </h2>
             <div className="mt-4 grid gap-2">
-              {proposed.length === 0 && <p className="text-sm text-muted-foreground">Nothing to review.</p>}
+              {proposed.length === 0 && <p className="text-sm text-muted-foreground">{t("biz.nothingToReview")}</p>}
               {proposed.map((g) => (
                 <div key={g.id} className="flex items-center justify-between gap-3 rounded-2xl border border-border bg-card p-4">
                   <Link to="/gatherings/$id" params={{ id: g.id }} className="min-w-0 flex-1">
                     <div className="font-display text-lg truncate">{g.subject}</div>
                     <div className="text-xs text-muted-foreground">
-                      {formatDateTime(g.starts_at)} · Table {g.table?.label} · {g.seats} seats
+                      {formatDateTime(g.starts_at)} · {t("biz.tableLabel")} {g.table?.label} · {g.seats} {t("biz.seats")}
                     </div>
                   </Link>
                   <Button size="sm" onClick={() => setStatus(g.id, "approved")} className="rounded-full">
-                    <Check className="mr-1 h-4 w-4" /> Approve
+                    <Check className="mr-1 h-4 w-4" /> {t("biz.approve")}
                   </Button>
                   <Button size="sm" variant="outline" onClick={() => setStatus(g.id, "cancelled")} className="rounded-full">
-                    <X className="mr-1 h-4 w-4" /> Decline
+                    <X className="mr-1 h-4 w-4" /> {t("biz.decline")}
                   </Button>
                 </div>
               ))}
@@ -178,9 +180,9 @@ function BusinessManage() {
         )}
 
         <section className="mt-10">
-          <h2 className="font-display text-2xl">Approved gatherings</h2>
+          <h2 className="font-display text-2xl">{t("biz.approved")}</h2>
           <div className="mt-4 grid gap-2">
-            {approved.length === 0 && <p className="text-sm text-muted-foreground">None yet.</p>}
+            {approved.length === 0 && <p className="text-sm text-muted-foreground">{t("biz.noneYet")}</p>}
             {approved.map((g) => (
               <Link
                 key={g.id}
@@ -191,7 +193,7 @@ function BusinessManage() {
                 <div className="min-w-0">
                   <div className="font-display text-lg truncate">{g.subject}</div>
                   <div className="text-xs text-muted-foreground">
-                    {formatDateTime(g.starts_at)} · Table {g.table?.label}
+                    {formatDateTime(g.starts_at)} · {t("biz.tableLabel")} {g.table?.label}
                   </div>
                 </div>
               </Link>
