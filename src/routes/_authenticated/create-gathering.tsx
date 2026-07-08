@@ -19,6 +19,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useT } from "@/i18n";
 
 export const Route = createFileRoute("/_authenticated/create-gathering")({
   component: CreateGathering,
