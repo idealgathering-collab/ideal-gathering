@@ -6,6 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useSession } from "@/hooks/use-session";
 import { Button } from "@/components/ui/button";
 import { formatDateTime } from "@/lib/gatherings";
+import { useT } from "@/i18n";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   component: Dashboard,
@@ -13,6 +14,7 @@ export const Route = createFileRoute("/_authenticated/dashboard")({
 
 function Dashboard() {
   const { user } = useSession();
+  const t = useT();
 
   const { data: businesses } = useQuery({
     queryKey: ["my-businesses", user?.id],
@@ -62,31 +64,38 @@ function Dashboard() {
     },
   });
 
+  function statusLabel(s: string) {
+    if (s === "approved") return t("dash.status.approved");
+    if (s === "proposed") return t("dash.status.proposed");
+    if (s === "cancelled") return t("dash.status.cancelled");
+    return s;
+  }
+
   return (
     <div className="min-h-screen bg-background">
       <SiteHeader />
       <main className="mx-auto max-w-6xl px-4 py-10">
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
-            <p className="text-sm uppercase tracking-wide text-muted-foreground">Your space</p>
-            <h1 className="font-display text-4xl sm:text-5xl">Dashboard</h1>
+            <p className="text-sm uppercase tracking-wide text-muted-foreground">{t("dash.eyebrow")}</p>
+            <h1 className="font-display text-4xl sm:text-5xl">{t("dash.title")}</h1>
           </div>
           <div className="flex flex-wrap gap-2">
             <Button asChild variant="outline" className="rounded-full">
               <Link to="/register-business">
-                <Store className="mr-1.5 h-4 w-4" /> Register business
+                <Store className="mr-1.5 h-4 w-4" /> {t("dash.registerBiz")}
               </Link>
             </Button>
             <Button asChild className="rounded-full">
               <Link to="/create-gathering">
-                <Plus className="mr-1.5 h-4 w-4" /> Propose gathering
+                <Plus className="mr-1.5 h-4 w-4" /> {t("dash.propose")}
               </Link>
             </Button>
           </div>
         </div>
 
         <section className="mt-10">
-          <h2 className="font-display text-2xl">Your businesses</h2>
+          <h2 className="font-display text-2xl">{t("dash.yourBiz")}</h2>
           <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {businesses && businesses.length > 0 ? (
               businesses.map((b) => {
@@ -108,10 +117,10 @@ function Dashboard() {
                       </div>
                     </div>
                     <div className="mt-4 flex items-center gap-4 text-xs text-muted-foreground">
-                      <span>{b.venue_tables?.length ?? 0} tables</span>
+                      <span>{b.venue_tables?.length ?? 0} {t("dash.tables")}</span>
                       {pending > 0 && (
                         <span className="rounded-full bg-sunshine px-2 py-0.5 text-sunshine-foreground">
-                          {pending} to approve
+                          {pending} {t("dash.toApprove")}
                         </span>
                       )}
                     </div>
@@ -120,9 +129,9 @@ function Dashboard() {
               })
             ) : (
               <div className="col-span-full rounded-3xl border border-dashed border-border p-8 text-center text-sm text-muted-foreground">
-                No businesses yet.{" "}
+                {t("dash.noBiz")}{" "}
                 <Link to="/register-business" className="text-primary underline underline-offset-2">
-                  Register one
+                  {t("dash.registerOne")}
                 </Link>
                 .
               </div>
@@ -132,7 +141,7 @@ function Dashboard() {
 
         <section className="mt-12 grid gap-8 lg:grid-cols-2">
           <div>
-            <h2 className="font-display text-2xl">Gatherings you host</h2>
+            <h2 className="font-display text-2xl">{t("dash.hosted")}</h2>
             <div className="mt-4 grid gap-3">
               {hosted && hosted.length > 0 ? (
                 hosted.map((g) => (
@@ -145,7 +154,7 @@ function Dashboard() {
                     <div className="min-w-0">
                       <div className="font-display text-lg truncate">{g.subject}</div>
                       <div className="text-xs text-muted-foreground truncate">
-                        {formatDateTime(g.starts_at)} · {g.business?.name} · Table {g.table?.label}
+                        {formatDateTime(g.starts_at)} · {g.business?.name} · {t("card.table")} {g.table?.label}
                       </div>
                     </div>
                     <span
@@ -157,18 +166,18 @@ function Dashboard() {
                             : "bg-muted text-muted-foreground"
                       }`}
                     >
-                      {g.status}
+                      {statusLabel(g.status)}
                     </span>
                   </Link>
                 ))
               ) : (
-                <p className="text-sm text-muted-foreground">No hosted gatherings yet.</p>
+                <p className="text-sm text-muted-foreground">{t("dash.noHosted")}</p>
               )}
             </div>
           </div>
 
           <div>
-            <h2 className="font-display text-2xl">Gatherings you joined</h2>
+            <h2 className="font-display text-2xl">{t("dash.joined")}</h2>
             <div className="mt-4 grid gap-3">
               {joined && joined.length > 0 ? (
                 joined.map((g) => (
@@ -181,14 +190,14 @@ function Dashboard() {
                     <div className="min-w-0">
                       <div className="font-display text-lg truncate">{g.subject}</div>
                       <div className="text-xs text-muted-foreground truncate">
-                        {formatDateTime(g.starts_at)} · {g.business?.name} · Table {g.table?.label}
+                        {formatDateTime(g.starts_at)} · {g.business?.name} · {t("card.table")} {g.table?.label}
                       </div>
                     </div>
                     <Users className="h-4 w-4 text-primary" />
                   </Link>
                 ))
               ) : (
-                <p className="text-sm text-muted-foreground">Not joined any yet.</p>
+                <p className="text-sm text-muted-foreground">{t("dash.noJoined")}</p>
               )}
             </div>
           </div>
