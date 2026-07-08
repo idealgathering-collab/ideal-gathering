@@ -2,8 +2,10 @@ import { Link } from "@tanstack/react-router";
 import { Users, MapPin, CalendarClock } from "lucide-react";
 import type { GatheringCard as G } from "@/lib/gatherings";
 import { formatDateTime } from "@/lib/gatherings";
+import { useT } from "@/i18n";
 
 export function GatheringCard({ g }: { g: G }) {
+  const t = useT();
   const seatsLeft = Math.max(0, g.seats - g.attendee_count);
   const full = seatsLeft === 0;
   return (
@@ -25,14 +27,14 @@ export function GatheringCard({ g }: { g: G }) {
         )}
         <div className="absolute inset-x-3 top-3 flex justify-between">
           <span className="rounded-full bg-background/90 px-3 py-1 text-[11px] font-medium tracking-wide uppercase text-foreground/80">
-            Table {g.table?.label ?? "—"}
+            {t("card.table")} {g.table?.label ?? "—"}
           </span>
           <span
             className={`rounded-full px-3 py-1 text-[11px] font-semibold tracking-wide uppercase ${
               full ? "bg-destructive text-destructive-foreground" : "bg-sunshine text-sunshine-foreground"
             }`}
           >
-            {full ? "Full" : `${seatsLeft} seat${seatsLeft === 1 ? "" : "s"} left`}
+            {full ? t("card.full") : t(seatsLeft === 1 ? "card.seatLeft" : "card.seatsLeft", { n: seatsLeft })}
           </span>
         </div>
       </div>

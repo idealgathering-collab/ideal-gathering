@@ -4,11 +4,14 @@ import { Button } from "@/components/ui/button";
 import { useSession } from "@/hooks/use-session";
 import { supabase } from "@/integrations/supabase/client";
 import { useQueryClient } from "@tanstack/react-query";
+import { LanguageSwitcher } from "@/components/language-switcher";
+import { useT } from "@/i18n";
 
 export function SiteHeader() {
   const { user } = useSession();
   const navigate = useNavigate();
   const qc = useQueryClient();
+  const t = useT();
 
   async function handleSignOut() {
     await qc.cancelQueries();
@@ -30,19 +33,20 @@ export function SiteHeader() {
         </Link>
 
         <nav className="flex items-center gap-1.5">
+          <LanguageSwitcher />
           {user ? (
             <>
               <Button asChild variant="ghost" size="sm" className="hidden sm:inline-flex">
-                <Link to="/dashboard">Dashboard</Link>
+                <Link to="/dashboard">{t("nav.dashboard")}</Link>
               </Button>
               <Button asChild size="sm" className="rounded-full">
-                <Link to="/create-gathering">Host</Link>
+                <Link to="/create-gathering">{t("nav.host")}</Link>
               </Button>
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={handleSignOut}
-                aria-label="Sign out"
+                aria-label={t("nav.signOut")}
                 className="rounded-full"
               >
                 <LogOut className="h-4 w-4" />
@@ -50,7 +54,7 @@ export function SiteHeader() {
               <Link
                 to="/dashboard"
                 className="sm:hidden grid h-9 w-9 place-items-center rounded-full bg-muted"
-                aria-label="Account"
+                aria-label={t("nav.account")}
               >
                 <UserIcon className="h-4 w-4" />
               </Link>
@@ -58,10 +62,10 @@ export function SiteHeader() {
           ) : (
             <>
               <Button asChild variant="ghost" size="sm">
-                <Link to="/auth">Sign in</Link>
+                <Link to="/auth">{t("nav.signIn")}</Link>
               </Button>
               <Button asChild size="sm" className="rounded-full">
-                <Link to="/waitlist">Join</Link>
+                <Link to="/waitlist">{t("nav.join")}</Link>
               </Button>
             </>
           )}

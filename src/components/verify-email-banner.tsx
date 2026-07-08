@@ -3,9 +3,11 @@ import { toast } from "sonner";
 import { MailWarning } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
+import { useT } from "@/i18n";
 
 export function VerifyEmailBanner({ email }: { email: string | null | undefined }) {
   const [sending, setSending] = useState(false);
+  const t = useT();
 
   async function resend() {
     if (!email) return;
@@ -17,9 +19,9 @@ export function VerifyEmailBanner({ email }: { email: string | null | undefined 
         options: { emailRedirectTo: window.location.origin },
       });
       if (error) throw error;
-      toast.success("Verification email sent. Check your inbox.");
+      toast.success(t("verify.sent"));
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Couldn't send email");
+      toast.error(err instanceof Error ? err.message : t("verify.failed"));
     } finally {
       setSending(false);
     }
@@ -30,9 +32,9 @@ export function VerifyEmailBanner({ email }: { email: string | null | undefined 
       <div className="flex items-start gap-3">
         <MailWarning className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
         <div>
-          <p className="font-medium">Verify your email to continue</p>
+          <p className="font-medium">{t("verify.title")}</p>
           <p className="text-xs text-foreground/70">
-            We sent a link to {email ?? "your inbox"}. Confirm it to propose or join gatherings.
+            {t("verify.body", { email: email ?? t("verify.yourInbox") })}
           </p>
         </div>
       </div>
@@ -44,7 +46,7 @@ export function VerifyEmailBanner({ email }: { email: string | null | undefined 
         onClick={resend}
         className="rounded-full"
       >
-        {sending ? "Sending…" : "Resend email"}
+        {sending ? t("verify.sending") : t("verify.resend")}
       </Button>
     </div>
   );
