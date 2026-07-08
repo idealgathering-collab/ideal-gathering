@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { useT } from "@/i18n";
 
 export const Route = createFileRoute("/waitlist")({
   head: () => ({
@@ -31,6 +32,7 @@ const schema = z.object({
 });
 
 function WaitlistPage() {
+  const t = useT();
   const [form, setForm] = useState({ name: "", email: "", city: "", interests: "" });
   const [loading, setLoading] = useState(false);
   const [done, setDone] = useState(false);
@@ -48,16 +50,16 @@ function WaitlistPage() {
       });
       if (error) {
         if (error.code === "23505") {
-          toast.success("You're already on the list — see you soon.");
+          toast.success(t("wait.alreadyOn"));
           setDone(true);
           return;
         }
         throw error;
       }
-      toast.success("You're on the list.");
+      toast.success(t("wait.joined"));
       setDone(true);
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Failed");
+      toast.error(err instanceof Error ? err.message : t("wait.failed"));
     } finally {
       setLoading(false);
     }
@@ -78,28 +80,27 @@ function WaitlistPage() {
 
         <div className="rounded-3xl border border-border bg-card p-8 shadow-plum">
           <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-sunshine/50 px-3 py-1 text-xs font-medium">
-            <Sparkles className="h-3.5 w-3.5" /> Guest waitlist
+            <Sparkles className="h-3.5 w-3.5" /> {t("wait.badge")}
           </div>
-          <h1 className="font-display text-3xl">Save your seat.</h1>
+          <h1 className="font-display text-3xl">{t("wait.title")}</h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            Guests join by invitation. Drop your details and we'll open the door as
-            tables free up in your city.
+            {t("wait.subtitle")}
           </p>
 
           {done ? (
             <div className="mt-6 rounded-2xl border border-border bg-muted/40 p-6 text-sm">
-              <p className="font-display text-lg">You're on the list.</p>
+              <p className="font-display text-lg">{t("wait.done.title")}</p>
               <p className="mt-1 text-muted-foreground">
-                We'll email {form.email} when it's your turn.
+                {t("wait.done.body", { email: form.email })}
               </p>
               <Button asChild className="mt-4 rounded-full" variant="outline">
-                <Link to="/">Back to gatherings</Link>
+                <Link to="/">{t("common.backToGatherings")}</Link>
               </Button>
             </div>
           ) : (
             <form onSubmit={submit} className="mt-6 grid gap-4">
               <div className="grid gap-2">
-                <Label htmlFor="name">Your name</Label>
+                <Label htmlFor="name">{t("wait.name")}</Label>
                 <Input
                   id="name"
                   required
@@ -109,7 +110,7 @@ function WaitlistPage() {
                 />
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="email">{t("wait.email")}</Label>
                 <Input
                   id="email"
                   type="email"
@@ -120,7 +121,7 @@ function WaitlistPage() {
                 />
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="city">City (optional)</Label>
+                <Label htmlFor="city">{t("wait.city")}</Label>
                 <Input
                   id="city"
                   maxLength={80}
@@ -129,25 +130,25 @@ function WaitlistPage() {
                 />
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="interests">What subjects pull you in? (optional)</Label>
+                <Label htmlFor="interests">{t("wait.interests")}</Label>
                 <Textarea
                   id="interests"
                   maxLength={500}
                   value={form.interests}
                   onChange={(e) => setForm({ ...form, interests: e.target.value })}
-                  placeholder="Books, film, startups, philosophy…"
+                  placeholder={t("wait.interestsPh")}
                 />
               </div>
               <Button type="submit" disabled={loading} className="mt-2 h-11 rounded-full text-base">
-                {loading ? "…" : "Join the waitlist"}
+                {loading ? "…" : t("wait.join")}
               </Button>
             </form>
           )}
 
           <div className="mt-6 border-t border-border pt-4 text-center text-xs text-muted-foreground">
-            Running a cafe or restaurant?{" "}
+            {t("wait.footer.q")}{" "}
             <Link to="/auth" search={{ mode: "signup" } as never} className="text-primary hover:underline">
-              Create a venue account
+              {t("wait.footer.link")}
             </Link>
           </div>
         </div>

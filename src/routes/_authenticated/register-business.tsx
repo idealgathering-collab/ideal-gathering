@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { useT } from "@/i18n";
 
 export const Route = createFileRoute("/_authenticated/register-business")({
   component: RegisterBusiness,
@@ -29,6 +30,7 @@ function RegisterBusiness() {
   const { user } = useSession();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const t = useT();
   const [form, setForm] = useState({
     name: "",
     description: "",
@@ -67,10 +69,10 @@ function RegisterBusiness() {
       const { error: tErr } = await supabase.from("venue_tables").insert(rows);
       if (tErr) throw tErr;
 
-      toast.success("Business registered");
+      toast.success(t("reg.success"));
       navigate({ to: "/businesses/$id", params: { id: biz.id } });
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Failed");
+      toast.error(err instanceof Error ? err.message : t("reg.failed"));
     } finally {
       setLoading(false);
     }
@@ -85,51 +87,49 @@ function RegisterBusiness() {
             <Store className="h-5 w-5 text-tangerine-foreground" />
           </div>
           <div>
-            <p className="text-xs uppercase tracking-wide text-muted-foreground">For cafes & restaurants</p>
-            <h1 className="font-display text-3xl">Register your business</h1>
+            <p className="text-xs uppercase tracking-wide text-muted-foreground">{t("reg.eyebrow")}</p>
+            <h1 className="font-display text-3xl">{t("reg.title")}</h1>
           </div>
         </div>
 
         <form onSubmit={submit} className="grid gap-5 rounded-3xl border border-border bg-card p-6 shadow-soft">
           <div className="grid gap-2">
-            <Label htmlFor="name">Venue name</Label>
+            <Label htmlFor="name">{t("reg.name")}</Label>
             <Input id="name" required maxLength={120} value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="description">Description</Label>
+            <Label htmlFor="description">{t("reg.description")}</Label>
             <Textarea id="description" maxLength={600} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="grid gap-2">
-              <Label htmlFor="city">City</Label>
+              <Label htmlFor="city">{t("reg.city")}</Label>
               <Input id="city" maxLength={80} value={form.city} onChange={(e) => setForm({ ...form, city: e.target.value })} />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="address">Address</Label>
+              <Label htmlFor="address">{t("reg.address")}</Label>
               <Input id="address" maxLength={200} value={form.address} onChange={(e) => setForm({ ...form, address: e.target.value })} />
             </div>
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="cover_url">Cover image URL (optional)</Label>
+            <Label htmlFor="cover_url">{t("reg.cover")}</Label>
             <Input id="cover_url" type="url" maxLength={500} value={form.cover_url} onChange={(e) => setForm({ ...form, cover_url: e.target.value })} placeholder="https://..." />
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="grid gap-2">
-              <Label htmlFor="tableCount">Number of tables</Label>
+              <Label htmlFor="tableCount">{t("reg.tableCount")}</Label>
               <Input id="tableCount" type="number" min={1} max={30} value={form.tableCount} onChange={(e) => setForm({ ...form, tableCount: Number(e.target.value) })} />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="capacity">Seats per table</Label>
+              <Label htmlFor="capacity">{t("reg.defaultCapacity")}</Label>
               <Input id="capacity" type="number" min={1} max={20} value={form.defaultCapacity} onChange={(e) => setForm({ ...form, defaultCapacity: Number(e.target.value) })} />
             </div>
           </div>
-          <p className="text-xs text-muted-foreground">
-            Tables are auto-labeled 1, 2, 3… You can rename or add more later.
-          </p>
           <Button type="submit" disabled={loading} size="lg" className="mt-2 h-12 rounded-full">
-            {loading ? "Registering…" : "Register business"}
+            {loading ? t("reg.submitting") : t("reg.submit")}
           </Button>
         </form>
+
       </main>
     </div>
   );

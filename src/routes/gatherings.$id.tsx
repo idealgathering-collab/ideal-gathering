@@ -8,6 +8,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useSession } from "@/hooks/use-session";
 import { Button } from "@/components/ui/button";
 import { fetchGathering, formatDateTime } from "@/lib/gatherings";
+import { useT } from "@/i18n";
 
 export const Route = createFileRoute("/gatherings/$id")({
   component: GatheringDetail,
@@ -18,6 +19,7 @@ function GatheringDetail() {
   const { user } = useSession();
   const navigate = useNavigate();
   const qc = useQueryClient();
+  const t = useT();
 
   const { data: g, isLoading } = useQuery({
     queryKey: ["gathering", id],
@@ -30,12 +32,12 @@ function GatheringDetail() {
       return;
     }
     if (!user.email_confirmed_at) {
-      toast.error("Verify your email to join gatherings");
+      toast.error(t("gd.verifyToJoin"));
       return;
     }
     const { error } = await supabase.from("gathering_attendees").insert({ gathering_id: id, user_id: user.id });
     if (error) return toast.error(error.message);
-    toast.success("You're in. Save the date.");
+    toast.success(t("gd.joinedOk"));
     qc.invalidateQueries({ queryKey: ["gathering", id] });
   }
 
@@ -43,7 +45,7 @@ function GatheringDetail() {
     if (!user) return;
     const { error } = await supabase.from("gathering_attendees").delete().eq("gathering_id", id).eq("user_id", user.id);
     if (error) return toast.error(error.message);
-    toast.success("Left the gathering");
+    toast.success(t("gd.leftOk"));
     qc.invalidateQueries({ queryKey: ["gathering", id] });
   }
 
@@ -51,7 +53,7 @@ function GatheringDetail() {
     return (
       <div className="min-h-screen bg-background">
         <SiteHeader />
-        <div className="mx-auto max-w-3xl px-4 py-16 text-center text-muted-foreground">Loading…</div>
+        <div className="mx-auto max-w-3xl px-4 py-16 text-center text-muted-foreground">{t("common.loading")}</div>
       </div>
     );
   }
@@ -61,10 +63,10 @@ function GatheringDetail() {
       <div className="min-h-screen bg-background">
         <SiteHeader />
         <div className="mx-auto max-w-3xl px-4 py-16 text-center">
-          <h1 className="font-display text-4xl">Not found</h1>
-          <p className="mt-2 text-muted-foreground">This gathering doesn't exist or isn't public.</p>
+          <h1 className="font-display text-4xl">{t("gd.notFound.title")}</h1>
+          <p className="mt-2 text-muted-foreground">{t("gd.notFound.body")}</p>
           <Button asChild className="mt-6 rounded-full">
-            <Link to="/">Back to gatherings</Link>
+            <Link to="/">{t("common.backToGatherings")}</Link>
           </Button>
         </div>
       </div>
@@ -88,48 +90,45 @@ function GatheringDetail() {
         )}
         <div className="relative mx-auto max-w-3xl px-4 py-16 text-primary-foreground">
           <Link to="/" className="inline-flex items-center gap-1.5 text-sm text-primary-foreground/80 hover:text-primary-foreground">
-            <ArrowLeft className="h-4 w-4" /> All gatherings
+            <ArrowLeft className="h-4 w-4" /> {t("gd.allGatherings")}
           </Link>
           <div className="mt-4 flex items-center gap-2 text-xs uppercase tracking-wider text-sunshine">
-            <Coffee className="h-4 w-4" /> Table {g.table?.label}
+            <Coffee className="h-4 w-4" /> {t("gd.table")} {g.table?.label}
             {g.status !== "approved" && (
               <span className="ml-2 rounded-full bg-sunshine px-2 py-0.5 text-sunshine-foreground">
-                {g.status}
+                {g.status === "proposed" ? t("gd.status.proposed") : t("gd.status.cancelled")}
               </span>
             )}
           </div>
-          <h1 className="mt-3 font-display text-5xl leading-[1] sm:text-6xl">{g.subject}</h1>
+          <h1 className="mt-3 font-display text-4xl sm:text-6xl leading-[0.95]">{g.subject}</h1>
           {g.description && <p className="mt-4 max-w-2xl text-primary-foreground/85">{g.description}</p>}
         </div>
       </div>
 
       <main className="mx-auto max-w-3xl px-4 py-10">
-        <div className="grid gap-4 rounded-3xl border border-border bg-card p-6 shadow-soft sm:grid-cols-3">
-          <div>
+        <div className="grid gap-4 sm:grid-cols-3">
+          <div className="rounded-2xl border border-border bg-card p-4">
             <div className="flex items-center gap-2 text-xs uppercase tracking-wide text-muted-foreground">
-              <CalendarClock className="h-4 w-4 text-primary" /> When
+              <CalendarClock className="h-3.5 w-3.5 text-primary" /> {t("create.datetime")}
             </div>
             <div className="mt-1 font-display text-lg">{formatDateTime(g.starts_at)}</div>
           </div>
-          <div>
+          <div className="rounded-2xl border border-border bg-card p-4">
             <div className="flex items-center gap-2 text-xs uppercase tracking-wide text-muted-foreground">
-              <MapPin className="h-4 w-4 text-tangerine" /> Where
+              <MapPin className="h-3.5 w-3.5 text-tangerine" /> {t("biz.venue")}
             </div>
             <div className="mt-1 font-display text-lg">{g.business?.name}</div>
-            <div className="text-xs text-muted-foreground">
-              {g.business?.address}
-              {g.business?.city ? `, ${g.business.city}` : ""}
-            </div>
+            {g.business?.city && <div className="text-xs text-muted-foreground">{g.business.city}</div>}
           </div>
-          <div>
+          <div className="rounded-2xl border border-border bg-card p-4">
             <div className="flex items-center gap-2 text-xs uppercase tracking-wide text-muted-foreground">
-              <Users className="h-4 w-4 text-primary" /> Seats
+              <Users className="h-3.5 w-3.5 text-primary" /> {t("create.seats")}
             </div>
             <div className="mt-1 font-display text-lg">
               {attendees.length} / {g.seats}
             </div>
             <div className="text-xs text-muted-foreground">
-              {seatsLeft > 0 ? `${seatsLeft} left` : "Full"}
+              {seatsLeft > 0 ? t("gd.seatsLeft", { n: seatsLeft }) : t("gd.full")}
             </div>
           </div>
         </div>
@@ -144,11 +143,11 @@ function GatheringDetail() {
           {g.status === "approved" && !isHost && !isOwner && (
             isAttending ? (
               <Button variant="outline" size="lg" onClick={leave} className="rounded-full">
-                Leave gathering
+                {t("gd.leave")}
               </Button>
             ) : (
               <Button size="lg" onClick={join} disabled={seatsLeft === 0} className="rounded-full bg-tangerine text-tangerine-foreground hover:bg-tangerine/90">
-                {seatsLeft === 0 ? "Full" : "Join gathering"}
+                {seatsLeft === 0 ? t("gd.full") : t("gd.join")}
               </Button>
             )
           )}
@@ -156,15 +155,15 @@ function GatheringDetail() {
             <div className="rounded-full bg-sunshine px-4 py-2 text-sm text-sunshine-foreground">
               {g.status === "proposed"
                 ? isOwner
-                  ? "Approve this gathering from your business dashboard."
-                  : "Waiting for the venue to approve."
-                : "This gathering is cancelled."}
+                  ? t("gd.approveFromDashboard")
+                  : t("gd.waitingApproval")
+                : t("gd.cancelledMsg")}
             </div>
           )}
           {isOwner && g.business && (
             <Button asChild variant="outline" className="rounded-full">
               <Link to="/businesses/$id" params={{ id: g.business.id }}>
-                Manage venue
+                {t("gd.manageVenue")}
               </Link>
             </Button>
           )}
