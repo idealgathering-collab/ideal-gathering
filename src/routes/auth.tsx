@@ -32,6 +32,7 @@ function AuthPage() {
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);
+  const t = useT();
 
   useEffect(() => setIsSignup(mode === "signup"), [mode]);
 
@@ -58,15 +59,15 @@ function AuthPage() {
           },
         });
         if (error) throw error;
-        toast.success("Welcome! You're in.");
+        toast.success(t("auth.welcomeIn"));
       } else {
         const { error } = await supabase.auth.signInWithPassword({ email: em, password: pw });
         if (error) throw error;
-        toast.success("Welcome back.");
+        toast.success(t("auth.welcomeBack"));
       }
       navigate({ to: redirect ?? "/dashboard" });
     } catch (err) {
-      const msg = err instanceof Error ? err.message : "Something went wrong";
+      const msg = err instanceof Error ? err.message : t("auth.generic");
       toast.error(msg);
     } finally {
       setLoading(false);
