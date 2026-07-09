@@ -472,5 +472,23 @@ export const translations: Record<Lang, Dict> = {
     "gd.approveFromDashboard": "Bu buluşmayı işletme panelinden onayla.",
     "gd.cancelledMsg": "Bu buluşma iptal edildi.",
     "gd.seatsLeft": "{n} kaldı",
+
+    // Menu
+    "menu.title": "Menü",
+    "menu.empty": "Henüz menü öğesi yok.",
+    "menu.add": "Öğe ekle",
+    "menu.name": "Ad",
+    "menu.namePh": "örn. Cappuccino",
+    "menu.price": "Fiyat",
+    "menu.category": "Kategori",
+    "menu.categoryPh": "örn. İçecekler",
+    "menu.description": "Açıklama",
+    "menu.descriptionPh": "İsteğe bağlı kısa açıklama",
+    "menu.currency": "Para birimi",
+    "menu.remove": "Kaldır",
+    "menu.added": "Öğe eklendi",
+    "menu.removed": "Öğe kaldırıldı",
+    "menu.viewMenu": "Menüyü gör",
   },
 };
+
