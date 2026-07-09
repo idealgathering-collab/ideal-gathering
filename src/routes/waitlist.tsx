@@ -69,16 +69,16 @@ function WaitlistPage() {
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-background">
-      <div className="absolute inset-0 bg-gradient-hero opacity-90" />
-      <div className="relative mx-auto flex min-h-screen max-w-md flex-col justify-center px-4 py-12">
+      <SiteHeader />
+      <div className="absolute inset-x-0 top-16 bottom-0 bg-gradient-hero opacity-90" />
+      <div className="relative mx-auto flex max-w-md flex-col justify-center px-4 py-12">
         <Link to="/" className="mb-8 inline-flex items-center gap-2 text-primary-foreground">
-          <span className="grid h-9 w-9 place-items-center rounded-full bg-sunshine">
-            <Coffee className="h-4 w-4 text-sunshine-foreground" />
-          </span>
+          <img src={logoAsset.url} alt="Ideal Gathering" className="h-9 w-9 rounded-full object-contain" />
           <span className="font-display text-xl">
             Ideal <span className="italic">Gathering</span>
           </span>
         </Link>
+
 
         <div className="rounded-3xl border border-border bg-card p-8 shadow-plum">
           <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-sunshine/50 px-3 py-1 text-xs font-medium">
