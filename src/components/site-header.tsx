@@ -1,5 +1,7 @@
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
-import { ArrowLeft, Coffee, LogOut, User as UserIcon } from "lucide-react";
+import { ArrowLeft, LogOut, User as UserIcon } from "lucide-react";
+import logoAsset from "@/assets/ideal-gathering-logo.png.asset.json";
+
 
 import { Button } from "@/components/ui/button";
 import { useSession } from "@/hooks/use-session";
@@ -44,13 +46,16 @@ export function SiteHeader() {
           )}
 
         <Link to="/" className="flex items-center gap-2 group">
-          <span className="grid h-9 w-9 place-items-center rounded-full bg-gradient-hero shadow-plum">
-            <Coffee className="h-4 w-4 text-primary-foreground" />
-          </span>
+          <img
+            src={logoAsset.url}
+            alt="Ideal Gathering"
+            className="h-9 w-9 rounded-full object-contain"
+          />
           <span className="font-display text-xl leading-none">
             Ideal <span className="italic text-primary">Gathering</span>
           </span>
         </Link>
+
         </div>
 
 
