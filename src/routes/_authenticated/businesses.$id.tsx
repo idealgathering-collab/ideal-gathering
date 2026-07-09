@@ -4,6 +4,8 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { Store, Plus, Trash2, Check, X } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
+import { MenuSection } from "@/components/menu-section";
+
 import { supabase } from "@/integrations/supabase/client";
 import { useSession } from "@/hooks/use-session";
 import { Button } from "@/components/ui/button";
@@ -147,7 +149,10 @@ function BusinessManage() {
           )}
         </section>
 
+        <MenuSection businessId={id} isOwner={isOwner} />
+
         {isOwner && (
+
           <section className="mt-10">
             <h2 className="font-display text-2xl">
               {t("biz.proposed")}{" "}

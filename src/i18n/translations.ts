@@ -230,7 +230,25 @@ export const translations: Record<Lang, Dict> = {
     "gd.approveFromDashboard": "Approve this gathering from your business dashboard.",
     "gd.cancelledMsg": "This gathering is cancelled.",
     "gd.seatsLeft": "{n} left",
+
+    // Menu
+    "menu.title": "Menu",
+    "menu.empty": "No menu items yet.",
+    "menu.add": "Add item",
+    "menu.name": "Name",
+    "menu.namePh": "e.g. Cappuccino",
+    "menu.price": "Price",
+    "menu.category": "Category",
+    "menu.categoryPh": "e.g. Drinks",
+    "menu.description": "Description",
+    "menu.descriptionPh": "Optional short description",
+    "menu.currency": "Currency",
+    "menu.remove": "Remove",
+    "menu.added": "Item added",
+    "menu.removed": "Item removed",
+    "menu.viewMenu": "View menu",
   },
+
 
   tr: {
     // Nav
@@ -454,5 +472,23 @@ export const translations: Record<Lang, Dict> = {
     "gd.approveFromDashboard": "Bu buluşmayı işletme panelinden onayla.",
     "gd.cancelledMsg": "Bu buluşma iptal edildi.",
     "gd.seatsLeft": "{n} kaldı",
+
+    // Menu
+    "menu.title": "Menü",
+    "menu.empty": "Henüz menü öğesi yok.",
+    "menu.add": "Öğe ekle",
+    "menu.name": "Ad",
+    "menu.namePh": "örn. Cappuccino",
+    "menu.price": "Fiyat",
+    "menu.category": "Kategori",
+    "menu.categoryPh": "örn. İçecekler",
+    "menu.description": "Açıklama",
+    "menu.descriptionPh": "İsteğe bağlı kısa açıklama",
+    "menu.currency": "Para birimi",
+    "menu.remove": "Kaldır",
+    "menu.added": "Öğe eklendi",
+    "menu.removed": "Öğe kaldırıldı",
+    "menu.viewMenu": "Menüyü gör",
   },
 };
+

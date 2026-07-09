@@ -1,5 +1,6 @@
-import { Link, useNavigate } from "@tanstack/react-router";
-import { Coffee, LogOut, User as UserIcon } from "lucide-react";
+import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
+import { ArrowLeft, Coffee, LogOut, User as UserIcon } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
 import { useSession } from "@/hooks/use-session";
 import { supabase } from "@/integrations/supabase/client";
@@ -12,6 +13,9 @@ export function SiteHeader() {
   const navigate = useNavigate();
   const qc = useQueryClient();
   const t = useT();
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const showBack = pathname !== "/";
+
 
   async function handleSignOut() {
     await qc.cancelQueries();
@@ -23,6 +27,22 @@ export function SiteHeader() {
   return (
     <header className="sticky top-0 z-40 w-full border-b border-border/60 bg-background/85 backdrop-blur-xl">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-3 px-4">
+        <div className="flex items-center gap-2">
+          {showBack && (
+            <Button
+              variant="ghost"
+              size="icon"
+              aria-label={t("common.back")}
+              className="rounded-full"
+              onClick={() => {
+                if (typeof window !== "undefined" && window.history.length > 1) window.history.back();
+                else navigate({ to: "/" });
+              }}
+            >
+              <ArrowLeft className="h-4 w-4" />
+            </Button>
+          )}
+
         <Link to="/" className="flex items-center gap-2 group">
           <span className="grid h-9 w-9 place-items-center rounded-full bg-gradient-hero shadow-plum">
             <Coffee className="h-4 w-4 text-primary-foreground" />
@@ -31,6 +51,9 @@ export function SiteHeader() {
             Ideal <span className="italic text-primary">Gathering</span>
           </span>
         </Link>
+        </div>
+
+
 
         <nav className="flex items-center gap-1.5">
           <LanguageSwitcher />
