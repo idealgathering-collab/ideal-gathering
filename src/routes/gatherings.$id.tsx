@@ -79,7 +79,18 @@ function GatheringDetail() {
   const isAttending = user ? attendees.some((a) => a.user_id === user.id) : false;
   const seatsLeft = Math.max(0, g.seats - attendees.length);
   const isHost = user?.id === g.host_id;
-  const isOwner = user?.id === g.business?.owner_id;
+  const { data: isOwner = false } = useQuery({
+    queryKey: ["gathering-is-owner", g?.business?.id, user?.id],
+    enabled: !!user && !!g?.business?.id,
+    queryFn: async () => {
+      const { count } = await supabase
+        .from("businesses")
+        .select("id", { count: "exact", head: true })
+        .eq("id", g!.business!.id)
+        .eq("owner_id", user!.id);
+      return (count ?? 0) > 0;
+    },
+  });
 
   return (
     <div className="min-h-screen bg-background">
