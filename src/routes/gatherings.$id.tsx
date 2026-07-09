@@ -3,6 +3,8 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { CalendarClock, MapPin, Users, ArrowLeft, Coffee } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
+import { MenuSection } from "@/components/menu-section";
+
 import { VerifyEmailBanner } from "@/components/verify-email-banner";
 import { supabase } from "@/integrations/supabase/client";
 import { useSession } from "@/hooks/use-session";
