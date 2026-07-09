@@ -38,7 +38,7 @@ export async function fetchGathering(id: string) {
   const { data, error } = await supabase
     .from("gatherings")
     .select(
-      "id, subject, description, starts_at, seats, status, host_id, business:businesses(id,name,city,address,cover_url,owner_id), table:venue_tables(id,label,capacity), gathering_attendees(user_id)"
+      "id, subject, description, starts_at, seats, status, host_id, business:businesses(id,name,city,address,cover_url), table:venue_tables(id,label,capacity), gathering_attendees(user_id)"
     )
     .eq("id", id)
     .maybeSingle();
