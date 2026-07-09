@@ -51,6 +51,9 @@ export function SiteHeader() {
             Ideal <span className="italic text-primary">Gathering</span>
           </span>
         </Link>
+        </div>
+
+
 
         <nav className="flex items-center gap-1.5">
           <LanguageSwitcher />
