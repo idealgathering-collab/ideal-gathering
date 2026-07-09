@@ -230,7 +230,25 @@ export const translations: Record<Lang, Dict> = {
     "gd.approveFromDashboard": "Approve this gathering from your business dashboard.",
     "gd.cancelledMsg": "This gathering is cancelled.",
     "gd.seatsLeft": "{n} left",
+
+    // Menu
+    "menu.title": "Menu",
+    "menu.empty": "No menu items yet.",
+    "menu.add": "Add item",
+    "menu.name": "Name",
+    "menu.namePh": "e.g. Cappuccino",
+    "menu.price": "Price",
+    "menu.category": "Category",
+    "menu.categoryPh": "e.g. Drinks",
+    "menu.description": "Description",
+    "menu.descriptionPh": "Optional short description",
+    "menu.currency": "Currency",
+    "menu.remove": "Remove",
+    "menu.added": "Item added",
+    "menu.removed": "Item removed",
+    "menu.viewMenu": "View menu",
   },
+
 
   tr: {
     // Nav
