@@ -1,5 +1,7 @@
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
-import { ArrowLeft, Coffee, LogOut, User as UserIcon } from "lucide-react";
+import { ArrowLeft, LogOut, User as UserIcon } from "lucide-react";
+import logoAsset from "@/assets/ideal-gathering-logo.png.asset.json";
+
 
 import { Button } from "@/components/ui/button";
 import { useSession } from "@/hooks/use-session";
