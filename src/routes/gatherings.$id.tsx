@@ -170,7 +170,10 @@ function GatheringDetail() {
             </Button>
           )}
         </div>
+
+        {g.business && <MenuSection businessId={g.business.id} isOwner={!!isOwner} />}
       </main>
+
     </div>
   );
 }
