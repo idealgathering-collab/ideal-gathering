@@ -1,0 +1,101 @@
+import { TrendingUp, Gavel, Users, Sparkles } from "lucide-react";
+
+export function VenueDashboardPreview() {
+  return (
+    <div className="relative rounded-[2rem] border border-border bg-card p-6 shadow-plum">
+      {/* header */}
+      <div className="flex items-center justify-between gap-3 border-b border-border pb-4">
+        <div className="flex items-center gap-3">
+          <div className="grid h-10 w-10 place-items-center rounded-xl bg-gradient-cool text-primary-foreground font-display text-lg">
+            P
+          </div>
+          <div>
+            <div className="font-display text-lg leading-tight">Petra Roasting Co.</div>
+            <div className="text-xs text-muted-foreground">Kadıköy, İstanbul</div>
+          </div>
+        </div>
+        <span className="inline-flex items-center gap-1 rounded-full bg-sunshine/60 px-2.5 py-1 text-[10px] font-medium uppercase tracking-wide">
+          <Sparkles className="h-3 w-3" /> Partner · Tier II
+        </span>
+      </div>
+
+      {/* stats */}
+      <div className="mt-4 grid grid-cols-3 gap-3">
+        <StatTile label="Utilization" value="78%" bar={78} icon={TrendingUp} />
+        <StatTile label="Bids won" value="12" hint="this week" icon={Gavel} />
+        <StatTile label="Guests routed" value="43" hint="new" icon={Users} />
+      </div>
+
+      {/* bidding strip */}
+      <div className="mt-5 rounded-2xl border border-border bg-muted/40 p-4">
+        <div className="flex items-center justify-between">
+          <div className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+            Quiet-hour bidding
+          </div>
+          <div className="text-[10px] text-muted-foreground">Live auction</div>
+        </div>
+        <div className="mt-3 space-y-2">
+          {[
+            { slot: "Tue · 14:00", bid: "₺45", winning: false },
+            { slot: "Wed · 15:30", bid: "₺62", winning: true },
+            { slot: "Thu · 16:00", bid: "₺38", winning: false },
+          ].map((row) => (
+            <div
+              key={row.slot}
+              className="flex items-center justify-between rounded-xl bg-card px-3 py-2 text-sm"
+            >
+              <span className="text-muted-foreground">{row.slot}</span>
+              <div className="flex items-center gap-2">
+                <span
+                  className={`font-medium ${
+                    row.winning ? "text-primary" : "text-foreground"
+                  }`}
+                >
+                  {row.bid}
+                </span>
+                <button
+                  type="button"
+                  className="rounded-full bg-primary px-3 py-1 text-[11px] font-medium text-primary-foreground"
+                >
+                  Boost
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function StatTile({
+  label,
+  value,
+  hint,
+  bar,
+  icon: Icon,
+}: {
+  label: string;
+  value: string;
+  hint?: string;
+  bar?: number;
+  icon: React.ComponentType<{ className?: string }>;
+}) {
+  return (
+    <div className="rounded-2xl border border-border bg-muted/30 p-3">
+      <div className="flex items-center gap-1.5 text-[10px] uppercase tracking-wide text-muted-foreground">
+        <Icon className="h-3 w-3" /> {label}
+      </div>
+      <div className="mt-1 font-display text-2xl leading-none">{value}</div>
+      {hint && <div className="mt-0.5 text-[10px] text-muted-foreground">{hint}</div>}
+      {typeof bar === "number" && (
+        <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-border">
+          <div
+            className="h-full rounded-full bg-gradient-warm"
+            style={{ width: `${bar}%` }}
+          />
+        </div>
+      )}
+    </div>
+  );
+}
