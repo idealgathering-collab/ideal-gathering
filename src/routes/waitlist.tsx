@@ -33,22 +33,44 @@ const schema = z.object({
   interests: z.string().trim().max(500).optional().or(z.literal("")),
 });
 
+const INTEREST_KEYS = [
+  "wait.pick.tech",
+  "wait.pick.philosophy",
+  "wait.pick.psychology",
+  "wait.pick.travel",
+  "wait.pick.books",
+  "wait.pick.design",
+] as const;
+
 function WaitlistPage() {
   const t = useT();
   const [form, setForm] = useState({ name: "", email: "", city: "", interests: "" });
+  const [picks, setPicks] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const [done, setDone] = useState(false);
+
+  function togglePick(key: string) {
+    setPicks((prev) =>
+      prev.includes(key)
+        ? prev.filter((k) => k !== key)
+        : prev.length >= 3
+        ? prev
+        : [...prev, key],
+    );
+  }
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     try {
       const v = schema.parse(form);
       setLoading(true);
+      const pickedLabels = picks.map((k) => t(k)).join(", ");
+      const combinedInterests = [pickedLabels, v.interests].filter(Boolean).join(" · ");
       const { error } = await supabase.from("waitlist").insert({
         name: v.name,
         email: v.email,
         city: v.city || null,
-        interests: v.interests || null,
+        interests: combinedInterests || null,
       });
       if (error) {
         if (error.code === "23505") {
