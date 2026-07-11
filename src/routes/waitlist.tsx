@@ -163,6 +163,32 @@ function WaitlistPage() {
                   placeholder={t("wait.interestsPh")}
                 />
               </div>
+              <div className="rounded-2xl border border-border bg-muted/40 p-4">
+                <div className="text-sm font-medium">{t("wait.pick.title")}</div>
+                <div className="mt-1 text-xs text-muted-foreground">{t("wait.pick.hint")}</div>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {INTEREST_KEYS.map((key) => {
+                    const active = picks.includes(key);
+                    const disabled = !active && picks.length >= 3;
+                    return (
+                      <button
+                        key={key}
+                        type="button"
+                        onClick={() => togglePick(key)}
+                        disabled={disabled}
+                        aria-pressed={active}
+                        className={`rounded-full border px-3 py-1.5 text-xs font-medium transition ${
+                          active
+                            ? "border-primary bg-primary text-primary-foreground"
+                            : "border-border bg-card text-foreground hover:border-primary/50"
+                        } ${disabled ? "opacity-40 cursor-not-allowed" : ""}`}
+                      >
+                        {t(key)}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
               <Button type="submit" disabled={loading} className="mt-2 h-11 rounded-full text-base">
                 {loading ? "…" : t("wait.join")}
               </Button>
