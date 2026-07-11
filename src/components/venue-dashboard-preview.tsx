@@ -1,9 +1,10 @@
 import { TrendingUp, Gavel, Users, Sparkles } from "lucide-react";
+import { useT } from "@/i18n";
 
 export function VenueDashboardPreview() {
+  const t = useT();
   return (
     <div className="relative rounded-[2rem] border border-border bg-card p-6 shadow-plum">
-      {/* header */}
       <div className="flex items-center justify-between gap-3 border-b border-border pb-4">
         <div className="flex items-center gap-3">
           <div className="grid h-10 w-10 place-items-center rounded-xl bg-gradient-cool text-primary-foreground font-display text-lg">
@@ -11,28 +12,26 @@ export function VenueDashboardPreview() {
           </div>
           <div>
             <div className="font-display text-lg leading-tight">Petra Roasting Co.</div>
-            <div className="text-xs text-muted-foreground">Kadıköy, İstanbul</div>
+            <div className="text-xs text-muted-foreground">{t("vdp.location")}</div>
           </div>
         </div>
         <span className="inline-flex items-center gap-1 rounded-full bg-sunshine/60 px-2.5 py-1 text-[10px] font-medium uppercase tracking-wide">
-          <Sparkles className="h-3 w-3" /> Partner · Tier II
+          <Sparkles className="h-3 w-3" /> {t("vdp.tier")}
         </span>
       </div>
 
-      {/* stats */}
       <div className="mt-4 grid grid-cols-3 gap-3">
-        <StatTile label="Utilization" value="78%" bar={78} icon={TrendingUp} />
-        <StatTile label="Bids won" value="12" hint="this week" icon={Gavel} />
-        <StatTile label="Guests routed" value="43" hint="new" icon={Users} />
+        <StatTile label={t("vdp.utilization")} value="78%" bar={78} icon={TrendingUp} />
+        <StatTile label={t("vdp.bidsWon")} value="12" hint={t("vdp.thisWeek")} icon={Gavel} />
+        <StatTile label={t("vdp.routed")} value="43" hint={t("vdp.new")} icon={Users} />
       </div>
 
-      {/* bidding strip */}
       <div className="mt-5 rounded-2xl border border-border bg-muted/40 p-4">
         <div className="flex items-center justify-between">
           <div className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-            Quiet-hour bidding
+            {t("vdp.quietBid")}
           </div>
-          <div className="text-[10px] text-muted-foreground">Live auction</div>
+          <div className="text-[10px] text-muted-foreground">{t("vdp.live")}</div>
         </div>
         <div className="mt-3 space-y-2">
           {[
@@ -47,9 +46,7 @@ export function VenueDashboardPreview() {
               <span className="text-muted-foreground">{row.slot}</span>
               <div className="flex items-center gap-2">
                 <span
-                  className={`font-medium ${
-                    row.winning ? "text-primary" : "text-foreground"
-                  }`}
+                  className={`font-medium ${row.winning ? "text-primary" : "text-foreground"}`}
                 >
                   {row.bid}
                 </span>
@@ -57,7 +54,7 @@ export function VenueDashboardPreview() {
                   type="button"
                   className="rounded-full bg-primary px-3 py-1 text-[11px] font-medium text-primary-foreground"
                 >
-                  Boost
+                  {t("vdp.boost")}
                 </button>
               </div>
             </div>
