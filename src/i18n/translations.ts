@@ -590,6 +590,107 @@ export const translations: Record<Lang, Dict> = {
     "menu.added": "Öğe eklendi",
     "menu.removed": "Öğe kaldırıldı",
     "menu.viewMenu": "Menüyü gör",
+
+    // How it works
+    "how.badge": "Nasıl çalışır",
+    "how.title1": "Bir sonraki masana",
+    "how.title2": "üç adım.",
+    "how.sub": "Sonu gelmeyen kaydırmalar yok. Garip grup sohbetleri yok. Sadece seni bekleyen bir koltuk.",
+    "how.s1.title": "Bize kendinden bahset",
+    "how.s1.body": "Kısa bir kişilik ve ilgi alanı özeti — uzun formlar yok.",
+    "how.s2.title": "Yerini kap",
+    "how.s2.body": "Yakınındaki en iyi partner kafede özenle seçilmiş bir konu masası seç.",
+    "how.s3.title": "Sadece gel",
+    "how.s3.body": "Sana özel küçük grubunla tanış. Boş konuşmayı atla. Bağ kur.",
+
+    // Sample gathering card
+    "sample.preview": "Önizleme",
+    "sample.reserve": "Koltuk ayır",
+    "sample.taken": "{seats} koltuğun {filled} tanesi dolu",
+    "sample.open": "{n} boş",
+
+    // Hero poster
+    "poster.tonight": "Bu akşam",
+    "poster.newTable": "Yeni masa · Kadıköy",
+    "poster.seatsLeft": "2 koltuk kaldı",
+    "poster.vibe": "Uyum",
+    "poster.taken": "5 koltuğun 3 tanesi dolu",
+    "poster.open": "2 boş",
+
+    // B2B
+    "b2b.badge": "Kafeler ve restoranlar için",
+    "b2b.title1": "Sessiz saatlerini dolduran",
+    "b2b.title2": "bir pazar yeri.",
+    "b2b.body": "Ideal Gathering bir indirim uygulaması değil. Partner mekânlar analiz, teklif araçları ve gerçekten oturmaya, sipariş vermeye ve sohbet etmeye gelen hedefli bir misafir akışı kazanır.",
+    "b2b.b1": "Haftanın her saatinde masa doluluk analizi",
+    "b2b.b2": "Sessiz saatleri doldurmak için promosyon yerleşimine teklif ver",
+    "b2b.b3": "Yüksek niyetli, hedefli misafir trafiği — kupon avcısı yok",
+    "b2b.b4": "Tam kontrol: her buluşmayı onayla, kendin de ev sahipliği yap",
+    "b2b.register": "Mekânını kaydet",
+    "b2b.partners": "Ortaklıkla konuş",
+    "b2b.feat1": "Masa doluluk analizi",
+    "b2b.feat2": "Promosyon yerleşimi teklifi",
+    "b2b.feat3": "Hedefli misafir trafiği",
+
+    // Venue dashboard preview
+    "vdp.location": "Kadıköy, İstanbul",
+    "vdp.tier": "Partner · Tier II",
+    "vdp.utilization": "Doluluk",
+    "vdp.bidsWon": "Kazanılan teklif",
+    "vdp.thisWeek": "bu hafta",
+    "vdp.routed": "Yönlendirilen misafir",
+    "vdp.new": "yeni",
+    "vdp.quietBid": "Sessiz saat teklifi",
+    "vdp.live": "Canlı açık artırma",
+    "vdp.boost": "Öne çıkar",
+
+    // Manifesto
+    "manifesto.badge": "Topluluk manifestosu",
+    "manifesto.title": "Neden masayı kuruyoruz.",
+    "manifesto.body": "Sonu gelmeyen kaydırmaya karşı bir alternatif inşa ediyoruz. En iyi sohbetlerin çevrimdışı, gerçek bir masada, zaten sevdiğimiz kafelerde geçtiğine inanan İstanbul'daki derin düşünürler, üreticiler ve teknoloji kurucularından oluşan bir topluluk.",
+    "manifesto.signature": "— Ideal Gathering topluluğu",
+
+    // Neighborhoods
+    "hoods.badge": "Özenle seçilmiş yaşam alanları",
+    "hoods.title1": "İstanbul'da,",
+    "hoods.title2": "her seferinde bir mahallede büyüyoruz.",
+    "hoods.body": "Zaten sevdiğimiz, elle seçilmiş partner kafeler — her buluşmanın vazgeçilmez ev sahipleri; trafik satın alan işletmeler değil.",
+    "hoods.soon": "Yakında",
+
+    // CTA band
+    "cta.title1": "Bir sonraki masada",
+    "cta.title2": "yerini ayır.",
+    "cta.body": "Misafirler davetle katılır. Bilgilerini bırak; şehrinde masalar açıldıkça kapıyı sana açalım.",
+    "cta.join": "Bekleme listesine katıl",
+    "cta.register": "Kafeni kaydet",
+
+    // Footer
+    "footer.mission": "Masayı kur. Konuyu belirle. Ideal Gathering, insanları oturmaya değer kafelerdeki küçük, özenle seçilmiş masalara getirir.",
+    "footer.col.explore": "Keşfet",
+    "footer.col.business": "İşletmeler için",
+    "footer.col.legal": "Yasal ve sosyal",
+    "footer.explore.how": "Nasıl çalışır",
+    "footer.explore.tables": "Yaklaşan masalar",
+    "footer.explore.partners": "Partner kafeler",
+    "footer.explore.vibe": "Topluluk ruhu",
+    "footer.biz.sub": "Mekân abonelikleri",
+    "footer.biz.bid": "Teklif sistemi",
+    "footer.biz.success": "Başarı hikâyeleri",
+    "footer.biz.support": "Kafe desteği",
+    "footer.legal.tos": "Kullanım Şartları",
+    "footer.legal.privacy": "Gizlilik Politikası",
+    "footer.legal.contact": "Bize ulaş",
+    "footer.bottom": "Kaydırmaktansa konuşmayı tercih edenler için özenle yapıldı.",
+
+    // Waitlist interests
+    "wait.pick.title": "Konuşmak istediğin 2–3 konu seç",
+    "wait.pick.hint": "Bu, seni önce hangi masalara davet edeceğimizi şekillendirir.",
+    "wait.pick.tech": "Teknoloji ve Girişim",
+    "wait.pick.philosophy": "Felsefe ve Sanat",
+    "wait.pick.psychology": "Psikoloji ve Alışkanlıklar",
+    "wait.pick.travel": "Seyahat ve Kültür",
+    "wait.pick.books": "Kitap ve Fikirler",
+    "wait.pick.design": "Tasarım ve Zanaat",
   },
 };
 
