@@ -1,12 +1,13 @@
 import { Link } from "@tanstack/react-router";
 import { Instagram, Linkedin } from "lucide-react";
 import logoAsset from "@/assets/ideal-gathering-logo.png.asset.json";
+import { useT } from "@/i18n";
 
 export function SiteFooter() {
+  const t = useT();
   return (
     <footer className="bg-plum text-primary-foreground">
       <div className="mx-auto grid max-w-6xl gap-10 px-4 py-14 sm:grid-cols-2 lg:grid-cols-4">
-        {/* Brand */}
         <div>
           <Link to="/" className="flex items-center gap-2">
             <img
@@ -19,70 +20,44 @@ export function SiteFooter() {
             </span>
           </Link>
           <p className="mt-4 max-w-xs text-sm text-primary-foreground/80">
-            Set the table. Set the subject. Ideal Gathering brings people to small,
-            curated tables at cafes worth sitting in.
+            {t("footer.mission")}
           </p>
         </div>
 
         <FooterCol
-          title="Explore"
+          title={t("footer.col.explore")}
           links={[
-            { label: "How it works", href: "/#how" },
-            { label: "Upcoming tables", href: "/#tables" },
-            { label: "Partner cafes", href: "/#partners" },
-            { label: "Community vibe", href: "/#vibe" },
+            { label: t("footer.explore.how"), href: "/#how" },
+            { label: t("footer.explore.tables"), href: "/#tables" },
+            { label: t("footer.explore.partners"), href: "/#partners" },
+            { label: t("footer.explore.vibe"), href: "/#vibe" },
           ]}
         />
         <FooterCol
-          title="For businesses"
+          title={t("footer.col.business")}
           links={[
-            { label: "Venue subscriptions", href: "/register-business", route: true },
-            { label: "Bidding framework", href: "/#partners" },
-            { label: "Success stories", href: "/#vibe" },
-            { label: "Cafe support", href: "mailto:hello@idealgathering.co" },
+            { label: t("footer.biz.sub"), href: "/register-business", route: true },
+            { label: t("footer.biz.bid"), href: "/#partners" },
+            { label: t("footer.biz.success"), href: "/#vibe" },
+            { label: t("footer.biz.support"), href: "mailto:hello@idealgathering.co" },
           ]}
         />
         <div>
           <div className="text-sm font-medium uppercase tracking-wide text-primary-foreground/60">
-            Legal & social
+            {t("footer.col.legal")}
           </div>
           <ul className="mt-4 space-y-2 text-sm">
-            <li>
-              <a href="/#terms" className="hover:text-sunshine">
-                Terms of Service
-              </a>
-            </li>
-            <li>
-              <a href="/#privacy" className="hover:text-sunshine">
-                Privacy Policy
-              </a>
-            </li>
-            <li>
-              <a
-                href="mailto:hello@idealgathering.co"
-                className="hover:text-sunshine"
-              >
-                Contact us
-              </a>
-            </li>
+            <li><a href="/#terms" className="hover:text-sunshine">{t("footer.legal.tos")}</a></li>
+            <li><a href="/#privacy" className="hover:text-sunshine">{t("footer.legal.privacy")}</a></li>
+            <li><a href="mailto:hello@idealgathering.co" className="hover:text-sunshine">{t("footer.legal.contact")}</a></li>
           </ul>
           <div className="mt-5 flex items-center gap-2">
-            <a
-              href="https://instagram.com"
-              target="_blank"
-              rel="noreferrer"
-              aria-label="Instagram"
-              className="grid h-9 w-9 place-items-center rounded-full border border-primary-foreground/25 text-primary-foreground/80 hover:bg-primary-foreground/10 hover:text-sunshine"
-            >
+            <a href="https://instagram.com" target="_blank" rel="noreferrer" aria-label="Instagram"
+              className="grid h-9 w-9 place-items-center rounded-full border border-primary-foreground/25 text-primary-foreground/80 hover:bg-primary-foreground/10 hover:text-sunshine">
               <Instagram className="h-4 w-4" />
             </a>
-            <a
-              href="https://linkedin.com"
-              target="_blank"
-              rel="noreferrer"
-              aria-label="LinkedIn"
-              className="grid h-9 w-9 place-items-center rounded-full border border-primary-foreground/25 text-primary-foreground/80 hover:bg-primary-foreground/10 hover:text-sunshine"
-            >
+            <a href="https://linkedin.com" target="_blank" rel="noreferrer" aria-label="LinkedIn"
+              className="grid h-9 w-9 place-items-center rounded-full border border-primary-foreground/25 text-primary-foreground/80 hover:bg-primary-foreground/10 hover:text-sunshine">
               <Linkedin className="h-4 w-4" />
             </a>
           </div>
@@ -92,9 +67,7 @@ export function SiteFooter() {
       <div className="border-t border-primary-foreground/15">
         <div className="mx-auto flex max-w-6xl flex-col items-start justify-between gap-2 px-4 py-6 text-xs text-primary-foreground/70 sm:flex-row sm:items-center">
           <div>© {new Date().getFullYear()} Ideal Gathering.</div>
-          <div className="italic">
-            Made with care for people who'd rather talk than scroll.
-          </div>
+          <div className="italic">{t("footer.bottom")}</div>
         </div>
       </div>
     </footer>
@@ -117,13 +90,9 @@ function FooterCol({
         {links.map((l) => (
           <li key={l.label}>
             {l.route ? (
-              <Link to={l.href} className="hover:text-sunshine">
-                {l.label}
-              </Link>
+              <Link to={l.href} className="hover:text-sunshine">{l.label}</Link>
             ) : (
-              <a href={l.href} className="hover:text-sunshine">
-                {l.label}
-              </a>
+              <a href={l.href} className="hover:text-sunshine">{l.label}</a>
             )}
           </li>
         ))}

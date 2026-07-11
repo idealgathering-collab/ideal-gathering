@@ -19,6 +19,8 @@ import {
 } from "@/components/sample-gathering-card";
 import { HeroPoster } from "@/components/hero-poster";
 import { VenueDashboardPreview } from "@/components/venue-dashboard-preview";
+import { ManifestoSection } from "@/components/manifesto-section";
+import { NeighborhoodsSection } from "@/components/neighborhoods-section";
 import { Button } from "@/components/ui/button";
 import { fetchApprovedGatherings } from "@/lib/gatherings";
 import { useT } from "@/i18n";
@@ -36,11 +38,25 @@ function Home() {
 
   const hasLive = !!gatherings && gatherings.length > 0;
 
+  const steps = [
+    { n: "01", icon: Sparkles, title: t("how.s1.title"), body: t("how.s1.body") },
+    { n: "02", icon: Armchair, title: t("how.s2.title"), body: t("how.s2.body") },
+    { n: "03", icon: Coffee, title: t("how.s3.title"), body: t("how.s3.body") },
+  ];
+
+  const bullets = [t("b2b.b1"), t("b2b.b2"), t("b2b.b3"), t("b2b.b4")];
+
+  const feats = [
+    { icon: BarChart3, label: t("b2b.feat1") },
+    { icon: Gavel, label: t("b2b.feat2") },
+    { icon: Users, label: t("b2b.feat3") },
+  ];
+
   return (
     <div className="min-h-screen bg-background">
       <SiteHeader />
 
-      {/* ============ HERO ============ */}
+      {/* HERO */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-hero opacity-95" />
         <div
@@ -65,19 +81,10 @@ function Home() {
               {t("home.hero.tagline")}
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <Button
-                asChild
-                size="lg"
-                className="rounded-full bg-sunshine text-sunshine-foreground hover:bg-sunshine/90 shadow-tangerine"
-              >
+              <Button asChild size="lg" className="rounded-full bg-sunshine text-sunshine-foreground hover:bg-sunshine/90 shadow-tangerine">
                 <Link to="/waitlist">{t("home.hero.joinWaitlist")}</Link>
               </Button>
-              <Button
-                asChild
-                size="lg"
-                variant="outline"
-                className="rounded-full border-primary-foreground/40 bg-transparent text-primary-foreground hover:bg-primary-foreground/10"
-              >
+              <Button asChild size="lg" variant="outline" className="rounded-full border-primary-foreground/40 bg-transparent text-primary-foreground hover:bg-primary-foreground/10">
                 <Link to="/register-business">
                   {t("home.hero.registerCafe")} <ArrowRight className="ml-1 h-4 w-4" />
                 </Link>
@@ -105,18 +112,16 @@ function Home() {
         </div>
       </section>
 
-      {/* ============ HOW IT WORKS ============ */}
+      {/* HOW IT WORKS */}
       <section id="how" className="mx-auto max-w-6xl px-4 py-20 sm:py-28">
         <div className="mx-auto max-w-2xl text-center">
           <div className="inline-flex items-center gap-2 rounded-full bg-muted px-3 py-1 text-xs font-medium uppercase tracking-wide text-muted-foreground">
-            How it works
+            {t("how.badge")}
           </div>
           <h2 className="mt-4 font-display text-4xl sm:text-5xl">
-            Three steps to your <span className="italic text-primary">next table.</span>
+            {t("how.title1")} <span className="italic text-primary">{t("how.title2")}</span>
           </h2>
-          <p className="mt-3 text-muted-foreground">
-            No endless swiping. No awkward group chats. Just a seat waiting for you.
-          </p>
+          <p className="mt-3 text-muted-foreground">{t("how.sub")}</p>
         </div>
 
         <div className="relative mt-14 grid gap-6 sm:grid-cols-3">
@@ -124,37 +129,13 @@ function Home() {
             aria-hidden
             className="pointer-events-none absolute left-[16.66%] right-[16.66%] top-8 hidden h-px border-t-2 border-dashed border-border sm:block"
           />
-          {[
-            {
-              n: "01",
-              icon: Sparkles,
-              title: "Tell us your vibe",
-              body: "A quick, seamless personality and interest snapshot — no long forms.",
-            },
-            {
-              n: "02",
-              icon: Armchair,
-              title: "Grab a seat",
-              body: "Pick a curated topic table at a top local partner cafe near you.",
-            },
-            {
-              n: "03",
-              icon: Coffee,
-              title: "Just show up",
-              body: "Meet your hand-picked small group. Skip the small talk. Connect.",
-            },
-          ].map((s) => (
-            <div
-              key={s.n}
-              className="relative rounded-3xl border border-border bg-card p-6 shadow-soft"
-            >
+          {steps.map((s) => (
+            <div key={s.n} className="relative rounded-3xl border border-border bg-card p-6 shadow-soft">
               <div className="relative z-10 mx-auto grid h-16 w-16 -translate-y-10 place-items-center rounded-2xl bg-gradient-cool text-primary-foreground shadow-plum">
                 <s.icon className="h-6 w-6" />
               </div>
               <div className="-mt-6 text-center">
-                <div className="font-display text-sm tracking-widest text-muted-foreground">
-                  {s.n}
-                </div>
+                <div className="font-display text-sm tracking-widest text-muted-foreground">{s.n}</div>
                 <h3 className="mt-1 font-display text-2xl">{s.title}</h3>
                 <p className="mt-2 text-sm text-muted-foreground">{s.body}</p>
               </div>
@@ -163,7 +144,7 @@ function Home() {
         </div>
       </section>
 
-      {/* ============ UPCOMING GATHERINGS ============ */}
+      {/* UPCOMING */}
       <section id="tables" className="border-y border-border bg-muted/30">
         <div className="mx-auto max-w-6xl px-4 py-20 sm:py-28">
           <div className="flex flex-wrap items-end justify-between gap-4">
@@ -173,7 +154,7 @@ function Home() {
                   <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75" />
                   <span className="relative inline-flex h-2 w-2 rounded-full bg-primary" />
                 </span>
-                Live feed
+                {t("sample.preview")}
               </div>
               <h2 className="mt-3 font-display text-4xl sm:text-5xl">
                 {t("home.upcoming.title1")}{" "}
@@ -202,30 +183,21 @@ function Home() {
         </div>
       </section>
 
-      {/* ============ B2B PARTNER SECTION ============ */}
-      <section id="partners" className="mx-auto max-w-6xl px-4 py-20 sm:py-28">
+      {/* B2B */}
+      <section className="mx-auto max-w-6xl px-4 py-20 sm:py-28">
         <div className="grid gap-12 lg:grid-cols-[1fr_1.05fr] lg:items-center">
           <div>
             <div className="inline-flex items-center gap-2 rounded-full bg-tangerine/20 px-3 py-1 text-xs font-medium uppercase tracking-wide text-tangerine-foreground">
-              For cafes & restaurants
+              {t("b2b.badge")}
             </div>
             <h2 className="mt-4 font-display text-4xl sm:text-5xl">
-              A marketplace that fills your{" "}
-              <span className="italic text-tangerine">quiet hours.</span>
+              {t("b2b.title1")}{" "}
+              <span className="italic text-tangerine">{t("b2b.title2")}</span>
             </h2>
-            <p className="mt-4 text-muted-foreground">
-              Ideal Gathering isn't a discount app. Partner venues get analytics,
-              bidding tools, and a targeted stream of guests who came to actually
-              stay, order, and talk.
-            </p>
+            <p className="mt-4 text-muted-foreground">{t("b2b.body")}</p>
 
             <ul className="mt-6 space-y-3 text-sm">
-              {[
-                "Table utilization analytics across every hour of the week",
-                "Bid on promotional placement to fill your quiet hours",
-                "Targeted, high-intent guest traffic — no coupon hunters",
-                "Full control: approve every gathering, host your own",
-              ].map((line) => (
+              {bullets.map((line) => (
                 <li key={line} className="flex items-start gap-2">
                   <span className="mt-0.5 grid h-5 w-5 place-items-center rounded-full bg-primary text-primary-foreground">
                     <Check className="h-3 w-3" />
@@ -238,16 +210,11 @@ function Home() {
             <div className="mt-8 flex flex-wrap gap-3">
               <Button asChild size="lg" className="rounded-full">
                 <Link to="/register-business">
-                  Register your venue <ArrowRight className="ml-1 h-4 w-4" />
+                  {t("b2b.register")} <ArrowRight className="ml-1 h-4 w-4" />
                 </Link>
               </Button>
-              <Button
-                asChild
-                size="lg"
-                variant="outline"
-                className="rounded-full"
-              >
-                <a href="mailto:partners@idealgathering.co">Talk to partnerships</a>
+              <Button asChild size="lg" variant="outline" className="rounded-full">
+                <a href="mailto:partners@idealgathering.co">{t("b2b.partners")}</a>
               </Button>
             </div>
           </div>
@@ -256,15 +223,8 @@ function Home() {
         </div>
 
         <div className="mt-14 grid gap-3 sm:grid-cols-3">
-          {[
-            { icon: BarChart3, label: "Table utilization analytics" },
-            { icon: Gavel, label: "Promotional placement bidding" },
-            { icon: Users, label: "Targeted guest traffic" },
-          ].map((f) => (
-            <div
-              key={f.label}
-              className="flex items-center gap-3 rounded-2xl border border-border bg-card px-4 py-3 text-sm"
-            >
+          {feats.map((f) => (
+            <div key={f.label} className="flex items-center gap-3 rounded-2xl border border-border bg-card px-4 py-3 text-sm">
               <span className="grid h-9 w-9 place-items-center rounded-xl bg-gradient-warm text-tangerine-foreground">
                 <f.icon className="h-4 w-4" />
               </span>
@@ -274,76 +234,28 @@ function Home() {
         </div>
       </section>
 
-      {/* ============ TRUST / VIBE ============ */}
-      <section id="vibe" className="border-t border-border bg-muted/30">
-        <div className="mx-auto max-w-6xl px-4 py-20">
-          <div className="grid gap-6 md:grid-cols-2">
-            {[
-              {
-                quote:
-                  "I walked in a stranger and left with three people I actually want to see again. That never happens.",
-                who: "Ayşe, guest · Kadıköy",
-              },
-              {
-                quote:
-                  "Our Tuesday afternoons used to be dead. Now they're our favorite tables of the week.",
-                who: "Emre, owner · Petra Roasting Co.",
-              },
-            ].map((q) => (
-              <figure
-                key={q.who}
-                className="rounded-3xl border border-border bg-card p-8 shadow-soft"
-              >
-                <blockquote className="font-display text-2xl leading-snug">
-                  "{q.quote}"
-                </blockquote>
-                <figcaption className="mt-4 text-sm text-muted-foreground">
-                  — {q.who}
-                </figcaption>
-              </figure>
-            ))}
-          </div>
+      {/* MANIFESTO (replaces testimonials) */}
+      <ManifestoSection />
 
-          <div className="mt-10 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 opacity-70">
-            {["MOC", "Petra", "Norm", "Kronotrop", "Federal"].map((n) => (
-              <span
-                key={n}
-                className="font-display text-xl tracking-wide text-muted-foreground"
-              >
-                {n}
-              </span>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* NEIGHBORHOODS + PARTNER CAFES */}
+      <NeighborhoodsSection />
 
-      {/* ============ JOIN CTA BAND ============ */}
+      {/* JOIN CTA */}
       <section id="join" className="bg-gradient-hero">
         <div className="mx-auto grid max-w-6xl gap-6 px-4 py-20 text-primary-foreground sm:grid-cols-[1.2fr_1fr] sm:items-center">
           <div>
             <h2 className="font-display text-4xl sm:text-5xl">
-              Save your seat at the <span className="italic text-sunshine">next table.</span>
+              {t("cta.title1")}{" "}
+              <span className="italic text-sunshine">{t("cta.title2")}</span>
             </h2>
-            <p className="mt-3 max-w-xl text-primary-foreground/85">
-              Guests join by invitation. Drop your details and we'll open the door as
-              tables free up in your city.
-            </p>
+            <p className="mt-3 max-w-xl text-primary-foreground/85">{t("cta.body")}</p>
           </div>
           <div className="flex flex-wrap gap-3 sm:justify-end">
-            <Button
-              asChild
-              size="lg"
-              className="rounded-full bg-sunshine text-sunshine-foreground hover:bg-sunshine/90 shadow-tangerine"
-            >
-              <Link to="/waitlist">Join the waitlist</Link>
+            <Button asChild size="lg" className="rounded-full bg-sunshine text-sunshine-foreground hover:bg-sunshine/90 shadow-tangerine">
+              <Link to="/waitlist">{t("cta.join")}</Link>
             </Button>
-            <Button
-              asChild
-              size="lg"
-              variant="outline"
-              className="rounded-full border-primary-foreground/40 bg-transparent text-primary-foreground hover:bg-primary-foreground/10"
-            >
-              <Link to="/register-business">Register your cafe</Link>
+            <Button asChild size="lg" variant="outline" className="rounded-full border-primary-foreground/40 bg-transparent text-primary-foreground hover:bg-primary-foreground/10">
+              <Link to="/register-business">{t("cta.register")}</Link>
             </Button>
           </div>
         </div>

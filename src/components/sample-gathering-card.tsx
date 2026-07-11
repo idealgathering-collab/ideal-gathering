@@ -1,4 +1,5 @@
 import { MapPin, Clock } from "lucide-react";
+import { useT } from "@/i18n";
 
 export type SampleGathering = {
   topic: string;
@@ -78,11 +79,12 @@ export const SAMPLE_GATHERINGS: SampleGathering[] = [
 ];
 
 export function SampleGatheringCard({ g }: { g: SampleGathering }) {
+  const t = useT();
   const openCount = g.seats - g.filled.length;
   return (
     <article className="group relative flex flex-col overflow-hidden rounded-3xl border border-border bg-card p-5 shadow-soft transition hover:-translate-y-1 hover:shadow-plum">
       <div className="absolute right-4 top-4 rounded-full bg-muted px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
-        Preview
+        {t("sample.preview")}
       </div>
 
       <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
@@ -92,7 +94,6 @@ export function SampleGatheringCard({ g }: { g: SampleGathering }) {
       </div>
       <h3 className="mt-2 font-display text-2xl leading-tight">{g.topic}</h3>
 
-      {/* seat diagram */}
       <div className="mt-5 rounded-2xl bg-muted/50 p-4">
         <div className="flex items-center justify-center gap-2">
           {g.filled.map((s) => (
@@ -114,8 +115,10 @@ export function SampleGatheringCard({ g }: { g: SampleGathering }) {
           ))}
         </div>
         <div className="mt-3 text-center text-[11px] text-muted-foreground">
-          {g.filled.length} of {g.seats} seats taken ·{" "}
-          <span className="font-medium text-primary">{openCount} open</span>
+          {t("sample.taken", { filled: g.filled.length, seats: g.seats })} ·{" "}
+          <span className="font-medium text-primary">
+            {t("sample.open", { n: openCount })}
+          </span>
         </div>
       </div>
 
@@ -123,7 +126,7 @@ export function SampleGatheringCard({ g }: { g: SampleGathering }) {
         href="#join"
         className="mt-5 inline-flex items-center justify-center rounded-full bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground shadow-plum transition hover:opacity-90"
       >
-        Reserve seat
+        {t("sample.reserve")}
       </a>
     </article>
   );

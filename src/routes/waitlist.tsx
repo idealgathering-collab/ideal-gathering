@@ -33,22 +33,44 @@ const schema = z.object({
   interests: z.string().trim().max(500).optional().or(z.literal("")),
 });
 
+const INTEREST_KEYS = [
+  "wait.pick.tech",
+  "wait.pick.philosophy",
+  "wait.pick.psychology",
+  "wait.pick.travel",
+  "wait.pick.books",
+  "wait.pick.design",
+] as const;
+
 function WaitlistPage() {
   const t = useT();
   const [form, setForm] = useState({ name: "", email: "", city: "", interests: "" });
+  const [picks, setPicks] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const [done, setDone] = useState(false);
+
+  function togglePick(key: string) {
+    setPicks((prev) =>
+      prev.includes(key)
+        ? prev.filter((k) => k !== key)
+        : prev.length >= 3
+        ? prev
+        : [...prev, key],
+    );
+  }
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     try {
       const v = schema.parse(form);
       setLoading(true);
+      const pickedLabels = picks.map((k) => t(k)).join(", ");
+      const combinedInterests = [pickedLabels, v.interests].filter(Boolean).join(" · ");
       const { error } = await supabase.from("waitlist").insert({
         name: v.name,
         email: v.email,
         city: v.city || null,
-        interests: v.interests || null,
+        interests: combinedInterests || null,
       });
       if (error) {
         if (error.code === "23505") {
@@ -140,6 +162,32 @@ function WaitlistPage() {
                   onChange={(e) => setForm({ ...form, interests: e.target.value })}
                   placeholder={t("wait.interestsPh")}
                 />
+              </div>
+              <div className="rounded-2xl border border-border bg-muted/40 p-4">
+                <div className="text-sm font-medium">{t("wait.pick.title")}</div>
+                <div className="mt-1 text-xs text-muted-foreground">{t("wait.pick.hint")}</div>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {INTEREST_KEYS.map((key) => {
+                    const active = picks.includes(key);
+                    const disabled = !active && picks.length >= 3;
+                    return (
+                      <button
+                        key={key}
+                        type="button"
+                        onClick={() => togglePick(key)}
+                        disabled={disabled}
+                        aria-pressed={active}
+                        className={`rounded-full border px-3 py-1.5 text-xs font-medium transition ${
+                          active
+                            ? "border-primary bg-primary text-primary-foreground"
+                            : "border-border bg-card text-foreground hover:border-primary/50"
+                        } ${disabled ? "opacity-40 cursor-not-allowed" : ""}`}
+                      >
+                        {t(key)}
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
               <Button type="submit" disabled={loading} className="mt-2 h-11 rounded-full text-base">
                 {loading ? "…" : t("wait.join")}
