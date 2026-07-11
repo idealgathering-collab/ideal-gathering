@@ -247,6 +247,107 @@ export const translations: Record<Lang, Dict> = {
     "menu.added": "Item added",
     "menu.removed": "Item removed",
     "menu.viewMenu": "View menu",
+
+    // How it works
+    "how.badge": "How it works",
+    "how.title1": "Three steps to your",
+    "how.title2": "next table.",
+    "how.sub": "No endless swiping. No awkward group chats. Just a seat waiting for you.",
+    "how.s1.title": "Tell us your vibe",
+    "how.s1.body": "A quick personality and interest snapshot — no long forms.",
+    "how.s2.title": "Grab a seat",
+    "how.s2.body": "Pick a curated topic table at a top local partner cafe near you.",
+    "how.s3.title": "Just show up",
+    "how.s3.body": "Meet your hand-picked small group. Skip the small talk. Connect.",
+
+    // Sample gathering card
+    "sample.preview": "Preview",
+    "sample.reserve": "Reserve seat",
+    "sample.taken": "{filled} of {seats} seats taken",
+    "sample.open": "{n} open",
+
+    // Hero poster
+    "poster.tonight": "Tonight",
+    "poster.newTable": "New table · Kadıköy",
+    "poster.seatsLeft": "2 seats left",
+    "poster.vibe": "Vibe",
+    "poster.taken": "3 of 5 seats taken",
+    "poster.open": "2 open",
+
+    // B2B
+    "b2b.badge": "For cafes & restaurants",
+    "b2b.title1": "A marketplace that fills your",
+    "b2b.title2": "quiet hours.",
+    "b2b.body": "Ideal Gathering isn't a discount app. Partner venues get analytics, bidding tools, and a targeted stream of guests who came to actually stay, order, and talk.",
+    "b2b.b1": "Table utilization analytics across every hour of the week",
+    "b2b.b2": "Bid on promotional placement to fill your quiet hours",
+    "b2b.b3": "Targeted, high-intent guest traffic — no coupon hunters",
+    "b2b.b4": "Full control: approve every gathering, host your own",
+    "b2b.register": "Register your venue",
+    "b2b.partners": "Talk to partnerships",
+    "b2b.feat1": "Table utilization analytics",
+    "b2b.feat2": "Promotional placement bidding",
+    "b2b.feat3": "Targeted guest traffic",
+
+    // Venue dashboard preview
+    "vdp.location": "Kadıköy, İstanbul",
+    "vdp.tier": "Partner · Tier II",
+    "vdp.utilization": "Utilization",
+    "vdp.bidsWon": "Bids won",
+    "vdp.thisWeek": "this week",
+    "vdp.routed": "Guests routed",
+    "vdp.new": "new",
+    "vdp.quietBid": "Quiet-hour bidding",
+    "vdp.live": "Live auction",
+    "vdp.boost": "Boost",
+
+    // Manifesto
+    "manifesto.badge": "Community manifesto",
+    "manifesto.title": "Why we're setting the table.",
+    "manifesto.body": "We are building a counter-culture to the endless scroll. A community of deep thinkers, creators, and tech builders in Istanbul who believe the best conversations happen offline, over a real table, at the cafes we already love.",
+    "manifesto.signature": "— The Ideal Gathering community",
+
+    // Neighborhoods
+    "hoods.badge": "Curated living rooms",
+    "hoods.title1": "Growing across İstanbul,",
+    "hoods.title2": "one neighborhood at a time.",
+    "hoods.body": "Hand-picked partner cafes we already love — the essential co-hosts of every gathering, not businesses buying traffic.",
+    "hoods.soon": "Soon",
+
+    // CTA band
+    "cta.title1": "Save your seat at the",
+    "cta.title2": "next table.",
+    "cta.body": "Guests join by invitation. Drop your details and we'll open the door as tables free up in your city.",
+    "cta.join": "Join the waitlist",
+    "cta.register": "Register your cafe",
+
+    // Footer
+    "footer.mission": "Set the table. Set the subject. Ideal Gathering brings people to small, curated tables at cafes worth sitting in.",
+    "footer.col.explore": "Explore",
+    "footer.col.business": "For businesses",
+    "footer.col.legal": "Legal & social",
+    "footer.explore.how": "How it works",
+    "footer.explore.tables": "Upcoming tables",
+    "footer.explore.partners": "Partner cafes",
+    "footer.explore.vibe": "Community vibe",
+    "footer.biz.sub": "Venue subscriptions",
+    "footer.biz.bid": "Bidding framework",
+    "footer.biz.success": "Success stories",
+    "footer.biz.support": "Cafe support",
+    "footer.legal.tos": "Terms of Service",
+    "footer.legal.privacy": "Privacy Policy",
+    "footer.legal.contact": "Contact us",
+    "footer.bottom": "Made with care for people who'd rather talk than scroll.",
+
+    // Waitlist interests
+    "wait.pick.title": "Pick 2–3 subjects you'd love to talk about",
+    "wait.pick.hint": "This shapes the tables we invite you to first.",
+    "wait.pick.tech": "Tech & Startups",
+    "wait.pick.philosophy": "Philosophy & Art",
+    "wait.pick.psychology": "Psychology & Habits",
+    "wait.pick.travel": "Travel & Culture",
+    "wait.pick.books": "Books & Ideas",
+    "wait.pick.design": "Design & Craft",
   },
 
 
