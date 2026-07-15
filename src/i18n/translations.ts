@@ -515,6 +515,25 @@ export const translations: Record<Lang, Dict> = {
     "create.proposed": "Buluşma önerildi — mekân onayı bekleniyor",
     "create.failed": "Başarısız",
     "create.tableSeats": "koltuk",
+    "create.venueName": "Mekân adı",
+    "create.venueNamePh": "örn. Kronotrop Coffee Bar",
+    "create.neighborhood": "Semt",
+    "create.neighborhoodPh": "örn. Kadıköy",
+
+    // Home extras
+    "home.hero.signup": "Kayıt ol",
+    "home.hero.explore": "Buluşmaları keşfet",
+
+    // Explore
+    "explore.badge": "Canlı masalar",
+    "explore.title": "Buluşmaları keşfet",
+    "explore.subtitle": "Katılmaya değer bir konu bul. Koltuğunu kapmadan yakala.",
+    "explore.empty.title": "Henüz buluşma yok",
+    "explore.empty.body": "İlk buluşmayı sen öner — bir kafe seç, bir konu belirle.",
+    "explore.empty.cta": "Buluşma öner",
+
+    // Card fallback
+    "card.gathering": "Buluşma",
 
     // Register business
     "reg.eyebrow": "Kafeler ve restoranlar için",
