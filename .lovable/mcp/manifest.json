@@ -1,0 +1,172 @@
+{
+  "version": 1,
+  "sdk_version": "0.22.0",
+  "path": "/mcp",
+  "auth": {
+    "type": "oauth",
+    "issuer": "https://msmmvtmgfmwwtipairsu.supabase.co/auth/v1",
+    "accepted_audiences": [
+      "authenticated"
+    ]
+  },
+  "mcp": {
+    "server": {
+      "name": "ideal-gathering-mcp",
+      "version": "0.1.0",
+      "title": "Ideal Gathering"
+    },
+    "tools": [
+      {
+        "name": "list_upcoming_gatherings",
+        "title": "List upcoming gatherings",
+        "description": "List approved upcoming gatherings at partner cafes/restaurants, ordered by start time. Optionally filter by city or a text search over the subject.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "city": {
+              "description": "Filter by venue city (e.g. Istanbul).",
+              "type": "string"
+            },
+            "search": {
+              "description": "Case-insensitive substring match on the gathering subject.",
+              "type": "string"
+            },
+            "limit": {
+              "description": "Max rows to return (default 20).",
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 50
+            }
+          }
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "get_gathering",
+        "title": "Get gathering details",
+        "description": "Fetch full details for one gathering by ID, including venue, table, and attendee count.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "gathering_id": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "description": "The gathering UUID."
+            }
+          },
+          "required": [
+            "gathering_id"
+          ]
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "join_gathering",
+        "title": "Join a gathering",
+        "description": "Reserve a seat at a gathering as the signed-in user. Requires a verified email. Fails if the gathering is full or already joined.",
+        "annotations": {
+          "readOnlyHint": false,
+          "destructiveHint": false,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "gathering_id": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "description": "The gathering UUID to join."
+            }
+          },
+          "required": [
+            "gathering_id"
+          ]
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "leave_gathering",
+        "title": "Leave a gathering",
+        "description": "Cancel the signed-in user's seat at a gathering.",
+        "annotations": {
+          "readOnlyHint": false,
+          "destructiveHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "gathering_id": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "description": "The gathering UUID to leave."
+            }
+          },
+          "required": [
+            "gathering_id"
+          ]
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "my_gatherings",
+        "title": "My gatherings",
+        "description": "List gatherings the signed-in user is hosting, attending, or both.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "role": {
+              "description": "Filter by relationship (default all).",
+              "type": "string",
+              "enum": [
+                "hosting",
+                "attending",
+                "all"
+              ]
+            }
+          }
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "my_businesses",
+        "title": "My businesses",
+        "description": "List cafes/restaurants owned by the signed-in user.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {}
+        },
+        "outputSchema": null
+      }
+    ]
+  }
+}
