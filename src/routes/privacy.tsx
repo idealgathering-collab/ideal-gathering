@@ -1,0 +1,46 @@
+import { createFileRoute } from "@tanstack/react-router";
+import { SiteHeader } from "@/components/site-header";
+import { SiteFooter } from "@/components/site-footer";
+import { useT } from "@/i18n";
+
+export const Route = createFileRoute("/privacy")({
+  head: () => ({
+    meta: [
+      { title: "Privacy Policy — Ideal Gathering" },
+      { name: "description", content: "How Ideal Gathering collects, uses, and protects your data. KVKK-aware notice for users in Türkiye." },
+    ],
+  }),
+  component: PrivacyPage,
+});
+
+function PrivacyPage() {
+  const t = useT();
+  return (
+    <div className="min-h-screen bg-background">
+      <SiteHeader />
+      <main className="mx-auto max-w-3xl px-4 py-12">
+        <h1 className="font-display text-4xl">{t("privacy.title")}</h1>
+        <p className="mt-2 text-sm text-muted-foreground">{t("privacy.updated")}</p>
+
+        <Section title={t("privacy.intro.title")} body={t("privacy.intro.body")} />
+        <Section title={t("privacy.collect.title")} body={t("privacy.collect.body")} />
+        <Section title={t("privacy.use.title")} body={t("privacy.use.body")} />
+        <Section title={t("privacy.share.title")} body={t("privacy.share.body")} />
+        <Section title={t("privacy.retention.title")} body={t("privacy.retention.body")} />
+        <Section title={t("privacy.rights.title")} body={t("privacy.rights.body")} />
+        <Section title={t("privacy.kvkk.title")} body={t("privacy.kvkk.body")} />
+        <Section title={t("privacy.contact.title")} body={t("privacy.contact.body")} />
+      </main>
+      <SiteFooter />
+    </div>
+  );
+}
+
+function Section({ title, body }: { title: string; body: string }) {
+  return (
+    <section className="mt-8">
+      <h2 className="font-display text-2xl">{title}</h2>
+      <p className="mt-2 whitespace-pre-line text-sm leading-relaxed text-foreground/80">{body}</p>
+    </section>
+  );
+}
