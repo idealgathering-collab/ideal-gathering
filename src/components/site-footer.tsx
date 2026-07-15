@@ -47,8 +47,8 @@ export function SiteFooter() {
             {t("footer.col.legal")}
           </div>
           <ul className="mt-4 space-y-2 text-sm">
-            <li><a href="/#terms" className="hover:text-sunshine">{t("footer.legal.tos")}</a></li>
-            <li><a href="/#privacy" className="hover:text-sunshine">{t("footer.legal.privacy")}</a></li>
+            <li><Link to="/terms" className="hover:text-sunshine">{t("footer.legal.tos")}</Link></li>
+            <li><Link to="/privacy" className="hover:text-sunshine">{t("footer.legal.privacy")}</Link></li>
             <li><a href="mailto:hello@idealgathering.co" className="hover:text-sunshine">{t("footer.legal.contact")}</a></li>
           </ul>
           <div className="mt-5 flex items-center gap-2">
