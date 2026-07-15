@@ -209,7 +209,7 @@ function ProfilePage() {
                 <Input id="ct" value={confirmText} onChange={(e) => setConfirmText(e.target.value)} placeholder="DELETE" />
               </div>
               <AlertDialogFooter>
-                <AlertDialogCancel>{t("common.tryAgain") /* fallback */ && t("profile.delete.cancel")}</AlertDialogCancel>
+                <AlertDialogCancel>{t("profile.delete.cancel")}</AlertDialogCancel>
                 <AlertDialogAction
                   onClick={(e) => {
                     e.preventDefault();
