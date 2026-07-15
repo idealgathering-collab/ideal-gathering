@@ -114,7 +114,7 @@ function GatheringDetail() {
                 {g.status === "proposed"
                   ? t("gd.status.proposed")
                   : g.status === "rejected"
-                    ? t("gd.status.rejected") ?? "Rejected"
+                    ? t("gd.status.rejected")
                     : t("gd.status.cancelled")}
               </span>
             )}
