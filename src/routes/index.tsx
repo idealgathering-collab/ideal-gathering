@@ -82,11 +82,11 @@ function Home() {
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Button asChild size="lg" className="rounded-full bg-sunshine text-sunshine-foreground hover:bg-sunshine/90 shadow-tangerine">
-                <Link to="/waitlist">{t("home.hero.joinWaitlist")}</Link>
+                <Link to="/auth" search={{ mode: "signup" }}>{t("home.hero.signup")}</Link>
               </Button>
               <Button asChild size="lg" variant="outline" className="rounded-full border-primary-foreground/40 bg-transparent text-primary-foreground hover:bg-primary-foreground/10">
-                <Link to="/register-business">
-                  {t("home.hero.registerCafe")} <ArrowRight className="ml-1 h-4 w-4" />
+                <Link to="/explore">
+                  {t("home.hero.explore")} <ArrowRight className="ml-1 h-4 w-4" />
                 </Link>
               </Button>
             </div>

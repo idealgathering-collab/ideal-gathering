@@ -153,6 +153,25 @@ export const translations: Record<Lang, Dict> = {
     "create.proposed": "Gathering proposed — awaiting venue approval",
     "create.failed": "Failed",
     "create.tableSeats": "seats",
+    "create.venueName": "Venue name",
+    "create.venueNamePh": "e.g. Kronotrop Coffee Bar",
+    "create.neighborhood": "Neighborhood",
+    "create.neighborhoodPh": "e.g. Kadıköy",
+
+    // Home extras
+    "home.hero.signup": "Sign up",
+    "home.hero.explore": "Explore gatherings",
+
+    // Explore
+    "explore.badge": "Live tables",
+    "explore.title": "Explore gatherings",
+    "explore.subtitle": "Find a subject worth showing up for. Grab a seat before it's taken.",
+    "explore.empty.title": "No gatherings yet",
+    "explore.empty.body": "Be the first to propose one — pick a cafe, pick a subject.",
+    "explore.empty.cta": "Propose a gathering",
+
+    // Card fallback
+    "card.gathering": "Gathering",
 
     // Register business
     "reg.eyebrow": "For cafes & restaurants",
@@ -217,6 +236,7 @@ export const translations: Record<Lang, Dict> = {
     "gd.table": "Table",
     "gd.status.proposed": "Proposed",
     "gd.status.cancelled": "Cancelled",
+    "gd.status.rejected": "Rejected",
     "gd.join": "Join gathering",
     "gd.leave": "Leave gathering",
     "gd.full": "Full",
@@ -496,6 +516,25 @@ export const translations: Record<Lang, Dict> = {
     "create.proposed": "Buluşma önerildi — mekân onayı bekleniyor",
     "create.failed": "Başarısız",
     "create.tableSeats": "koltuk",
+    "create.venueName": "Mekân adı",
+    "create.venueNamePh": "örn. Kronotrop Coffee Bar",
+    "create.neighborhood": "Semt",
+    "create.neighborhoodPh": "örn. Kadıköy",
+
+    // Home extras
+    "home.hero.signup": "Kayıt ol",
+    "home.hero.explore": "Buluşmaları keşfet",
+
+    // Explore
+    "explore.badge": "Canlı masalar",
+    "explore.title": "Buluşmaları keşfet",
+    "explore.subtitle": "Katılmaya değer bir konu bul. Koltuğunu kapmadan yakala.",
+    "explore.empty.title": "Henüz buluşma yok",
+    "explore.empty.body": "İlk buluşmayı sen öner — bir kafe seç, bir konu belirle.",
+    "explore.empty.cta": "Buluşma öner",
+
+    // Card fallback
+    "card.gathering": "Buluşma",
 
     // Register business
     "reg.eyebrow": "Kafeler ve restoranlar için",
@@ -560,6 +599,7 @@ export const translations: Record<Lang, Dict> = {
     "gd.table": "Masa",
     "gd.status.proposed": "Önerildi",
     "gd.status.cancelled": "İptal",
+    "gd.status.rejected": "Reddedildi",
     "gd.join": "Buluşmaya katıl",
     "gd.leave": "Buluşmadan ayrıl",
     "gd.full": "Dolu",

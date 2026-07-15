@@ -107,10 +107,15 @@ function GatheringDetail() {
             <ArrowLeft className="h-4 w-4" /> {t("gd.allGatherings")}
           </Link>
           <div className="mt-4 flex items-center gap-2 text-xs uppercase tracking-wider text-sunshine">
-            <Coffee className="h-4 w-4" /> {t("gd.table")} {g.table?.label}
+            <Coffee className="h-4 w-4" />
+            {g.table?.label ? `${t("gd.table")} ${g.table.label}` : g.neighborhood || t("card.gathering")}
             {g.status !== "approved" && (
               <span className="ml-2 rounded-full bg-sunshine px-2 py-0.5 text-sunshine-foreground">
-                {g.status === "proposed" ? t("gd.status.proposed") : t("gd.status.cancelled")}
+                {g.status === "proposed"
+                  ? t("gd.status.proposed")
+                  : g.status === "rejected"
+                    ? t("gd.status.rejected")
+                    : t("gd.status.cancelled")}
               </span>
             )}
           </div>
@@ -131,8 +136,10 @@ function GatheringDetail() {
             <div className="flex items-center gap-2 text-xs uppercase tracking-wide text-muted-foreground">
               <MapPin className="h-3.5 w-3.5 text-tangerine" /> {t("biz.venue")}
             </div>
-            <div className="mt-1 font-display text-lg">{g.business?.name}</div>
-            {g.business?.city && <div className="text-xs text-muted-foreground">{g.business.city}</div>}
+            <div className="mt-1 font-display text-lg">{g.business?.name ?? g.venue_name}</div>
+            {(g.business?.city || g.neighborhood) && (
+              <div className="text-xs text-muted-foreground">{g.business?.city ?? g.neighborhood}</div>
+            )}
           </div>
           <div className="rounded-2xl border border-border bg-card p-4">
             <div className="flex items-center gap-2 text-xs uppercase tracking-wide text-muted-foreground">

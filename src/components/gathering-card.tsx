@@ -8,6 +8,12 @@ export function GatheringCard({ g }: { g: G }) {
   const t = useT();
   const seatsLeft = Math.max(0, g.seats - g.attendee_count);
   const full = seatsLeft === 0;
+  const chipLabel = g.table?.label
+    ? `${t("card.table")} ${g.table.label}`
+    : g.neighborhood || t("card.gathering");
+  const venueLine = g.business
+    ? `${g.business.name}${g.business.city ? `, ${g.business.city}` : ""}`
+    : `${g.venue_name}${g.neighborhood ? ` · ${g.neighborhood}` : ""}`;
   return (
     <Link
       to="/gatherings/$id"
@@ -27,7 +33,7 @@ export function GatheringCard({ g }: { g: G }) {
         )}
         <div className="absolute inset-x-3 top-3 flex justify-between">
           <span className="rounded-full bg-background/90 px-3 py-1 text-[11px] font-medium tracking-wide uppercase text-foreground/80">
-            {t("card.table")} {g.table?.label ?? "—"}
+            {chipLabel}
           </span>
           <span
             className={`rounded-full px-3 py-1 text-[11px] font-semibold tracking-wide uppercase ${
@@ -53,8 +59,7 @@ export function GatheringCard({ g }: { g: G }) {
           </span>
           <span className="inline-flex items-center gap-1.5">
             <MapPin className="h-3.5 w-3.5 text-tangerine" />
-            {g.business?.name}
-            {g.business?.city ? `, ${g.business.city}` : ""}
+            {venueLine}
           </span>
           <span className="inline-flex items-center gap-1.5">
             <Users className="h-3.5 w-3.5 text-primary" />

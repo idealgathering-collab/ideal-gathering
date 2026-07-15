@@ -1,6 +1,5 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useEffect, useMemo, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 import { z } from "zod";
 import { toast } from "sonner";
 import { Sparkles } from "lucide-react";
@@ -12,13 +11,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { useT } from "@/i18n";
 
 export const Route = createFileRoute("/_authenticated/create-gathering")({
@@ -26,10 +18,10 @@ export const Route = createFileRoute("/_authenticated/create-gathering")({
 });
 
 const schema = z.object({
-  business_id: z.string().uuid("Pick a venue"),
-  table_id: z.string().uuid("Pick a table"),
   subject: z.string().trim().min(3, "Subject too short").max(120),
   description: z.string().trim().max(800).optional().or(z.literal("")),
+  venue_name: z.string().trim().min(2, "Venue name required").max(120),
+  neighborhood: z.string().trim().min(2, "Neighborhood required").max(80),
   starts_at: z.string().min(1, "Pick a date & time"),
   seats: z.coerce.number().int().min(2).max(30),
 });
@@ -40,37 +32,13 @@ function CreateGathering() {
   const [loading, setLoading] = useState(false);
   const t = useT();
   const [form, setForm] = useState({
-    business_id: "",
-    table_id: "",
     subject: "",
     description: "",
+    venue_name: "",
+    neighborhood: "",
     starts_at: "",
     seats: 4,
   });
-
-  const { data: businesses } = useQuery({
-    queryKey: ["all-businesses"],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("businesses")
-        .select("id,name,city,owner_id,venue_tables(id,label,capacity)")
-        .order("name");
-      if (error) throw error;
-      return data;
-    },
-  });
-
-  const selectedBiz = useMemo(
-    () => businesses?.find((b) => b.id === form.business_id),
-    [businesses, form.business_id],
-  );
-
-  useEffect(() => {
-    // reset table when business changes
-    setForm((f) => ({ ...f, table_id: "" }));
-  }, [form.business_id]);
-
-  const isOwner = selectedBiz?.owner_id === user?.id;
 
   const emailVerified = Boolean(user?.email_confirmed_at);
 
@@ -92,11 +60,13 @@ function CreateGathering() {
       const { data, error } = await supabase
         .from("gatherings")
         .insert({
-          business_id: v.business_id,
-          table_id: v.table_id,
+          business_id: null,
+          table_id: null,
           host_id: user.id,
           subject: v.subject,
           description: v.description || null,
+          venue_name: v.venue_name,
+          neighborhood: v.neighborhood,
           starts_at: iso,
           seats: v.seats,
           status: "proposed",
@@ -104,14 +74,7 @@ function CreateGathering() {
         .select("id")
         .single();
       if (error) throw error;
-
-      // If the host owns the venue, auto-approve.
-      if (isOwner) {
-        await supabase.from("gatherings").update({ status: "approved" }).eq("id", data.id);
-        toast.success(t("create.published"));
-      } else {
-        toast.success(t("create.proposed"));
-      }
+      toast.success(t("create.proposed"));
       navigate({ to: "/gatherings/$id", params: { id: data.id } });
     } catch (err) {
       toast.error(err instanceof Error ? err.message : t("create.failed"));
@@ -142,44 +105,6 @@ function CreateGathering() {
 
         <form onSubmit={submit} className="grid gap-5 rounded-3xl border border-border bg-card p-6 shadow-soft">
           <div className="grid gap-2">
-            <Label>{t("create.venue")}</Label>
-            <Select value={form.business_id} onValueChange={(v) => setForm({ ...form, business_id: v })}>
-              <SelectTrigger>
-                <SelectValue placeholder={t("create.venuePh")} />
-              </SelectTrigger>
-              <SelectContent>
-                {(businesses ?? []).map((b) => (
-                  <SelectItem key={b.id} value={b.id}>
-                    {b.name}
-                    {b.city ? ` · ${b.city}` : ""}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            {businesses && businesses.length === 0 && (
-              <p className="text-xs text-muted-foreground">
-                {t("create.noVenues")}
-              </p>
-            )}
-          </div>
-
-          <div className="grid gap-2">
-            <Label>{t("create.table")}</Label>
-            <Select value={form.table_id} onValueChange={(v) => setForm({ ...form, table_id: v })} disabled={!selectedBiz}>
-              <SelectTrigger>
-                <SelectValue placeholder={selectedBiz ? t("create.tablePh") : t("create.tablePhFirst")} />
-              </SelectTrigger>
-              <SelectContent>
-                {(selectedBiz?.venue_tables ?? []).map((tbl) => (
-                  <SelectItem key={tbl.id} value={tbl.id}>
-                    {t("create.table")} {tbl.label} · {t("create.tableSeats")} {tbl.capacity}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="grid gap-2">
             <Label htmlFor="subject">{t("create.subject")}</Label>
             <Input
               id="subject"
@@ -200,6 +125,31 @@ function CreateGathering() {
               onChange={(e) => setForm({ ...form, description: e.target.value })}
               placeholder={t("create.descriptionPh")}
             />
+          </div>
+
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className="grid gap-2">
+              <Label htmlFor="venue_name">{t("create.venueName")}</Label>
+              <Input
+                id="venue_name"
+                required
+                maxLength={120}
+                value={form.venue_name}
+                placeholder={t("create.venueNamePh")}
+                onChange={(e) => setForm({ ...form, venue_name: e.target.value })}
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="neighborhood">{t("create.neighborhood")}</Label>
+              <Input
+                id="neighborhood"
+                required
+                maxLength={80}
+                value={form.neighborhood}
+                placeholder={t("create.neighborhoodPh")}
+                onChange={(e) => setForm({ ...form, neighborhood: e.target.value })}
+              />
+            </div>
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2">
@@ -226,16 +176,13 @@ function CreateGathering() {
             </div>
           </div>
 
-          {selectedBiz && !isOwner && (
-            <p className="rounded-2xl bg-sunshine/40 px-4 py-3 text-xs text-foreground/80">
-              {t("create.needsApproval")}
-            </p>
-          )}
+          <p className="rounded-2xl bg-sunshine/40 px-4 py-3 text-xs text-foreground/80">
+            {t("create.needsApproval")}
+          </p>
 
           <Button type="submit" size="lg" disabled={loading || !emailVerified} className="mt-2 h-12 rounded-full">
-            {loading ? t("create.sending") : !emailVerified ? t("create.verifyToContinue") : isOwner ? t("create.publish") : t("create.propose")}
+            {loading ? t("create.sending") : !emailVerified ? t("create.verifyToContinue") : t("create.propose")}
           </Button>
-
         </form>
       </main>
     </div>
