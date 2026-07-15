@@ -75,40 +75,46 @@ export type Database = {
       }
       gatherings: {
         Row: {
-          business_id: string
+          business_id: string | null
           created_at: string
           description: string | null
           host_id: string
           id: string
+          neighborhood: string
           seats: number
           starts_at: string
           status: Database["public"]["Enums"]["gathering_status"]
           subject: string
-          table_id: string
+          table_id: string | null
+          venue_name: string
         }
         Insert: {
-          business_id: string
+          business_id?: string | null
           created_at?: string
           description?: string | null
           host_id: string
           id?: string
+          neighborhood: string
           seats?: number
           starts_at: string
           status?: Database["public"]["Enums"]["gathering_status"]
           subject: string
-          table_id: string
+          table_id?: string | null
+          venue_name: string
         }
         Update: {
-          business_id?: string
+          business_id?: string | null
           created_at?: string
           description?: string | null
           host_id?: string
           id?: string
+          neighborhood?: string
           seats?: number
           starts_at?: string
           status?: Database["public"]["Enums"]["gathering_status"]
           subject?: string
-          table_id?: string
+          table_id?: string | null
+          venue_name?: string
         }
         Relationships: [
           {
@@ -278,7 +284,7 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "business_owner" | "user"
-      gathering_status: "proposed" | "approved" | "cancelled"
+      gathering_status: "proposed" | "approved" | "cancelled" | "rejected"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -407,7 +413,7 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "business_owner", "user"],
-      gathering_status: ["proposed", "approved", "cancelled"],
+      gathering_status: ["proposed", "approved", "cancelled", "rejected"],
     },
   },
 } as const
