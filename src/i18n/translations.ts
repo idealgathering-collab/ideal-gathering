@@ -153,6 +153,25 @@ export const translations: Record<Lang, Dict> = {
     "create.proposed": "Gathering proposed — awaiting venue approval",
     "create.failed": "Failed",
     "create.tableSeats": "seats",
+    "create.venueName": "Venue name",
+    "create.venueNamePh": "e.g. Kronotrop Coffee Bar",
+    "create.neighborhood": "Neighborhood",
+    "create.neighborhoodPh": "e.g. Kadıköy",
+
+    // Home extras
+    "home.hero.signup": "Sign up",
+    "home.hero.explore": "Explore gatherings",
+
+    // Explore
+    "explore.badge": "Live tables",
+    "explore.title": "Explore gatherings",
+    "explore.subtitle": "Find a subject worth showing up for. Grab a seat before it's taken.",
+    "explore.empty.title": "No gatherings yet",
+    "explore.empty.body": "Be the first to propose one — pick a cafe, pick a subject.",
+    "explore.empty.cta": "Propose a gathering",
+
+    // Card fallback
+    "card.gathering": "Gathering",
 
     // Register business
     "reg.eyebrow": "For cafes & restaurants",
