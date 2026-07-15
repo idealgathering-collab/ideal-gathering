@@ -35,3 +35,9 @@ export function notAuthed() {
 export function errorResult(message: string) {
   return { content: [{ type: "text" as const, text: message }], isError: true };
 }
+
+export function requireUserId(ctx: ToolContext): string {
+  const id = ctx.getUserId();
+  if (!id) throw new Error("Missing user id in verified token");
+  return id;
+}
