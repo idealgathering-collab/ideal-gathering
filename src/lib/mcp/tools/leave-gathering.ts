@@ -1,6 +1,6 @@
 import { defineTool } from "@lovable.dev/mcp-js";
 import { z } from "zod";
-import { supabaseForUser, notAuthed, errorResult } from "../supabase";
+import { supabaseForUser, notAuthed, errorResult, requireUserId } from "../supabase";
 
 export default defineTool({
   name: "leave_gathering",
@@ -17,7 +17,7 @@ export default defineTool({
       .from("gathering_attendees")
       .delete()
       .eq("gathering_id", gathering_id)
-      .eq("user_id", ctx.getUserId());
+      .eq("user_id", requireUserId(ctx));
     if (error) return errorResult(error.message);
     return {
       content: [{ type: "text", text: `Left gathering ${gathering_id}.` }],

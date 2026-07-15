@@ -1,6 +1,6 @@
 import { defineTool } from "@lovable.dev/mcp-js";
 import { z } from "zod";
-import { supabaseForUser, notAuthed, errorResult } from "../supabase";
+import { supabaseForUser, notAuthed, errorResult, requireUserId } from "../supabase";
 
 export default defineTool({
   name: "join_gathering",
@@ -14,7 +14,7 @@ export default defineTool({
   handler: async ({ gathering_id }, ctx) => {
     if (!ctx.isAuthenticated()) return notAuthed();
     const supabase = supabaseForUser(ctx);
-    const userId = ctx.getUserId();
+    const userId = requireUserId(ctx);
     const { error } = await supabase
       .from("gathering_attendees")
       .insert({ gathering_id, user_id: userId });

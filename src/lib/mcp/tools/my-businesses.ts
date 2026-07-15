@@ -1,5 +1,5 @@
 import { defineTool } from "@lovable.dev/mcp-js";
-import { supabaseForUser, notAuthed, errorResult } from "../supabase";
+import { supabaseForUser, notAuthed, errorResult, requireUserId } from "../supabase";
 
 export default defineTool({
   name: "my_businesses",
@@ -13,7 +13,7 @@ export default defineTool({
     const { data, error } = await supabase
       .from("businesses")
       .select("id, name, city, address, description")
-      .eq("owner_id", ctx.getUserId())
+      .eq("owner_id", requireUserId(ctx))
       .order("created_at", { ascending: false });
     if (error) return errorResult(error.message);
     return {
