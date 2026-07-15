@@ -46,6 +46,7 @@ function WaitlistPage() {
   const t = useT();
   const [form, setForm] = useState({ name: "", email: "", city: "", interests: "" });
   const [picks, setPicks] = useState<string[]>([]);
+  const [agree, setAgree] = useState(false);
   const [loading, setLoading] = useState(false);
   const [done, setDone] = useState(false);
 
@@ -62,6 +63,10 @@ function WaitlistPage() {
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     try {
+      if (!agree) {
+        toast.error(t("consent.required"));
+        return;
+      }
       const v = schema.parse(form);
       setLoading(true);
       const pickedLabels = picks.map((k) => t(k)).join(", ");
@@ -189,6 +194,25 @@ function WaitlistPage() {
                   })}
                 </div>
               </div>
+              <label className="flex items-start gap-2 text-xs text-muted-foreground">
+                <input
+                  type="checkbox"
+                  checked={agree}
+                  onChange={(e) => setAgree(e.target.checked)}
+                  className="mt-0.5 h-4 w-4 rounded border-border"
+                />
+                <span>
+                  {t("consent.agree")}{" "}
+                  <Link to="/privacy" className="text-primary hover:underline">
+                    {t("consent.privacy")}
+                  </Link>{" "}
+                  {t("consent.and")}{" "}
+                  <Link to="/terms" className="text-primary hover:underline">
+                    {t("consent.terms")}
+                  </Link>
+                  .
+                </span>
+              </label>
               <Button type="submit" disabled={loading} className="mt-2 h-11 rounded-full text-base">
                 {loading ? "…" : t("wait.join")}
               </Button>

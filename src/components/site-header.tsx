@@ -1,5 +1,6 @@
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
-import { ArrowLeft, LogOut, User as UserIcon } from "lucide-react";
+import { ArrowLeft, LogOut, Shield, User as UserIcon } from "lucide-react";
+import { useEffect, useState } from "react";
 import logoAsset from "@/assets/ideal-gathering-logo.png.asset.json";
 
 
@@ -17,6 +18,21 @@ export function SiteHeader() {
   const t = useT();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const showBack = pathname !== "/";
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    if (!user) {
+      setIsAdmin(false);
+      return;
+    }
+    supabase
+      .from("user_roles")
+      .select("role")
+      .eq("user_id", user.id)
+      .eq("role", "admin")
+      .maybeSingle()
+      .then(({ data }) => setIsAdmin(!!data));
+  }, [user]);
 
 
   async function handleSignOut() {
@@ -67,6 +83,17 @@ export function SiteHeader() {
               <Button asChild variant="ghost" size="sm" className="hidden sm:inline-flex">
                 <Link to="/dashboard">{t("nav.dashboard")}</Link>
               </Button>
+              <Button asChild variant="ghost" size="sm" className="hidden sm:inline-flex">
+                <Link to="/profile">{t("nav.profile")}</Link>
+              </Button>
+              {isAdmin && (
+                <Button asChild variant="ghost" size="sm" className="hidden sm:inline-flex">
+                  <Link to="/admin">
+                    <Shield className="mr-1 h-3.5 w-3.5" />
+                    {t("nav.admin")}
+                  </Link>
+                </Button>
+              )}
               <Button asChild size="sm" className="rounded-full">
                 <Link to="/create-gathering">{t("nav.host")}</Link>
               </Button>
@@ -80,7 +107,7 @@ export function SiteHeader() {
                 <LogOut className="h-4 w-4" />
               </Button>
               <Link
-                to="/dashboard"
+                to="/profile"
                 className="sm:hidden grid h-9 w-9 place-items-center rounded-full bg-muted"
                 aria-label={t("nav.account")}
               >
