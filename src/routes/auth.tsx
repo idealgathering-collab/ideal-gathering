@@ -54,7 +54,7 @@ function AuthPage() {
           email: em,
           password: pw,
           options: {
-            emailRedirectTo: window.location.origin,
+            emailRedirectTo: `${window.location.origin}${redirect ?? ""}`,
             data: { display_name: nm },
           },
         });
@@ -103,7 +103,7 @@ function AuthPage() {
               try {
                 setLoading(true);
                 const result = await lovable.auth.signInWithOAuth("google", {
-                  redirect_uri: window.location.origin,
+                  redirect_uri: `${window.location.origin}${redirect ?? ""}`,
                 });
                 if (result.error) throw result.error;
                 if (result.redirected) return;
