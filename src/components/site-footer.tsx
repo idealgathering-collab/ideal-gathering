@@ -36,9 +36,8 @@ export function SiteFooter() {
         <FooterCol
           title={t("footer.col.business")}
           links={[
+            { label: t("footer.biz.partnership"), href: "/partnership", route: true },
             { label: t("footer.biz.sub"), href: "/register-business", route: true },
-            { label: t("footer.biz.bid"), href: "/#partners" },
-            { label: t("footer.biz.success"), href: "/#vibe" },
             { label: t("footer.biz.support"), href: "mailto:hello@idealgathering.co" },
           ]}
         />
