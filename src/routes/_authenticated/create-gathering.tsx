@@ -163,6 +163,29 @@ function CreateGathering() {
             )}
           </div>
 
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className="grid gap-2">
+              <Label htmlFor="starts_at">{t("create.datetime")}</Label>
+              <Input
+                id="starts_at"
+                type="datetime-local"
+                required
+                value={form.starts_at}
+                onChange={(e) => setForm({ ...form, starts_at: e.target.value })}
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="seats">{t("create.seats")}</Label>
+              <Input
+                id="seats"
+                type="number"
+                min={2}
+                max={30}
+                value={form.seats}
+                onChange={(e) => setForm({ ...form, seats: Number(e.target.value) })}
+              />
+            </div>
+          </div>
 
           <p className="rounded-2xl bg-sunshine/40 px-4 py-3 text-xs text-foreground/80">
             {t("create.needsApproval")}
