@@ -76,9 +76,9 @@ export const listAdminUsers = createServerFn({ method: "GET" })
 
 export type AdminUserDetail = AdminUserRow & {
   bio: string | null;
-  interests: unknown;
+  interests: string[];
   city: string | null;
-  social_links: unknown;
+  social_links: Record<string, string>;
   cover_url: string | null;
 };
 
