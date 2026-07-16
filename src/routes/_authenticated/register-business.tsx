@@ -57,6 +57,8 @@ function RegisterBusiness() {
           description: v.description || null,
           address: v.address || null,
           city: v.city || null,
+          lat: location?.lat ?? null,
+          lng: location?.lng ?? null,
           cover_url: v.cover_url || null,
         })
         .select("id")
