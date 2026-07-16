@@ -13,6 +13,7 @@ import { Route as WaitlistRouteImport } from './routes/waitlist'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as PartnershipRouteImport } from './routes/partnership'
 import { Route as McpRouteImport } from './routes/mcp'
 import { Route as ExploreRouteImport } from './routes/explore'
 import { Route as AuthRouteImport } from './routes/auth'
@@ -48,6 +49,11 @@ const ResetPasswordRoute = ResetPasswordRouteImport.update({
 const PrivacyRoute = PrivacyRouteImport.update({
   id: '/privacy',
   path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PartnershipRoute = PartnershipRouteImport.update({
+  id: '/partnership',
+  path: '/partnership',
   getParentRoute: () => rootRouteImport,
 } as any)
 const McpRoute = McpRouteImport.update({
@@ -141,6 +147,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/explore': typeof ExploreRoute
   '/mcp': typeof McpRoute
+  '/partnership': typeof PartnershipRoute
   '/privacy': typeof PrivacyRoute
   '/reset-password': typeof ResetPasswordRoute
   '/terms': typeof TermsRoute
@@ -162,6 +169,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/explore': typeof ExploreRoute
   '/mcp': typeof McpRoute
+  '/partnership': typeof PartnershipRoute
   '/privacy': typeof PrivacyRoute
   '/reset-password': typeof ResetPasswordRoute
   '/terms': typeof TermsRoute
@@ -185,6 +193,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/explore': typeof ExploreRoute
   '/mcp': typeof McpRoute
+  '/partnership': typeof PartnershipRoute
   '/privacy': typeof PrivacyRoute
   '/reset-password': typeof ResetPasswordRoute
   '/terms': typeof TermsRoute
@@ -208,6 +217,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/explore'
     | '/mcp'
+    | '/partnership'
     | '/privacy'
     | '/reset-password'
     | '/terms'
@@ -229,6 +239,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/explore'
     | '/mcp'
+    | '/partnership'
     | '/privacy'
     | '/reset-password'
     | '/terms'
@@ -251,6 +262,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/explore'
     | '/mcp'
+    | '/partnership'
     | '/privacy'
     | '/reset-password'
     | '/terms'
@@ -274,6 +286,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   ExploreRoute: typeof ExploreRoute
   McpRoute: typeof McpRoute
+  PartnershipRoute: typeof PartnershipRoute
   PrivacyRoute: typeof PrivacyRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   TermsRoute: typeof TermsRoute
@@ -313,6 +326,13 @@ declare module '@tanstack/react-router' {
       path: '/privacy'
       fullPath: '/privacy'
       preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/partnership': {
+      id: '/partnership'
+      path: '/partnership'
+      fullPath: '/partnership'
+      preLoaderRoute: typeof PartnershipRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/mcp': {
@@ -457,6 +477,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   ExploreRoute: ExploreRoute,
   McpRoute: McpRoute,
+  PartnershipRoute: PartnershipRoute,
   PrivacyRoute: PrivacyRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   TermsRoute: TermsRoute,

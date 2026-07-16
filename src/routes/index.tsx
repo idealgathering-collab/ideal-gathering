@@ -5,10 +5,6 @@ import {
   Coffee,
   Armchair,
   ArrowRight,
-  Check,
-  BarChart3,
-  Gavel,
-  Users,
 } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
@@ -18,7 +14,6 @@ import {
   SAMPLE_GATHERINGS,
 } from "@/components/sample-gathering-card";
 import { HeroPoster } from "@/components/hero-poster";
-import { VenueDashboardPreview } from "@/components/venue-dashboard-preview";
 import { ManifestoSection } from "@/components/manifesto-section";
 import { NeighborhoodsSection } from "@/components/neighborhoods-section";
 import { Button } from "@/components/ui/button";
