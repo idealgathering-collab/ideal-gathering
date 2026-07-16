@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useT } from "@/i18n";
+import { LocationAutocomplete, type LocationValue } from "@/components/location-autocomplete";
 
 export const Route = createFileRoute("/_authenticated/create-gathering")({
   component: CreateGathering,
@@ -20,8 +21,8 @@ export const Route = createFileRoute("/_authenticated/create-gathering")({
 const schema = z.object({
   subject: z.string().trim().min(3, "Subject too short").max(120),
   description: z.string().trim().max(800).optional().or(z.literal("")),
-  venue_name: z.string().trim().min(2, "Venue name required").max(120),
-  neighborhood: z.string().trim().min(2, "Neighborhood required").max(80),
+  venue_name: z.string().trim().min(2, "Venue name required").max(200),
+  neighborhood: z.string().trim().min(1).max(120),
   starts_at: z.string().min(1, "Pick a date & time"),
   seats: z.coerce.number().int().min(2).max(30),
 });
@@ -39,6 +40,7 @@ function CreateGathering() {
     starts_at: "",
     seats: 4,
   });
+  const [location, setLocation] = useState<LocationValue | null>(null);
 
   const emailVerified = Boolean(user?.email_confirmed_at);
 
@@ -67,6 +69,10 @@ function CreateGathering() {
           description: v.description || null,
           venue_name: v.venue_name,
           neighborhood: v.neighborhood,
+          address: location?.address ?? null,
+          city: location?.city ?? null,
+          lat: location?.lat ?? null,
+          lng: location?.lng ?? null,
           starts_at: iso,
           seats: v.seats,
           status: "proposed",
@@ -127,29 +133,34 @@ function CreateGathering() {
             />
           </div>
 
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div className="grid gap-2">
-              <Label htmlFor="venue_name">{t("create.venueName")}</Label>
-              <Input
-                id="venue_name"
-                required
-                maxLength={120}
-                value={form.venue_name}
-                placeholder={t("create.venueNamePh")}
-                onChange={(e) => setForm({ ...form, venue_name: e.target.value })}
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="neighborhood">{t("create.neighborhood")}</Label>
-              <Input
-                id="neighborhood"
-                required
-                maxLength={80}
-                value={form.neighborhood}
-                placeholder={t("create.neighborhoodPh")}
-                onChange={(e) => setForm({ ...form, neighborhood: e.target.value })}
-              />
-            </div>
+          <div className="grid gap-2">
+            <Label htmlFor="venue_name">{t("create.venueName")}</Label>
+            <Input
+              id="venue_name"
+              required
+              maxLength={200}
+              value={form.venue_name}
+              placeholder={t("create.venueNamePh")}
+              onChange={(e) => setForm({ ...form, venue_name: e.target.value })}
+            />
+          </div>
+
+          <div className="grid gap-2">
+            <Label htmlFor="location">{t("create.location")}</Label>
+            <LocationAutocomplete
+              id="location"
+              required
+              value={form.neighborhood}
+              placeholder={t("create.locationPh")}
+              onChange={(text) => setForm({ ...form, neighborhood: text })}
+              onSelect={(loc) => {
+                setLocation(loc);
+                setForm({ ...form, neighborhood: loc.city || loc.display_name });
+              }}
+            />
+            {location && (
+              <p className="text-xs text-muted-foreground">{location.address}</p>
+            )}
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2">

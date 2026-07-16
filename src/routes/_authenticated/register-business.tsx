@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useT } from "@/i18n";
+import { LocationAutocomplete, type LocationValue } from "@/components/location-autocomplete";
 
 export const Route = createFileRoute("/_authenticated/register-business")({
   component: RegisterBusiness,
@@ -19,8 +20,8 @@ export const Route = createFileRoute("/_authenticated/register-business")({
 const schema = z.object({
   name: z.string().trim().min(2).max(120),
   description: z.string().trim().max(600).optional().or(z.literal("")),
-  address: z.string().trim().max(200).optional().or(z.literal("")),
-  city: z.string().trim().max(80).optional().or(z.literal("")),
+  address: z.string().trim().max(300).optional().or(z.literal("")),
+  city: z.string().trim().max(120).optional().or(z.literal("")),
   cover_url: z.string().trim().url().max(500).optional().or(z.literal("")),
   tableCount: z.coerce.number().int().min(1).max(30),
   defaultCapacity: z.coerce.number().int().min(1).max(20),
@@ -40,6 +41,7 @@ function RegisterBusiness() {
     tableCount: 4,
     defaultCapacity: 4,
   });
+  const [location, setLocation] = useState<LocationValue | null>(null);
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -55,6 +57,8 @@ function RegisterBusiness() {
           description: v.description || null,
           address: v.address || null,
           city: v.city || null,
+          lat: location?.lat ?? null,
+          lng: location?.lng ?? null,
           cover_url: v.cover_url || null,
         })
         .select("id")
@@ -101,15 +105,22 @@ function RegisterBusiness() {
             <Label htmlFor="description">{t("reg.description")}</Label>
             <Textarea id="description" maxLength={600} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
           </div>
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div className="grid gap-2">
-              <Label htmlFor="city">{t("reg.city")}</Label>
-              <Input id="city" maxLength={80} value={form.city} onChange={(e) => setForm({ ...form, city: e.target.value })} />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="address">{t("reg.address")}</Label>
-              <Input id="address" maxLength={200} value={form.address} onChange={(e) => setForm({ ...form, address: e.target.value })} />
-            </div>
+          <div className="grid gap-2">
+            <Label htmlFor="address">{t("reg.address")}</Label>
+            <LocationAutocomplete
+              id="address"
+              value={form.address}
+              placeholder={t("reg.addressPh")}
+              onChange={(text) => setForm({ ...form, address: text })}
+              onSelect={(loc) => {
+                setLocation(loc);
+                setForm({ ...form, address: loc.display_name, city: loc.city || form.city });
+              }}
+            />
+          </div>
+          <div className="grid gap-2">
+            <Label htmlFor="city">{t("reg.city")}</Label>
+            <Input id="city" maxLength={120} value={form.city} onChange={(e) => setForm({ ...form, city: e.target.value })} />
           </div>
           <div className="grid gap-2">
             <Label htmlFor="cover_url">{t("reg.cover")}</Label>
