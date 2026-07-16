@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useT } from "@/i18n";
+import { LocationAutocomplete, type LocationValue } from "@/components/location-autocomplete";
 
 export const Route = createFileRoute("/_authenticated/register-business")({
   component: RegisterBusiness,
@@ -19,8 +20,8 @@ export const Route = createFileRoute("/_authenticated/register-business")({
 const schema = z.object({
   name: z.string().trim().min(2).max(120),
   description: z.string().trim().max(600).optional().or(z.literal("")),
-  address: z.string().trim().max(200).optional().or(z.literal("")),
-  city: z.string().trim().max(80).optional().or(z.literal("")),
+  address: z.string().trim().max(300).optional().or(z.literal("")),
+  city: z.string().trim().max(120).optional().or(z.literal("")),
   cover_url: z.string().trim().url().max(500).optional().or(z.literal("")),
   tableCount: z.coerce.number().int().min(1).max(30),
   defaultCapacity: z.coerce.number().int().min(1).max(20),
@@ -40,6 +41,7 @@ function RegisterBusiness() {
     tableCount: 4,
     defaultCapacity: 4,
   });
+  const [location, setLocation] = useState<LocationValue | null>(null);
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
