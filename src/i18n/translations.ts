@@ -17,6 +17,14 @@ export const translations: Record<Lang, Dict> = {
     "nav.signIn": "Sign in",
     "nav.join": "Join",
     "nav.language": "Language",
+    "nav.partnership": "Partnership",
+
+    // Partnership page
+    "partner.eyebrow": "For cafes & restaurants",
+    "partner.intro": "Ideal Gathering brings themed tables — and the guests who want to sit at them — to the cafes and restaurants we already love. Every Gathering at your venue only happens if you approve it.",
+    "partner.how.title": "How it works for your venue",
+    "partner.cta.title": "Ready to host your first Gathering?",
+    "partner.cta.body": "Register your venue in a few minutes. No fee, no commitment — you approve every Gathering before it goes live.",
 
     // Common
     "common.loading": "Loading…",
