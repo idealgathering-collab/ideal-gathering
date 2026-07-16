@@ -1,0 +1,1 @@
+REVOKE ALL ON FUNCTION public.prevent_business_status_change_by_owner() FROM PUBLIC, anon, authenticated;
