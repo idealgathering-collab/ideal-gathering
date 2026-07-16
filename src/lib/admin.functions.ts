@@ -119,9 +119,9 @@ export const getAdminUser = createServerFn({ method: "GET" })
       display_name: p.display_name ?? null,
       avatar_url: p.avatar_url ?? null,
       bio: p.bio ?? null,
-      interests: p.interests ?? [],
+      interests: Array.isArray(p.interests) ? (p.interests as string[]) : [],
       city: p.city ?? null,
-      social_links: p.social_links ?? {},
+      social_links: p.social_links && typeof p.social_links === "object" ? (p.social_links as Record<string, string>) : {},
       cover_url: p.cover_url ?? null,
       role: role ? "admin" : "user",
     };
