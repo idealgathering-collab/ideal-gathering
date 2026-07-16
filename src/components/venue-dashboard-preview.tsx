@@ -1,4 +1,4 @@
-import { TrendingUp, Gavel, Users, Sparkles } from "lucide-react";
+import { TrendingUp, Users, Sparkles, Calendar, Check, Clock } from "lucide-react";
 import { useT } from "@/i18n";
 
 export function VenueDashboardPreview() {
@@ -20,43 +20,49 @@ export function VenueDashboardPreview() {
         </span>
       </div>
 
-      <div className="mt-4 grid grid-cols-3 gap-3">
+      <div className="mt-4 grid grid-cols-2 gap-3">
         <StatTile label={t("vdp.utilization")} value="78%" bar={78} icon={TrendingUp} />
-        <StatTile label={t("vdp.bidsWon")} value="12" hint={t("vdp.thisWeek")} icon={Gavel} />
-        <StatTile label={t("vdp.routed")} value="43" hint={t("vdp.new")} icon={Users} />
+        <StatTile label={t("vdp.routed")} value="43" hint={`${t("vdp.new")} · ${t("vdp.thisWeek")}`} icon={Users} />
       </div>
 
       <div className="mt-5 rounded-2xl border border-border bg-muted/40 p-4">
         <div className="flex items-center justify-between">
           <div className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-            {t("vdp.quietBid")}
+            {t("vdp.upcoming")}
           </div>
-          <div className="text-[10px] text-muted-foreground">{t("vdp.live")}</div>
+          <Calendar className="h-3.5 w-3.5 text-muted-foreground" />
         </div>
         <div className="mt-3 space-y-2">
           {[
-            { slot: "Tue · 14:00", bid: "₺45", winning: false },
-            { slot: "Wed · 15:30", bid: "₺62", winning: true },
-            { slot: "Thu · 16:00", bid: "₺38", winning: false },
+            { slot: "Tue · 14:00", topic: "Books that changed my mind", pending: true },
+            { slot: "Wed · 15:30", topic: "Solo travel stories", pending: false },
+            { slot: "Thu · 16:00", topic: "Design & craft", pending: false },
           ].map((row) => (
             <div
               key={row.slot}
-              className="flex items-center justify-between rounded-xl bg-card px-3 py-2 text-sm"
+              className="flex items-center justify-between gap-3 rounded-xl bg-card px-3 py-2 text-sm"
             >
-              <span className="text-muted-foreground">{row.slot}</span>
-              <div className="flex items-center gap-2">
-                <span
-                  className={`font-medium ${row.winning ? "text-primary" : "text-foreground"}`}
-                >
-                  {row.bid}
-                </span>
-                <button
-                  type="button"
-                  className="rounded-full bg-primary px-3 py-1 text-[11px] font-medium text-primary-foreground"
-                >
-                  {t("vdp.boost")}
-                </button>
+              <div className="min-w-0">
+                <div className="truncate font-medium">{row.topic}</div>
+                <div className="text-[11px] text-muted-foreground">{row.slot}</div>
               </div>
+              <span
+                className={`inline-flex shrink-0 items-center gap-1 rounded-full px-2.5 py-1 text-[10px] font-medium ${
+                  row.pending
+                    ? "bg-sunshine/60 text-foreground"
+                    : "bg-primary/10 text-primary"
+                }`}
+              >
+                {row.pending ? (
+                  <>
+                    <Clock className="h-3 w-3" /> {t("vdp.pending")}
+                  </>
+                ) : (
+                  <>
+                    <Check className="h-3 w-3" /> {t("vdp.approved")}
+                  </>
+                )}
+              </span>
             </div>
           ))}
         </div>
