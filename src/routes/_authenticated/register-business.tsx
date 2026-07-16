@@ -106,17 +106,24 @@ function RegisterBusiness() {
             <Textarea id="description" maxLength={600} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
-            <div className="grid gap-2">
-              <Label htmlFor="city">{t("reg.city")}</Label>
-              <Input id="city" maxLength={80} value={form.city} onChange={(e) => setForm({ ...form, city: e.target.value })} />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="address">{t("reg.address")}</Label>
-              <Input id="address" maxLength={200} value={form.address} onChange={(e) => setForm({ ...form, address: e.target.value })} />
-            </div>
+          <div className="grid gap-2">
+            <Label htmlFor="address">{t("reg.address")}</Label>
+            <LocationAutocomplete
+              id="address"
+              value={form.address}
+              placeholder={t("reg.addressPh")}
+              onChange={(text) => setForm({ ...form, address: text })}
+              onSelect={(loc) => {
+                setLocation(loc);
+                setForm({ ...form, address: loc.display_name, city: loc.city || form.city });
+              }}
+            />
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="cover_url">{t("reg.cover")}</Label>
+            <Label htmlFor="city">{t("reg.city")}</Label>
+            <Input id="city" maxLength={120} value={form.city} onChange={(e) => setForm({ ...form, city: e.target.value })} />
+          </div>
+
             <Input id="cover_url" type="url" maxLength={500} value={form.cover_url} onChange={(e) => setForm({ ...form, cover_url: e.target.value })} placeholder="https://..." />
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
