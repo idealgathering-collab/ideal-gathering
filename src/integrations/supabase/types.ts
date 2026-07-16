@@ -24,6 +24,7 @@ export type Database = {
           id: string
           name: string
           owner_id: string
+          status: Database["public"]["Enums"]["business_status"]
         }
         Insert: {
           address?: string | null
@@ -34,6 +35,7 @@ export type Database = {
           id?: string
           name: string
           owner_id: string
+          status?: Database["public"]["Enums"]["business_status"]
         }
         Update: {
           address?: string | null
@@ -44,6 +46,7 @@ export type Database = {
           id?: string
           name?: string
           owner_id?: string
+          status?: Database["public"]["Enums"]["business_status"]
         }
         Relationships: []
       }
@@ -183,21 +186,36 @@ export type Database = {
       profiles: {
         Row: {
           avatar_url: string | null
+          bio: string | null
+          city: string | null
+          cover_url: string | null
           created_at: string
           display_name: string | null
           id: string
+          interests: Json
+          social_links: Json
         }
         Insert: {
           avatar_url?: string | null
+          bio?: string | null
+          city?: string | null
+          cover_url?: string | null
           created_at?: string
           display_name?: string | null
           id: string
+          interests?: Json
+          social_links?: Json
         }
         Update: {
           avatar_url?: string | null
+          bio?: string | null
+          city?: string | null
+          cover_url?: string | null
           created_at?: string
           display_name?: string | null
           id?: string
+          interests?: Json
+          social_links?: Json
         }
         Relationships: []
       }
@@ -287,6 +305,7 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "business_owner" | "user"
+      business_status: "pending" | "approved" | "rejected"
       gathering_status: "proposed" | "approved" | "cancelled" | "rejected"
     }
     CompositeTypes: {
@@ -416,6 +435,7 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "business_owner", "user"],
+      business_status: ["pending", "approved", "rejected"],
       gathering_status: ["proposed", "approved", "cancelled", "rejected"],
     },
   },
