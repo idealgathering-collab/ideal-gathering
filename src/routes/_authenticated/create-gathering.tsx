@@ -133,54 +133,36 @@ function CreateGathering() {
             />
           </div>
 
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div className="grid gap-2">
-              <Label htmlFor="venue_name">{t("create.venueName")}</Label>
-              <Input
-                id="venue_name"
-                required
-                maxLength={120}
-                value={form.venue_name}
-                placeholder={t("create.venueNamePh")}
-                onChange={(e) => setForm({ ...form, venue_name: e.target.value })}
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="neighborhood">{t("create.neighborhood")}</Label>
-              <Input
-                id="neighborhood"
-                required
-                maxLength={80}
-                value={form.neighborhood}
-                placeholder={t("create.neighborhoodPh")}
-                onChange={(e) => setForm({ ...form, neighborhood: e.target.value })}
-              />
-            </div>
+          <div className="grid gap-2">
+            <Label htmlFor="venue_name">{t("create.venueName")}</Label>
+            <Input
+              id="venue_name"
+              required
+              maxLength={200}
+              value={form.venue_name}
+              placeholder={t("create.venueNamePh")}
+              onChange={(e) => setForm({ ...form, venue_name: e.target.value })}
+            />
           </div>
 
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div className="grid gap-2">
-              <Label htmlFor="starts_at">{t("create.datetime")}</Label>
-              <Input
-                id="starts_at"
-                type="datetime-local"
-                required
-                value={form.starts_at}
-                onChange={(e) => setForm({ ...form, starts_at: e.target.value })}
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="seats">{t("create.seats")}</Label>
-              <Input
-                id="seats"
-                type="number"
-                min={2}
-                max={30}
-                value={form.seats}
-                onChange={(e) => setForm({ ...form, seats: Number(e.target.value) })}
-              />
-            </div>
+          <div className="grid gap-2">
+            <Label htmlFor="location">{t("create.location")}</Label>
+            <LocationAutocomplete
+              id="location"
+              required
+              value={form.neighborhood}
+              placeholder={t("create.locationPh")}
+              onChange={(text) => setForm({ ...form, neighborhood: text })}
+              onSelect={(loc) => {
+                setLocation(loc);
+                setForm({ ...form, neighborhood: loc.city || loc.display_name });
+              }}
+            />
+            {location && (
+              <p className="text-xs text-muted-foreground">{location.address}</p>
+            )}
           </div>
+
 
           <p className="rounded-2xl bg-sunshine/40 px-4 py-3 text-xs text-foreground/80">
             {t("create.needsApproval")}
