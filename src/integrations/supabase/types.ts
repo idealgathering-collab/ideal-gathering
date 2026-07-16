@@ -22,6 +22,8 @@ export type Database = {
           created_at: string
           description: string | null
           id: string
+          lat: number | null
+          lng: number | null
           name: string
           owner_id: string
           status: Database["public"]["Enums"]["business_status"]
@@ -33,6 +35,8 @@ export type Database = {
           created_at?: string
           description?: string | null
           id?: string
+          lat?: number | null
+          lng?: number | null
           name: string
           owner_id: string
           status?: Database["public"]["Enums"]["business_status"]
@@ -44,6 +48,8 @@ export type Database = {
           created_at?: string
           description?: string | null
           id?: string
+          lat?: number | null
+          lng?: number | null
           name?: string
           owner_id?: string
           status?: Database["public"]["Enums"]["business_status"]
@@ -78,11 +84,15 @@ export type Database = {
       }
       gatherings: {
         Row: {
+          address: string | null
           business_id: string | null
+          city: string | null
           created_at: string
           description: string | null
           host_id: string
           id: string
+          lat: number | null
+          lng: number | null
           neighborhood: string
           seats: number
           starts_at: string
@@ -92,11 +102,15 @@ export type Database = {
           venue_name: string
         }
         Insert: {
+          address?: string | null
           business_id?: string | null
+          city?: string | null
           created_at?: string
           description?: string | null
           host_id: string
           id?: string
+          lat?: number | null
+          lng?: number | null
           neighborhood: string
           seats?: number
           starts_at: string
@@ -106,11 +120,15 @@ export type Database = {
           venue_name: string
         }
         Update: {
+          address?: string | null
           business_id?: string | null
+          city?: string | null
           created_at?: string
           description?: string | null
           host_id?: string
           id?: string
+          lat?: number | null
+          lng?: number | null
           neighborhood?: string
           seats?: number
           starts_at?: string
