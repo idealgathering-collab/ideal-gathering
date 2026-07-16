@@ -171,54 +171,24 @@ function Home() {
         </div>
       </section>
 
-      {/* B2B */}
-      <section className="mx-auto max-w-6xl px-4 py-20 sm:py-28">
-        <div className="grid gap-12 lg:grid-cols-[1fr_1.05fr] lg:items-center">
-          <div>
-            <div className="inline-flex items-center gap-2 rounded-full bg-tangerine/20 px-3 py-1 text-xs font-medium uppercase tracking-wide text-tangerine-foreground">
-              {t("b2b.badge")}
-            </div>
-            <h2 className="mt-4 font-display text-4xl sm:text-5xl">
-              {t("b2b.title1")}{" "}
-              <span className="italic text-tangerine">{t("b2b.title2")}</span>
-            </h2>
-            <p className="mt-4 text-muted-foreground">{t("b2b.body")}</p>
-
-            <ul className="mt-6 space-y-3 text-sm">
-              {bullets.map((line) => (
-                <li key={line} className="flex items-start gap-2">
-                  <span className="mt-0.5 grid h-5 w-5 place-items-center rounded-full bg-primary text-primary-foreground">
-                    <Check className="h-3 w-3" />
-                  </span>
-                  <span>{line}</span>
-                </li>
-              ))}
-            </ul>
-
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Button asChild size="lg" className="rounded-full">
-                <Link to="/register-business">
-                  {t("b2b.register")} <ArrowRight className="ml-1 h-4 w-4" />
-                </Link>
-              </Button>
-              <Button asChild size="lg" variant="outline" className="rounded-full">
-                <a href="mailto:partners@idealgathering.co">{t("b2b.partners")}</a>
-              </Button>
-            </div>
+      {/* B2B TEASER */}
+      <section className="mx-auto max-w-4xl px-4 py-20 sm:py-24">
+        <div className="rounded-3xl border border-border bg-card p-8 text-center shadow-soft sm:p-12">
+          <div className="inline-flex items-center gap-2 rounded-full bg-tangerine/20 px-3 py-1 text-xs font-medium uppercase tracking-wide text-tangerine-foreground">
+            {t("b2b.badge")}
           </div>
-
-          <VenueDashboardPreview />
-        </div>
-
-        <div className="mt-14 grid gap-3 sm:grid-cols-3">
-          {feats.map((f) => (
-            <div key={f.label} className="flex items-center gap-3 rounded-2xl border border-border bg-card px-4 py-3 text-sm">
-              <span className="grid h-9 w-9 place-items-center rounded-xl bg-gradient-warm text-tangerine-foreground">
-                <f.icon className="h-4 w-4" />
-              </span>
-              {f.label}
-            </div>
-          ))}
+          <h2 className="mt-4 font-display text-4xl sm:text-5xl">
+            {t("b2b.title1")}{" "}
+            <span className="italic text-tangerine">{t("b2b.title2")}</span>
+          </h2>
+          <p className="mx-auto mt-4 max-w-2xl text-muted-foreground">{t("b2b.teaser")}</p>
+          <div className="mt-8">
+            <Button asChild size="lg" className="rounded-full">
+              <Link to="/partnership">
+                {t("b2b.learnMore")} <ArrowRight className="ml-1 h-4 w-4" />
+              </Link>
+            </Button>
+          </div>
         </div>
       </section>
 
