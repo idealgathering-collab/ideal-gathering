@@ -1,12 +1,14 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
+import { X } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { supabase } from "@/integrations/supabase/client";
 import { useSession } from "@/hooks/use-session";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -26,46 +28,101 @@ export const Route = createFileRoute("/_authenticated/profile")({
   component: ProfilePage,
 });
 
+type SocialLinks = {
+  instagram?: string;
+  linkedin?: string;
+  twitter?: string;
+  website?: string;
+};
+
+async function signedUrl(path: string | null | undefined) {
+  if (!path) return null;
+  const { data } = await supabase.storage.from("avatars").createSignedUrl(path, 3600);
+  return data?.signedUrl ?? null;
+}
+
 function ProfilePage() {
   const t = useT();
   const { user } = useSession();
   const navigate = useNavigate();
   const qc = useQueryClient();
+
   const [displayName, setDisplayName] = useState("");
+  const [bio, setBio] = useState("");
+  const [city, setCity] = useState("");
+  const [interests, setInterests] = useState<string[]>([]);
+  const [interestInput, setInterestInput] = useState("");
+  const [social, setSocial] = useState<SocialLinks>({});
   const [avatarPath, setAvatarPath] = useState<string | null>(null);
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+  const [coverPath, setCoverPath] = useState<string | null>(null);
+  const [coverUrl, setCoverUrl] = useState<string | null>(null);
+
   const [saving, setSaving] = useState(false);
-  const [uploading, setUploading] = useState(false);
+  const [uploadingAvatar, setUploadingAvatar] = useState(false);
+  const [uploadingCover, setUploadingCover] = useState(false);
   const [confirmText, setConfirmText] = useState("");
   const [deleting, setDeleting] = useState(false);
-  const fileRef = useRef<HTMLInputElement>(null);
+  const avatarRef = useRef<HTMLInputElement>(null);
+  const coverRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (!user) return;
     supabase
       .from("profiles")
-      .select("display_name, avatar_url")
+      .select("display_name, avatar_url, bio, city, interests, social_links, cover_url")
       .eq("id", user.id)
       .maybeSingle()
       .then(async ({ data }) => {
-        setDisplayName(data?.display_name ?? "");
-        setAvatarPath(data?.avatar_url ?? null);
-        if (data?.avatar_url) {
-          const { data: signed } = await supabase.storage
-            .from("avatars")
-            .createSignedUrl(data.avatar_url, 3600);
-          setAvatarUrl(signed?.signedUrl ?? null);
-        }
+        if (!data) return;
+        setDisplayName(data.display_name ?? "");
+        setBio(data.bio ?? "");
+        setCity(data.city ?? "");
+        setInterests(Array.isArray(data.interests) ? (data.interests as string[]) : []);
+        setSocial((data.social_links as SocialLinks) ?? {});
+        setAvatarPath(data.avatar_url ?? null);
+        setCoverPath(data.cover_url ?? null);
+        setAvatarUrl(await signedUrl(data.avatar_url));
+        setCoverUrl(await signedUrl(data.cover_url));
       });
   }, [user]);
 
-  async function saveName() {
+  function addInterest() {
+    const v = interestInput.trim();
+    if (!v) return;
+    if (interests.includes(v)) {
+      setInterestInput("");
+      return;
+    }
+    if (interests.length >= 15) {
+      toast.error(t("profile.interests.max"));
+      return;
+    }
+    setInterests([...interests, v]);
+    setInterestInput("");
+  }
+
+  function removeInterest(tag: string) {
+    setInterests(interests.filter((i) => i !== tag));
+  }
+
+  async function saveProfile() {
     if (!user) return;
+    if (bio.length > 500) {
+      toast.error(t("profile.bio.max"));
+      return;
+    }
     try {
       setSaving(true);
       const { error } = await supabase
         .from("profiles")
-        .update({ display_name: displayName.trim() })
+        .update({
+          display_name: displayName.trim(),
+          bio: bio.trim() || null,
+          city: city.trim() || null,
+          interests: interests,
+          social_links: social,
+        })
         .eq("id", user.id);
       if (error) throw error;
       toast.success(t("profile.saved"));
@@ -76,31 +133,55 @@ function ProfilePage() {
     }
   }
 
+  async function uploadImage(
+    file: File,
+    kind: "avatar" | "cover",
+  ): Promise<string> {
+    if (!user) throw new Error("No user");
+    const ext = file.name.split(".").pop()?.toLowerCase() || "png";
+    const path = `${user.id}/${kind}.${ext}`;
+    const { error: upErr } = await supabase.storage
+      .from("avatars")
+      .upload(path, file, { upsert: true, contentType: file.type });
+    if (upErr) throw upErr;
+    return path;
+  }
+
   async function onAvatarChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file || !user) return;
     try {
-      setUploading(true);
-      const ext = file.name.split(".").pop()?.toLowerCase() || "png";
-      const path = `${user.id}/avatar.${ext}`;
-      const { error: upErr } = await supabase.storage
-        .from("avatars")
-        .upload(path, file, { upsert: true, contentType: file.type });
-      if (upErr) throw upErr;
-      const { error: updErr } = await supabase
-        .from("profiles")
-        .update({ avatar_url: path })
-        .eq("id", user.id);
-      if (updErr) throw updErr;
+      setUploadingAvatar(true);
+      const path = await uploadImage(file, "avatar");
+      const { error } = await supabase.from("profiles").update({ avatar_url: path }).eq("id", user.id);
+      if (error) throw error;
       setAvatarPath(path);
-      const { data: signed } = await supabase.storage.from("avatars").createSignedUrl(path, 3600);
-      setAvatarUrl(signed?.signedUrl ?? null);
+      setAvatarUrl(await signedUrl(path));
       toast.success(t("profile.avatarUpdated"));
     } catch (err) {
       toast.error(err instanceof Error ? err.message : t("auth.generic"));
     } finally {
-      setUploading(false);
-      if (fileRef.current) fileRef.current.value = "";
+      setUploadingAvatar(false);
+      if (avatarRef.current) avatarRef.current.value = "";
+    }
+  }
+
+  async function onCoverChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file || !user) return;
+    try {
+      setUploadingCover(true);
+      const path = await uploadImage(file, "cover");
+      const { error } = await supabase.from("profiles").update({ cover_url: path }).eq("id", user.id);
+      if (error) throw error;
+      setCoverPath(path);
+      setCoverUrl(await signedUrl(path));
+      toast.success(t("profile.coverUpdated"));
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : t("auth.generic"));
+    } finally {
+      setUploadingCover(false);
+      if (coverRef.current) coverRef.current.value = "";
     }
   }
 
@@ -138,28 +219,48 @@ function ProfilePage() {
     }
   }
 
+  const initial = (displayName || user?.email || "?").slice(0, 1).toUpperCase();
+
   return (
     <div className="min-h-screen bg-background">
       <SiteHeader />
-      <main className="mx-auto max-w-2xl px-4 py-12">
+      <main className="mx-auto max-w-3xl px-4 py-12">
         <h1 className="font-display text-4xl">{t("profile.title")}</h1>
         <p className="mt-1 text-sm text-muted-foreground">{user?.email}</p>
 
-        <section className="mt-8 rounded-3xl border border-border bg-card p-6">
-          <h2 className="font-display text-xl">{t("profile.avatar")}</h2>
-          <div className="mt-4 flex items-center gap-4">
-            <div className="grid h-20 w-20 place-items-center overflow-hidden rounded-full bg-muted">
+        {/* Cover + Avatar */}
+        <section className="mt-8 overflow-hidden rounded-3xl border border-border bg-card">
+          <div className="relative h-48 w-full bg-gradient-hero">
+            {coverUrl && <img src={coverUrl} alt="" className="h-full w-full object-cover" />}
+            <input
+              ref={coverRef}
+              type="file"
+              accept="image/*"
+              onChange={onCoverChange}
+              className="hidden"
+            />
+            <Button
+              type="button"
+              variant="secondary"
+              size="sm"
+              onClick={() => coverRef.current?.click()}
+              disabled={uploadingCover}
+              className="absolute right-4 top-4 rounded-full"
+            >
+              {uploadingCover ? "…" : t("profile.uploadCover")}
+            </Button>
+          </div>
+          <div className="flex items-end gap-4 px-6 pb-6">
+            <div className="-mt-10 grid h-24 w-24 place-items-center overflow-hidden rounded-full border-4 border-card bg-muted">
               {avatarUrl ? (
                 <img src={avatarUrl} alt="" className="h-full w-full object-cover" />
               ) : (
-                <span className="text-2xl font-display">
-                  {(displayName || user?.email || "?").slice(0, 1).toUpperCase()}
-                </span>
+                <span className="text-3xl font-display">{initial}</span>
               )}
             </div>
-            <div>
+            <div className="pb-1">
               <input
-                ref={fileRef}
+                ref={avatarRef}
                 type="file"
                 accept="image/*"
                 onChange={onAvatarChange}
@@ -168,29 +269,148 @@ function ProfilePage() {
               <Button
                 type="button"
                 variant="outline"
-                onClick={() => fileRef.current?.click()}
-                disabled={uploading}
+                size="sm"
+                onClick={() => avatarRef.current?.click()}
+                disabled={uploadingAvatar}
                 className="rounded-full"
               >
-                {uploading ? "…" : t("profile.uploadAvatar")}
+                {uploadingAvatar ? "…" : t("profile.uploadAvatar")}
               </Button>
-              <p className="mt-2 text-xs text-muted-foreground">{t("profile.avatarHint")}</p>
+              <p className="mt-1 text-xs text-muted-foreground">{t("profile.avatarHint")}</p>
             </div>
           </div>
         </section>
 
+        {/* About */}
         <section className="mt-6 rounded-3xl border border-border bg-card p-6">
-          <h2 className="font-display text-xl">{t("profile.displayName")}</h2>
-          <div className="mt-4 grid gap-3">
-            <Label htmlFor="dn">{t("profile.displayName")}</Label>
-            <Input id="dn" value={displayName} maxLength={80} onChange={(e) => setDisplayName(e.target.value)} />
-            <Button onClick={saveName} disabled={saving} className="rounded-full w-fit">
-              {saving ? "…" : t("profile.save")}
+          <h2 className="font-display text-xl">{t("profile.about")}</h2>
+          <div className="mt-4 grid gap-4">
+            <div className="grid gap-2">
+              <Label htmlFor="dn">{t("profile.displayName")}</Label>
+              <Input id="dn" value={displayName} maxLength={80} onChange={(e) => setDisplayName(e.target.value)} />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="bio">{t("profile.bio")}</Label>
+              <Textarea
+                id="bio"
+                value={bio}
+                maxLength={500}
+                rows={4}
+                placeholder={t("profile.bioPh")}
+                onChange={(e) => setBio(e.target.value)}
+              />
+              <p className="text-xs text-muted-foreground">{bio.length}/500</p>
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="city">{t("profile.city")}</Label>
+              <Input
+                id="city"
+                value={city}
+                maxLength={120}
+                placeholder={t("profile.cityPh")}
+                onChange={(e) => setCity(e.target.value)}
+              />
+            </div>
+          </div>
+        </section>
+
+        {/* Interests */}
+        <section className="mt-6 rounded-3xl border border-border bg-card p-6">
+          <h2 className="font-display text-xl">{t("profile.interests")}</h2>
+          <p className="mt-1 text-sm text-muted-foreground">{t("profile.interests.hint")}</p>
+          <div className="mt-4 flex flex-wrap gap-2">
+            {interests.map((tag) => (
+              <span
+                key={tag}
+                className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-3 py-1 text-sm text-primary"
+              >
+                {tag}
+                <button
+                  type="button"
+                  onClick={() => removeInterest(tag)}
+                  className="ml-1 rounded-full hover:bg-primary/20"
+                  aria-label={t("profile.interests.remove")}
+                >
+                  <X className="h-3.5 w-3.5" />
+                </button>
+              </span>
+            ))}
+          </div>
+          <div className="mt-4 flex gap-2">
+            <Input
+              value={interestInput}
+              placeholder={t("profile.interests.add")}
+              maxLength={40}
+              onChange={(e) => setInterestInput(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === ",") {
+                  e.preventDefault();
+                  addInterest();
+                }
+              }}
+            />
+            <Button type="button" variant="outline" onClick={addInterest} className="rounded-full">
+              {t("profile.interests.addBtn")}
             </Button>
           </div>
         </section>
 
-        <section className="mt-6 rounded-3xl border border-destructive/40 bg-card p-6">
+        {/* Social links */}
+        <section className="mt-6 rounded-3xl border border-border bg-card p-6">
+          <h2 className="font-display text-xl">{t("profile.social")}</h2>
+          <div className="mt-4 grid gap-4 sm:grid-cols-2">
+            <div className="grid gap-2">
+              <Label htmlFor="ig">Instagram</Label>
+              <Input
+                id="ig"
+                value={social.instagram ?? ""}
+                placeholder="@username"
+                maxLength={200}
+                onChange={(e) => setSocial({ ...social, instagram: e.target.value })}
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="li">LinkedIn</Label>
+              <Input
+                id="li"
+                value={social.linkedin ?? ""}
+                placeholder="linkedin.com/in/…"
+                maxLength={200}
+                onChange={(e) => setSocial({ ...social, linkedin: e.target.value })}
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="tw">X / Twitter</Label>
+              <Input
+                id="tw"
+                value={social.twitter ?? ""}
+                placeholder="@username"
+                maxLength={200}
+                onChange={(e) => setSocial({ ...social, twitter: e.target.value })}
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="ws">{t("profile.website")}</Label>
+              <Input
+                id="ws"
+                type="url"
+                value={social.website ?? ""}
+                placeholder="https://…"
+                maxLength={300}
+                onChange={(e) => setSocial({ ...social, website: e.target.value })}
+              />
+            </div>
+          </div>
+        </section>
+
+        <div className="mt-6 flex justify-end">
+          <Button onClick={saveProfile} disabled={saving} size="lg" className="rounded-full">
+            {saving ? "…" : t("profile.save")}
+          </Button>
+        </div>
+
+        {/* Danger zone */}
+        <section className="mt-8 rounded-3xl border border-destructive/40 bg-card p-6">
           <h2 className="font-display text-xl text-destructive">{t("profile.danger")}</h2>
           <p className="mt-1 text-sm text-muted-foreground">{t("profile.delete.body")}</p>
           <AlertDialog>
