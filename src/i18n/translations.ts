@@ -667,6 +667,9 @@ export const translations: Record<Lang, Dict> = {
     "create.venueNamePh": "örn. Kronotrop Coffee Bar",
     "create.neighborhood": "Semt",
     "create.neighborhoodPh": "örn. Kadıköy",
+    "create.location": "Konum",
+    "create.locationPh": "Semt veya adres ara…",
+    "reg.addressPh": "Adres ara…",
 
     // Home extras
     "home.hero.signup": "Kayıt ol",
