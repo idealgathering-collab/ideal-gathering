@@ -39,13 +39,6 @@ function Home() {
     { n: "03", icon: Coffee, title: t("how.s3.title"), body: t("how.s3.body") },
   ];
 
-  const bullets = [t("b2b.b1"), t("b2b.b2"), t("b2b.b3"), t("b2b.b4")];
-
-  const feats = [
-    { icon: BarChart3, label: t("b2b.feat1") },
-    { icon: Gavel, label: t("b2b.feat2") },
-    { icon: Users, label: t("b2b.feat3") },
-  ];
 
   return (
     <div className="min-h-screen bg-background">
