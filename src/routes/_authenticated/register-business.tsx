@@ -105,7 +105,6 @@ function RegisterBusiness() {
             <Label htmlFor="description">{t("reg.description")}</Label>
             <Textarea id="description" maxLength={600} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
           </div>
-          <div className="grid gap-4 sm:grid-cols-2">
           <div className="grid gap-2">
             <Label htmlFor="address">{t("reg.address")}</Label>
             <LocationAutocomplete
@@ -123,7 +122,8 @@ function RegisterBusiness() {
             <Label htmlFor="city">{t("reg.city")}</Label>
             <Input id="city" maxLength={120} value={form.city} onChange={(e) => setForm({ ...form, city: e.target.value })} />
           </div>
-
+          <div className="grid gap-2">
+            <Label htmlFor="cover_url">{t("reg.cover")}</Label>
             <Input id="cover_url" type="url" maxLength={500} value={form.cover_url} onChange={(e) => setForm({ ...form, cover_url: e.target.value })} placeholder="https://..." />
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
