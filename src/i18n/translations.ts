@@ -488,6 +488,14 @@ export const translations: Record<Lang, Dict> = {
     "nav.signIn": "Giriş yap",
     "nav.join": "Katıl",
     "nav.language": "Dil",
+    "nav.partnership": "Ortaklık",
+
+    // Partnership page
+    "partner.eyebrow": "Kafeler ve restoranlar için",
+    "partner.intro": "Ideal Gathering, konulu masaları ve o masalarda oturmak isteyen misafirleri zaten sevdiğimiz kafe ve restoranlara getirir. Mekânında düzenlenen her Buluşma yalnızca sen onayladığında gerçekleşir.",
+    "partner.how.title": "Mekânın için nasıl çalışır",
+    "partner.cta.title": "İlk Buluşmaya ev sahipliği yapmaya hazır mısın?",
+    "partner.cta.body": "Mekânını birkaç dakikada kaydet. Ücret yok, taahhüt yok — her Buluşmayı yayına almadan önce sen onaylıyorsun.",
 
     // Common
     "common.loading": "Yükleniyor…",
@@ -821,9 +829,8 @@ export const translations: Record<Lang, Dict> = {
     "footer.explore.tables": "Yaklaşan masalar",
     "footer.explore.partners": "Partner kafeler",
     "footer.explore.vibe": "Topluluk ruhu",
-    "footer.biz.sub": "Mekân abonelikleri",
-    "footer.biz.bid": "Teklif sistemi",
-    "footer.biz.success": "Başarı hikâyeleri",
+    "footer.biz.partnership": "Ortaklık",
+    "footer.biz.sub": "Mekânını kaydet",
     "footer.biz.support": "Kafe desteği",
     "footer.legal.tos": "Kullanım Şartları",
     "footer.legal.privacy": "Gizlilik Politikası",
