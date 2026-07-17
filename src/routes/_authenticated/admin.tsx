@@ -517,6 +517,7 @@ function UserDetail({ id, onBack }: { id: string; onBack: () => void }) {
             )}
 
             <dl className="mt-6 grid gap-4 sm:grid-cols-2">
+              <Field label={t("admin.user.country")} value={user.country ? countryName(user.country) : null} />
               <Field label={t("admin.user.city")} value={user.city} />
               <Field label={t("admin.users.role")} value={user.role} />
               <Field label={t("admin.users.signedUp")} value={new Date(user.created_at).toLocaleString()} />
