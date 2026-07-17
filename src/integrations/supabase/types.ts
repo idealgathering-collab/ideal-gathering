@@ -16,42 +16,51 @@ export type Database = {
     Tables: {
       businesses: {
         Row: {
-          address: string | null
-          city: string | null
-          cover_url: string | null
+          address: string
+          city: string
+          cover_url: string
           created_at: string
-          description: string | null
+          description: string
           id: string
-          lat: number | null
-          lng: number | null
+          lat: number
+          lng: number
+          menu_link: string | null
+          mobile: string
           name: string
           owner_id: string
+          phone: string
           status: Database["public"]["Enums"]["business_status"]
         }
         Insert: {
-          address?: string | null
-          city?: string | null
-          cover_url?: string | null
+          address: string
+          city: string
+          cover_url: string
           created_at?: string
-          description?: string | null
+          description: string
           id?: string
-          lat?: number | null
-          lng?: number | null
+          lat: number
+          lng: number
+          menu_link?: string | null
+          mobile: string
           name: string
           owner_id: string
+          phone: string
           status?: Database["public"]["Enums"]["business_status"]
         }
         Update: {
-          address?: string | null
-          city?: string | null
-          cover_url?: string | null
+          address?: string
+          city?: string
+          cover_url?: string
           created_at?: string
-          description?: string | null
+          description?: string
           id?: string
-          lat?: number | null
-          lng?: number | null
+          lat?: number
+          lng?: number
+          menu_link?: string | null
+          mobile?: string
           name?: string
           owner_id?: string
+          phone?: string
           status?: Database["public"]["Enums"]["business_status"]
         }
         Relationships: []
@@ -82,6 +91,96 @@ export type Database = {
           },
         ]
       }
+      gathering_checklist_checks: {
+        Row: {
+          checked_at: string
+          item_id: string
+          user_id: string
+        }
+        Insert: {
+          checked_at?: string
+          item_id: string
+          user_id: string
+        }
+        Update: {
+          checked_at?: string
+          item_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gathering_checklist_checks_item_id_fkey"
+            columns: ["item_id"]
+            isOneToOne: false
+            referencedRelation: "gathering_checklist_items"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      gathering_checklist_items: {
+        Row: {
+          created_at: string
+          gathering_id: string
+          id: string
+          label: string
+          sort_order: number
+        }
+        Insert: {
+          created_at?: string
+          gathering_id: string
+          id?: string
+          label: string
+          sort_order?: number
+        }
+        Update: {
+          created_at?: string
+          gathering_id?: string
+          id?: string
+          label?: string
+          sort_order?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gathering_checklist_items_gathering_id_fkey"
+            columns: ["gathering_id"]
+            isOneToOne: false
+            referencedRelation: "gatherings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      gathering_messages: {
+        Row: {
+          body: string
+          created_at: string
+          gathering_id: string
+          id: string
+          sender_id: string
+        }
+        Insert: {
+          body: string
+          created_at?: string
+          gathering_id: string
+          id?: string
+          sender_id: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          gathering_id?: string
+          id?: string
+          sender_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gathering_messages_gathering_id_fkey"
+            columns: ["gathering_id"]
+            isOneToOne: false
+            referencedRelation: "gatherings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       gatherings: {
         Row: {
           address: string | null
@@ -89,11 +188,13 @@ export type Database = {
           city: string | null
           created_at: string
           description: string | null
+          ends_at: string | null
           host_id: string
           id: string
           lat: number | null
           lng: number | null
           neighborhood: string
+          origin: string
           seats: number
           starts_at: string
           status: Database["public"]["Enums"]["gathering_status"]
@@ -107,11 +208,13 @@ export type Database = {
           city?: string | null
           created_at?: string
           description?: string | null
+          ends_at?: string | null
           host_id: string
           id?: string
           lat?: number | null
           lng?: number | null
           neighborhood: string
+          origin?: string
           seats?: number
           starts_at: string
           status?: Database["public"]["Enums"]["gathering_status"]
@@ -125,11 +228,13 @@ export type Database = {
           city?: string | null
           created_at?: string
           description?: string | null
+          ends_at?: string | null
           host_id?: string
           id?: string
           lat?: number | null
           lng?: number | null
           neighborhood?: string
+          origin?: string
           seats?: number
           starts_at?: string
           status?: Database["public"]["Enums"]["gathering_status"]
@@ -206,6 +311,7 @@ export type Database = {
           avatar_url: string | null
           bio: string | null
           city: string | null
+          country: string | null
           cover_url: string | null
           created_at: string
           display_name: string | null
@@ -217,6 +323,7 @@ export type Database = {
           avatar_url?: string | null
           bio?: string | null
           city?: string | null
+          country?: string | null
           cover_url?: string | null
           created_at?: string
           display_name?: string | null
@@ -228,6 +335,7 @@ export type Database = {
           avatar_url?: string | null
           bio?: string | null
           city?: string | null
+          country?: string | null
           cover_url?: string | null
           created_at?: string
           display_name?: string | null
@@ -322,7 +430,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      app_role: "admin" | "business_owner" | "user"
+      app_role: "admin" | "business_owner" | "user" | "venue"
       business_status: "pending" | "approved" | "rejected"
       gathering_status: "proposed" | "approved" | "cancelled" | "rejected"
     }
@@ -452,7 +560,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      app_role: ["admin", "business_owner", "user"],
+      app_role: ["admin", "business_owner", "user", "venue"],
       business_status: ["pending", "approved", "rejected"],
       gathering_status: ["proposed", "approved", "cancelled", "rejected"],
     },
