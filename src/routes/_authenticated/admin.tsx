@@ -730,9 +730,9 @@ export function VenueEditForm({
   onSaved: () => void;
 }) {
   const t = useT();
-  const [name, setName] = useState(venue.name);
-  const [city, setCity] = useState(venue.city ?? "");
-  const [address, setAddress] = useState(venue.address ?? "");
+  const [name, setName] = useState<string>(venue.name);
+  const [city, setCity] = useState<string>(venue.city ?? "");
+  const [address, setAddress] = useState<string>(venue.address ?? "");
   const [saving, setSaving] = useState(false);
 
   async function save() {
