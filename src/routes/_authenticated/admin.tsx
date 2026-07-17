@@ -496,11 +496,25 @@ function UserDetail({ id, onBack }: { id: string; onBack: () => void }) {
                   </span>
                 )}
               </div>
-              <div>
+              <div className="flex-1">
                 <h2 className="font-display text-2xl">{user.display_name ?? "—"}</h2>
                 <p className="text-sm text-muted-foreground">{user.email}</p>
               </div>
+              <Button size="sm" variant="outline" className="rounded-full" onClick={() => setEditing((v) => !v)}>
+                {editing ? t("admin.user.cancel") : t("admin.user.edit")}
+              </Button>
             </div>
+
+            {editing && (
+              <UserEditForm
+                user={user}
+                onCancel={() => setEditing(false)}
+                onSaved={() => {
+                  setEditing(false);
+                  runGet({ data: { id } }).then((u) => setUser(u));
+                }}
+              />
+            )}
 
             <dl className="mt-6 grid gap-4 sm:grid-cols-2">
               <Field label={t("admin.user.city")} value={user.city} />
