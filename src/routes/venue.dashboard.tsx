@@ -9,8 +9,6 @@ import {
   Trash2,
   Zap,
   LogOut,
-  UtensilsCrossed,
-  Link2,
   Upload,
   Loader2,
 } from "lucide-react";
