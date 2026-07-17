@@ -123,6 +123,7 @@ function ProfilePage() {
           display_name: displayName.trim(),
           bio: bio.trim() || null,
           city: city.trim() || null,
+          country: country || null,
           interests: interests,
           social_links: social,
         })
