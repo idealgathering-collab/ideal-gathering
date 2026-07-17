@@ -52,6 +52,7 @@ function ProfilePage() {
   const [displayName, setDisplayName] = useState("");
   const [bio, setBio] = useState("");
   const [city, setCity] = useState("");
+  const [country, setCountry] = useState<string>("");
   const [interests, setInterests] = useState<string[]>([]);
   const [interestInput, setInterestInput] = useState("");
   const [social, setSocial] = useState<SocialLinks>({});
