@@ -1,182 +1,147 @@
 
 # Ideal Gathering — Roles, Venue Portal, Admin Approval & Gathering Room
 
-Big, foundational change. I recommend shipping it in 4 sequential phases (see §7). Below is the full breakdown you asked for.
+**Status update:** Phase 1 (schema + RLS foundation) already shipped in the previous turn — see §7. This plan is unchanged; approving it continues into Phase 2.
 
 ---
 
 ## 1. Schema & RLS changes
 
-### 1.1 Roles
+### 1.1 Roles ✅ (Phase 1, shipped)
+- `venue` value added to `public.app_role` enum (was: `user`, `admin`).
+- `user_roles` unique partial index enforces EXACTLY ONE of `user` or `venue` per auth user. `admin` is additive on top of `user` only.
+- Helpers in `private` schema: `is_venue(uid)`, `is_user(uid)`, existing `has_role(...)`.
+- `handle_new_user()` trigger reads `raw_user_meta_data->>'account_type'` (`'user'` | `'venue'`, default `'user'`) and grants the matching role.
+- `idealgathering@gmail.com` keeps `user + admin`.
 
-- Add `'venue'` to the `public.app_role` enum (currently `user`, `admin`).
-- `user_roles` stays the source of truth. A single auth user has EXACTLY ONE of `user` or `venue` (enforced by a partial unique index or a CHECK-via-trigger). `admin` is additive on top of `user` only.
-- New helper (in `private` schema, matching existing pattern):
-  - `private.is_venue(uid)` — has role `venue`.
-  - `private.is_user(uid)` — has role `user`.
-  - `private.has_role(...)` already exists — keep.
-- Update `handle_new_user()` trigger: it currently hard-codes `user`. Change to read `raw_user_meta_data->>'account_type'` (`'user'` or `'venue'`) set from the signup form, default `'user'`. Venue signups skip inserting a `profiles` row OR insert a minimal one — we'll insert a profile row for both (so `display_name` works everywhere), but grant `venue` role instead of `user`.
-- Backfill: existing accounts stay `user`. `idealgathering@gmail.com` already has `user + admin` — good, no change.
+### 1.2 `businesses` ✅ (Phase 1)
+- New required cols: `phone`, `mobile`. `description`, `address`, `city`, `lat`, `lng`, `cover_url` (repurposed as profile picture) all NOT NULL.
+- New optional col: `menu_link`.
+- Unique index `businesses_one_per_owner_idx` → 1 business per venue account.
+- RLS INSERT rewritten: `owner_id=auth.uid()` AND `status='pending'` AND `private.is_venue(auth.uid())`.
+- UPDATE stays owner-scoped; existing status-lock trigger keeps venue from self-approving.
+- SELECT: public sees `status='approved'`; owner sees own; admin sees all.
 
-### 1.2 `businesses`
+### 1.3 `venue_tables` ✅ (Phase 1)
+- RLS INSERT/UPDATE/DELETE require venue role AND ownership of parent business. Editable while business is pending.
 
-Add:
-- `phone text NOT NULL` (telephone)
-- `mobile text NOT NULL` (mobile)
-- Rename semantics: reuse existing `cover_url` as the required **profile picture** path (stored in `avatars` bucket, same as user avatars). Drop the separate "cover" concept for venues in UI. Column stays; we just repurpose + make it `NOT NULL` after backfill.
-- `menu_link text NULL` (optional external menu URL)
-- `description NOT NULL` (currently nullable — backfill `''` then set NOT NULL)
-- `address`, `city`, `lat`, `lng` → make `NOT NULL` after backfill
-- `status` already exists (`pending`/`approved`/`rejected`) — keep.
+### 1.4 `gatherings` ✅ (Phase 1)
+- New: `origin` (`'user_proposed'` | `'venue_activated'`), `ends_at`.
+- CHECK: venue-activated must have `business_id + table_id`.
+- Overlap trigger `prevent_table_double_booking` (2h default duration).
+- Status-change trigger → only admins can flip status.
+- RLS:
+  - INSERT user_proposed: user role, email verified, `status='proposed'`.
+  - INSERT venue_activated: venue role, owns business (approved), table belongs to business, `status='approved'`.
+  - UPDATE/DELETE by host allowed on own row (status blocked by trigger).
 
-**RLS rewrites on `businesses`**:
-- INSERT: only if `private.is_venue(auth.uid())` AND `owner_id = auth.uid()` AND no existing business for this owner (1 business per venue account — simplest; can relax later).
-- UPDATE: owner may update ALL fields EXCEPT `status` (existing `prevent_business_status_change_by_owner` trigger already enforces this) — keep working whether `status` is pending or approved.
-- SELECT public: only where `status = 'approved'` (existing).
-- SELECT own: owner sees own row regardless of status (existing).
-- Admin: full read/write via `has_role(admin)`.
+### 1.5 `gathering_attendees` ✅ (Phase 1)
+- INSERT: user role AND email verified AND target gathering is approved. (Prevents venue accounts joining.)
 
-### 1.3 `venue_tables`
+### 1.6 `gathering_messages` ✅ (Phase 1)
+- Columns: `id`, `gathering_id`, `sender_id`, `body` (1–2000 chars), `created_at`.
+- RLS: SELECT/INSERT restricted to host + attendees; sender must be self; delete by sender or admin.
+- Added to `supabase_realtime` publication.
 
-- No column changes.
-- RLS INSERT/UPDATE/DELETE: only if caller owns the parent business AND is `venue` role. Editable while business is pending (per spec).
+### 1.7 `gathering_checklist_items` + `gathering_checklist_checks` ✅ (Phase 1)
+- Items: host manages; host+attendees read.
+- Checks: per-user (recommended in original plan and applied) — `(item_id, user_id)` primary key.
 
-### 1.4 `gatherings`
+### 1.8 `profiles` ✅ (Phase 1)
+- Added `country text NULL`.
+- `city text` stays — front end will move it to a static dropdown in Phase 4.
 
-Add:
-- `origin text NOT NULL DEFAULT 'user_proposed'` with CHECK IN (`'user_proposed'`, `'venue_activated'`) — lets us tell the two flows apart cleanly for policies + UI.
-- `ends_at timestamptz NULL` — optional, needed for the "no overlapping active gathering per table" rule (fall back to `starts_at + 2h` if null).
-- Make `business_id` and `table_id` NOT NULL for `origin = 'venue_activated'` (partial CHECK).
-- Existing `venue_name`, `neighborhood`, `address`, `city`, `lat`, `lng` become required for `user_proposed`, ignored for `venue_activated` (they inherit from business).
-
-**Status flow**:
-- `user_proposed` → inserted as `status='proposed'`, only ADMIN can flip to `approved`/`rejected`.
-- `venue_activated` → inserted as `status='approved'` directly, only allowed if `origin='venue_activated'` AND caller is venue owner of `business_id` AND business.status='approved'.
-
-**RLS**:
-- INSERT (user_proposed): role=`user` AND `is_email_verified()` AND `host_id=auth.uid()` AND `origin='user_proposed'` AND `status='proposed'`.
-- INSERT (venue_activated): role=`venue` AND owns `business_id` AND business is approved AND `status='approved'` AND `origin='venue_activated'` AND `table_id` belongs to that business AND no overlapping active gathering on that table (enforced via BEFORE INSERT trigger raising exception; overlap = `tsrange(starts_at, coalesce(ends_at, starts_at+2h))` intersects an existing approved/proposed row's range for same `table_id`).
-- UPDATE status: only `has_role(admin)` (removes existing venue-owner approve path).
-- SELECT public: `status='approved'` (existing) — unchanged.
-
-### 1.5 `gathering_attendees`
-
-- INSERT: role=`user` (already email-verified) AND gathering is `status='approved'`. Prevents venues joining as attendees; matches spec.
-- Everything else unchanged.
-
-### 1.6 New: `gathering_messages` (chat)
-
-```
-id uuid pk, gathering_id uuid fk, sender_id uuid, body text, created_at timestamptz
-```
-- RLS SELECT/INSERT: caller is host OR in `gathering_attendees` for that gathering. INSERT also requires `sender_id = auth.uid()`.
-- Enable Realtime on this table (`ALTER PUBLICATION supabase_realtime ADD TABLE ...`).
-- GRANTs: `authenticated` SELECT/INSERT; no anon.
-
-### 1.7 New: `gathering_checklist_items`
-
-```
-id uuid pk, gathering_id uuid fk, label text, sort_order int, created_at timestamptz
-```
-- RLS INSERT/UPDATE/DELETE: only gathering host.
-- SELECT: host + attendees.
-
-**Recommendation on check-state**: **per-user**, via a separate join table `gathering_checklist_checks (item_id, user_id, checked_at)`. Reason: items like "bring a book" or "arrive 10 min early" are personal actions, not shared todos. Simpler RLS too (`user_id = auth.uid()`). Flag if you'd rather have shared.
-
-### 1.8 `profiles`
-
-- Add `country text NULL` (dropdown-backed).
-- Keep `city text` — becomes dropdown-backed on the client, no schema change.
-- Drop `cover_url` from user profiles UI (still used on businesses; keep column for now to avoid data loss, hide from user profile page).
-
-### 1.9 Data hygiene / backfill risks
-
-- **Existing gatherings** created via the current free-text create-gathering flow have no `business_id`/`table_id` and were never really approvable. Mark them all `origin='user_proposed'`, leave them alone. Admin queue will show them; admin can reject/clean up.
-- **Existing businesses** created before venue role existed: their owners currently have `user` role. Migration will need to detect any owner of a `businesses` row and grant them `venue` role too (or ask you: do we wipe existing test businesses? Likely yes since data is beta).
-- **Required new fields** on businesses (`phone`, `mobile`, `description`, address bits): backfill with placeholder strings then set NOT NULL, OR wipe existing beta businesses. Recommend **wipe** — simpler.
-- **1 business per venue** constraint: if any owner has >1 today, keep first, delete rest.
+### 1.9 Data hygiene ✅ (Phase 1)
+- Truncated beta `gatherings`, `gathering_attendees`, `businesses`, `venue_tables`, `menu_items` — cleanest possible baseline.
 
 ---
 
-## 2. Routes / files — modified vs. new
+## 2. Routes / files — modified vs. new (Phases 2–4)
 
-### New files
+### Phase 2 — Venue portal (NEXT)
 
-- `src/routes/venue/auth.tsx` — venue signup/login (mirrors `/auth`, signs up with `account_type: 'venue'` metadata; no Google — email/password only for cleanliness).
-- `src/routes/_venue/route.tsx` — pathless layout gate, redirects non-venue users out. Uses `ssr:false` like `_authenticated`.
-- `src/routes/_venue/dashboard.tsx` — venue home: business profile summary, tables list w/ Activate buttons, menu builder link, menu_link field.
-- `src/routes/_venue/business.tsx` — edit business profile (fields listed in §5).
+**New files**
+- `src/routes/venue/auth.tsx` — venue signup/login (email/password only; sets `account_type: 'venue'` metadata).
+- `src/routes/_venue/route.tsx` — pathless layout gate; `ssr:false`; redirects non-venues out. Mirrors `_authenticated/route.tsx`.
+- `src/routes/_venue/dashboard.tsx` — venue home: business summary card, tables list w/ per-table Activate button (disabled while `status!='approved'` with tooltip), links to business edit / menu builder.
+- `src/routes/_venue/business.tsx` — create OR edit business (single form, upsert-style). Fields per §5. Redirects here on first login when no business exists.
 - `src/routes/_venue/tables.tsx` — table CRUD (moved out of `businesses.$id.tsx`).
+- `src/routes/_venue/menu.tsx` — structured menu builder (moved from `businesses.$id.tsx`) + optional `menu_link` field.
 - `src/routes/_venue/activate.$tableId.tsx` — the Activate form (subject + optional starts_at/ends_at) → inserts venue_activated gathering.
-- `src/routes/_authenticated/admin/businesses.tsx` — pending/approved businesses queue (replaces current inline tab).
-- `src/routes/_authenticated/admin/gatherings.tsx` — NEW global pending user-proposed gatherings queue.
-- `src/routes/_authenticated/admin/users.$id.edit.tsx` — admin edits any profile.
-- `src/routes/_authenticated/admin/businesses.$id.edit.tsx` — admin edits any business.
-- `src/components/venue-bottom-nav.tsx` and `src/components/user-bottom-nav.tsx` — role-scoped bottom navs.
-- `src/components/country-select.tsx`, `src/components/city-select.tsx` — static dropdowns (start with Turkey + major cities; extendable JSON).
-- `src/components/gathering-room/` — `chat.tsx`, `checklist.tsx`, `info.tsx`, tab shell.
-- `src/lib/gathering-messages.functions.ts`, `src/lib/gathering-checklist.functions.ts` — server functions (chat send if we want moderation; otherwise direct Supabase client + Realtime).
-- `src/lib/admin.functions.ts` — extend with `listPendingBusinesses`, `listPendingGatherings`, `setBusinessStatus`, `setGatheringStatus`, `adminUpdateProfile`, `adminUpdateBusiness`.
+- `src/components/venue-bottom-nav.tsx` — bottom nav: Dashboard / Business / Menu / Logout.
+- `src/components/user-bottom-nav.tsx` — bottom nav: Explore / Host / Profile / Logout.
 
-### Modified files
+**Modified files**
+- `src/routes/auth.tsx` — signup passes `account_type: 'user'`; add small "Are you a venue? →" link.
+- `src/routes/_authenticated/register-business.tsx` — already stubbed as redirect in Phase 1 hotfix; DELETE in Phase 2.
+- `src/routes/_authenticated/businesses.$id.tsx` — strip approve/decline & table CRUD & menu builder; becomes public read-only detail for approved venues (shows active gatherings per table, structured menu, menu_link).
+- `src/routes/_authenticated/create-gathering.tsx` — reshape into "propose a gathering at an existing venue": pick approved business → pick table → subject/date → `origin='user_proposed'`, `status='proposed'`.
+- `src/routes/_authenticated/dashboard.tsx` — becomes USER dashboard; adds user bottom nav; removes venue widgets.
+- `src/routes/_authenticated/route.tsx` — after auth, branch on role: venue outside `/venue/*` → redirect to `/venue/dashboard`.
+- `src/i18n/translations.ts` — many new keys for venue portal + activate flow (EN + TR).
 
-- `src/routes/auth.tsx` — clarify it's the USER door; add link "Are you a venue? → /venue/auth"; signup metadata `account_type: 'user'`.
-- `src/routes/_authenticated/register-business.tsx` — **delete** (moved into venue portal as `/venue/business` shown on first venue login when no business exists yet).
-- `src/routes/_authenticated/businesses.$id.tsx` — strip approve/decline UI, strip table CRUD (moved to venue portal). Becomes a public read-only business detail page for approved venues (shows tables' active gatherings, menu, menu_link).
-- `src/routes/_authenticated/create-gathering.tsx` — reshape into "propose a gathering at an existing venue". Instead of free-text venue, use a venue picker (search approved businesses) → then table picker → subject/date. Sets `origin='user_proposed'`, `status='proposed'`.
-- `src/routes/_authenticated/dashboard.tsx` — becomes the USER dashboard shell with bottom nav (Explore / Host / Profile / Logout). Existing venue-related widgets removed.
-- `src/routes/_authenticated/admin.tsx` — restructured tabs: Businesses / Gatherings / Users (each links into the new admin subroutes above).
-- `src/routes/_authenticated/profile.tsx` — add country + city dropdowns; remove cover photo upload UI.
-- `src/routes/_authenticated/route.tsx` — after auth check, branch on role: venue → redirect to `/venue/dashboard` unless URL already starts with `/venue`; user → allow app routes. Admin routes gate additionally on `admin` role.
-- `src/routes/gatherings.$id.tsx` — add Gathering Room tabs (Info / Chat / Checklist) shown only when `isAttending || isHost`; Checklist tab hidden if `items.length === 0`.
-- `src/routes/explore.tsx` — filter to `status='approved'` (already) + surface both origin types.
-- `src/i18n/translations.ts` — many new keys (venue portal, activate flow, admin queues, chat, checklist, country/city labels).
-- `src/lib/mcp/tools/*` — audit `my-businesses`/`join-gathering` for new role gates.
+### Phase 3 — Admin queues & edits
 
-### Deleted / obsolete
+**New files**
+- `src/routes/_authenticated/admin/businesses.tsx` — pending/approved queue.
+- `src/routes/_authenticated/admin/gatherings.tsx` — global pending user-proposed queue.
+- `src/routes/_authenticated/admin/users.$id.edit.tsx` — edit any profile.
+- `src/routes/_authenticated/admin/businesses.$id.edit.tsx` — edit any business.
 
-- Approve/decline block inside `businesses.$id.tsx`.
-- Any UI implying a normal user can register a business from the user dashboard.
+**Modified files**
+- `src/lib/admin.functions.ts` — add `listPendingBusinesses`, `listPendingGatherings`, `setBusinessStatus`, `setGatheringStatus`, `adminUpdateProfile`, `adminUpdateBusiness`.
+- `src/routes/_authenticated/admin.tsx` — restructure to 3 tabs: Businesses / Gatherings / Users.
+
+### Phase 4 — Gathering Room + profile dropdowns
+
+**New files**
+- `src/components/gathering-room/tabs.tsx`, `chat.tsx`, `checklist.tsx`, `info.tsx`.
+- `src/lib/countries.ts`, `src/lib/cities.ts` — static lists (start with Turkey + top ~15 cities).
+- `src/components/country-select.tsx`, `src/components/city-select.tsx`.
+
+**Modified files**
+- `src/routes/gatherings.$id.tsx` — Info always; Chat when `isAttending || isHost`; Checklist same gate AND `items.length > 0`. Realtime subscription for chat.
+- `src/routes/_authenticated/profile.tsx` — swap city textbox → CitySelect; add CountrySelect; drop cover photo UI.
+- `src/i18n/translations.ts` — chat / checklist / country / city keys.
+
+### Deleted
+- Approve/decline block inside `businesses.$id.tsx` (Phase 2).
+- `register-business.tsx` (Phase 2).
 
 ---
 
 ## 3. Flows recap
-
-**User signup** → `/auth` → role `user` → redirected to `/dashboard` (Explore).
-**Venue signup** → `/venue/auth` → role `venue` → redirected to `/venue/business` (must complete registration; status `pending`) → then `/venue/dashboard`. Can edit while pending; Activate button disabled with tooltip "Waiting for admin approval".
-**Admin** → `/admin` → 3 tabs: Businesses pending, Gatherings pending, Users. Can edit any of them.
-**User proposes gathering** → `/create-gathering` → picks approved venue + table → status `proposed` → appears in admin gatherings queue → admin approves → visible in Explore.
-**Venue activates table** → `/venue/dashboard` → per-table Activate → auto-approved → visible in Explore. Overlap trigger blocks double-booking.
-**Gathering Room** → attendee opens `/gatherings/:id` → sees Info always; Chat if joined; Checklist if joined AND host added items.
+- **User signup** → `/auth` → role `user` → `/dashboard` (Explore).
+- **Venue signup** → `/venue/auth` → role `venue` → `/venue/business` (must complete registration; status `pending`) → `/venue/dashboard`. Editable while pending; Activate disabled with tooltip.
+- **Admin** → `/admin` → 3 tabs (Businesses / Gatherings / Users), edits any of them.
+- **User proposes gathering** → `/create-gathering` → pick approved venue+table → status `proposed` → admin queue → approve → visible in Explore.
+- **Venue activates table** → per-table Activate → auto-approved, overlap trigger blocks double-booking.
+- **Gathering Room** → attendee opens `/gatherings/:id` → Info always; Chat + Checklist (if items exist) after joining.
 
 ---
 
 ## 4. Risks, ambiguities, sequencing
 
 ### Risks
-- **Existing beta data**: mix of orphan free-text gatherings + businesses without required new fields. Cleanest path is a wipe of both tables in the first migration (data is pre-launch). Please confirm — otherwise I'll write backfills with placeholder values.
-- **Google OAuth on venue door**: today `/auth` uses Google. If a Gmail user signs up via `/venue/auth` with Google, we can't reliably set `account_type` metadata on first sign-in. Recommend: **venue signup is email/password only**; venues can add Google later. Flag if you want Google on both doors.
-- **1-business-per-venue** constraint is a simplification. If a chain owner needs multiple locations later, we lift the unique constraint and add a business picker.
-- **Chat moderation**: no profanity filter, no rate limit in v1. Admin can delete messages via admin tools (add later if needed).
-- **Realtime on `gathering_messages`** requires enabling the publication + a signed-in supabase client subscription. Straightforward but new surface area.
-- **`admin` role users also have `user` role** — they'll see the user bottom nav. That's fine and matches your spec.
-- **Overlap trigger** needs care with time zones + null `ends_at`. Will use a default 2h window; happy to make it configurable per venue.
+- **Google OAuth on venue door**: hard to reliably tag first Google sign-in as `account_type: 'venue'`. **Recommend: email/password only for venue door** (applied). Users on `/auth` still get Google.
+- **1-business-per-venue** simplification — lift later for chains.
+- **Chat moderation**: no profanity filter/rate limit v1; sender & admin can delete.
+- **Realtime**: `gathering_messages` in publication; browser subscribes via `supabase.channel`.
+- **Overlap trigger** uses 2h default when `ends_at` is null.
+- **Admin users also have `user` role** — they see the user bottom nav (matches spec). Admin dashboard is reached via a link.
 
-### Ambiguities to confirm before build
-1. Wipe existing beta gatherings + businesses? (Strong recommend yes.)
-2. Venue signup — email/password only, or also Google? (Recommend email/password only.)
-3. Checklist check-state — per-user (recommended) or shared?
-4. 1 business per venue account for now? (Recommend yes.)
-5. Country/city dropdown source — start with Turkey + top ~15 cities hard-coded, extend later?
-6. Default venue-activated gathering duration when `ends_at` omitted — 2 hours OK?
+### Ambiguities (applied defaults from prior approval)
+1. Wipe beta data — YES (done).
+2. Venue signup — email/password only.
+3. Checklist check-state — per-user.
+4. 1 business per venue for now.
+5. Country/city dropdown — Turkey + top ~15 cities hard-coded, extendable JSON.
+6. Default duration on venue-activated — 2 hours.
 
-### Recommended sequencing (4 PRs, in order)
+### Sequencing (4 PRs)
+1. ✅ Roles + venue auth door + RLS rewrite + data wipe (SHIPPED).
+2. Venue portal (dashboard, business form, tables, menu link, Activate flow) + strip approve/decline from `businesses.$id.tsx` + reshape create-gathering.
+3. Admin queues (businesses, gatherings, edit-any-profile/business).
+4. Gathering Room (chat + checklist tabs, realtime) + profile country/city dropdowns.
 
-1. **Roles + venue auth door + RLS rewrite + data wipe/backfill** (foundational; unlocks everything). Ship with a temporary "venue portal coming" placeholder page.
-2. **Venue portal**: dashboard, business form (with new required fields + profile pic upload), tables, menu link, Activate flow + overlap trigger. Remove approve/decline from `businesses.$id.tsx`.
-3. **Admin queues**: businesses pending, gatherings pending, edit-any-profile, edit-any-business. Restructure `/admin`.
-4. **Gathering Room** (chat + checklist tables, realtime, tabs on gathering detail) + profile country/city dropdowns.
-
-Doing Gathering Room before account separation would be risky — its RLS depends on the cleaned-up attendee/host model, and shipping chat on top of the current shared-login world would need to be redone.
-
-Waiting on your answers to the 6 questions in §4 before I open the first migration.
+Approving this plan continues with **Phase 2 (venue portal)** next. Gathering Room stays last because its RLS depends on the finalized attendee/host model already in place.

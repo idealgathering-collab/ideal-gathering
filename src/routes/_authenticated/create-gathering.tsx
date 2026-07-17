@@ -1,5 +1,6 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { z } from "zod";
 import { toast } from "sonner";
 import { Sparkles } from "lucide-react";
@@ -11,18 +12,18 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useT } from "@/i18n";
-import { LocationAutocomplete, type LocationValue } from "@/components/location-autocomplete";
 
 export const Route = createFileRoute("/_authenticated/create-gathering")({
   component: CreateGathering,
 });
 
 const schema = z.object({
-  subject: z.string().trim().min(3, "Subject too short").max(120),
+  business_id: z.string().uuid("Pick a venue"),
+  table_id: z.string().uuid("Pick a table"),
+  subject: z.string().trim().min(3).max(120),
   description: z.string().trim().max(800).optional().or(z.literal("")),
-  venue_name: z.string().trim().min(2, "Venue name required").max(200),
-  neighborhood: z.string().trim().min(1).max(120),
   starts_at: z.string().min(1, "Pick a date & time"),
   seats: z.coerce.number().int().min(2).max(30),
 });
@@ -30,52 +31,57 @@ const schema = z.object({
 function CreateGathering() {
   const { user } = useSession();
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
   const t = useT();
+  const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({
+    business_id: "",
+    table_id: "",
     subject: "",
     description: "",
-    venue_name: "",
-    neighborhood: "",
     starts_at: "",
     seats: 4,
   });
-  const [location, setLocation] = useState<LocationValue | null>(null);
 
   const emailVerified = Boolean(user?.email_confirmed_at);
+
+  const { data: venues } = useQuery({
+    queryKey: ["approved-venues"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("businesses")
+        .select("id,name,city,venue_tables(id,label,capacity)")
+        .eq("status", "approved")
+        .order("name");
+      if (error) throw error;
+      return data ?? [];
+    },
+  });
+
+  const selectedBiz = venues?.find((v) => v.id === form.business_id);
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     if (!user) return;
-    if (!emailVerified) {
-      toast.error(t("create.verifyFirst"));
-      return;
-    }
+    if (!emailVerified) return toast.error(t("create.verifyFirst"));
     try {
       const v = schema.parse(form);
       const iso = new Date(v.starts_at).toISOString();
-      if (new Date(iso) < new Date()) {
-        toast.error(t("create.futureTime"));
-        return;
-      }
+      if (new Date(iso) < new Date()) return toast.error(t("create.futureTime"));
       setLoading(true);
       const { data, error } = await supabase
         .from("gatherings")
         .insert({
-          business_id: null,
-          table_id: null,
+          business_id: v.business_id,
+          table_id: v.table_id,
           host_id: user.id,
           subject: v.subject,
           description: v.description || null,
-          venue_name: v.venue_name,
-          neighborhood: v.neighborhood,
-          address: location?.address ?? null,
-          city: location?.city ?? null,
-          lat: location?.lat ?? null,
-          lng: location?.lng ?? null,
+          venue_name: selectedBiz?.name ?? "",
+          neighborhood: selectedBiz?.city ?? "",
           starts_at: iso,
           seats: v.seats,
           status: "proposed",
+          origin: "user_proposed",
         })
         .select("id")
         .single();
@@ -109,92 +115,110 @@ function CreateGathering() {
           </div>
         )}
 
-        <form onSubmit={submit} className="grid gap-5 rounded-3xl border border-border bg-card p-6 shadow-soft">
-          <div className="grid gap-2">
-            <Label htmlFor="subject">{t("create.subject")}</Label>
-            <Input
-              id="subject"
-              required
-              maxLength={120}
-              value={form.subject}
-              placeholder={t("create.subjectPh")}
-              onChange={(e) => setForm({ ...form, subject: e.target.value })}
-            />
+        {venues && venues.length === 0 ? (
+          <div className="rounded-3xl border border-dashed border-border bg-card p-8 text-center">
+            <p className="text-sm text-muted-foreground">{t("create.noVenues")}</p>
+            <Button asChild variant="outline" className="mt-4 rounded-full">
+              <Link to="/venue/auth">{t("create.registerVenue")}</Link>
+            </Button>
           </div>
-
-          <div className="grid gap-2">
-            <Label htmlFor="description">{t("create.description")}</Label>
-            <Textarea
-              id="description"
-              maxLength={800}
-              value={form.description}
-              onChange={(e) => setForm({ ...form, description: e.target.value })}
-              placeholder={t("create.descriptionPh")}
-            />
-          </div>
-
-          <div className="grid gap-2">
-            <Label htmlFor="venue_name">{t("create.venueName")}</Label>
-            <Input
-              id="venue_name"
-              required
-              maxLength={200}
-              value={form.venue_name}
-              placeholder={t("create.venueNamePh")}
-              onChange={(e) => setForm({ ...form, venue_name: e.target.value })}
-            />
-          </div>
-
-          <div className="grid gap-2">
-            <Label htmlFor="location">{t("create.location")}</Label>
-            <LocationAutocomplete
-              id="location"
-              required
-              value={form.neighborhood}
-              placeholder={t("create.locationPh")}
-              onChange={(text) => setForm({ ...form, neighborhood: text })}
-              onSelect={(loc) => {
-                setLocation(loc);
-                setForm({ ...form, neighborhood: loc.city || loc.display_name });
-              }}
-            />
-            {location && (
-              <p className="text-xs text-muted-foreground">{location.address}</p>
-            )}
-          </div>
-
-          <div className="grid gap-4 sm:grid-cols-2">
+        ) : (
+          <form onSubmit={submit} className="grid gap-5 rounded-3xl border border-border bg-card p-6 shadow-soft">
             <div className="grid gap-2">
-              <Label htmlFor="starts_at">{t("create.datetime")}</Label>
+              <Label>{t("create.venue")} *</Label>
+              <Select
+                value={form.business_id}
+                onValueChange={(id) => setForm({ ...form, business_id: id, table_id: "" })}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder={t("create.venuePh")} />
+                </SelectTrigger>
+                <SelectContent>
+                  {(venues ?? []).map((v) => (
+                    <SelectItem key={v.id} value={v.id}>
+                      {v.name} {v.city && <span className="text-muted-foreground">· {v.city}</span>}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="grid gap-2">
+              <Label>{t("create.table")} *</Label>
+              <Select
+                value={form.table_id}
+                onValueChange={(id) => setForm({ ...form, table_id: id })}
+                disabled={!selectedBiz}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder={selectedBiz ? t("create.tablePh") : t("create.tablePhFirst")} />
+                </SelectTrigger>
+                <SelectContent>
+                  {(selectedBiz?.venue_tables ?? []).map((tbl) => (
+                    <SelectItem key={tbl.id} value={tbl.id}>
+                      {t("card.table")} {tbl.label} — {tbl.capacity} {t("create.tableSeats")}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="grid gap-2">
+              <Label htmlFor="subject">{t("create.subject")} *</Label>
               <Input
-                id="starts_at"
-                type="datetime-local"
+                id="subject"
                 required
-                value={form.starts_at}
-                onChange={(e) => setForm({ ...form, starts_at: e.target.value })}
+                maxLength={120}
+                value={form.subject}
+                placeholder={t("create.subjectPh")}
+                onChange={(e) => setForm({ ...form, subject: e.target.value })}
               />
             </div>
+
             <div className="grid gap-2">
-              <Label htmlFor="seats">{t("create.seats")}</Label>
-              <Input
-                id="seats"
-                type="number"
-                min={2}
-                max={30}
-                value={form.seats}
-                onChange={(e) => setForm({ ...form, seats: Number(e.target.value) })}
+              <Label htmlFor="description">{t("create.description")}</Label>
+              <Textarea
+                id="description"
+                maxLength={800}
+                value={form.description}
+                onChange={(e) => setForm({ ...form, description: e.target.value })}
+                placeholder={t("create.descriptionPh")}
               />
             </div>
-          </div>
 
-          <p className="rounded-2xl bg-sunshine/40 px-4 py-3 text-xs text-foreground/80">
-            {t("create.needsApproval")}
-          </p>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div className="grid gap-2">
+                <Label htmlFor="starts_at">{t("create.datetime")} *</Label>
+                <Input
+                  id="starts_at"
+                  type="datetime-local"
+                  required
+                  value={form.starts_at}
+                  onChange={(e) => setForm({ ...form, starts_at: e.target.value })}
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="seats">{t("create.seats")} *</Label>
+                <Input
+                  id="seats"
+                  type="number"
+                  min={2}
+                  max={30}
+                  value={form.seats}
+                  onChange={(e) => setForm({ ...form, seats: Number(e.target.value) })}
+                />
+              </div>
+            </div>
 
-          <Button type="submit" size="lg" disabled={loading || !emailVerified} className="mt-2 h-12 rounded-full">
-            {loading ? t("create.sending") : !emailVerified ? t("create.verifyToContinue") : t("create.propose")}
-          </Button>
-        </form>
+            <p className="rounded-2xl bg-sunshine/40 px-4 py-3 text-xs text-foreground/80">
+              {t("create.needsAdminApproval")}
+            </p>
+
+            <Button type="submit" size="lg" disabled={loading || !emailVerified} className="mt-2 h-12 rounded-full">
+              {loading ? t("create.sending") : !emailVerified ? t("create.verifyToContinue") : t("create.propose")}
+            </Button>
+          </form>
+        )}
       </main>
     </div>
   );

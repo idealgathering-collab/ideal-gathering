@@ -213,7 +213,7 @@ function Home() {
               <Link to="/waitlist">{t("cta.join")}</Link>
             </Button>
             <Button asChild size="lg" variant="outline" className="rounded-full border-primary-foreground/40 bg-transparent text-primary-foreground hover:bg-primary-foreground/10">
-              <Link to="/register-business">{t("cta.register")}</Link>
+              <Link to="/venue/auth">{t("cta.register")}</Link>
             </Button>
           </div>
         </div>

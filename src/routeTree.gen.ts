@@ -19,8 +19,9 @@ import { Route as ExploreRouteImport } from './routes/explore'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as VenueDashboardRouteImport } from './routes/venue.dashboard'
+import { Route as VenueAuthRouteImport } from './routes/venue.auth'
 import { Route as GatheringsIdRouteImport } from './routes/gatherings.$id'
-import { Route as AuthenticatedRegisterBusinessRouteImport } from './routes/_authenticated/register-business'
 import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedCreateGatheringRouteImport } from './routes/_authenticated/create-gathering'
@@ -80,17 +81,21 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const VenueDashboardRoute = VenueDashboardRouteImport.update({
+  id: '/venue/dashboard',
+  path: '/venue/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const VenueAuthRoute = VenueAuthRouteImport.update({
+  id: '/venue/auth',
+  path: '/venue/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const GatheringsIdRoute = GatheringsIdRouteImport.update({
   id: '/gatherings/$id',
   path: '/gatherings/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthenticatedRegisterBusinessRoute =
-  AuthenticatedRegisterBusinessRouteImport.update({
-    id: '/register-business',
-    path: '/register-business',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
 const AuthenticatedProfileRoute = AuthenticatedProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
@@ -158,8 +163,9 @@ export interface FileRoutesByFullPath {
   '/create-gathering': typeof AuthenticatedCreateGatheringRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/profile': typeof AuthenticatedProfileRoute
-  '/register-business': typeof AuthenticatedRegisterBusinessRoute
   '/gatherings/$id': typeof GatheringsIdRoute
+  '/venue/auth': typeof VenueAuthRoute
+  '/venue/dashboard': typeof VenueDashboardRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/businesses/$id': typeof AuthenticatedBusinessesIdRoute
@@ -180,8 +186,9 @@ export interface FileRoutesByTo {
   '/create-gathering': typeof AuthenticatedCreateGatheringRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/profile': typeof AuthenticatedProfileRoute
-  '/register-business': typeof AuthenticatedRegisterBusinessRoute
   '/gatherings/$id': typeof GatheringsIdRoute
+  '/venue/auth': typeof VenueAuthRoute
+  '/venue/dashboard': typeof VenueDashboardRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/businesses/$id': typeof AuthenticatedBusinessesIdRoute
@@ -204,8 +211,9 @@ export interface FileRoutesById {
   '/_authenticated/create-gathering': typeof AuthenticatedCreateGatheringRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
-  '/_authenticated/register-business': typeof AuthenticatedRegisterBusinessRoute
   '/gatherings/$id': typeof GatheringsIdRoute
+  '/venue/auth': typeof VenueAuthRoute
+  '/venue/dashboard': typeof VenueDashboardRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/_authenticated/businesses/$id': typeof AuthenticatedBusinessesIdRoute
@@ -228,8 +236,9 @@ export interface FileRouteTypes {
     | '/create-gathering'
     | '/dashboard'
     | '/profile'
-    | '/register-business'
     | '/gatherings/$id'
+    | '/venue/auth'
+    | '/venue/dashboard'
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
     | '/businesses/$id'
@@ -250,8 +259,9 @@ export interface FileRouteTypes {
     | '/create-gathering'
     | '/dashboard'
     | '/profile'
-    | '/register-business'
     | '/gatherings/$id'
+    | '/venue/auth'
+    | '/venue/dashboard'
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
     | '/businesses/$id'
@@ -273,8 +283,9 @@ export interface FileRouteTypes {
     | '/_authenticated/create-gathering'
     | '/_authenticated/dashboard'
     | '/_authenticated/profile'
-    | '/_authenticated/register-business'
     | '/gatherings/$id'
+    | '/venue/auth'
+    | '/venue/dashboard'
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
     | '/_authenticated/businesses/$id'
@@ -294,6 +305,8 @@ export interface RootRouteChildren {
   Char91DotmcpChar93ListToolsRoute: typeof Char91DotmcpChar93ListToolsRoute
   Char91DotwellKnownChar93OauthProtectedResourceRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   GatheringsIdRoute: typeof GatheringsIdRoute
+  VenueAuthRoute: typeof VenueAuthRoute
+  VenueDashboardRoute: typeof VenueDashboardRoute
   DotlovableOauthConsentRoute: typeof DotlovableOauthConsentRoute
   Char91DotmcpChar93InvokeToolToolRoute: typeof Char91DotmcpChar93InvokeToolToolRoute
 }
@@ -370,19 +383,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/venue/dashboard': {
+      id: '/venue/dashboard'
+      path: '/venue/dashboard'
+      fullPath: '/venue/dashboard'
+      preLoaderRoute: typeof VenueDashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/venue/auth': {
+      id: '/venue/auth'
+      path: '/venue/auth'
+      fullPath: '/venue/auth'
+      preLoaderRoute: typeof VenueAuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/gatherings/$id': {
       id: '/gatherings/$id'
       path: '/gatherings/$id'
       fullPath: '/gatherings/$id'
       preLoaderRoute: typeof GatheringsIdRouteImport
       parentRoute: typeof rootRouteImport
-    }
-    '/_authenticated/register-business': {
-      id: '/_authenticated/register-business'
-      path: '/register-business'
-      fullPath: '/register-business'
-      preLoaderRoute: typeof AuthenticatedRegisterBusinessRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/profile': {
       id: '/_authenticated/profile'
@@ -455,7 +475,6 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedCreateGatheringRoute: typeof AuthenticatedCreateGatheringRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
-  AuthenticatedRegisterBusinessRoute: typeof AuthenticatedRegisterBusinessRoute
   AuthenticatedBusinessesIdRoute: typeof AuthenticatedBusinessesIdRoute
 }
 
@@ -464,7 +483,6 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedCreateGatheringRoute: AuthenticatedCreateGatheringRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedProfileRoute: AuthenticatedProfileRoute,
-  AuthenticatedRegisterBusinessRoute: AuthenticatedRegisterBusinessRoute,
   AuthenticatedBusinessesIdRoute: AuthenticatedBusinessesIdRoute,
 }
 
@@ -486,6 +504,8 @@ const rootRouteChildren: RootRouteChildren = {
   Char91DotwellKnownChar93OauthProtectedResourceRoute:
     Char91DotwellKnownChar93OauthProtectedResourceRoute,
   GatheringsIdRoute: GatheringsIdRoute,
+  VenueAuthRoute: VenueAuthRoute,
+  VenueDashboardRoute: VenueDashboardRoute,
   DotlovableOauthConsentRoute: DotlovableOauthConsentRoute,
   Char91DotmcpChar93InvokeToolToolRoute: Char91DotmcpChar93InvokeToolToolRoute,
 }
