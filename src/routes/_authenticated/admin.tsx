@@ -444,6 +444,7 @@ function UserDetail({ id, onBack }: { id: string; onBack: () => void }) {
   const [loading, setLoading] = useState(true);
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [coverUrl, setCoverUrl] = useState<string | null>(null);
+  const [editing, setEditing] = useState(false);
   const runGet = useServerFn(getAdminUser);
 
   useEffect(() => {
