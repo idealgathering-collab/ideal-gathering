@@ -232,6 +232,8 @@ function VenueDetail({
   const [gatherings, setGatherings] = useState<VenueGathering[]>([]);
   const [ownerEmail, setOwnerEmail] = useState<string | null>(null);
   const [tick, setTick] = useState(0);
+  const [editing, setEditing] = useState(false);
+  const [current, setCurrent] = useState<VenueRow>(venue);
   const runGetUser = useServerFn(getAdminUser);
 
   useEffect(() => {
