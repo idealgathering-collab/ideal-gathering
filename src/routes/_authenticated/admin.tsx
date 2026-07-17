@@ -314,6 +314,8 @@ function VenueDetail({
               if (data) setCurrent(data as VenueRow);
             }}
           />
+        )}
+
 
         <div className="mt-6 grid gap-2">
           <h3 className="font-display text-lg">
