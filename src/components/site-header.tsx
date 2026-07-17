@@ -1,5 +1,6 @@
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { ArrowLeft, LogOut, Shield, User as UserIcon } from "lucide-react";
+import { NotificationsBell } from "@/components/notifications-bell";
 import { useEffect, useState } from "react";
 import logoAsset from "@/assets/ideal-gathering-logo.png.asset.json";
 
@@ -94,6 +95,7 @@ export function SiteHeader() {
                   </Link>
                 </Button>
               )}
+              <NotificationsBell />
               <Button asChild size="sm" className="rounded-full">
                 <Link to="/create-gathering">{t("nav.host")}</Link>
               </Button>
@@ -119,11 +121,8 @@ export function SiteHeader() {
               <Button asChild variant="ghost" size="sm" className="hidden sm:inline-flex">
                 <Link to="/partnership">{t("nav.partnership")}</Link>
               </Button>
-              <Button asChild variant="ghost" size="sm">
-                <Link to="/auth">{t("nav.signIn")}</Link>
-              </Button>
               <Button asChild size="sm" className="rounded-full">
-                <Link to="/waitlist">{t("nav.join")}</Link>
+                <Link to="/auth" search={{ mode: "signup" }}>{t("nav.join")}</Link>
               </Button>
             </>
           )}

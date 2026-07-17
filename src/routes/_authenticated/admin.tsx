@@ -14,7 +14,9 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { COUNTRIES, citiesFor, countryName } from "@/lib/locations";
+import { insertNotification } from "@/lib/notifications";
 
 export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({ meta: [{ title: "Admin — Ideal Gathering" }] }),
@@ -131,21 +133,62 @@ function VenuesSection() {
       });
   }, [tick]);
 
-  async function setStatus(id: string, status: "approved" | "rejected") {
-    const { error } = await supabase.from("businesses").update({ status }).eq("id", id);
+  const [rejectTarget, setRejectTarget] = useState<VenueRow | null>(null);
+
+  async function approveVenue(v: VenueRow) {
+    const { error } = await supabase.from("businesses").update({ status: "approved" }).eq("id", v.id);
     if (error) return toast.error(error.message);
-    toast.success(status === "approved" ? t("admin.venue.set.approved") : t("admin.venue.set.rejected"));
+    try {
+      await insertNotification({
+        recipient_id: v.owner_id,
+        type: "business_approved",
+        title: `${v.name}: approved`,
+        body: "Your venue is live. You can now activate tables and host Gatherings.",
+        related_id: v.id,
+      });
+    } catch (e) {
+      // notification failure shouldn't block status change
+      console.warn("notify failed", e);
+    }
+    toast.success(t("admin.venue.set.approved"));
     setTick((n) => n + 1);
-    if (selected?.id === id) setSelected({ ...selected, status });
+    if (selected?.id === v.id) setSelected({ ...selected, status: "approved" });
+  }
+
+  async function rejectVenue(v: VenueRow, reason: string) {
+    const { error } = await supabase.from("businesses").update({ status: "rejected" }).eq("id", v.id);
+    if (error) throw new Error(error.message);
+    await insertNotification({
+      recipient_id: v.owner_id,
+      type: "business_rejected",
+      title: `${v.name}: not approved`,
+      body: reason,
+      related_id: v.id,
+    });
+    toast.success(t("admin.venue.set.rejected"));
+    setTick((n) => n + 1);
+    if (selected?.id === v.id) setSelected({ ...selected, status: "rejected" });
   }
 
   if (selected) {
     return (
-      <VenueDetail
-        venue={selected}
-        onBack={() => setSelected(null)}
-        onStatus={(s) => setStatus(selected.id, s)}
-      />
+      <>
+        <VenueDetail
+          venue={selected}
+          onBack={() => setSelected(null)}
+          onApprove={() => approveVenue(selected)}
+          onReject={() => setRejectTarget(selected)}
+        />
+        <RejectReasonDialog
+          open={!!rejectTarget}
+          title={rejectTarget ? `Reject ${rejectTarget.name}` : ""}
+          onClose={() => setRejectTarget(null)}
+          onConfirm={async (reason) => {
+            if (rejectTarget) await rejectVenue(rejectTarget, reason);
+            setRejectTarget(null);
+          }}
+        />
+      </>
     );
   }
 
@@ -153,54 +196,65 @@ function VenuesSection() {
   const approved = venues.filter((v) => v.status === "approved");
 
   return (
-    <Tabs defaultValue="pending">
-      <TabsList>
-        <TabsTrigger value="pending">
-          {t("admin.venues.pending")} ({pending.length})
-        </TabsTrigger>
-        <TabsTrigger value="approved">
-          {t("admin.venues.approved")} ({approved.length})
-        </TabsTrigger>
-      </TabsList>
+    <>
+      <Tabs defaultValue="pending">
+        <TabsList>
+          <TabsTrigger value="pending">
+            {t("admin.venues.pending")} ({pending.length})
+          </TabsTrigger>
+          <TabsTrigger value="approved">
+            {t("admin.venues.approved")} ({approved.length})
+          </TabsTrigger>
+        </TabsList>
 
-      <TabsContent value="pending" className="mt-4">
-        {pending.length === 0 ? (
-          <Empty text={t("admin.venues.empty.pending")} />
-        ) : (
-          <div className="grid gap-3">
-            {pending.map((v) => (
-              <VenueCard
-                key={v.id}
-                v={v}
-                onOpen={() => setSelected(v)}
-                actions={
-                  <>
-                    <Button size="sm" className="rounded-full" onClick={() => setStatus(v.id, "approved")}>
-                      {t("admin.approve")}
-                    </Button>
-                    <Button size="sm" variant="outline" className="rounded-full" onClick={() => setStatus(v.id, "rejected")}>
-                      {t("admin.reject")}
-                    </Button>
-                  </>
-                }
-              />
-            ))}
-          </div>
-        )}
-      </TabsContent>
+        <TabsContent value="pending" className="mt-4">
+          {pending.length === 0 ? (
+            <Empty text={t("admin.venues.empty.pending")} />
+          ) : (
+            <div className="grid gap-3">
+              {pending.map((v) => (
+                <VenueCard
+                  key={v.id}
+                  v={v}
+                  onOpen={() => setSelected(v)}
+                  actions={
+                    <>
+                      <Button size="sm" className="rounded-full" onClick={() => approveVenue(v)}>
+                        {t("admin.approve")}
+                      </Button>
+                      <Button size="sm" variant="outline" className="rounded-full" onClick={() => setRejectTarget(v)}>
+                        {t("admin.reject")}
+                      </Button>
+                    </>
+                  }
+                />
+              ))}
+            </div>
+          )}
+        </TabsContent>
 
-      <TabsContent value="approved" className="mt-4">
-        {approved.length === 0 ? (
-          <Empty text={t("admin.venues.empty.approved")} />
-        ) : (
-          <div className="grid gap-3">
-            {approved.map((v) => (
-              <VenueCard key={v.id} v={v} onOpen={() => setSelected(v)} />
-            ))}
-          </div>
-        )}
-      </TabsContent>
-    </Tabs>
+        <TabsContent value="approved" className="mt-4">
+          {approved.length === 0 ? (
+            <Empty text={t("admin.venues.empty.approved")} />
+          ) : (
+            <div className="grid gap-3">
+              {approved.map((v) => (
+                <VenueCard key={v.id} v={v} onOpen={() => setSelected(v)} />
+              ))}
+            </div>
+          )}
+        </TabsContent>
+      </Tabs>
+      <RejectReasonDialog
+        open={!!rejectTarget}
+        title={rejectTarget ? `Reject ${rejectTarget.name}` : ""}
+        onClose={() => setRejectTarget(null)}
+        onConfirm={async (reason) => {
+          if (rejectTarget) await rejectVenue(rejectTarget, reason);
+          setRejectTarget(null);
+        }}
+      />
+    </>
   );
 }
 
@@ -221,11 +275,13 @@ function VenueCard({ v, onOpen, actions }: { v: VenueRow; onOpen: () => void; ac
 function VenueDetail({
   venue,
   onBack,
-  onStatus,
+  onApprove,
+  onReject,
 }: {
   venue: VenueRow;
   onBack: () => void;
-  onStatus: (s: "approved" | "rejected") => void;
+  onApprove: () => void;
+  onReject: () => void;
 }) {
   const t = useT();
   const [tables, setTables] = useState<VenueTable[]>([]);
@@ -234,7 +290,9 @@ function VenueDetail({
   const [tick, setTick] = useState(0);
   const [editing, setEditing] = useState(false);
   const [current, setCurrent] = useState<VenueRow>(venue);
+  const [rejectGathering, setRejectGathering] = useState<VenueGathering | null>(null);
   const runGetUser = useServerFn(getAdminUser);
+  const runSetGathering = useServerFn(setGatheringStatus);
 
   useEffect(() => {
     supabase
@@ -259,10 +317,19 @@ function VenueDetail({
       .catch(() => setOwnerEmail(null));
   }, [venue.owner_id, runGetUser]);
 
-  async function setGStatus(id: string, status: "approved" | "rejected") {
-    const { error } = await supabase.from("gatherings").update({ status }).eq("id", id);
-    if (error) return toast.error(error.message);
-    toast.success(t(`admin.set.${status}`));
+  async function approveGathering(id: string) {
+    try {
+      await runSetGathering({ data: { id, status: "approved" } });
+      toast.success(t("admin.set.approved"));
+      setTick((n) => n + 1);
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : String(e));
+    }
+  }
+
+  async function rejectGatheringWithReason(id: string, reason: string) {
+    await runSetGathering({ data: { id, status: "rejected", reason } });
+    toast.success(t("admin.set.rejected"));
     setTick((n) => n + 1);
   }
 
@@ -293,10 +360,10 @@ function VenueDetail({
             </Button>
             {venue.status === "pending" && (
               <>
-                <Button size="sm" className="rounded-full" onClick={() => onStatus("approved")}>
+                <Button size="sm" className="rounded-full" onClick={onApprove}>
                   {t("admin.approve")}
                 </Button>
-                <Button size="sm" variant="outline" className="rounded-full" onClick={() => onStatus("rejected")}>
+                <Button size="sm" variant="outline" className="rounded-full" onClick={onReject}>
                   {t("admin.reject")}
                 </Button>
               </>
@@ -339,10 +406,10 @@ function VenueDetail({
           <div className="mt-3 grid gap-3">
             {pendingGs.map((g) => (
               <GatheringRow key={g.id} g={g}>
-                <Button size="sm" className="rounded-full" onClick={() => setGStatus(g.id, "approved")}>
+                <Button size="sm" className="rounded-full" onClick={() => approveGathering(g.id)}>
                   {t("admin.approve")}
                 </Button>
-                <Button size="sm" variant="outline" className="rounded-full" onClick={() => setGStatus(g.id, "rejected")}>
+                <Button size="sm" variant="outline" className="rounded-full" onClick={() => setRejectGathering(g)}>
                   {t("admin.reject")}
                 </Button>
               </GatheringRow>
@@ -363,6 +430,16 @@ function VenueDetail({
           </div>
         )}
       </section>
+
+      <RejectReasonDialog
+        open={!!rejectGathering}
+        title={rejectGathering ? `Reject "${rejectGathering.subject}"` : ""}
+        onClose={() => setRejectGathering(null)}
+        onConfirm={async (reason) => {
+          if (rejectGathering) await rejectGatheringWithReason(rejectGathering.id, reason);
+          setRejectGathering(null);
+        }}
+      />
     </div>
   );
 }
@@ -592,6 +669,7 @@ function GatheringsSection() {
   const runList = useServerFn(listPendingGatherings);
   const runSet = useServerFn(setGatheringStatus);
   const [rows, setRows] = useState<PendingGatheringRow[] | null>(null);
+  const [rejectTarget, setRejectTarget] = useState<PendingGatheringRow | null>(null);
 
   function refresh() {
     runList()
@@ -604,14 +682,20 @@ function GatheringsSection() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  async function act(id: string, status: "approved" | "rejected") {
+  async function approve(id: string) {
     try {
-      await runSet({ data: { id, status } });
-      toast.success(t(`admin.set.${status}`));
+      await runSet({ data: { id, status: "approved" } });
+      toast.success(t("admin.set.approved"));
       refresh();
     } catch (e) {
       toast.error(e instanceof Error ? e.message : String(e));
     }
+  }
+
+  async function reject(id: string, reason: string) {
+    await runSet({ data: { id, status: "rejected", reason } });
+    toast.success(t("admin.set.rejected"));
+    refresh();
   }
 
   if (rows === null) return <p className="text-sm text-muted-foreground">{t("common.loading")}</p>;
@@ -636,17 +720,72 @@ function GatheringsSection() {
               {g.description && <p className="mt-2 text-sm">{g.description}</p>}
             </div>
             <div className="flex gap-2">
-              <Button size="sm" className="rounded-full" onClick={() => act(g.id, "approved")}>
+              <Button size="sm" className="rounded-full" onClick={() => approve(g.id)}>
                 {t("admin.approve")}
               </Button>
-              <Button size="sm" variant="outline" className="rounded-full" onClick={() => act(g.id, "rejected")}>
+              <Button size="sm" variant="outline" className="rounded-full" onClick={() => setRejectTarget(g)}>
                 {t("admin.reject")}
               </Button>
             </div>
           </div>
         </div>
       ))}
+      <RejectReasonDialog
+        open={!!rejectTarget}
+        title={rejectTarget ? `Reject "${rejectTarget.subject}"` : ""}
+        onClose={() => setRejectTarget(null)}
+        onConfirm={async (reason) => {
+          if (rejectTarget) await reject(rejectTarget.id, reason);
+          setRejectTarget(null);
+        }}
+      />
     </div>
+  );
+}
+
+function RejectReasonDialog({
+  open,
+  title,
+  onClose,
+  onConfirm,
+}: {
+  open: boolean;
+  title: string;
+  onClose: () => void;
+  onConfirm: (reason: string) => Promise<void> | void;
+}) {
+  const [reason, setReason] = useState("");
+  const [busy, setBusy] = useState(false);
+  useEffect(() => {
+    if (!open) setReason("");
+  }, [open]);
+  return (
+    <Dialog open={open} onOpenChange={(v) => { if (!v) onClose(); }}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>{title || "Reject"}</DialogTitle>
+        </DialogHeader>
+        <Textarea
+          value={reason}
+          onChange={(e) => setReason(e.target.value)}
+          placeholder="Reason (required)"
+          rows={4}
+        />
+        <DialogFooter>
+          <Button variant="outline" onClick={onClose} disabled={busy}>Cancel</Button>
+          <Button
+            disabled={busy || !reason.trim()}
+            onClick={async () => {
+              setBusy(true);
+              try { await onConfirm(reason.trim()); } catch (e) { toast.error(e instanceof Error ? e.message : String(e)); }
+              setBusy(false);
+            }}
+          >
+            Reject
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }
 
