@@ -1,9 +1,11 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { CalendarClock, MapPin, Users, ArrowLeft, Coffee } from "lucide-react";
+import { CalendarClock, MapPin, Users, ArrowLeft, Coffee, Lock } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { MenuSection } from "@/components/menu-section";
+import { GatheringChat, GatheringChecklist } from "@/components/gathering-room";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import { VerifyEmailBanner } from "@/components/verify-email-banner";
 import { supabase } from "@/integrations/supabase/client";
@@ -92,6 +94,7 @@ function GatheringDetail() {
   const isAttending = user ? attendees.some((a) => a.user_id === user.id) : false;
   const seatsLeft = Math.max(0, g.seats - attendees.length);
   const isHost = user?.id === g.host_id;
+  const isMember = isHost || isAttending;
 
   return (
     <div className="min-h-screen bg-background">
@@ -99,7 +102,6 @@ function GatheringDetail() {
       <div className="relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-hero" />
         {g.business?.cover_url && (
-          // eslint-disable-next-line @next/next/no-img-element
           <img src={g.business.cover_url} alt="" className="absolute inset-0 h-full w-full object-cover opacity-40 mix-blend-multiply" />
         )}
         <div className="relative mx-auto max-w-3xl px-4 py-16 text-primary-foreground">
@@ -190,9 +192,44 @@ function GatheringDetail() {
           )}
         </div>
 
+        {/* Gathering Room */}
+        {g.status === "approved" && user && (
+          <div className="mt-8">
+            <Tabs defaultValue="chat">
+              <TabsList>
+                <TabsTrigger value="chat">{t("room.tab.chat")}</TabsTrigger>
+                <TabsTrigger value="checklist">{t("room.tab.checklist")}</TabsTrigger>
+              </TabsList>
+              <TabsContent value="chat" className="mt-4">
+                {isMember ? (
+                  <GatheringChat gatheringId={g.id} currentUserId={user.id} />
+                ) : (
+                  <LockedPanel t={t} />
+                )}
+              </TabsContent>
+              <TabsContent value="checklist" className="mt-4">
+                {isMember ? (
+                  <GatheringChecklist gatheringId={g.id} currentUserId={user.id} isHost={isHost} />
+                ) : (
+                  <LockedPanel t={t} />
+                )}
+              </TabsContent>
+            </Tabs>
+          </div>
+        )}
+
         {g.business && <MenuSection businessId={g.business.id} isOwner={!!isOwner} />}
       </main>
+    </div>
+  );
+}
 
+function LockedPanel({ t }: { t: (k: string) => string }) {
+  return (
+    <div className="rounded-2xl border border-dashed border-border bg-card p-8 text-center">
+      <Lock className="mx-auto h-6 w-6 text-muted-foreground" />
+      <h3 className="mt-2 font-display text-lg">{t("room.locked.title")}</h3>
+      <p className="mt-1 text-sm text-muted-foreground">{t("room.locked.body")}</p>
     </div>
   );
 }

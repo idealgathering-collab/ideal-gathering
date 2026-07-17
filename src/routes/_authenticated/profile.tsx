@@ -9,6 +9,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { COUNTRIES, citiesFor } from "@/lib/locations";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -50,6 +52,7 @@ function ProfilePage() {
   const [displayName, setDisplayName] = useState("");
   const [bio, setBio] = useState("");
   const [city, setCity] = useState("");
+  const [country, setCountry] = useState<string>("");
   const [interests, setInterests] = useState<string[]>([]);
   const [interestInput, setInterestInput] = useState("");
   const [social, setSocial] = useState<SocialLinks>({});
@@ -70,7 +73,7 @@ function ProfilePage() {
     if (!user) return;
     supabase
       .from("profiles")
-      .select("display_name, avatar_url, bio, city, interests, social_links, cover_url")
+      .select("display_name, avatar_url, bio, city, country, interests, social_links, cover_url")
       .eq("id", user.id)
       .maybeSingle()
       .then(async ({ data }) => {
@@ -78,6 +81,7 @@ function ProfilePage() {
         setDisplayName(data.display_name ?? "");
         setBio(data.bio ?? "");
         setCity(data.city ?? "");
+        setCountry(((data as { country?: string | null }).country ?? "") as string);
         setInterests(Array.isArray(data.interests) ? (data.interests as string[]) : []);
         setSocial((data.social_links as SocialLinks) ?? {});
         setAvatarPath(data.avatar_url ?? null);
@@ -120,6 +124,7 @@ function ProfilePage() {
           display_name: displayName.trim(),
           bio: bio.trim() || null,
           city: city.trim() || null,
+          country: country || null,
           interests: interests,
           social_links: social,
         })
@@ -301,15 +306,52 @@ function ProfilePage() {
               />
               <p className="text-xs text-muted-foreground">{bio.length}/500</p>
             </div>
-            <div className="grid gap-2">
-              <Label htmlFor="city">{t("profile.city")}</Label>
-              <Input
-                id="city"
-                value={city}
-                maxLength={120}
-                placeholder={t("profile.cityPh")}
-                onChange={(e) => setCity(e.target.value)}
-              />
+            <div className="grid gap-2 sm:grid-cols-2">
+              <div className="grid gap-2">
+                <Label>{t("profile.country")}</Label>
+                <Select
+                  value={country || undefined}
+                  onValueChange={(v) => {
+                    setCountry(v);
+                    if (!citiesFor(v).includes(city)) setCity("");
+                  }}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder={t("profile.selectCountry")} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {COUNTRIES.map((c) => (
+                      <SelectItem key={c.code} value={c.code}>
+                        {c.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="grid gap-2">
+                <Label>{t("profile.city")}</Label>
+                {citiesFor(country).length > 0 ? (
+                  <Select value={city || undefined} onValueChange={setCity}>
+                    <SelectTrigger>
+                      <SelectValue placeholder={t("profile.selectCity")} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {citiesFor(country).map((c) => (
+                        <SelectItem key={c} value={c}>
+                          {c}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                ) : (
+                  <Input
+                    value={city}
+                    maxLength={120}
+                    placeholder={t("profile.cityPh")}
+                    onChange={(e) => setCity(e.target.value)}
+                  />
+                )}
+              </div>
             </div>
           </div>
         </section>
