@@ -306,15 +306,52 @@ function ProfilePage() {
               />
               <p className="text-xs text-muted-foreground">{bio.length}/500</p>
             </div>
-            <div className="grid gap-2">
-              <Label htmlFor="city">{t("profile.city")}</Label>
-              <Input
-                id="city"
-                value={city}
-                maxLength={120}
-                placeholder={t("profile.cityPh")}
-                onChange={(e) => setCity(e.target.value)}
-              />
+            <div className="grid gap-2 sm:grid-cols-2">
+              <div className="grid gap-2">
+                <Label>{t("profile.country")}</Label>
+                <Select
+                  value={country || undefined}
+                  onValueChange={(v) => {
+                    setCountry(v);
+                    if (!citiesFor(v).includes(city)) setCity("");
+                  }}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder={t("profile.selectCountry")} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {COUNTRIES.map((c) => (
+                      <SelectItem key={c.code} value={c.code}>
+                        {c.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="grid gap-2">
+                <Label>{t("profile.city")}</Label>
+                {citiesFor(country).length > 0 ? (
+                  <Select value={city || undefined} onValueChange={setCity}>
+                    <SelectTrigger>
+                      <SelectValue placeholder={t("profile.selectCity")} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {citiesFor(country).map((c) => (
+                        <SelectItem key={c} value={c}>
+                          {c}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                ) : (
+                  <Input
+                    value={city}
+                    maxLength={120}
+                    placeholder={t("profile.cityPh")}
+                    onChange={(e) => setCity(e.target.value)}
+                  />
+                )}
+              </div>
             </div>
           </div>
         </section>
