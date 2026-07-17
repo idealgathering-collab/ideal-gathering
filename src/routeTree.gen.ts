@@ -22,7 +22,6 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as VenueDashboardRouteImport } from './routes/venue.dashboard'
 import { Route as VenueAuthRouteImport } from './routes/venue.auth'
 import { Route as GatheringsIdRouteImport } from './routes/gatherings.$id'
-import { Route as AuthenticatedRegisterBusinessRouteImport } from './routes/_authenticated/register-business'
 import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedCreateGatheringRouteImport } from './routes/_authenticated/create-gathering'
@@ -97,12 +96,6 @@ const GatheringsIdRoute = GatheringsIdRouteImport.update({
   path: '/gatherings/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthenticatedRegisterBusinessRoute =
-  AuthenticatedRegisterBusinessRouteImport.update({
-    id: '/register-business',
-    path: '/register-business',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
 const AuthenticatedProfileRoute = AuthenticatedProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
@@ -170,7 +163,6 @@ export interface FileRoutesByFullPath {
   '/create-gathering': typeof AuthenticatedCreateGatheringRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/profile': typeof AuthenticatedProfileRoute
-  '/register-business': typeof AuthenticatedRegisterBusinessRoute
   '/gatherings/$id': typeof GatheringsIdRoute
   '/venue/auth': typeof VenueAuthRoute
   '/venue/dashboard': typeof VenueDashboardRoute
@@ -194,7 +186,6 @@ export interface FileRoutesByTo {
   '/create-gathering': typeof AuthenticatedCreateGatheringRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/profile': typeof AuthenticatedProfileRoute
-  '/register-business': typeof AuthenticatedRegisterBusinessRoute
   '/gatherings/$id': typeof GatheringsIdRoute
   '/venue/auth': typeof VenueAuthRoute
   '/venue/dashboard': typeof VenueDashboardRoute
@@ -220,7 +211,6 @@ export interface FileRoutesById {
   '/_authenticated/create-gathering': typeof AuthenticatedCreateGatheringRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
-  '/_authenticated/register-business': typeof AuthenticatedRegisterBusinessRoute
   '/gatherings/$id': typeof GatheringsIdRoute
   '/venue/auth': typeof VenueAuthRoute
   '/venue/dashboard': typeof VenueDashboardRoute
@@ -246,7 +236,6 @@ export interface FileRouteTypes {
     | '/create-gathering'
     | '/dashboard'
     | '/profile'
-    | '/register-business'
     | '/gatherings/$id'
     | '/venue/auth'
     | '/venue/dashboard'
@@ -270,7 +259,6 @@ export interface FileRouteTypes {
     | '/create-gathering'
     | '/dashboard'
     | '/profile'
-    | '/register-business'
     | '/gatherings/$id'
     | '/venue/auth'
     | '/venue/dashboard'
@@ -295,7 +283,6 @@ export interface FileRouteTypes {
     | '/_authenticated/create-gathering'
     | '/_authenticated/dashboard'
     | '/_authenticated/profile'
-    | '/_authenticated/register-business'
     | '/gatherings/$id'
     | '/venue/auth'
     | '/venue/dashboard'
@@ -417,13 +404,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GatheringsIdRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_authenticated/register-business': {
-      id: '/_authenticated/register-business'
-      path: '/register-business'
-      fullPath: '/register-business'
-      preLoaderRoute: typeof AuthenticatedRegisterBusinessRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
     '/_authenticated/profile': {
       id: '/_authenticated/profile'
       path: '/profile'
@@ -495,7 +475,6 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedCreateGatheringRoute: typeof AuthenticatedCreateGatheringRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
-  AuthenticatedRegisterBusinessRoute: typeof AuthenticatedRegisterBusinessRoute
   AuthenticatedBusinessesIdRoute: typeof AuthenticatedBusinessesIdRoute
 }
 
@@ -504,7 +483,6 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedCreateGatheringRoute: AuthenticatedCreateGatheringRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedProfileRoute: AuthenticatedProfileRoute,
-  AuthenticatedRegisterBusinessRoute: AuthenticatedRegisterBusinessRoute,
   AuthenticatedBusinessesIdRoute: AuthenticatedBusinessesIdRoute,
 }
 

@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { Plus, Store, Users } from "lucide-react";
+import { Plus, Users, Compass, Store } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { supabase } from "@/integrations/supabase/client";
 import { useSession } from "@/hooks/use-session";
@@ -15,20 +15,6 @@ export const Route = createFileRoute("/_authenticated/dashboard")({
 function Dashboard() {
   const { user } = useSession();
   const t = useT();
-
-  const { data: businesses } = useQuery({
-    queryKey: ["my-businesses", user?.id],
-    enabled: !!user,
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("businesses")
-        .select("id, name, city, cover_url, venue_tables(id), gatherings(id,status)")
-        .eq("owner_id", user!.id)
-        .order("created_at", { ascending: false });
-      if (error) throw error;
-      return data;
-    },
-  });
 
   const { data: hosted } = useQuery({
     queryKey: ["my-hosted", user?.id],
@@ -82,8 +68,8 @@ function Dashboard() {
           </div>
           <div className="flex flex-wrap gap-2">
             <Button asChild variant="outline" className="rounded-full">
-              <Link to="/register-business">
-                <Store className="mr-1.5 h-4 w-4" /> {t("dash.registerBiz")}
+              <Link to="/explore">
+                <Compass className="mr-1.5 h-4 w-4" /> {t("nav.explore")}
               </Link>
             </Button>
             <Button asChild className="rounded-full">
@@ -94,52 +80,19 @@ function Dashboard() {
           </div>
         </div>
 
-        <section className="mt-10">
-          <h2 className="font-display text-2xl">{t("dash.yourBiz")}</h2>
-          <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {businesses && businesses.length > 0 ? (
-              businesses.map((b) => {
-                const pending = (b.gatherings ?? []).filter((g) => g.status === "proposed").length;
-                return (
-                  <Link
-                    key={b.id}
-                    to="/businesses/$id"
-                    params={{ id: b.id }}
-                    className="rounded-3xl border border-border bg-card p-5 shadow-soft transition hover:-translate-y-0.5 hover:shadow-plum"
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="grid h-12 w-12 place-items-center rounded-2xl bg-gradient-warm text-tangerine-foreground">
-                        <Store className="h-5 w-5" />
-                      </div>
-                      <div className="min-w-0">
-                        <div className="font-display text-xl truncate">{b.name}</div>
-                        {b.city && <div className="text-xs text-muted-foreground truncate">{b.city}</div>}
-                      </div>
-                    </div>
-                    <div className="mt-4 flex items-center gap-4 text-xs text-muted-foreground">
-                      <span>{b.venue_tables?.length ?? 0} {t("dash.tables")}</span>
-                      {pending > 0 && (
-                        <span className="rounded-full bg-sunshine px-2 py-0.5 text-sunshine-foreground">
-                          {pending} {t("dash.toApprove")}
-                        </span>
-                      )}
-                    </div>
-                  </Link>
-                );
-              })
-            ) : (
-              <div className="col-span-full rounded-3xl border border-dashed border-border p-8 text-center text-sm text-muted-foreground">
-                {t("dash.noBiz")}{" "}
-                <Link to="/register-business" className="text-primary underline underline-offset-2">
-                  {t("dash.registerOne")}
-                </Link>
-                .
-              </div>
-            )}
+        <div className="mt-6 rounded-3xl border border-dashed border-border bg-card p-5 text-sm text-muted-foreground">
+          <div className="flex items-center gap-2">
+            <Store className="h-4 w-4 text-primary" />
+            <span>
+              {t("dash.venueHint")}{" "}
+              <Link to="/venue/auth" className="text-primary underline underline-offset-2">
+                {t("dash.venueHintLink")}
+              </Link>
+            </span>
           </div>
-        </section>
+        </div>
 
-        <section className="mt-12 grid gap-8 lg:grid-cols-2">
+        <section className="mt-10 grid gap-8 lg:grid-cols-2">
           <div>
             <h2 className="font-display text-2xl">{t("dash.hosted")}</h2>
             <div className="mt-4 grid gap-3">
