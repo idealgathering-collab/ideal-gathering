@@ -94,10 +94,14 @@ function AdminPage() {
         <Tabs defaultValue="venues" className="mt-8">
           <TabsList>
             <TabsTrigger value="venues">{t("admin.section.venues")}</TabsTrigger>
+            <TabsTrigger value="gatherings">{t("admin.section.gatherings")}</TabsTrigger>
             <TabsTrigger value="users">{t("admin.section.users")}</TabsTrigger>
           </TabsList>
           <TabsContent value="venues" className="mt-6">
             <VenuesSection />
+          </TabsContent>
+          <TabsContent value="gatherings" className="mt-6">
+            <GatheringsSection />
           </TabsContent>
           <TabsContent value="users" className="mt-6">
             <UsersSection />
