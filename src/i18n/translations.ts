@@ -347,8 +347,22 @@ export const translations: Record<Lang, Dict> = {
     "cta.title1": "Save your seat at the",
     "cta.title2": "next table.",
     "cta.body": "Guests join by invitation. Drop your details and we'll open the door as tables free up in your city.",
-    "cta.join": "Join the waitlist",
+    "cta.join": "Join Ideal Gathering",
     "cta.register": "Register your cafe",
+
+    // Notifications
+    "notif.aria": "Notifications",
+    "notif.title": "Notifications",
+    "notif.empty": "You're all caught up.",
+    "notif.reason.label": "Reason",
+    "notif.reason.placeholder": "Explain why you're rejecting this…",
+    "notif.reason.required": "A reason is required to reject.",
+    "notif.business.approved.title": "Your venue is approved",
+    "notif.business.approved.body": "Your venue is live. You can now activate tables and host Gatherings.",
+    "notif.business.rejected.title": "Your venue was not approved",
+    "notif.gathering.approved.title": "Your Gathering was approved",
+    "notif.gathering.approved.body": "It's live and guests can join.",
+    "notif.gathering.rejected.title": "Your Gathering was not approved",
 
     // Footer
     "footer.mission": "Set the table. Set the subject. Ideal Gathering brings people to small, curated tables at cafes worth sitting in.",
@@ -946,8 +960,22 @@ export const translations: Record<Lang, Dict> = {
     "cta.title1": "Bir sonraki masada",
     "cta.title2": "yerini ayır.",
     "cta.body": "Misafirler davetle katılır. Bilgilerini bırak; şehrinde masalar açıldıkça kapıyı sana açalım.",
-    "cta.join": "Bekleme listesine katıl",
+    "cta.join": "Ideal Gathering'e katıl",
     "cta.register": "Kafeni kaydet",
+
+    // Notifications
+    "notif.aria": "Bildirimler",
+    "notif.title": "Bildirimler",
+    "notif.empty": "Her şey güncel.",
+    "notif.reason.label": "Sebep",
+    "notif.reason.placeholder": "Neden reddettiğini açıkla…",
+    "notif.reason.required": "Reddetmek için bir sebep gerekli.",
+    "notif.business.approved.title": "Mekânın onaylandı",
+    "notif.business.approved.body": "Mekânın yayında. Artık masaları etkinleştirip Buluşmalar düzenleyebilirsin.",
+    "notif.business.rejected.title": "Mekânın onaylanmadı",
+    "notif.gathering.approved.title": "Buluşman onaylandı",
+    "notif.gathering.approved.body": "Yayında ve misafirler katılabilir.",
+    "notif.gathering.rejected.title": "Buluşman onaylanmadı",
 
     // Footer
     "footer.mission": "Masayı kur. Konuyu belirle. Ideal Gathering, insanları oturmaya değer kafelerdeki küçük, özenle seçilmiş masalara getirir.",

@@ -209,18 +209,40 @@ export const listPendingGatherings = createServerFn({ method: "GET" })
 
 export const setGatheringStatus = createServerFn({ method: "POST" })
   .inputValidator((data: unknown) => {
-    const d = data as { id?: string; status?: string };
+    const d = data as { id?: string; status?: string; reason?: string };
     if (!d?.id) throw new Error("id required");
     if (d.status !== "approved" && d.status !== "rejected" && d.status !== "cancelled") {
       throw new Error("bad status");
     }
-    return { id: d.id, status: d.status as "approved" | "rejected" | "cancelled" };
+    if (d.status === "rejected" && (!d.reason || !d.reason.trim())) {
+      throw new Error("reason required");
+    }
+    return { id: d.id, status: d.status as "approved" | "rejected" | "cancelled", reason: (d.reason ?? "").trim() };
   })
   .middleware([requireSupabaseAuth])
   .handler(async ({ data, context }) => {
     await assertAdmin(context as any);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: gathering, error: gErr } = await supabaseAdmin
+      .from("gatherings")
+      .select("id, host_id, subject")
+      .eq("id", data.id)
+      .maybeSingle();
+    if (gErr) throw new Error(gErr.message);
     const { error } = await supabaseAdmin.from("gatherings").update({ status: data.status }).eq("id", data.id);
     if (error) throw new Error(error.message);
+
+    if (gathering && (data.status === "approved" || data.status === "rejected")) {
+      const isApproved = data.status === "approved";
+      await supabaseAdmin.from("notifications" as any).insert({
+        recipient_id: gathering.host_id,
+        type: isApproved ? "gathering_approved" : "gathering_rejected",
+        title: isApproved
+          ? `Your Gathering "${gathering.subject}" was approved`
+          : `Your Gathering "${gathering.subject}" was not approved`,
+        body: isApproved ? "It's live and guests can join." : data.reason,
+        related_id: gathering.id,
+      } as any);
+    }
     return { ok: true };
   });

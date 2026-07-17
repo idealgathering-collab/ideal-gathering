@@ -210,10 +210,7 @@ function Home() {
           </div>
           <div className="flex flex-wrap gap-3 sm:justify-end">
             <Button asChild size="lg" className="rounded-full bg-sunshine text-sunshine-foreground hover:bg-sunshine/90 shadow-tangerine">
-              <Link to="/waitlist">{t("cta.join")}</Link>
-            </Button>
-            <Button asChild size="lg" variant="outline" className="rounded-full border-primary-foreground/40 bg-transparent text-primary-foreground hover:bg-primary-foreground/10">
-              <Link to="/venue/auth">{t("cta.register")}</Link>
+              <Link to="/auth" search={{ mode: "signup" }}>{t("cta.join")}</Link>
             </Button>
           </div>
         </div>
