@@ -730,7 +730,62 @@ function GatheringsSection() {
           </div>
         </div>
       ))}
+      <RejectReasonDialog
+        open={!!rejectTarget}
+        title={rejectTarget ? `Reject "${rejectTarget.subject}"` : ""}
+        onClose={() => setRejectTarget(null)}
+        onConfirm={async (reason) => {
+          if (rejectTarget) await reject(rejectTarget.id, reason);
+          setRejectTarget(null);
+        }}
+      />
     </div>
+  );
+}
+
+function RejectReasonDialog({
+  open,
+  title,
+  onClose,
+  onConfirm,
+}: {
+  open: boolean;
+  title: string;
+  onClose: () => void;
+  onConfirm: (reason: string) => Promise<void> | void;
+}) {
+  const [reason, setReason] = useState("");
+  const [busy, setBusy] = useState(false);
+  useEffect(() => {
+    if (!open) setReason("");
+  }, [open]);
+  return (
+    <Dialog open={open} onOpenChange={(v) => { if (!v) onClose(); }}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>{title || "Reject"}</DialogTitle>
+        </DialogHeader>
+        <Textarea
+          value={reason}
+          onChange={(e) => setReason(e.target.value)}
+          placeholder="Reason (required)"
+          rows={4}
+        />
+        <DialogFooter>
+          <Button variant="outline" onClick={onClose} disabled={busy}>Cancel</Button>
+          <Button
+            disabled={busy || !reason.trim()}
+            onClick={async () => {
+              setBusy(true);
+              try { await onConfirm(reason.trim()); } catch (e) { toast.error(e instanceof Error ? e.message : String(e)); }
+              setBusy(false);
+            }}
+          >
+            Reject
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }
 
