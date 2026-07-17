@@ -287,17 +287,33 @@ function VenueDetail({
             </p>
             <p className="mt-1 text-xs uppercase tracking-wide text-muted-foreground">status: {venue.status}</p>
           </div>
-          {venue.status === "pending" && (
-            <div className="flex gap-2">
-              <Button size="sm" className="rounded-full" onClick={() => onStatus("approved")}>
-                {t("admin.approve")}
-              </Button>
-              <Button size="sm" variant="outline" className="rounded-full" onClick={() => onStatus("rejected")}>
-                {t("admin.reject")}
-              </Button>
-            </div>
-          )}
+          <div className="flex flex-wrap gap-2">
+            <Button size="sm" variant="outline" className="rounded-full" onClick={() => setEditing((v) => !v)}>
+              {editing ? t("admin.user.cancel") : t("admin.venue.edit")}
+            </Button>
+            {venue.status === "pending" && (
+              <>
+                <Button size="sm" className="rounded-full" onClick={() => onStatus("approved")}>
+                  {t("admin.approve")}
+                </Button>
+                <Button size="sm" variant="outline" className="rounded-full" onClick={() => onStatus("rejected")}>
+                  {t("admin.reject")}
+                </Button>
+              </>
+            )}
+          </div>
         </div>
+
+        {editing && (
+          <VenueEditForm
+            venue={current}
+            onCancel={() => setEditing(false)}
+            onSaved={async () => {
+              setEditing(false);
+              const { data } = await supabase.from("businesses").select("*").eq("id", venue.id).maybeSingle();
+              if (data) setCurrent(data as VenueRow);
+            }}
+          />
 
         <div className="mt-6 grid gap-2">
           <h3 className="font-display text-lg">
