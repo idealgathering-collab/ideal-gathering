@@ -73,7 +73,7 @@ function ProfilePage() {
     if (!user) return;
     supabase
       .from("profiles")
-      .select("display_name, avatar_url, bio, city, interests, social_links, cover_url")
+      .select("display_name, avatar_url, bio, city, country, interests, social_links, cover_url")
       .eq("id", user.id)
       .maybeSingle()
       .then(async ({ data }) => {
@@ -81,6 +81,7 @@ function ProfilePage() {
         setDisplayName(data.display_name ?? "");
         setBio(data.bio ?? "");
         setCity(data.city ?? "");
+        setCountry(((data as { country?: string | null }).country ?? "") as string);
         setInterests(Array.isArray(data.interests) ? (data.interests as string[]) : []);
         setSocial((data.social_links as SocialLinks) ?? {});
         setAvatarPath(data.avatar_url ?? null);
