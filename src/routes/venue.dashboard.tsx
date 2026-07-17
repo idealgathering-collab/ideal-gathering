@@ -24,6 +24,7 @@ import { LocationAutocomplete, type LocationValue } from "@/components/location-
 import { MenuSection } from "@/components/menu-section";
 import { VerifyEmailBanner } from "@/components/verify-email-banner";
 import { LanguageSwitcher } from "@/components/language-switcher";
+import { NotificationsBell } from "@/components/notifications-bell";
 import { useT } from "@/i18n";
 import logoAsset from "@/assets/ideal-gathering-logo.png.asset.json";
 
@@ -116,6 +117,7 @@ function VenueDashboard() {
           </Link>
           <div className="flex items-center gap-2">
             <LanguageSwitcher />
+            {user && <NotificationsBell />}
             <Button variant="ghost" size="icon" onClick={signOut} aria-label={t("nav.signOut")} className="rounded-full">
               <LogOut className="h-4 w-4" />
             </Button>
