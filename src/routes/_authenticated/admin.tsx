@@ -548,3 +548,234 @@ function Empty({ text }: { text: string }) {
     </p>
   );
 }
+
+// ------------------------------ Gatherings queue ------------------------------
+
+function GatheringsSection() {
+  const t = useT();
+  const runList = useServerFn(listPendingGatherings);
+  const runSet = useServerFn(setGatheringStatus);
+  const [rows, setRows] = useState<PendingGatheringRow[] | null>(null);
+
+  function refresh() {
+    runList()
+      .then((r) => setRows(r))
+      .catch((e) => toast.error(e instanceof Error ? e.message : String(e)));
+  }
+
+  useEffect(() => {
+    refresh();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  async function act(id: string, status: "approved" | "rejected") {
+    try {
+      await runSet({ data: { id, status } });
+      toast.success(t(`admin.set.${status}`));
+      refresh();
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : String(e));
+    }
+  }
+
+  if (rows === null) return <p className="text-sm text-muted-foreground">{t("common.loading")}</p>;
+  if (rows.length === 0) return <Empty text={t("admin.gatherings.empty")} />;
+
+  return (
+    <div className="grid gap-3">
+      {rows.map((g) => (
+        <div key={g.id} className="rounded-2xl border border-border bg-card p-4">
+          <div className="flex flex-wrap items-start justify-between gap-3">
+            <div className="min-w-0 flex-1">
+              <div className="font-display text-lg">{g.subject}</div>
+              <div className="mt-1 text-xs text-muted-foreground">
+                {t("admin.gatherings.venue")}: {g.business_name ?? "—"}
+                {g.business_city ? ` · ${g.business_city}` : ""}
+                {g.table_label ? ` · ${t("admin.gatherings.table")} ${g.table_label}` : ""}
+              </div>
+              <div className="mt-1 text-xs text-muted-foreground">
+                {t("admin.gatherings.host")}: {g.host_name ?? g.host_id.slice(0, 8)} ·{" "}
+                {t("admin.gatherings.when")}: {formatDateTime(g.starts_at)} · {g.seats} seats
+              </div>
+              {g.description && <p className="mt-2 text-sm">{g.description}</p>}
+            </div>
+            <div className="flex gap-2">
+              <Button size="sm" className="rounded-full" onClick={() => act(g.id, "approved")}>
+                {t("admin.approve")}
+              </Button>
+              <Button size="sm" variant="outline" className="rounded-full" onClick={() => act(g.id, "rejected")}>
+                {t("admin.reject")}
+              </Button>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// ------------------------------ Edit forms ------------------------------
+
+export function UserEditForm({
+  user,
+  onCancel,
+  onSaved,
+}: {
+  user: AdminUserDetail;
+  onCancel: () => void;
+  onSaved: () => void;
+}) {
+  const t = useT();
+  const runUpdate = useServerFn(updateAdminUser);
+  const [displayName, setDisplayName] = useState(user.display_name ?? "");
+  const [bio, setBio] = useState(user.bio ?? "");
+  const [country, setCountry] = useState(user.country ?? "");
+  const [city, setCity] = useState(user.city ?? "");
+  const [saving, setSaving] = useState(false);
+
+  async function save() {
+    try {
+      setSaving(true);
+      await runUpdate({
+        data: {
+          id: user.id,
+          patch: {
+            display_name: displayName.trim() || null,
+            bio: bio.trim() || null,
+            country: country || null,
+            city: city.trim() || null,
+          },
+        },
+      });
+      toast.success(t("admin.user.saved"));
+      onSaved();
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : String(e));
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  return (
+    <div className="mt-6 grid gap-4 rounded-2xl border border-border bg-card p-6">
+      <div className="grid gap-2">
+        <Label>{t("profile.displayName")}</Label>
+        <Input value={displayName} maxLength={80} onChange={(e) => setDisplayName(e.target.value)} />
+      </div>
+      <div className="grid gap-2">
+        <Label>{t("profile.bio")}</Label>
+        <Textarea value={bio} maxLength={500} rows={3} onChange={(e) => setBio(e.target.value)} />
+      </div>
+      <div className="grid gap-3 sm:grid-cols-2">
+        <div className="grid gap-2">
+          <Label>{t("admin.user.country")}</Label>
+          <Select
+            value={country || undefined}
+            onValueChange={(v) => {
+              setCountry(v);
+              if (!citiesFor(v).includes(city)) setCity("");
+            }}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder={t("profile.selectCountry")} />
+            </SelectTrigger>
+            <SelectContent>
+              {COUNTRIES.map((c) => (
+                <SelectItem key={c.code} value={c.code}>
+                  {c.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+        <div className="grid gap-2">
+          <Label>{t("admin.user.city")}</Label>
+          {citiesFor(country).length > 0 ? (
+            <Select value={city || undefined} onValueChange={setCity}>
+              <SelectTrigger>
+                <SelectValue placeholder={t("profile.selectCity")} />
+              </SelectTrigger>
+              <SelectContent>
+                {citiesFor(country).map((c) => (
+                  <SelectItem key={c} value={c}>
+                    {c}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          ) : (
+            <Input value={city} maxLength={120} onChange={(e) => setCity(e.target.value)} />
+          )}
+        </div>
+      </div>
+      <div className="flex justify-end gap-2">
+        <Button variant="outline" onClick={onCancel} className="rounded-full">
+          {t("admin.user.cancel")}
+        </Button>
+        <Button onClick={save} disabled={saving} className="rounded-full">
+          {saving ? "…" : t("admin.user.save")}
+        </Button>
+      </div>
+    </div>
+  );
+}
+
+export function VenueEditForm({
+  venue,
+  onCancel,
+  onSaved,
+}: {
+  venue: VenueRow;
+  onCancel: () => void;
+  onSaved: () => void;
+}) {
+  const t = useT();
+  const [name, setName] = useState(venue.name);
+  const [city, setCity] = useState(venue.city ?? "");
+  const [address, setAddress] = useState(venue.address ?? "");
+  const [saving, setSaving] = useState(false);
+
+  async function save() {
+    try {
+      setSaving(true);
+      const { error } = await supabase
+        .from("businesses")
+        .update({ name: name.trim(), city: city.trim() || null, address: address.trim() || null })
+        .eq("id", venue.id);
+      if (error) throw error;
+      toast.success(t("admin.venue.saved"));
+      onSaved();
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : String(e));
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  return (
+    <div className="mt-4 grid gap-4 rounded-2xl border border-border bg-card p-6">
+      <div className="grid gap-2">
+        <Label>{t("venueDash.name")}</Label>
+        <Input value={name} maxLength={200} onChange={(e) => setName(e.target.value)} />
+      </div>
+      <div className="grid gap-3 sm:grid-cols-2">
+        <div className="grid gap-2">
+          <Label>{t("venueDash.city")}</Label>
+          <Input value={city} maxLength={120} onChange={(e) => setCity(e.target.value)} />
+        </div>
+        <div className="grid gap-2">
+          <Label>{t("venueDash.address")}</Label>
+          <Input value={address} maxLength={300} onChange={(e) => setAddress(e.target.value)} />
+        </div>
+      </div>
+      <div className="flex justify-end gap-2">
+        <Button variant="outline" onClick={onCancel} className="rounded-full">
+          {t("admin.user.cancel")}
+        </Button>
+        <Button onClick={save} disabled={saving} className="rounded-full">
+          {saving ? "…" : t("admin.venue.save")}
+        </Button>
+      </div>
+    </div>
+  );
+}
