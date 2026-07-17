@@ -740,7 +740,7 @@ export function VenueEditForm({
       setSaving(true);
       const { error } = await supabase
         .from("businesses")
-        .update({ name: name.trim(), city: city.trim() || null, address: address.trim() || null })
+        .update({ name: name.trim(), city: city.trim() || undefined, address: address.trim() || undefined })
         .eq("id", venue.id);
       if (error) throw error;
       toast.success(t("admin.venue.saved"));
