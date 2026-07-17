@@ -146,10 +146,16 @@ export const updateAdminUser = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) => {
     await assertAdmin(context as any);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const patch: Record<string, unknown> = {};
-    for (const key of ["display_name", "bio", "city", "country"] as const) {
-      if (key in data.patch) patch[key] = data.patch[key] ?? null;
-    }
+    const patch: {
+      display_name?: string | null;
+      bio?: string | null;
+      city?: string | null;
+      country?: string | null;
+    } = {};
+    if ("display_name" in data.patch) patch.display_name = data.patch.display_name ?? null;
+    if ("bio" in data.patch) patch.bio = data.patch.bio ?? null;
+    if ("city" in data.patch) patch.city = data.patch.city ?? null;
+    if ("country" in data.patch) patch.country = data.patch.country ?? null;
     const { error } = await supabaseAdmin.from("profiles").update(patch).eq("id", data.id);
     if (error) throw new Error(error.message);
     return { ok: true };
