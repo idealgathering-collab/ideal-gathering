@@ -18,6 +18,8 @@ export const translations: Record<Lang, Dict> = {
     "nav.join": "Join",
     "nav.language": "Language",
     "nav.partnership": "Partnership",
+    "nav.home": "Home",
+    "nav.menu": "Menu",
 
     // Partnership page
     "partner.eyebrow": "For cafes & restaurants",
@@ -629,6 +631,8 @@ export const translations: Record<Lang, Dict> = {
     "nav.join": "Katıl",
     "nav.language": "Dil",
     "nav.partnership": "Ortaklık",
+    "nav.home": "Ana Sayfa",
+    "nav.menu": "Menü",
 
     // Partnership page
     "partner.eyebrow": "Kafeler ve restoranlar için",

@@ -1,11 +1,18 @@
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
-import { ArrowLeft, LogOut, Shield, User as UserIcon } from "lucide-react";
+import { ArrowLeft, Home, LogOut, Menu, Shield, User as UserIcon } from "lucide-react";
 import { NotificationsBell } from "@/components/notifications-bell";
 import { useEffect, useState } from "react";
 import logoAsset from "@/assets/ideal-gathering-logo.png.asset.json";
 
 
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { useSession } from "@/hooks/use-session";
 import { supabase } from "@/integrations/supabase/client";
 import { useQueryClient } from "@tanstack/react-query";
@@ -46,7 +53,7 @@ export function SiteHeader() {
   return (
     <header className="sticky top-0 z-40 w-full border-b border-border/60 bg-background/85 backdrop-blur-xl">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-3 px-4">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5">
           {showBack && (
             <Button
               variant="ghost"
@@ -62,20 +69,29 @@ export function SiteHeader() {
             </Button>
           )}
 
-        <Link to="/" className="flex items-center gap-2 group">
-          <img
-            src={logoAsset.url}
-            alt="Ideal Gathering"
-            className="h-9 w-9 rounded-full object-contain"
-          />
-          <span className="font-display text-xl leading-none">
-            Ideal <span className="italic text-primary">Gathering</span>
-          </span>
-        </Link>
+          <Link to="/" className="flex items-center gap-2 group">
+            <img
+              src={logoAsset.url}
+              alt="Ideal Gathering"
+              className="h-9 w-9 rounded-full object-contain"
+            />
+            <span className="font-display text-xl leading-none hidden xs:inline sm:inline">
+              Ideal <span className="italic text-primary">Gathering</span>
+            </span>
+          </Link>
 
+          <Button
+            asChild
+            variant="ghost"
+            size="icon"
+            aria-label={t("nav.home")}
+            className="rounded-full"
+          >
+            <Link to="/">
+              <Home className="h-4 w-4" />
+            </Link>
+          </Button>
         </div>
-
-
 
         <nav className="flex items-center gap-1.5">
           <LanguageSwitcher />
@@ -104,17 +120,48 @@ export function SiteHeader() {
                 size="icon"
                 onClick={handleSignOut}
                 aria-label={t("nav.signOut")}
-                className="rounded-full"
+                className="rounded-full hidden sm:inline-flex"
               >
                 <LogOut className="h-4 w-4" />
               </Button>
-              <Link
-                to="/profile"
-                className="sm:hidden grid h-9 w-9 place-items-center rounded-full bg-muted"
-                aria-label={t("nav.account")}
-              >
-                <UserIcon className="h-4 w-4" />
-              </Link>
+
+              {/* Mobile hamburger */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    aria-label={t("nav.menu")}
+                    className="rounded-full sm:hidden"
+                  >
+                    <Menu className="h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem asChild>
+                    <Link to="/dashboard">{t("nav.dashboard")}</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to="/profile">
+                      <UserIcon className="mr-2 h-4 w-4" />
+                      {t("nav.profile")}
+                    </Link>
+                  </DropdownMenuItem>
+                  {isAdmin && (
+                    <DropdownMenuItem asChild>
+                      <Link to="/admin">
+                        <Shield className="mr-2 h-4 w-4" />
+                        {t("nav.admin")}
+                      </Link>
+                    </DropdownMenuItem>
+                  )}
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onSelect={handleSignOut}>
+                    <LogOut className="mr-2 h-4 w-4" />
+                    {t("nav.signOut")}
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </>
           ) : (
             <>
@@ -124,6 +171,25 @@ export function SiteHeader() {
               <Button asChild size="sm" className="rounded-full">
                 <Link to="/auth" search={{ mode: "signup" }}>{t("nav.join")}</Link>
               </Button>
+
+              {/* Mobile hamburger */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    aria-label={t("nav.menu")}
+                    className="rounded-full sm:hidden"
+                  >
+                    <Menu className="h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem asChild>
+                    <Link to="/partnership">{t("nav.partnership")}</Link>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </>
           )}
         </nav>
