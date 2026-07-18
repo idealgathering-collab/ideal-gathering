@@ -18,6 +18,8 @@ export const translations: Record<Lang, Dict> = {
     "nav.join": "Join",
     "nav.language": "Language",
     "nav.partnership": "Partnership",
+    "nav.home": "Home",
+    "nav.menu": "Menu",
 
     // Partnership page
     "partner.eyebrow": "For cafes & restaurants",
