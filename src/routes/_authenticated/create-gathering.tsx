@@ -47,13 +47,26 @@ function CreateGathering() {
   const { data: venues } = useQuery({
     queryKey: ["approved-venues"],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("businesses")
-        .select("id,name,city,venue_tables(id,label,capacity)")
-        .eq("status", "approved")
-        .order("name");
+      const { data: bizList, error } = await supabase.rpc("list_approved_businesses");
       if (error) throw error;
-      return data ?? [];
+      const ids = (bizList ?? []).map((b: { id: string }) => b.id);
+      if (ids.length === 0) return [];
+      const { data: tables } = await supabase
+        .from("venue_tables")
+        .select("id,label,capacity,business_id")
+        .in("business_id", ids);
+      const byBiz = new Map<string, { id: string; label: string; capacity: number }[]>();
+      for (const t of tables ?? []) {
+        const arr = byBiz.get(t.business_id) ?? [];
+        arr.push({ id: t.id, label: t.label, capacity: t.capacity });
+        byBiz.set(t.business_id, arr);
+      }
+      return (bizList ?? []).map((b: { id: string; name: string; city: string | null }) => ({
+        id: b.id,
+        name: b.name,
+        city: b.city,
+        venue_tables: byBiz.get(b.id) ?? [],
+      }));
     },
   });
 
