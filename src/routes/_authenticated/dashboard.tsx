@@ -69,12 +69,12 @@ function Dashboard() {
           <div className="flex flex-wrap gap-2">
             <Button asChild variant="outline" className="rounded-full">
               <Link to="/explore">
-                <Compass className="mr-1.5 h-4 w-4" /> {t("nav.explore")}
+                <Compass className="me-1.5 h-4 w-4" /> {t("nav.explore")}
               </Link>
             </Button>
             <Button asChild className="rounded-full">
               <Link to="/create-gathering">
-                <Plus className="mr-1.5 h-4 w-4" /> {t("dash.propose")}
+                <Plus className="me-1.5 h-4 w-4" /> {t("dash.propose")}
               </Link>
             </Button>
           </div>
@@ -111,7 +111,7 @@ function Dashboard() {
                       </div>
                     </div>
                     <span
-                      className={`ml-3 rounded-full px-2.5 py-1 text-[10px] font-semibold uppercase ${
+                      className={`ms-3 rounded-full px-2.5 py-1 text-[10px] font-semibold uppercase ${
                         g.status === "approved"
                           ? "bg-primary text-primary-foreground"
                           : g.status === "proposed"

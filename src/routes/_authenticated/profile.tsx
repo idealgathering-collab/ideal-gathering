@@ -322,7 +322,7 @@ function ProfilePage() {
                 <button
                   type="button"
                   onClick={() => removeInterest(tag)}
-                  className="ml-1 rounded-full hover:bg-primary/20"
+                  className="ms-1 rounded-full hover:bg-primary/20"
                   aria-label={t("profile.interests.remove")}
                 >
                   <X className="h-3.5 w-3.5" />

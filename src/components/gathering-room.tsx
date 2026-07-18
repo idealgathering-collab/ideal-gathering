@@ -253,7 +253,7 @@ export function GatheringChecklist({
                 <button
                   type="button"
                   onClick={() => toggle(it.id)}
-                  className="flex flex-1 items-center gap-2 rounded-lg px-2 py-2 text-left hover:bg-muted"
+                  className="flex flex-1 items-center gap-2 rounded-lg px-2 py-2 text-start hover:bg-muted"
                 >
                   {done ? (
                     <CheckCircle2 className="h-4 w-4 text-primary" />

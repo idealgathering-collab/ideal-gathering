@@ -112,7 +112,7 @@ function VenueDashboard() {
             <img src={logoAsset.url} alt="" className="h-9 w-9 rounded-full object-contain" />
             <span className="font-display text-lg">
               Ideal <span className="italic text-primary">Gathering</span>
-              <span className="ml-1 text-xs text-muted-foreground">· {t("venueAuth.for")}</span>
+              <span className="ms-1 text-xs text-muted-foreground">· {t("venueAuth.for")}</span>
             </span>
           </Link>
           <div className="flex items-center gap-2">
@@ -418,7 +418,7 @@ function TablesSection({ business }: { business: BizRow }) {
               disabled={!canActivate}
               title={!canActivate ? t("venueDash.activateNeedsApproval") : undefined}
             >
-              <Zap className="mr-1 h-4 w-4" /> {t("venueDash.activate")}
+              <Zap className="me-1 h-4 w-4" /> {t("venueDash.activate")}
             </Button>
           </div>
         ))}
@@ -434,7 +434,7 @@ function TablesSection({ business }: { business: BizRow }) {
           <Input type="number" min={1} max={30} value={cap} onChange={(e) => setCap(Number(e.target.value))} className="w-24" />
         </div>
         <Button type="submit" className="rounded-full">
-          <Plus className="mr-1 h-4 w-4" /> {t("biz.addTable")}
+          <Plus className="me-1 h-4 w-4" /> {t("biz.addTable")}
         </Button>
       </form>
 
@@ -535,7 +535,7 @@ function ActivateDialog({
           </div>
           <DialogFooter>
             <Button type="submit" disabled={saving} className="rounded-full">
-              <Zap className="mr-1 h-4 w-4" /> {saving ? t("common.loading") : t("venueDash.activate")}
+              <Zap className="me-1 h-4 w-4" /> {saving ? t("common.loading") : t("venueDash.activate")}
             </Button>
           </DialogFooter>
         </form>

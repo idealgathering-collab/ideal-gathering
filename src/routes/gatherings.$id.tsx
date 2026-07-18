@@ -112,7 +112,7 @@ function GatheringDetail() {
             <Coffee className="h-4 w-4" />
             {g.table?.label ? `${t("gd.table")} ${g.table.label}` : g.neighborhood || t("card.gathering")}
             {g.status !== "approved" && (
-              <span className="ml-2 rounded-full bg-sunshine px-2 py-0.5 text-sunshine-foreground">
+              <span className="ms-2 rounded-full bg-sunshine px-2 py-0.5 text-sunshine-foreground">
                 {g.status === "proposed"
                   ? t("gd.status.proposed")
                   : g.status === "rejected"

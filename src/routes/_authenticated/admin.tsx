@@ -261,7 +261,7 @@ function VenuesSection() {
 function VenueCard({ v, onOpen, actions }: { v: VenueRow; onOpen: () => void; actions?: React.ReactNode }) {
   return (
     <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-border bg-card p-4">
-      <button className="min-w-0 flex-1 text-left" onClick={onOpen}>
+      <button className="min-w-0 flex-1 text-start" onClick={onOpen}>
         <div className="font-display text-lg">{v.name}</div>
         <div className="mt-1 text-xs text-muted-foreground">
           {v.city ?? "—"} · {v.address ?? "—"}
@@ -486,7 +486,7 @@ function UsersSection() {
   return (
     <div className="overflow-x-auto rounded-2xl border border-border bg-card">
       <table className="w-full text-sm">
-        <thead className="text-left text-xs uppercase tracking-wide text-muted-foreground">
+        <thead className="text-start text-xs uppercase tracking-wide text-muted-foreground">
           <tr>
             <th className="px-4 py-3">{t("admin.users.name")}</th>
             <th className="px-4 py-3">{t("admin.users.email")}</th>

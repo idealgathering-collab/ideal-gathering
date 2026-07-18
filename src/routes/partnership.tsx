@@ -62,7 +62,7 @@ function Partnership() {
             <div className="mt-8">
               <Button asChild size="lg" className="rounded-full">
                 <Link to="/venue/auth">
-                  {t("b2b.register")} <ArrowRight className="ml-1 h-4 w-4" />
+                  {t("b2b.register")} <ArrowRight className="ms-1 h-4 w-4" />
                 </Link>
               </Button>
             </div>
