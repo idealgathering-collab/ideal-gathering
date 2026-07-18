@@ -4,7 +4,7 @@ import { CheckCircle2, Circle, Plus, Send, Trash2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useT } from "@/i18n";
+import { useI18n, useT } from "@/i18n";
 
 type Msg = {
   id: string;
@@ -41,6 +41,7 @@ export function GatheringChat({
   currentUserId: string;
 }) {
   const t = useT();
+  const { lang } = useI18n();
   const [messages, setMessages] = useState<Msg[]>([]);
   const [profiles, setProfiles] = useState<Record<string, Profile>>({});
   const [body, setBody] = useState("");
@@ -131,7 +132,7 @@ export function GatheringChat({
                 {!mine && <div className="mb-0.5 text-xs font-medium opacity-70">{name}</div>}
                 <div className="whitespace-pre-wrap break-words">{m.body}</div>
                 <div className={`mt-0.5 text-[10px] ${mine ? "text-primary-foreground/70" : "text-muted-foreground"}`}>
-                  {new Date(m.created_at).toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" })}
+                  {new Date(m.created_at).toLocaleTimeString(lang, { hour: "numeric", minute: "2-digit" })}
                 </div>
               </div>
             </div>
