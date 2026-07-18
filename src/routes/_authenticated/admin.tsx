@@ -7,7 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useSession } from "@/hooks/use-session";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useT } from "@/i18n";
+import { useI18n, useT } from "@/i18n";
 import { formatDateTime } from "@/lib/gatherings";
 import { listAdminUsers, getAdminUser, updateAdminUser, listPendingGatherings, setGatheringStatus, type AdminUserRow, type AdminUserDetail, type PendingGatheringRow } from "@/lib/admin.functions";
 import { Input } from "@/components/ui/input";
@@ -445,18 +445,20 @@ function VenueDetail({
 }
 
 function GatheringRow({ g, children }: { g: VenueGathering; children?: React.ReactNode }) {
+  const { lang } = useI18n();
   return (
     <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-border bg-card p-4">
       <div className="min-w-0 flex-1">
         <div className="font-display text-base">{g.subject}</div>
         <div className="mt-1 text-xs text-muted-foreground">
-          {formatDateTime(g.starts_at)} · {g.seats} seats
+          {formatDateTime(g.starts_at, lang)} · {g.seats} seats
         </div>
       </div>
       <div className="flex gap-2">{children}</div>
     </div>
   );
 }
+
 
 // ------------------------------ Users ------------------------------
 
