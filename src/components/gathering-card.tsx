@@ -2,10 +2,11 @@ import { Link } from "@tanstack/react-router";
 import { Users, MapPin, CalendarClock } from "lucide-react";
 import type { GatheringCard as G } from "@/lib/gatherings";
 import { formatDateTime } from "@/lib/gatherings";
-import { useT } from "@/i18n";
+import { useI18n, useT } from "@/i18n";
 
 export function GatheringCard({ g }: { g: G }) {
   const t = useT();
+  const { lang } = useI18n();
   const seatsLeft = Math.max(0, g.seats - g.attendee_count);
   const full = seatsLeft === 0;
   const chipLabel = g.table?.label
