@@ -12,7 +12,7 @@ const I18nContext = createContext<Ctx | null>(null);
 const STORAGE_KEY = "ideal-gathering.lang";
 
 function isLang(v: unknown): v is Lang {
-  return v === "en" || v === "tr";
+  return v === "en" || v === "tr" || v === "fa";
 }
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
@@ -28,6 +28,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
       }
       const nav = window.navigator.language?.toLowerCase() ?? "";
       if (nav.startsWith("tr")) setLangState("tr");
+      else if (nav.startsWith("fa") || nav.startsWith("pe")) setLangState("fa");
     } catch {
       // ignore
     }
@@ -36,6 +37,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (typeof document !== "undefined") {
       document.documentElement.lang = lang;
+      document.documentElement.dir = lang === "fa" ? "rtl" : "ltr";
     }
   }, [lang]);
 

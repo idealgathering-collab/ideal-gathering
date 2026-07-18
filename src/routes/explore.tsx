@@ -61,7 +61,7 @@ function Explore() {
             <p className="mt-2 text-sm text-muted-foreground">{t("explore.empty.body")}</p>
             <Button asChild className="mt-6 rounded-full">
               <Link to="/create-gathering">
-                {t("explore.empty.cta")} <ArrowRight className="ml-1 h-4 w-4" />
+                {t("explore.empty.cta")} <ArrowRight className="ms-1 h-4 w-4" />
               </Link>
             </Button>
           </div>

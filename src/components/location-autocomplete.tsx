@@ -152,7 +152,7 @@ export function LocationAutocomplete({
             scheduleSearch(e.target.value);
           }}
           onFocus={() => results.length && setOpen(true)}
-          className="pl-9"
+          className="ps-9"
           autoComplete="off"
         />
         {loading && (
@@ -168,7 +168,7 @@ export function LocationAutocomplete({
                   type="button"
                   onClick={() => pick(r)}
                   className={cn(
-                    "flex w-full items-start gap-2 px-3 py-2 text-left text-sm hover:bg-accent hover:text-accent-foreground",
+                    "flex w-full items-start gap-2 px-3 py-2 text-start text-sm hover:bg-accent hover:text-accent-foreground",
                   )}
                 >
                   <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />

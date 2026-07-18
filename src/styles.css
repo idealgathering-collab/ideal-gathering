@@ -133,6 +133,23 @@
     letter-spacing: -0.01em;
     line-height: 1.05;
   }
+
+  :lang(fa),
+  [dir="rtl"] {
+    font-family: "Vazirmatn", var(--font-sans);
+  }
+
+  :lang(fa) h1,
+  :lang(fa) h2,
+  :lang(fa) h3,
+  :lang(fa) h4,
+  [dir="rtl"] h1,
+  [dir="rtl"] h2,
+  [dir="rtl"] h3,
+  [dir="rtl"] h4 {
+    font-family: "Vazirmatn", var(--font-display);
+    letter-spacing: 0;
+  }
 }
 
 @utility bg-gradient-hero {

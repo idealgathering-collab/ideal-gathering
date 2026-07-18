@@ -157,7 +157,7 @@ function AuthPage() {
                 }}
                 className="mt-6 h-11 w-full rounded-full text-base"
               >
-                <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24" aria-hidden="true">
+                <svg className="me-2 h-4 w-4" viewBox="0 0 24 24" aria-hidden="true">
                   <path fill="#EA4335" d="M12 10.2v3.9h5.5c-.24 1.44-1.7 4.22-5.5 4.22-3.31 0-6-2.74-6-6.12s2.69-6.12 6-6.12c1.88 0 3.14.8 3.86 1.49l2.63-2.53C16.83 3.5 14.66 2.5 12 2.5 6.75 2.5 2.5 6.75 2.5 12s4.25 9.5 9.5 9.5c5.48 0 9.12-3.85 9.12-9.28 0-.62-.07-1.1-.16-1.52H12z"/>
                 </svg>
                 {t("auth.google")}

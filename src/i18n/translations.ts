@@ -1,8 +1,9 @@
-export type Lang = "en" | "tr";
+export type Lang = "en" | "tr" | "fa";
 
 export const LANGS: { code: Lang; label: string; short: string }[] = [
   { code: "en", label: "English", short: "EN" },
   { code: "tr", label: "Türkçe", short: "TR" },
+  { code: "fa", label: "فارسی", short: "FA" },
 ];
 
 type Dict = Record<string, string>;
@@ -1232,5 +1233,6 @@ export const translations: Record<Lang, Dict> = {
     "dash.venueHintLink": "Mekân panelini aç →",
     "nav.explore": "Keşfet",
   },
+  fa: {},
 };
 

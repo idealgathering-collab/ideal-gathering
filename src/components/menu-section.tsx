@@ -134,7 +134,7 @@ export function MenuSection({ businessId, isOwner }: { businessId: string; isOwn
           </div>
           <div className="sm:col-span-2">
             <Button type="submit" className="rounded-full">
-              <Plus className="mr-1 h-4 w-4" /> {t("menu.add")}
+              <Plus className="me-1 h-4 w-4" /> {t("menu.add")}
             </Button>
           </div>
         </form>

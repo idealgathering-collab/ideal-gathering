@@ -65,7 +65,7 @@ export function SiteHeader() {
                 else navigate({ to: "/" });
               }}
             >
-              <ArrowLeft className="h-4 w-4" />
+              <ArrowLeft className="h-4 w-4 rtl:rotate-180" />
             </Button>
           )}
 
@@ -106,7 +106,7 @@ export function SiteHeader() {
               {isAdmin && (
                 <Button asChild variant="ghost" size="sm" className="hidden sm:inline-flex">
                   <Link to="/admin">
-                    <Shield className="mr-1 h-3.5 w-3.5" />
+                    <Shield className="me-1 h-3.5 w-3.5" />
                     {t("nav.admin")}
                   </Link>
                 </Button>
@@ -143,21 +143,21 @@ export function SiteHeader() {
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
                     <Link to="/profile">
-                      <UserIcon className="mr-2 h-4 w-4" />
+                      <UserIcon className="me-2 h-4 w-4" />
                       {t("nav.profile")}
                     </Link>
                   </DropdownMenuItem>
                   {isAdmin && (
                     <DropdownMenuItem asChild>
                       <Link to="/admin">
-                        <Shield className="mr-2 h-4 w-4" />
+                        <Shield className="me-2 h-4 w-4" />
                         {t("nav.admin")}
                       </Link>
                     </DropdownMenuItem>
                   )}
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onSelect={handleSignOut}>
-                    <LogOut className="mr-2 h-4 w-4" />
+                    <LogOut className="me-2 h-4 w-4" />
                     {t("nav.signOut")}
                   </DropdownMenuItem>
                 </DropdownMenuContent>
