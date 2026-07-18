@@ -6,7 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useSession } from "@/hooks/use-session";
 import { Button } from "@/components/ui/button";
 import { formatDateTime } from "@/lib/gatherings";
-import { useT } from "@/i18n";
+import { useI18n, useT } from "@/i18n";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   component: Dashboard,
@@ -15,6 +15,7 @@ export const Route = createFileRoute("/_authenticated/dashboard")({
 function Dashboard() {
   const { user } = useSession();
   const t = useT();
+  const { lang } = useI18n();
 
   const { data: hosted } = useQuery({
     queryKey: ["my-hosted", user?.id],
@@ -107,7 +108,7 @@ function Dashboard() {
                     <div className="min-w-0">
                       <div className="font-display text-lg truncate">{g.subject}</div>
                       <div className="text-xs text-muted-foreground truncate">
-                        {formatDateTime(g.starts_at)} · {g.business?.name} · {t("card.table")} {g.table?.label}
+                        {formatDateTime(g.starts_at, lang)} · {g.business?.name} · {t("card.table")} {g.table?.label}
                       </div>
                     </div>
                     <span
@@ -143,7 +144,7 @@ function Dashboard() {
                     <div className="min-w-0">
                       <div className="font-display text-lg truncate">{g.subject}</div>
                       <div className="text-xs text-muted-foreground truncate">
-                        {formatDateTime(g.starts_at)} · {g.business?.name} · {t("card.table")} {g.table?.label}
+                        {formatDateTime(g.starts_at, lang)} · {g.business?.name} · {t("card.table")} {g.table?.label}
                       </div>
                     </div>
                     <Users className="h-4 w-4 text-primary" />

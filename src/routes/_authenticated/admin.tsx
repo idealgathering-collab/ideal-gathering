@@ -7,7 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useSession } from "@/hooks/use-session";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useT } from "@/i18n";
+import { useI18n, useT } from "@/i18n";
 import { formatDateTime } from "@/lib/gatherings";
 import { listAdminUsers, getAdminUser, updateAdminUser, listPendingGatherings, setGatheringStatus, type AdminUserRow, type AdminUserDetail, type PendingGatheringRow } from "@/lib/admin.functions";
 import { Input } from "@/components/ui/input";
@@ -445,12 +445,13 @@ function VenueDetail({
 }
 
 function GatheringRow({ g, children }: { g: VenueGathering; children?: React.ReactNode }) {
+  const { lang } = useI18n();
   return (
     <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-border bg-card p-4">
       <div className="min-w-0 flex-1">
         <div className="font-display text-base">{g.subject}</div>
         <div className="mt-1 text-xs text-muted-foreground">
-          {formatDateTime(g.starts_at)} · {g.seats} seats
+          {formatDateTime(g.starts_at, lang)} · {g.seats} seats
         </div>
       </div>
       <div className="flex gap-2">{children}</div>
@@ -458,10 +459,12 @@ function GatheringRow({ g, children }: { g: VenueGathering; children?: React.Rea
   );
 }
 
+
 // ------------------------------ Users ------------------------------
 
 function UsersSection() {
   const t = useT();
+  const { lang } = useI18n();
   const [users, setUsers] = useState<AdminUserRow[] | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const runList = useServerFn(listAdminUsers);
@@ -504,7 +507,7 @@ function UsersSection() {
             >
               <td className="px-4 py-3 font-medium">{u.display_name ?? "—"}</td>
               <td className="px-4 py-3">{u.email ?? "—"}</td>
-              <td className="px-4 py-3">{new Date(u.created_at).toLocaleDateString()}</td>
+              <td className="px-4 py-3">{new Date(u.created_at).toLocaleDateString(lang)}</td>
               <td className="px-4 py-3">{u.email_confirmed_at ? "✓" : "—"}</td>
               <td className="px-4 py-3">{u.role}</td>
             </tr>
@@ -517,6 +520,7 @@ function UsersSection() {
 
 function UserDetail({ id, onBack }: { id: string; onBack: () => void }) {
   const t = useT();
+  const { lang } = useI18n();
   const [user, setUser] = useState<AdminUserDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
@@ -586,7 +590,7 @@ function UserDetail({ id, onBack }: { id: string; onBack: () => void }) {
               <Field label={t("admin.user.country")} value={user.country ? countryName(user.country) : null} />
               <Field label={t("admin.user.city")} value={user.city} />
               <Field label={t("admin.users.role")} value={user.role} />
-              <Field label={t("admin.users.signedUp")} value={new Date(user.created_at).toLocaleString()} />
+              <Field label={t("admin.users.signedUp")} value={new Date(user.created_at).toLocaleString(lang)} />
               <Field label={t("admin.users.verified")} value={user.email_confirmed_at ? "✓" : "—"} />
             </dl>
 
@@ -655,6 +659,7 @@ function Empty({ text }: { text: string }) {
 
 function GatheringsSection() {
   const t = useT();
+  const { lang } = useI18n();
   const runList = useServerFn(listPendingGatherings);
   const runSet = useServerFn(setGatheringStatus);
   const [rows, setRows] = useState<PendingGatheringRow[] | null>(null);
@@ -704,7 +709,7 @@ function GatheringsSection() {
               </div>
               <div className="mt-1 text-xs text-muted-foreground">
                 {t("admin.gatherings.host")}: {g.host_name ?? g.host_id.slice(0, 8)} ·{" "}
-                {t("admin.gatherings.when")}: {formatDateTime(g.starts_at)} · {g.seats} seats
+                {t("admin.gatherings.when")}: {formatDateTime(g.starts_at, lang)} · {g.seats} seats
               </div>
               {g.description && <p className="mt-2 text-sm">{g.description}</p>}
             </div>

@@ -62,5 +62,5 @@ export function relativeTime(iso: string, lang: "en" | "tr" | "fa" = "en"): stri
   if (abs < 3600) return rtf.format(-Math.round(diff / 60), "minute");
   if (abs < 86400) return rtf.format(-Math.round(diff / 3600), "hour");
   if (abs < 86400 * 30) return rtf.format(-Math.round(diff / 86400), "day");
-  return new Date(iso).toLocaleDateString();
+  return new Date(iso).toLocaleDateString(lang);
 }

@@ -12,7 +12,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useSession } from "@/hooks/use-session";
 import { Button } from "@/components/ui/button";
 import { fetchGathering, formatDateTime } from "@/lib/gatherings";
-import { useT } from "@/i18n";
+import { useI18n, useT } from "@/i18n";
 
 export const Route = createFileRoute("/gatherings/$id")({
   component: GatheringDetail,
@@ -24,6 +24,7 @@ function GatheringDetail() {
   const navigate = useNavigate();
   const qc = useQueryClient();
   const t = useT();
+  const { lang } = useI18n();
 
   const { data: g, isLoading } = useQuery({
     queryKey: ["gathering", id],
@@ -132,7 +133,7 @@ function GatheringDetail() {
             <div className="flex items-center gap-2 text-xs uppercase tracking-wide text-muted-foreground">
               <CalendarClock className="h-3.5 w-3.5 text-primary" /> {t("create.datetime")}
             </div>
-            <div className="mt-1 font-display text-lg">{formatDateTime(g.starts_at)}</div>
+            <div className="mt-1 font-display text-lg">{formatDateTime(g.starts_at, lang)}</div>
           </div>
           <div className="rounded-2xl border border-border bg-card p-4">
             <div className="flex items-center gap-2 text-xs uppercase tracking-wide text-muted-foreground">

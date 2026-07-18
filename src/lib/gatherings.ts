@@ -66,9 +66,9 @@ export async function leaveGathering(gatheringId: string, userId: string) {
   if (error) throw error;
 }
 
-export function formatDateTime(iso: string) {
+export function formatDateTime(iso: string, lang?: "en" | "tr" | "fa") {
   const d = new Date(iso);
-  return d.toLocaleString(undefined, {
+  return d.toLocaleString(lang, {
     weekday: "short",
     month: "short",
     day: "numeric",
@@ -76,3 +76,4 @@ export function formatDateTime(iso: string) {
     minute: "2-digit",
   });
 }
+
