@@ -54,7 +54,7 @@ export async function insertNotification(input: {
   if (error) throw error;
 }
 
-export function relativeTime(iso: string, lang: "en" | "tr" = "en"): string {
+export function relativeTime(iso: string, lang: "en" | "tr" | "fa" = "en"): string {
   const diff = (Date.now() - new Date(iso).getTime()) / 1000;
   const rtf = new Intl.RelativeTimeFormat(lang, { numeric: "auto" });
   const abs = Math.abs(diff);
