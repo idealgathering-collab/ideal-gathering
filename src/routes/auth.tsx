@@ -235,12 +235,6 @@ function AuthPage() {
             </button>
           )}
 
-          <div className="mt-3 text-center text-xs text-muted-foreground">
-            {t("auth.guestHint")}{" "}
-            <Link to="/waitlist" className="text-primary hover:underline">
-              {t("auth.guestLink")}
-            </Link>
-          </div>
           <div className="mt-2 text-center text-xs text-muted-foreground">
             {t("auth.venueHint")}{" "}
             <Link to="/venue/auth" className="text-primary hover:underline">

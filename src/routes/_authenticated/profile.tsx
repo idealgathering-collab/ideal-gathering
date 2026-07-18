@@ -58,22 +58,18 @@ function ProfilePage() {
   const [social, setSocial] = useState<SocialLinks>({});
   const [avatarPath, setAvatarPath] = useState<string | null>(null);
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
-  const [coverPath, setCoverPath] = useState<string | null>(null);
-  const [coverUrl, setCoverUrl] = useState<string | null>(null);
 
   const [saving, setSaving] = useState(false);
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
-  const [uploadingCover, setUploadingCover] = useState(false);
   const [confirmText, setConfirmText] = useState("");
   const [deleting, setDeleting] = useState(false);
   const avatarRef = useRef<HTMLInputElement>(null);
-  const coverRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (!user) return;
     supabase
       .from("profiles")
-      .select("display_name, avatar_url, bio, city, country, interests, social_links, cover_url")
+      .select("display_name, avatar_url, bio, city, country, interests, social_links")
       .eq("id", user.id)
       .maybeSingle()
       .then(async ({ data }) => {
@@ -85,9 +81,7 @@ function ProfilePage() {
         setInterests(Array.isArray(data.interests) ? (data.interests as string[]) : []);
         setSocial((data.social_links as SocialLinks) ?? {});
         setAvatarPath(data.avatar_url ?? null);
-        setCoverPath(data.cover_url ?? null);
         setAvatarUrl(await signedUrl(data.avatar_url));
-        setCoverUrl(await signedUrl(data.cover_url));
       });
   }, [user]);
 
@@ -138,13 +132,10 @@ function ProfilePage() {
     }
   }
 
-  async function uploadImage(
-    file: File,
-    kind: "avatar" | "cover",
-  ): Promise<string> {
+  async function uploadImage(file: File): Promise<string> {
     if (!user) throw new Error("No user");
     const ext = file.name.split(".").pop()?.toLowerCase() || "png";
-    const path = `${user.id}/${kind}.${ext}`;
+    const path = `${user.id}/avatar.${ext}`;
     const { error: upErr } = await supabase.storage
       .from("avatars")
       .upload(path, file, { upsert: true, contentType: file.type });
@@ -157,7 +148,7 @@ function ProfilePage() {
     if (!file || !user) return;
     try {
       setUploadingAvatar(true);
-      const path = await uploadImage(file, "avatar");
+      const path = await uploadImage(file);
       const { error } = await supabase.from("profiles").update({ avatar_url: path }).eq("id", user.id);
       if (error) throw error;
       setAvatarPath(path);
@@ -168,25 +159,6 @@ function ProfilePage() {
     } finally {
       setUploadingAvatar(false);
       if (avatarRef.current) avatarRef.current.value = "";
-    }
-  }
-
-  async function onCoverChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0];
-    if (!file || !user) return;
-    try {
-      setUploadingCover(true);
-      const path = await uploadImage(file, "cover");
-      const { error } = await supabase.from("profiles").update({ cover_url: path }).eq("id", user.id);
-      if (error) throw error;
-      setCoverPath(path);
-      setCoverUrl(await signedUrl(path));
-      toast.success(t("profile.coverUpdated"));
-    } catch (err) {
-      toast.error(err instanceof Error ? err.message : t("auth.generic"));
-    } finally {
-      setUploadingCover(false);
-      if (coverRef.current) coverRef.current.value = "";
     }
   }
 
@@ -233,37 +205,17 @@ function ProfilePage() {
         <h1 className="font-display text-4xl">{t("profile.title")}</h1>
         <p className="mt-1 text-sm text-muted-foreground">{user?.email}</p>
 
-        {/* Cover + Avatar */}
-        <section className="mt-8 overflow-hidden rounded-3xl border border-border bg-card">
-          <div className="relative h-48 w-full bg-gradient-hero">
-            {coverUrl && <img src={coverUrl} alt="" className="h-full w-full object-cover" />}
-            <input
-              ref={coverRef}
-              type="file"
-              accept="image/*"
-              onChange={onCoverChange}
-              className="hidden"
-            />
-            <Button
-              type="button"
-              variant="secondary"
-              size="sm"
-              onClick={() => coverRef.current?.click()}
-              disabled={uploadingCover}
-              className="absolute right-4 top-4 rounded-full"
-            >
-              {uploadingCover ? "…" : t("profile.uploadCover")}
-            </Button>
-          </div>
-          <div className="flex items-end gap-4 px-6 pb-6">
-            <div className="-mt-10 grid h-24 w-24 place-items-center overflow-hidden rounded-full border-4 border-card bg-muted">
+        {/* Avatar */}
+        <section className="mt-8 rounded-3xl border border-border bg-card p-6">
+          <div className="flex items-center gap-4">
+            <div className="grid h-24 w-24 place-items-center overflow-hidden rounded-full bg-muted">
               {avatarUrl ? (
                 <img src={avatarUrl} alt="" className="h-full w-full object-cover" />
               ) : (
                 <span className="text-3xl font-display">{initial}</span>
               )}
             </div>
-            <div className="pb-1">
+            <div>
               <input
                 ref={avatarRef}
                 type="file"
