@@ -4,7 +4,7 @@ import { Store, MapPin, ExternalLink } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { supabase } from "@/integrations/supabase/client";
 import { formatDateTime } from "@/lib/gatherings";
-import { useT } from "@/i18n";
+import { useI18n, useT } from "@/i18n";
 
 export const Route = createFileRoute("/_authenticated/businesses/$id")({
   component: BusinessDetail,
@@ -13,6 +13,7 @@ export const Route = createFileRoute("/_authenticated/businesses/$id")({
 function BusinessDetail() {
   const { id } = Route.useParams();
   const t = useT();
+  const { lang } = useI18n();
 
   const { data: biz } = useQuery({
     queryKey: ["business-public", id],
@@ -111,7 +112,7 @@ function BusinessDetail() {
                 <div className="min-w-0">
                   <div className="font-display text-lg truncate">{g.subject}</div>
                   <div className="text-xs text-muted-foreground">
-                    {formatDateTime(g.starts_at)} · {t("biz.tableLabel")} {g.table?.label}
+                    {formatDateTime(g.starts_at, lang)} · {t("biz.tableLabel")} {g.table?.label}
                   </div>
                 </div>
               </Link>
