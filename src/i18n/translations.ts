@@ -1233,5 +1233,6 @@ export const translations: Record<Lang, Dict> = {
     "dash.venueHintLink": "Mekân panelini aç →",
     "nav.explore": "Keşfet",
   },
+  fa: {},
 };
 
