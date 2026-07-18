@@ -45,7 +45,7 @@ export const translations: Record<Lang, Dict> = {
     "home.hero.title2": "Just Gather.",
     "home.hero.tagline":
       "Ideal Gathering turns cafes and restaurants into hosts for conversations worth having. Pick a table, pick a topic, show up.",
-    "home.hero.joinWaitlist": "Join the waitlist",
+    
     "home.hero.registerCafe": "Register your cafe",
     "home.stats.venues": "Venues",
     "home.stats.venuesVal": "Cafes & restaurants",
@@ -72,7 +72,7 @@ export const translations: Record<Lang, Dict> = {
     "home.two.guests.title": "For everyone else",
     "home.two.guests.body":
       "Guests join by invitation. Save your seat on the waitlist and we'll open the door as tables free up in your city.",
-    "home.two.guests.cta": "Join the waitlist →",
+    
     "home.footer.tagline": "Set the table. Set the subject.",
 
     // Gathering card
@@ -112,8 +112,6 @@ export const translations: Record<Lang, Dict> = {
     "auth.noAccount": "Need a venue account?",
     "auth.switchSignin": "Sign in",
     "auth.switchSignup": "Sign up",
-    "auth.guestHint": "Not a cafe or restaurant?",
-    "auth.guestLink": "Join the guest waitlist",
 
     // Waitlist
     "wait.badge": "Guest waitlist",
@@ -658,7 +656,7 @@ export const translations: Record<Lang, Dict> = {
     "home.hero.title2": "Sadece Buluş.",
     "home.hero.tagline":
       "Ideal Gathering, kafeleri ve restoranları anlamlı sohbetlerin ev sahibine dönüştürür. Bir masa seç, bir konu seç, gel.",
-    "home.hero.joinWaitlist": "Bekleme listesine katıl",
+    
     "home.hero.registerCafe": "Kafeni kaydet",
     "home.stats.venues": "Mekânlar",
     "home.stats.venuesVal": "Kafe ve restoranlar",
@@ -685,7 +683,7 @@ export const translations: Record<Lang, Dict> = {
     "home.two.guests.title": "Diğer herkes için",
     "home.two.guests.body":
       "Misafirler davetle katılır. Bekleme listesinde yerini ayır; şehrinde masalar açıldıkça kapıyı sana açalım.",
-    "home.two.guests.cta": "Bekleme listesine katıl →",
+    
     "home.footer.tagline": "Masayı kur. Konuyu belirle.",
 
     // Gathering card
@@ -725,8 +723,6 @@ export const translations: Record<Lang, Dict> = {
     "auth.noAccount": "Mekân hesabı mı lazım?",
     "auth.switchSignin": "Giriş yap",
     "auth.switchSignup": "Kaydol",
-    "auth.guestHint": "Kafe veya restoran değil misin?",
-    "auth.guestLink": "Misafir bekleme listesine katıl",
 
     // Waitlist
     "wait.badge": "Misafir bekleme listesi",

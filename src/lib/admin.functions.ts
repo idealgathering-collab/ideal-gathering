@@ -79,7 +79,6 @@ export type AdminUserDetail = AdminUserRow & {
   city: string | null;
   country: string | null;
   social_links: Record<string, string>;
-  cover_url: string | null;
 };
 
 export const getAdminUser = createServerFn({ method: "GET" })
@@ -99,7 +98,7 @@ export const getAdminUser = createServerFn({ method: "GET" })
 
     const { data: profile } = await supabaseAdmin
       .from("profiles")
-      .select("display_name, avatar_url, bio, interests, city, country, social_links, cover_url")
+      .select("display_name, avatar_url, bio, interests, city, country, social_links")
       .eq("id", data.id)
       .maybeSingle();
 
@@ -123,7 +122,6 @@ export const getAdminUser = createServerFn({ method: "GET" })
       city: p.city ?? null,
       country: p.country ?? null,
       social_links: p.social_links && typeof p.social_links === "object" ? (p.social_links as Record<string, string>) : {},
-      cover_url: p.cover_url ?? null,
       role: role ? "admin" : "user",
     };
   });
@@ -185,12 +183,22 @@ export const listPendingGatherings = createServerFn({ method: "GET" })
     const { data, error } = await supabaseAdmin
       .from("gatherings")
       .select(
-        "id, subject, description, starts_at, seats, status, host_id, business_id, created_at, business:businesses(name, city), table:venue_tables(label), host:profiles!gatherings_host_id_fkey(display_name)",
+        "id, subject, description, starts_at, seats, status, host_id, business_id, created_at, business:businesses(name, city), table:venue_tables(label)",
       )
       .eq("status", "proposed")
       .order("created_at", { ascending: false });
     if (error) throw new Error(error.message);
-    return ((data ?? []) as any[]).map((r) => ({
+    const rows = (data ?? []) as any[];
+    const hostIds = Array.from(new Set(rows.map((r) => r.host_id).filter(Boolean)));
+    const nameMap = new Map<string, string | null>();
+    if (hostIds.length > 0) {
+      const { data: profs } = await supabaseAdmin
+        .from("profiles")
+        .select("id, display_name")
+        .in("id", hostIds);
+      for (const p of profs ?? []) nameMap.set((p as any).id, (p as any).display_name ?? null);
+    }
+    return rows.map((r) => ({
       id: r.id,
       subject: r.subject,
       description: r.description,
@@ -198,7 +206,7 @@ export const listPendingGatherings = createServerFn({ method: "GET" })
       seats: r.seats,
       status: r.status,
       host_id: r.host_id,
-      host_name: r.host?.display_name ?? null,
+      host_name: nameMap.get(r.host_id) ?? null,
       business_id: r.business_id,
       business_name: r.business?.name ?? null,
       business_city: r.business?.city ?? null,

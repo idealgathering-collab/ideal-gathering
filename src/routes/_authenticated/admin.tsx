@@ -520,7 +520,6 @@ function UserDetail({ id, onBack }: { id: string; onBack: () => void }) {
   const [user, setUser] = useState<AdminUserDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
-  const [coverUrl, setCoverUrl] = useState<string | null>(null);
   const [editing, setEditing] = useState(false);
   const runGet = useServerFn(getAdminUser);
 
@@ -532,13 +531,6 @@ function UserDetail({ id, onBack }: { id: string; onBack: () => void }) {
         if (u?.avatar_url) {
           const { data } = await supabase.storage.from("avatars").createSignedUrl(u.avatar_url, 3600);
           setAvatarUrl(data?.signedUrl ?? null);
-        }
-        if (u?.cover_url) {
-          if (u.cover_url.startsWith("http")) setCoverUrl(u.cover_url);
-          else {
-            const { data } = await supabase.storage.from("avatars").createSignedUrl(u.cover_url, 3600);
-            setCoverUrl(data?.signedUrl ?? null);
-          }
         }
       })
       .catch((e) => toast.error(e instanceof Error ? e.message : String(e)))
@@ -559,12 +551,9 @@ function UserDetail({ id, onBack }: { id: string; onBack: () => void }) {
         <p className="text-sm text-muted-foreground">{t("common.loading")}</p>
       ) : (
         <div className="overflow-hidden rounded-3xl border border-border bg-card">
-          <div className="relative h-40 w-full bg-muted">
-            {coverUrl && <img src={coverUrl} alt="" className="h-full w-full object-cover" />}
-          </div>
           <div className="p-6">
-            <div className="-mt-16 flex items-end gap-4">
-              <div className="grid h-24 w-24 place-items-center overflow-hidden rounded-full border-4 border-card bg-muted">
+            <div className="flex items-center gap-4">
+              <div className="grid h-24 w-24 place-items-center overflow-hidden rounded-full bg-muted">
                 {avatarUrl ? (
                   <img src={avatarUrl} alt="" className="h-full w-full object-cover" />
                 ) : (

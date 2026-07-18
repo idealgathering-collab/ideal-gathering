@@ -1,147 +1,41 @@
+# Three contained fixes
 
-# Ideal Gathering — Roles, Venue Portal, Admin Approval & Gathering Room
+## 1. Remove `/waitlist` link from `/auth`
 
-**Status update:** Phase 1 (schema + RLS foundation) already shipped in the previous turn — see §7. This plan is unchanged; approving it continues into Phase 2.
+**File:** `src/routes/auth.tsx` (line ~240)
+- Remove the guest hint block containing `<Link to="/waitlist">` and its `t("auth.guestLink")` label. Also remove the surrounding sentence copy if the link was the whole point of the line.
 
----
+**Site-wide audit (verified via ripgrep):**
+- The only in-app `/waitlist` link outside `src/routes/waitlist.tsx` and the auto-generated route tree is the one in `auth.tsx`. Nav (`site-header.tsx`), footer, homepage, and venue pages are already clean — a prior turn repointed everything else to `/auth`.
+- **Orphan i18n keys** that will no longer be referenced anywhere after this change: `auth.guestLink`, `home.hero.joinWaitlist`, `home.two.guests.cta` (EN + TR). I'll delete those six lines from `src/i18n/translations.ts` to keep the file honest. The `wait.*` keys stay — they're still used by the dormant `/waitlist` route itself, which per your instruction is untouched.
 
-## 1. Schema & RLS changes
+## 2. Remove profile cover photo everywhere
 
-### 1.1 Roles ✅ (Phase 1, shipped)
-- `venue` value added to `public.app_role` enum (was: `user`, `admin`).
-- `user_roles` unique partial index enforces EXACTLY ONE of `user` or `venue` per auth user. `admin` is additive on top of `user` only.
-- Helpers in `private` schema: `is_venue(uid)`, `is_user(uid)`, existing `has_role(...)`.
-- `handle_new_user()` trigger reads `raw_user_meta_data->>'account_type'` (`'user'` | `'venue'`, default `'user'`) and grants the matching role.
-- `idealgathering@gmail.com` keeps `user + admin`.
+Scope note: `cover_url` also exists on the `businesses` table (venue cover) and is used by `venue.dashboard.tsx`, `businesses.$id.tsx`, `gathering-card.tsx`, `gatherings.$id.tsx`, `lib/gatherings.ts`. That is a **different column on a different table** and is out of scope — only `profiles.cover_url` is being removed.
 
-### 1.2 `businesses` ✅ (Phase 1)
-- New required cols: `phone`, `mobile`. `description`, `address`, `city`, `lat`, `lng`, `cover_url` (repurposed as profile picture) all NOT NULL.
-- New optional col: `menu_link`.
-- Unique index `businesses_one_per_owner_idx` → 1 business per venue account.
-- RLS INSERT rewritten: `owner_id=auth.uid()` AND `status='pending'` AND `private.is_venue(auth.uid())`.
-- UPDATE stays owner-scoped; existing status-lock trigger keeps venue from self-approving.
-- SELECT: public sees `status='approved'`; owner sees own; admin sees all.
+**`src/routes/_authenticated/profile.tsx`:**
+- Remove `coverPath`, `coverUrl` state.
+- Remove `cover_url` from the profiles `.select(...)` and from the `setCoverPath` / `setCoverUrl` lines in the loader.
+- Remove the `onCoverChange` handler and the storage upload + `.update({ cover_url })` call.
+- Remove the cover `<img>` banner block and its upload button in the JSX.
+- Keep the avatar upload flow untouched.
 
-### 1.3 `venue_tables` ✅ (Phase 1)
-- RLS INSERT/UPDATE/DELETE require venue role AND ownership of parent business. Editable while business is pending.
+**`src/routes/_authenticated/admin.tsx` (UserDetail):**
+- Remove `coverUrl` state, the `if (u?.cover_url) { ... createSignedUrl(...) }` block inside `runGet`, and the `h-40` cover banner `<div>` that renders `coverUrl`.
+- The `AdminUserDetail` type comes from `src/lib/admin.functions.ts`; I'll also drop `cover_url` from that type and from the profiles `.select(...)` in `getAdminUser` so nothing on the server side still returns it.
 
-### 1.4 `gatherings` ✅ (Phase 1)
-- New: `origin` (`'user_proposed'` | `'venue_activated'`), `ends_at`.
-- CHECK: venue-activated must have `business_id + table_id`.
-- Overlap trigger `prevent_table_double_booking` (2h default duration).
-- Status-change trigger → only admins can flip status.
-- RLS:
-  - INSERT user_proposed: user role, email verified, `status='proposed'`.
-  - INSERT venue_activated: venue role, owns business (approved), table belongs to business, `status='approved'`.
-  - UPDATE/DELETE by host allowed on own row (status blocked by trigger).
+**DB decision — non-destructive:**
+- Keep the `profiles.cover_url` column. Reason: dropping it would require a migration that also churns the auto-generated `src/integrations/supabase/types.ts` (3 references) with no user-visible benefit, and there's no PII risk in leaving an unread nullable column. New writes stop; existing values simply become inert. I'll call this out in the ship note. If you'd rather drop the column outright, say so and I'll add the migration.
 
-### 1.5 `gathering_attendees` ✅ (Phase 1)
-- INSERT: user role AND email verified AND target gathering is approved. (Prevents venue accounts joining.)
+## 3. Fix broken admin Gatherings tab
 
-### 1.6 `gathering_messages` ✅ (Phase 1)
-- Columns: `id`, `gathering_id`, `sender_id`, `body` (1–2000 chars), `created_at`.
-- RLS: SELECT/INSERT restricted to host + attendees; sender must be self; delete by sender or admin.
-- Added to `supabase_realtime` publication.
+**File:** `src/lib/admin.functions.ts` → `listPendingGatherings`
+- Root cause is as you described: `host:profiles!gatherings_host_id_fkey(display_name)` embed fails because that FK targets `auth.users`, not `profiles`, so PostgREST can't resolve the relationship and the whole query errors out.
+- Fix: remove the `host:profiles!...` embed from the `.select(...)`. After the gatherings query returns, collect `host_id`s, run a second `supabaseAdmin.from("profiles").select("id, display_name").in("id", ids)` fetch, build a `Map<string, string | null>`, and set `host_name` from that map when mapping the rows. Mirrors the pattern already used by `listAdminUsers` in the same file.
+- No FK, schema, or RLS changes. Return shape (`PendingGatheringRow`) stays identical, so `admin.tsx` needs no changes.
 
-### 1.7 `gathering_checklist_items` + `gathering_checklist_checks` ✅ (Phase 1)
-- Items: host manages; host+attendees read.
-- Checks: per-user (recommended in original plan and applied) — `(item_id, user_id)` primary key.
+## Risks / sequencing
 
-### 1.8 `profiles` ✅ (Phase 1)
-- Added `country text NULL`.
-- `city text` stays — front end will move it to a static dropdown in Phase 4.
-
-### 1.9 Data hygiene ✅ (Phase 1)
-- Truncated beta `gatherings`, `gathering_attendees`, `businesses`, `venue_tables`, `menu_items` — cleanest possible baseline.
-
----
-
-## 2. Routes / files — modified vs. new (Phases 2–4)
-
-### Phase 2 — Venue portal (NEXT)
-
-**New files**
-- `src/routes/venue/auth.tsx` — venue signup/login (email/password only; sets `account_type: 'venue'` metadata).
-- `src/routes/_venue/route.tsx` — pathless layout gate; `ssr:false`; redirects non-venues out. Mirrors `_authenticated/route.tsx`.
-- `src/routes/_venue/dashboard.tsx` — venue home: business summary card, tables list w/ per-table Activate button (disabled while `status!='approved'` with tooltip), links to business edit / menu builder.
-- `src/routes/_venue/business.tsx` — create OR edit business (single form, upsert-style). Fields per §5. Redirects here on first login when no business exists.
-- `src/routes/_venue/tables.tsx` — table CRUD (moved out of `businesses.$id.tsx`).
-- `src/routes/_venue/menu.tsx` — structured menu builder (moved from `businesses.$id.tsx`) + optional `menu_link` field.
-- `src/routes/_venue/activate.$tableId.tsx` — the Activate form (subject + optional starts_at/ends_at) → inserts venue_activated gathering.
-- `src/components/venue-bottom-nav.tsx` — bottom nav: Dashboard / Business / Menu / Logout.
-- `src/components/user-bottom-nav.tsx` — bottom nav: Explore / Host / Profile / Logout.
-
-**Modified files**
-- `src/routes/auth.tsx` — signup passes `account_type: 'user'`; add small "Are you a venue? →" link.
-- `src/routes/_authenticated/register-business.tsx` — already stubbed as redirect in Phase 1 hotfix; DELETE in Phase 2.
-- `src/routes/_authenticated/businesses.$id.tsx` — strip approve/decline & table CRUD & menu builder; becomes public read-only detail for approved venues (shows active gatherings per table, structured menu, menu_link).
-- `src/routes/_authenticated/create-gathering.tsx` — reshape into "propose a gathering at an existing venue": pick approved business → pick table → subject/date → `origin='user_proposed'`, `status='proposed'`.
-- `src/routes/_authenticated/dashboard.tsx` — becomes USER dashboard; adds user bottom nav; removes venue widgets.
-- `src/routes/_authenticated/route.tsx` — after auth, branch on role: venue outside `/venue/*` → redirect to `/venue/dashboard`.
-- `src/i18n/translations.ts` — many new keys for venue portal + activate flow (EN + TR).
-
-### Phase 3 — Admin queues & edits
-
-**New files**
-- `src/routes/_authenticated/admin/businesses.tsx` — pending/approved queue.
-- `src/routes/_authenticated/admin/gatherings.tsx` — global pending user-proposed queue.
-- `src/routes/_authenticated/admin/users.$id.edit.tsx` — edit any profile.
-- `src/routes/_authenticated/admin/businesses.$id.edit.tsx` — edit any business.
-
-**Modified files**
-- `src/lib/admin.functions.ts` — add `listPendingBusinesses`, `listPendingGatherings`, `setBusinessStatus`, `setGatheringStatus`, `adminUpdateProfile`, `adminUpdateBusiness`.
-- `src/routes/_authenticated/admin.tsx` — restructure to 3 tabs: Businesses / Gatherings / Users.
-
-### Phase 4 — Gathering Room + profile dropdowns
-
-**New files**
-- `src/components/gathering-room/tabs.tsx`, `chat.tsx`, `checklist.tsx`, `info.tsx`.
-- `src/lib/countries.ts`, `src/lib/cities.ts` — static lists (start with Turkey + top ~15 cities).
-- `src/components/country-select.tsx`, `src/components/city-select.tsx`.
-
-**Modified files**
-- `src/routes/gatherings.$id.tsx` — Info always; Chat when `isAttending || isHost`; Checklist same gate AND `items.length > 0`. Realtime subscription for chat.
-- `src/routes/_authenticated/profile.tsx` — swap city textbox → CitySelect; add CountrySelect; drop cover photo UI.
-- `src/i18n/translations.ts` — chat / checklist / country / city keys.
-
-### Deleted
-- Approve/decline block inside `businesses.$id.tsx` (Phase 2).
-- `register-business.tsx` (Phase 2).
-
----
-
-## 3. Flows recap
-- **User signup** → `/auth` → role `user` → `/dashboard` (Explore).
-- **Venue signup** → `/venue/auth` → role `venue` → `/venue/business` (must complete registration; status `pending`) → `/venue/dashboard`. Editable while pending; Activate disabled with tooltip.
-- **Admin** → `/admin` → 3 tabs (Businesses / Gatherings / Users), edits any of them.
-- **User proposes gathering** → `/create-gathering` → pick approved venue+table → status `proposed` → admin queue → approve → visible in Explore.
-- **Venue activates table** → per-table Activate → auto-approved, overlap trigger blocks double-booking.
-- **Gathering Room** → attendee opens `/gatherings/:id` → Info always; Chat + Checklist (if items exist) after joining.
-
----
-
-## 4. Risks, ambiguities, sequencing
-
-### Risks
-- **Google OAuth on venue door**: hard to reliably tag first Google sign-in as `account_type: 'venue'`. **Recommend: email/password only for venue door** (applied). Users on `/auth` still get Google.
-- **1-business-per-venue** simplification — lift later for chains.
-- **Chat moderation**: no profanity filter/rate limit v1; sender & admin can delete.
-- **Realtime**: `gathering_messages` in publication; browser subscribes via `supabase.channel`.
-- **Overlap trigger** uses 2h default when `ends_at` is null.
-- **Admin users also have `user` role** — they see the user bottom nav (matches spec). Admin dashboard is reached via a link.
-
-### Ambiguities (applied defaults from prior approval)
-1. Wipe beta data — YES (done).
-2. Venue signup — email/password only.
-3. Checklist check-state — per-user.
-4. 1 business per venue for now.
-5. Country/city dropdown — Turkey + top ~15 cities hard-coded, extendable JSON.
-6. Default duration on venue-activated — 2 hours.
-
-### Sequencing (4 PRs)
-1. ✅ Roles + venue auth door + RLS rewrite + data wipe (SHIPPED).
-2. Venue portal (dashboard, business form, tables, menu link, Activate flow) + strip approve/decline from `businesses.$id.tsx` + reshape create-gathering.
-3. Admin queues (businesses, gatherings, edit-any-profile/business).
-4. Gathering Room (chat + checklist tabs, realtime) + profile country/city dropdowns.
-
-Approving this plan continues with **Phase 2 (venue portal)** next. Gathering Room stays last because its RLS depends on the finalized attendee/host model already in place.
+- All three fixes are independent — one turn, parallel edits.
+- Item 2's non-destructive choice means `types.ts` still lists `cover_url` on `profiles`. That's fine; nothing reads it.
+- Please confirm the "keep the column" choice for item 2 before I implement, or say "drop it" and I'll add the migration instead.
