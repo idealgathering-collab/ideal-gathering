@@ -101,14 +101,29 @@ function AuthPage() {
     <div className="relative min-h-screen overflow-hidden bg-background">
       <div className="absolute inset-0 bg-gradient-hero opacity-90" />
       <div className="relative mx-auto flex min-h-screen max-w-md flex-col justify-center px-4 py-12">
-        <Link to="/" className="mb-8 inline-flex items-center gap-2 text-primary-foreground">
-          <span className="grid h-9 w-9 place-items-center rounded-full bg-sunshine">
-            <Coffee className="h-4 w-4 text-sunshine-foreground" />
-          </span>
-          <span className="font-display text-xl">
-            Ideal <span className="italic">Gathering</span>
-          </span>
-        </Link>
+        <div className="mb-8 flex items-center gap-2">
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon"
+            aria-label={t("common.back")}
+            className="rounded-full text-primary-foreground hover:bg-white/10 hover:text-primary-foreground"
+            onClick={() => {
+              if (typeof window !== "undefined" && window.history.length > 1) window.history.back();
+              else navigate({ to: "/" });
+            }}
+          >
+            <ArrowLeft className="h-4 w-4" />
+          </Button>
+          <Link to="/" className="inline-flex items-center gap-2 text-primary-foreground">
+            <span className="grid h-9 w-9 place-items-center rounded-full bg-sunshine">
+              <Coffee className="h-4 w-4 text-sunshine-foreground" />
+            </span>
+            <span className="font-display text-xl">
+              Ideal <span className="italic">Gathering</span>
+            </span>
+          </Link>
+        </div>
 
         <div className="rounded-3xl border border-border bg-card p-8 shadow-plum">
           <h1 className="font-display text-3xl">
