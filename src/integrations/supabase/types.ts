@@ -460,7 +460,44 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_approved_business: {
+        Args: { _id: string }
+        Returns: {
+          address: string
+          city: string
+          cover_url: string
+          created_at: string
+          description: string
+          id: string
+          lat: number
+          lng: number
+          menu_link: string
+          name: string
+        }[]
+      }
+      get_public_profiles: {
+        Args: { _ids: string[] }
+        Returns: {
+          avatar_url: string
+          display_name: string
+          id: string
+        }[]
+      }
+      list_approved_businesses: {
+        Args: never
+        Returns: {
+          address: string
+          city: string
+          cover_url: string
+          created_at: string
+          description: string
+          id: string
+          lat: number
+          lng: number
+          menu_link: string
+          name: string
+        }[]
+      }
     }
     Enums: {
       app_role: "admin" | "business_owner" | "user" | "venue"

@@ -17,15 +17,29 @@ function BusinessDetail() {
   const { data: biz } = useQuery({
     queryKey: ["business-public", id],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("businesses")
-        .select(
-          "id,name,description,city,address,cover_url,menu_link,venue_tables(id,label,capacity),gatherings(id,subject,status,starts_at,seats,table:venue_tables(label)),menu_items(id,name,description,category,price,currency)"
-        )
-        .eq("id", id)
-        .maybeSingle();
-      if (error) throw error;
-      return data;
+      const [{ data: bizRows, error: bizErr }, tablesRes, gatheringsRes, menuRes] = await Promise.all([
+        supabase.rpc("get_approved_business", { _id: id }),
+        supabase.from("venue_tables").select("id,label,capacity").eq("business_id", id),
+        supabase
+          .from("gatherings")
+          .select("id,subject,status,starts_at,seats,table:venue_tables(label)")
+          .eq("business_id", id)
+          .eq("status", "approved"),
+        supabase
+          .from("menu_items")
+          .select("id,name,description,category,price,currency")
+          .eq("business_id", id)
+          .order("sort_order"),
+      ]);
+      if (bizErr) throw bizErr;
+      const base = (bizRows ?? [])[0];
+      if (!base) return null;
+      return {
+        ...base,
+        venue_tables: tablesRes.data ?? [],
+        gatherings: gatheringsRes.data ?? [],
+        menu_items: menuRes.data ?? [],
+      };
     },
   });
 
