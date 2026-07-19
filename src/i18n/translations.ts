@@ -1468,6 +1468,7 @@ export const translations: Record<Lang, Dict> = {
     "dash.status.approved": "تأییدشده",
     "dash.status.proposed": "پیشنهادشده",
     "dash.status.cancelled": "لغو شد",
+    "dash.status.rejected": "رد شد",
 
     // Gathering detail
     "gd.allGatherings": "همهٔ گردهمایی‌ها",
