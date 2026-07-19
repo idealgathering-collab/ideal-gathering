@@ -1,9 +1,9 @@
 export type Lang = "en" | "tr" | "fa";
 
-export const LANGS: { code: Lang; label: string; short: string }[] = [
-  { code: "en", label: "English", short: "EN" },
-  { code: "tr", label: "Türkçe", short: "TR" },
-  { code: "fa", label: "فارسی", short: "FA" },
+export const LANGS: { code: Lang; label: string; short: string; flag: string }[] = [
+  { code: "en", label: "English", short: "EN", flag: "🇬🇧" },
+  { code: "tr", label: "Türkçe", short: "TR", flag: "🇹🇷" },
+  { code: "fa", label: "فارسی", short: "FA", flag: "🇮🇷" },
 ];
 
 type Dict = Record<string, string>;
@@ -530,6 +530,9 @@ export const translations: Record<Lang, Dict> = {
     "profile.selectCountry": "Select country",
     "profile.selectCity": "Select city",
     "profile.cityOther": "City (other)",
+    "profile.neighborhood": "Neighborhood",
+    "profile.neighborhoodPh": "e.g. Kadıköy",
+    "profile.selectNeighborhood": "Select neighborhood",
 
     // Privacy
     "privacy.title": "Privacy Policy",
@@ -1147,6 +1150,9 @@ export const translations: Record<Lang, Dict> = {
     "profile.selectCountry": "Ülke seç",
     "profile.selectCity": "Şehir seç",
     "profile.cityOther": "Şehir (diğer)",
+    "profile.neighborhood": "Mahalle / Semt",
+    "profile.neighborhoodPh": "örn. Kadıköy",
+    "profile.selectNeighborhood": "Mahalle seç",
 
     // Privacy
     "privacy.title": "Gizlilik Politikası",
@@ -1762,6 +1768,9 @@ export const translations: Record<Lang, Dict> = {
     "profile.selectCountry": "انتخاب کشور",
     "profile.selectCity": "انتخاب شهر",
     "profile.cityOther": "شهر (سایر)",
+    "profile.neighborhood": "محله",
+    "profile.neighborhoodPh": "مثلاً: تجریش",
+    "profile.selectNeighborhood": "انتخاب محله",
 
     // Privacy
     "privacy.title": "سیاست حریم خصوصی",

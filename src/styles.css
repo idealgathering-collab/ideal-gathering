@@ -170,3 +170,19 @@
 @utility shadow-soft {
   box-shadow: var(--shadow-soft);
 }
+
+@keyframes logo-idle-spin {
+  to { transform: rotate(360deg); }
+}
+@keyframes flag-pulse-glow {
+  0%, 100% { box-shadow: 0 0 6px hsl(280 60% 50% / 0.35); transform: scale(1); }
+  50% { box-shadow: 0 0 18px hsl(280 60% 55% / 0.75); transform: scale(1.08); }
+}
+
+@utility animate-logo-spin {
+  animation: logo-idle-spin 24s linear infinite;
+}
+@utility animate-flag-pulse {
+  animation: flag-pulse-glow 1.4s ease-in-out infinite;
+}
+

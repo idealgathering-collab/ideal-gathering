@@ -1,27 +1,43 @@
-## Feature 1: Add to calendar (.ics)
+## Plan — 6-item polish batch
 
-- New helper `buildIcsFile(g)` inside `src/routes/gatherings.$id.tsx` (small enough not to warrant a shared lib module): builds an ICS string with `BEGIN:VCALENDAR` / `VEVENT`, `UID` from `g.id` + host domain, `DTSTAMP` (now, UTC), `DTSTART`/`DTEND` from `g.starts_at`/`g.ends_at` formatted as `YYYYMMDDTHHMMSSZ` (UTC), `SUMMARY` = `g.subject`, `LOCATION` = `${venue name} — ${city or neighborhood}` when present, `DESCRIPTION` = `g.description` with CRLF line endings, and text-field escaping (`\`, `,`, `;`, newlines) plus 75-octet line folding.
-- Trigger download: create a `Blob` (`text/calendar;charset=utf-8`), `URL.createObjectURL`, click a hidden `<a download>`, revoke the URL. No new deps.
-- If `g.ends_at` is missing, fall back to `starts_at + 2h`.
-- Button placement: inside the existing `mt-6 flex flex-wrap gap-3` action row, gated by `isMember` (host or attending), for `status === "approved"` only. Uses `CalendarPlus` from lucide, `variant="outline"`, `rounded-full`.
+### 1. Language switcher → flag emojis
+Edit `src/components/language-switcher.tsx` and `src/i18n/index.tsx` (add `flag` field to LANGS: 🇬🇧 en, 🇹🇷 tr, 🇮🇷 fa). Trigger shows the current flag (no globe icon, no short code). Each dropdown item shows flag + full label. Active item gets a glow ring (`ring-2 ring-primary/60 shadow-[0_0_12px_hsl(var(--primary)/0.5)]`). Add a `pulse-glow` keyframe in `src/styles.css` and apply on hover to all flags.
 
-## Feature 2: Share / copy link
+### 2. Logo background removal (best-effort)
+Use `imagegen--edit_image` on the current logo URL with prompt "remove background, keep subject only" and `transparent_background: true`, saving to `src/assets/ideal-gathering-logo.png`. Then upload via `lovable-assets create` and overwrite the `.asset.json` pointer. Flag if result is imperfect (fringing, holes).
 
-- Handler `share()`:
-  - `url = window.location.href`
-  - If `navigator.share` exists, call `navigator.share({ title: g.subject, text: g.description ?? "", url })` inside try/catch — swallow `AbortError` silently; on any other failure fall back to clipboard.
-  - Fallback: `navigator.clipboard.writeText(url)` then `toast.success(t("gd.linkCopied"))`.
-- Button visible to everyone (no auth gate), placed in the same action row. Uses `Share2` icon, `variant="outline"`, `rounded-full`.
+### 3. Idle logo spin
+Add keyframe in `src/styles.css`:
+```css
+@keyframes logo-spin { to { transform: rotate(360deg); } }
+.animate-logo-spin { animation: logo-spin 24s linear infinite; }
+```
+Apply `animate-logo-spin` to the logo `<img>` in `site-header.tsx`, `venue.dashboard.tsx`, `site-footer.tsx`, and `waitlist.tsx`.
 
-## i18n keys added (en / tr / fa) in `src/i18n/translations.ts`
+### 4. /auth logo swap
+In `src/routes/auth.tsx` replace the `Coffee` icon circle with `<img src={logoAsset.url}>` + `animate-logo-spin`. Remove the now-unused `Coffee` import if applicable.
 
-- `gd.addToCalendar` — "Add to calendar" / "Takvime ekle" / "افزودن به تقویم"
-- `gd.share` — "Share" / "Paylaş" / "اشتراک‌گذاری"
-- `gd.linkCopied` — "Link copied to clipboard" / "Bağlantı panoya kopyalandı" / "پیوند در کلیپ‌بورد کپی شد"
+### 5. Iran + neighborhoods (⚠ needs migration)
+**Migration** (single call): `ALTER TABLE public.profiles ADD COLUMN neighborhood text;` — nullable, no policy changes needed (existing profile policies cover it).
 
-## Files touched
+**Code** in `src/lib/locations.ts`:
+- Add `{ code: "IR", name: "Iran" }` to COUNTRIES.
+- Add IR cities: Tehran, Isfahan, Shiraz, Mashhad, Tabriz, Karaj, Qom, Ahvaz, Kermanshah, Urmia, Rasht, Yazd.
+- New export `NEIGHBORHOODS_BY_CITY: Record<string, string[]>` with:
+  - İstanbul: Kadıköy, Beşiktaş, Şişli, Beyoğlu, Üsküdar, Bakırköy, Fatih, Sarıyer, Ataşehir, Maltepe, Kartal, Bahçelievler
+  - Tehran: Tajrish, Vanak, Elahieh, Niavaran, Sa'adat Abad, Jordan, Darrous, Zafaraniyeh, Fereshteh, Pasdaran, Shahrak-e Gharb, Yousef Abad
+- Helper `neighborhoodsFor(city)`.
 
-- `src/routes/gatherings.$id.tsx` — add helper, handler, two buttons, new lucide imports
-- `src/i18n/translations.ts` — three keys × three languages
+**Profile UI** in `src/routes/_authenticated/profile.tsx`: add `neighborhood` state, load/save, and render a field below city — `Select` when `neighborhoodsFor(city).length > 0`, otherwise free-text `Input`. Reset neighborhood when city changes.
 
-No schema, no new deps, no route changes.
+**i18n**: add `profile.neighborhood`, `profile.neighborhoodPh` in en/tr/fa.
+
+### 6. Button `lg` desktop scaling
+In `src/components/ui/button.tsx`: change `lg` to `h-10 rounded-md px-8 sm:h-12 sm:px-10 sm:text-base`.
+
+**Centering audit**: I'll scan the CTA-heavy routes (`index.tsx`, `partnership.tsx`, `auth.tsx`, `venue.auth.tsx`) during implementation and add `justify-center` / `mx-auto` on any wrapping flex container that isn't already centered on desktop. Will list any specific fixes in the completion message.
+
+### Summary
+- **Migration**: 1 (add `profiles.neighborhood` column).
+- **Asset ops**: logo background removal + re-upload.
+- **Code-only**: everything else.

@@ -350,6 +350,7 @@ export type Database = {
           display_name: string | null
           id: string
           interests: Json
+          neighborhood: string | null
           social_links: Json
         }
         Insert: {
@@ -362,6 +363,7 @@ export type Database = {
           display_name?: string | null
           id: string
           interests?: Json
+          neighborhood?: string | null
           social_links?: Json
         }
         Update: {
@@ -374,6 +376,7 @@ export type Database = {
           display_name?: string | null
           id?: string
           interests?: Json
+          neighborhood?: string | null
           social_links?: Json
         }
         Relationships: []

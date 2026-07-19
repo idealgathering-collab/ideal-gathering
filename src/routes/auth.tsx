@@ -2,7 +2,8 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { z } from "zod";
 import { toast } from "sonner";
-import { ArrowLeft, Coffee } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
+import logoAsset from "@/assets/ideal-gathering-logo.png.asset.json";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
 import { Button } from "@/components/ui/button";
@@ -116,9 +117,11 @@ function AuthPage() {
             <ArrowLeft className="h-4 w-4" />
           </Button>
           <Link to="/" className="inline-flex items-center gap-2 text-primary-foreground">
-            <span className="grid h-9 w-9 place-items-center rounded-full bg-sunshine">
-              <Coffee className="h-4 w-4 text-sunshine-foreground" />
-            </span>
+            <img
+              src={logoAsset.url}
+              alt=""
+              className="h-9 w-9 rounded-full object-contain animate-logo-spin"
+            />
             <span className="font-display text-xl">
               Ideal <span className="italic">Gathering</span>
             </span>

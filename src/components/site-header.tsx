@@ -73,7 +73,7 @@ export function SiteHeader() {
             <img
               src={logoAsset.url}
               alt="Ideal Gathering"
-              className="h-9 w-9 rounded-full object-contain"
+              className="h-9 w-9 rounded-full object-contain animate-logo-spin"
             />
             <span className="font-display text-xl leading-none hidden xs:inline sm:inline">
               Ideal <span className="italic text-primary">Gathering</span>
