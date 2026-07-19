@@ -109,7 +109,7 @@ function VenueDashboard() {
       <header className="sticky top-0 z-40 w-full border-b border-border/60 bg-background/85 backdrop-blur-xl">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-3 px-4">
           <Link to="/" className="flex items-center gap-2">
-            <img src={logoAsset.url} alt="" className="h-9 w-9 rounded-full object-contain" />
+            <img src={logoAsset.url} alt="" className="h-9 w-9 rounded-full object-contain animate-logo-spin" />
             <span className="font-display text-lg">
               Ideal <span className="italic text-primary">Gathering</span>
               <span className="ms-1 text-xs text-muted-foreground">· {t("venueAuth.for")}</span>

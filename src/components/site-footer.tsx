@@ -13,7 +13,7 @@ export function SiteFooter() {
             <img
               src={logoAsset.url}
               alt="Ideal Gathering"
-              className="h-10 w-10 rounded-full bg-primary-foreground/10 object-contain p-1"
+              className="h-10 w-10 rounded-full bg-primary-foreground/10 object-contain p-1 animate-logo-spin"
             />
             <span className="font-display text-xl leading-none">
               Ideal <span className="italic">Gathering</span>
