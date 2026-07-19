@@ -242,6 +242,7 @@ export const translations: Record<Lang, Dict> = {
     "dash.status.approved": "Approved",
     "dash.status.proposed": "Proposed",
     "dash.status.cancelled": "Cancelled",
+    "dash.status.rejected": "Rejected",
 
     // Gathering detail
     "gd.allGatherings": "All gatherings",
@@ -258,8 +259,8 @@ export const translations: Record<Lang, Dict> = {
     "gd.notFound.title": "Not found",
     "gd.notFound.body": "This gathering doesn't exist or isn't public.",
     "gd.manageVenue": "Manage venue",
-    "gd.waitingApproval": "Waiting for the venue to approve.",
-    "gd.approveFromDashboard": "Approve this gathering from your business dashboard.",
+    "gd.waitingApproval": "Waiting for admin review.",
+    "gd.rejectedMsg": "This gathering was rejected by an admin.",
     "gd.cancelledMsg": "This gathering is cancelled.",
     "gd.seatsLeft": "{n} left",
 
@@ -855,6 +856,7 @@ export const translations: Record<Lang, Dict> = {
     "dash.status.approved": "Onaylı",
     "dash.status.proposed": "Önerildi",
     "dash.status.cancelled": "İptal",
+    "dash.status.rejected": "Reddedildi",
 
     // Gathering detail
     "gd.allGatherings": "Tüm buluşmalar",
@@ -871,8 +873,8 @@ export const translations: Record<Lang, Dict> = {
     "gd.notFound.title": "Bulunamadı",
     "gd.notFound.body": "Bu buluşma mevcut değil ya da herkese açık değil.",
     "gd.manageVenue": "Mekânı yönet",
-    "gd.waitingApproval": "Mekânın onayı bekleniyor.",
-    "gd.approveFromDashboard": "Bu buluşmayı işletme panelinden onayla.",
+    "gd.waitingApproval": "Yönetici incelemesi bekleniyor.",
+    "gd.rejectedMsg": "Bu buluşma bir yönetici tarafından reddedildi.",
     "gd.cancelledMsg": "Bu buluşma iptal edildi.",
     "gd.seatsLeft": "{n} kaldı",
 
@@ -1466,6 +1468,7 @@ export const translations: Record<Lang, Dict> = {
     "dash.status.approved": "تأییدشده",
     "dash.status.proposed": "پیشنهادشده",
     "dash.status.cancelled": "لغو شد",
+    "dash.status.rejected": "رد شد",
 
     // Gathering detail
     "gd.allGatherings": "همهٔ گردهمایی‌ها",
@@ -1482,8 +1485,8 @@ export const translations: Record<Lang, Dict> = {
     "gd.notFound.title": "یافت نشد",
     "gd.notFound.body": "این گردهمایی وجود ندارد یا عمومی نیست.",
     "gd.manageVenue": "مدیریت مکان",
-    "gd.waitingApproval": "در انتظار تأیید مکان.",
-    "gd.approveFromDashboard": "این گردهمایی را از داشبورد کسب‌وکارتان تأیید کنید.",
+    "gd.waitingApproval": "در انتظار بررسی توسط مدیر.",
+    "gd.rejectedMsg": "این گردهمایی توسط مدیر رد شد.",
     "gd.cancelledMsg": "این گردهمایی لغو شده است.",
     "gd.seatsLeft": "{n} باقی مانده",
 
