@@ -289,7 +289,13 @@ function ProfilePage() {
               <div className="grid gap-2">
                 <Label>{t("profile.city")}</Label>
                 {citiesFor(country).length > 0 ? (
-                  <Select value={city || undefined} onValueChange={setCity}>
+                  <Select
+                    value={city || undefined}
+                    onValueChange={(v) => {
+                      setCity(v);
+                      if (!neighborhoodsFor(v).includes(neighborhood)) setNeighborhood("");
+                    }}
+                  >
                     <SelectTrigger>
                       <SelectValue placeholder={t("profile.selectCity")} />
                     </SelectTrigger>
@@ -306,7 +312,34 @@ function ProfilePage() {
                     value={city}
                     maxLength={120}
                     placeholder={t("profile.cityPh")}
-                    onChange={(e) => setCity(e.target.value)}
+                    onChange={(e) => {
+                      setCity(e.target.value);
+                      setNeighborhood("");
+                    }}
+                  />
+                )}
+              </div>
+              <div className="grid gap-2 sm:col-span-2">
+                <Label>{t("profile.neighborhood")}</Label>
+                {neighborhoodsFor(city).length > 0 ? (
+                  <Select value={neighborhood || undefined} onValueChange={setNeighborhood}>
+                    <SelectTrigger>
+                      <SelectValue placeholder={t("profile.selectNeighborhood")} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {neighborhoodsFor(city).map((n) => (
+                        <SelectItem key={n} value={n}>
+                          {n}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                ) : (
+                  <Input
+                    value={neighborhood}
+                    maxLength={120}
+                    placeholder={t("profile.neighborhoodPh")}
+                    onChange={(e) => setNeighborhood(e.target.value)}
                   />
                 )}
               </div>
