@@ -1485,8 +1485,8 @@ export const translations: Record<Lang, Dict> = {
     "gd.notFound.title": "یافت نشد",
     "gd.notFound.body": "این گردهمایی وجود ندارد یا عمومی نیست.",
     "gd.manageVenue": "مدیریت مکان",
-    "gd.waitingApproval": "در انتظار تأیید مکان.",
-    "gd.approveFromDashboard": "این گردهمایی را از داشبورد کسب‌وکارتان تأیید کنید.",
+    "gd.waitingApproval": "در انتظار بررسی توسط مدیر.",
+    "gd.rejectedMsg": "این گردهمایی توسط مدیر رد شد.",
     "gd.cancelledMsg": "این گردهمایی لغو شده است.",
     "gd.seatsLeft": "{n} باقی مانده",
 
