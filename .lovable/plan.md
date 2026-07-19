@@ -1,21 +1,27 @@
-## Fix 1: Misleading owner approval copy (gathering detail)
+## Feature 1: Add to calendar (.ics)
 
-In `src/routes/gatherings.$id.tsx`, the proposed-status message currently branches on `isOwner` to show `t("gd.approveFromDashboard")`. Since approval is admin-only and the venue dashboard has no approval UI, collapse both branches to `t("gd.waitingApproval")` and drop the now-unused `gd.approveFromDashboard` key from `en`/`tr`/`fa` in `src/i18n/translations.ts`.
+- New helper `buildIcsFile(g)` inside `src/routes/gatherings.$id.tsx` (small enough not to warrant a shared lib module): builds an ICS string with `BEGIN:VCALENDAR` / `VEVENT`, `UID` from `g.id` + host domain, `DTSTAMP` (now, UTC), `DTSTART`/`DTEND` from `g.starts_at`/`g.ends_at` formatted as `YYYYMMDDTHHMMSSZ` (UTC), `SUMMARY` = `g.subject`, `LOCATION` = `${venue name} — ${city or neighborhood}` when present, `DESCRIPTION` = `g.description` with CRLF line endings, and text-field escaping (`\`, `,`, `;`, newlines) plus 75-octet line folding.
+- Trigger download: create a `Blob` (`text/calendar;charset=utf-8`), `URL.createObjectURL`, click a hidden `<a download>`, revoke the URL. No new deps.
+- If `g.ends_at` is missing, fall back to `starts_at + 2h`.
+- Button placement: inside the existing `mt-6 flex flex-wrap gap-3` action row, gated by `isMember` (host or attending), for `status === "approved"` only. Uses `CalendarPlus` from lucide, `variant="outline"`, `rounded-full`.
 
-## Fix 2: Rejected status renders wrong copy
+## Feature 2: Share / copy link
 
-**`src/routes/gatherings.$id.tsx`** — the message block:
-```
-g.status === "proposed" ? (...) : t("gd.cancelledMsg")
-```
-Add a `rejected` branch before the cancelled fallback, using a new key `gd.rejectedMsg` (clearer than reusing the short badge label `gd.status.rejected`). Add strings in en/tr/fa, e.g. EN: "This gathering was rejected by an admin."
+- Handler `share()`:
+  - `url = window.location.href`
+  - If `navigator.share` exists, call `navigator.share({ title: g.subject, text: g.description ?? "", url })` inside try/catch — swallow `AbortError` silently; on any other failure fall back to clipboard.
+  - Fallback: `navigator.clipboard.writeText(url)` then `toast.success(t("gd.linkCopied"))`.
+- Button visible to everyone (no auth gate), placed in the same action row. Uses `Share2` icon, `variant="outline"`, `rounded-full`.
 
-**`src/routes/_authenticated/dashboard.tsx`** — `statusLabel()` only handles approved/proposed/cancelled. Add a `rejected` branch returning a new key `dash.status.rejected`. Add strings in en/tr/fa (EN: "Rejected").
+## i18n keys added (en / tr / fa) in `src/i18n/translations.ts`
+
+- `gd.addToCalendar` — "Add to calendar" / "Takvime ekle" / "افزودن به تقویم"
+- `gd.share` — "Share" / "Paylaş" / "اشتراک‌گذاری"
+- `gd.linkCopied` — "Link copied to clipboard" / "Bağlantı panoya kopyalandı" / "پیوند در کلیپ‌بورد کپی شد"
 
 ## Files touched
 
-- `src/routes/gatherings.$id.tsx` — collapse owner branch; add rejected branch
-- `src/routes/_authenticated/dashboard.tsx` — add rejected case in `statusLabel`
-- `src/i18n/translations.ts` — remove `gd.approveFromDashboard`; add `gd.rejectedMsg` and `dash.status.rejected` in en/tr/fa
+- `src/routes/gatherings.$id.tsx` — add helper, handler, two buttons, new lucide imports
+- `src/i18n/translations.ts` — three keys × three languages
 
-No schema or logic changes; presentation-only.
+No schema, no new deps, no route changes.

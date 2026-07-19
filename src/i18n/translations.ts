@@ -261,6 +261,9 @@ export const translations: Record<Lang, Dict> = {
     "gd.manageVenue": "Manage venue",
     "gd.waitingApproval": "Waiting for admin review.",
     "gd.rejectedMsg": "This gathering was rejected by an admin.",
+    "gd.addToCalendar": "Add to calendar",
+    "gd.share": "Share",
+    "gd.linkCopied": "Link copied to clipboard",
     "gd.cancelledMsg": "This gathering is cancelled.",
     "gd.seatsLeft": "{n} left",
 
@@ -875,6 +878,9 @@ export const translations: Record<Lang, Dict> = {
     "gd.manageVenue": "Mekânı yönet",
     "gd.waitingApproval": "Yönetici incelemesi bekleniyor.",
     "gd.rejectedMsg": "Bu buluşma bir yönetici tarafından reddedildi.",
+    "gd.addToCalendar": "Takvime ekle",
+    "gd.share": "Paylaş",
+    "gd.linkCopied": "Bağlantı panoya kopyalandı",
     "gd.cancelledMsg": "Bu buluşma iptal edildi.",
     "gd.seatsLeft": "{n} kaldı",
 
@@ -1487,6 +1493,9 @@ export const translations: Record<Lang, Dict> = {
     "gd.manageVenue": "مدیریت مکان",
     "gd.waitingApproval": "در انتظار بررسی توسط مدیر.",
     "gd.rejectedMsg": "این گردهمایی توسط مدیر رد شد.",
+    "gd.addToCalendar": "افزودن به تقویم",
+    "gd.share": "اشتراک‌گذاری",
+    "gd.linkCopied": "پیوند در کلیپ‌بورد کپی شد",
     "gd.cancelledMsg": "این گردهمایی لغو شده است.",
     "gd.seatsLeft": "{n} باقی مانده",
 
