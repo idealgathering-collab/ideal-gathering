@@ -878,6 +878,9 @@ export const translations: Record<Lang, Dict> = {
     "gd.manageVenue": "Mekânı yönet",
     "gd.waitingApproval": "Yönetici incelemesi bekleniyor.",
     "gd.rejectedMsg": "Bu buluşma bir yönetici tarafından reddedildi.",
+    "gd.addToCalendar": "Takvime ekle",
+    "gd.share": "Paylaş",
+    "gd.linkCopied": "Bağlantı panoya kopyalandı",
     "gd.cancelledMsg": "Bu buluşma iptal edildi.",
     "gd.seatsLeft": "{n} kaldı",
 
