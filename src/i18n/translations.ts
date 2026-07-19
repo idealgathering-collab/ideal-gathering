@@ -261,6 +261,9 @@ export const translations: Record<Lang, Dict> = {
     "gd.manageVenue": "Manage venue",
     "gd.waitingApproval": "Waiting for admin review.",
     "gd.rejectedMsg": "This gathering was rejected by an admin.",
+    "gd.addToCalendar": "Add to calendar",
+    "gd.share": "Share",
+    "gd.linkCopied": "Link copied to clipboard",
     "gd.cancelledMsg": "This gathering is cancelled.",
     "gd.seatsLeft": "{n} left",
 
