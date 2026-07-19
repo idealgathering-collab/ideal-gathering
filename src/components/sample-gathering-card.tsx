@@ -83,7 +83,7 @@ export function SampleGatheringCard({ g }: { g: SampleGathering }) {
   const openCount = g.seats - g.filled.length;
   return (
     <article className="group relative flex flex-col overflow-hidden rounded-3xl border border-border bg-card p-5 shadow-soft transition hover:-translate-y-1 hover:shadow-plum">
-      <div className="absolute right-4 top-4 rounded-full bg-muted px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
+      <div className="absolute end-4 top-4 rounded-full bg-muted px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
         {t("sample.preview")}
       </div>
 
