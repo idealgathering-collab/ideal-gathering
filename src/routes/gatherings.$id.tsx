@@ -178,10 +178,10 @@ function GatheringDetail() {
           {g.status !== "approved" && (isHost || isOwner) && (
             <div className="rounded-full bg-sunshine px-4 py-2 text-sm text-sunshine-foreground">
               {g.status === "proposed"
-                ? isOwner
-                  ? t("gd.approveFromDashboard")
-                  : t("gd.waitingApproval")
-                : t("gd.cancelledMsg")}
+                ? t("gd.waitingApproval")
+                : g.status === "rejected"
+                  ? t("gd.rejectedMsg")
+                  : t("gd.cancelledMsg")}
             </div>
           )}
           {isOwner && g.business && (
