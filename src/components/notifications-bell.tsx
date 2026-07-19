@@ -66,7 +66,7 @@ export function NotificationsBell({ className }: { className?: string }) {
         <Button variant="ghost" size="icon" aria-label={t("notif.aria")} className={`relative rounded-full ${className ?? ""}`}>
           <Bell className="h-4 w-4" />
           {unread > 0 && (
-            <span className="absolute -right-0.5 -top-0.5 grid h-4 min-w-4 place-items-center rounded-full bg-destructive px-1 text-[10px] font-semibold text-destructive-foreground">
+            <span className="absolute -end-0.5 -top-0.5 grid h-4 min-w-4 place-items-center rounded-full bg-destructive px-1 text-[10px] font-semibold text-destructive-foreground">
               {unread > 9 ? "9+" : unread}
             </span>
           )}

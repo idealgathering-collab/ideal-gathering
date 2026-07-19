@@ -74,7 +74,7 @@ function Home() {
               </Button>
               <Button asChild size="lg" variant="outline" className="rounded-full border-primary-foreground/40 bg-transparent text-primary-foreground hover:bg-primary-foreground/10">
                 <Link to="/explore">
-                  {t("home.hero.explore")} <ArrowRight className="ms-1 h-4 w-4" />
+                  {t("home.hero.explore")} <ArrowRight className="ms-1 h-4 w-4 rtl:rotate-180" />
                 </Link>
               </Button>
             </div>
@@ -152,7 +152,7 @@ function Home() {
             </div>
             <Button asChild variant="ghost" className="rounded-full">
               <Link to="/create-gathering">
-                {t("home.upcoming.proposeOwn")} <ArrowRight className="ms-1 h-4 w-4" />
+                {t("home.upcoming.proposeOwn")} <ArrowRight className="ms-1 h-4 w-4 rtl:rotate-180" />
               </Link>
             </Button>
           </div>
@@ -185,7 +185,7 @@ function Home() {
           <div className="mt-8">
             <Button asChild size="lg" className="rounded-full">
               <Link to="/partnership">
-                {t("b2b.learnMore")} <ArrowRight className="ms-1 h-4 w-4" />
+                {t("b2b.learnMore")} <ArrowRight className="ms-1 h-4 w-4 rtl:rotate-180" />
               </Link>
             </Button>
           </div>

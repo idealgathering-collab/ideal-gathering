@@ -107,7 +107,7 @@ function GatheringDetail() {
         )}
         <div className="relative mx-auto max-w-3xl px-4 py-16 text-primary-foreground">
           <Link to="/" className="inline-flex items-center gap-1.5 text-sm text-primary-foreground/80 hover:text-primary-foreground">
-            <ArrowLeft className="h-4 w-4" /> {t("gd.allGatherings")}
+            <ArrowLeft className="h-4 w-4 rtl:rotate-180" /> {t("gd.allGatherings")}
           </Link>
           <div className="mt-4 flex items-center gap-2 text-xs uppercase tracking-wider text-sunshine">
             <Coffee className="h-4 w-4" />
