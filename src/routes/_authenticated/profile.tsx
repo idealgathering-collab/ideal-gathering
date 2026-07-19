@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { COUNTRIES, citiesFor } from "@/lib/locations";
+import { COUNTRIES, citiesFor, neighborhoodsFor } from "@/lib/locations";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -52,6 +52,7 @@ function ProfilePage() {
   const [displayName, setDisplayName] = useState("");
   const [bio, setBio] = useState("");
   const [city, setCity] = useState("");
+  const [neighborhood, setNeighborhood] = useState("");
   const [country, setCountry] = useState<string>("");
   const [interests, setInterests] = useState<string[]>([]);
   const [interestInput, setInterestInput] = useState("");
@@ -69,7 +70,7 @@ function ProfilePage() {
     if (!user) return;
     supabase
       .from("profiles")
-      .select("display_name, avatar_url, bio, city, country, interests, social_links")
+      .select("display_name, avatar_url, bio, city, neighborhood, country, interests, social_links")
       .eq("id", user.id)
       .maybeSingle()
       .then(async ({ data }) => {
@@ -77,6 +78,7 @@ function ProfilePage() {
         setDisplayName(data.display_name ?? "");
         setBio(data.bio ?? "");
         setCity(data.city ?? "");
+        setNeighborhood(((data as { neighborhood?: string | null }).neighborhood ?? "") as string);
         setCountry(((data as { country?: string | null }).country ?? "") as string);
         setInterests(Array.isArray(data.interests) ? (data.interests as string[]) : []);
         setSocial((data.social_links as SocialLinks) ?? {});
@@ -118,10 +120,11 @@ function ProfilePage() {
           display_name: displayName.trim(),
           bio: bio.trim() || null,
           city: city.trim() || null,
+          neighborhood: neighborhood.trim() || null,
           country: country || null,
           interests: interests,
           social_links: social,
-        })
+        } as never)
         .eq("id", user.id);
       if (error) throw error;
       toast.success(t("profile.saved"));
@@ -265,7 +268,10 @@ function ProfilePage() {
                   value={country || undefined}
                   onValueChange={(v) => {
                     setCountry(v);
-                    if (!citiesFor(v).includes(city)) setCity("");
+                    if (!citiesFor(v).includes(city)) {
+                      setCity("");
+                      setNeighborhood("");
+                    }
                   }}
                 >
                   <SelectTrigger>
