@@ -873,8 +873,8 @@ export const translations: Record<Lang, Dict> = {
     "gd.notFound.title": "Bulunamadı",
     "gd.notFound.body": "Bu buluşma mevcut değil ya da herkese açık değil.",
     "gd.manageVenue": "Mekânı yönet",
-    "gd.waitingApproval": "Mekânın onayı bekleniyor.",
-    "gd.approveFromDashboard": "Bu buluşmayı işletme panelinden onayla.",
+    "gd.waitingApproval": "Yönetici incelemesi bekleniyor.",
+    "gd.rejectedMsg": "Bu buluşma bir yönetici tarafından reddedildi.",
     "gd.cancelledMsg": "Bu buluşma iptal edildi.",
     "gd.seatsLeft": "{n} kaldı",
 
