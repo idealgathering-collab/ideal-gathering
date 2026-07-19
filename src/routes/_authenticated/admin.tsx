@@ -338,8 +338,8 @@ function VenueDetail({
 
   return (
     <div>
-      <button className="mb-4 text-sm text-muted-foreground hover:text-foreground" onClick={onBack}>
-        ← {t("admin.venue.back")}
+      <button className="mb-4 inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground" onClick={onBack}>
+        <span aria-hidden className="inline-block rtl:rotate-180">←</span> {t("admin.venue.back")}
       </button>
 
       <div className="rounded-3xl border border-border bg-card p-6">
@@ -548,8 +548,8 @@ function UserDetail({ id, onBack }: { id: string; onBack: () => void }) {
 
   return (
     <div>
-      <button className="mb-4 text-sm text-muted-foreground hover:text-foreground" onClick={onBack}>
-        ← {t("admin.users.back")}
+      <button className="mb-4 inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground" onClick={onBack}>
+        <span aria-hidden className="inline-block rtl:rotate-180">←</span> {t("admin.users.back")}
       </button>
       {loading || !user ? (
         <p className="text-sm text-muted-foreground">{t("common.loading")}</p>

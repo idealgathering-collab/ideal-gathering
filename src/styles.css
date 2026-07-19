@@ -243,6 +243,11 @@
   text-align: right;
 }
 
+/* Dialog / Drawer / AlertDialog headers use sm:text-left. */
+[dir="rtl"] .sm\:text-left {
+  text-align: right;
+}
+
 /* Sheet: when side="right" is used, mirror in RTL (start = left edge). */
 [dir="rtl"] [data-slot="sheet-content"].right-0 {
   right: auto;
