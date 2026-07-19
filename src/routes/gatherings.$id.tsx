@@ -262,3 +262,92 @@ function LockedPanel({ t }: { t: (k: string) => string }) {
     </div>
   );
 }
+
+function icsEscape(v: string) {
+  return v.replace(/\\/g, "\\\\").replace(/\n/g, "\\n").replace(/,/g, "\\,").replace(/;/g, "\\;");
+}
+function icsDate(d: Date) {
+  const p = (n: number) => String(n).padStart(2, "0");
+  return (
+    d.getUTCFullYear().toString() +
+    p(d.getUTCMonth() + 1) +
+    p(d.getUTCDate()) +
+    "T" +
+    p(d.getUTCHours()) +
+    p(d.getUTCMinutes()) +
+    p(d.getUTCSeconds()) +
+    "Z"
+  );
+}
+function icsFold(line: string) {
+  // 75-octet line folding per RFC 5545
+  const bytes = new TextEncoder().encode(line);
+  if (bytes.length <= 75) return line;
+  const out: string[] = [];
+  let buf = "";
+  let size = 0;
+  for (const ch of line) {
+    const chSize = new TextEncoder().encode(ch).length;
+    if (size + chSize > 75) {
+      out.push(buf);
+      buf = " " + ch;
+      size = 1 + chSize;
+    } else {
+      buf += ch;
+      size += chSize;
+    }
+  }
+  if (buf) out.push(buf);
+  return out.join("\r\n");
+}
+
+function downloadIcs(g: { id: string; subject: string; description: string | null; startsAt: string; location: string }) {
+  const start = new Date(g.startsAt);
+  const end = new Date(start.getTime() + 2 * 60 * 60 * 1000);
+  const host = typeof window !== "undefined" ? window.location.hostname : "idealgathering.com";
+  const lines = [
+    "BEGIN:VCALENDAR",
+    "VERSION:2.0",
+    "PRODID:-//Ideal Gathering//EN",
+    "CALSCALE:GREGORIAN",
+    "METHOD:PUBLISH",
+    "BEGIN:VEVENT",
+    `UID:${g.id}@${host}`,
+    `DTSTAMP:${icsDate(new Date())}`,
+    `DTSTART:${icsDate(start)}`,
+    `DTEND:${icsDate(end)}`,
+    `SUMMARY:${icsEscape(g.subject)}`,
+    g.location ? `LOCATION:${icsEscape(g.location)}` : "",
+    g.description ? `DESCRIPTION:${icsEscape(g.description)}` : "",
+    "END:VEVENT",
+    "END:VCALENDAR",
+  ].filter(Boolean).map(icsFold);
+  const blob = new Blob([lines.join("\r\n") + "\r\n"], { type: "text/calendar;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `${g.subject.replace(/[^\w\-]+/g, "_").slice(0, 60) || "gathering"}.ics`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+
+async function shareGathering(title: string, text: string, copiedMsg: string) {
+  const url = typeof window !== "undefined" ? window.location.href : "";
+  if (typeof navigator !== "undefined" && "share" in navigator) {
+    try {
+      await navigator.share({ title, text, url });
+      return;
+    } catch (e) {
+      if (e instanceof Error && e.name === "AbortError") return;
+      // fall through to clipboard
+    }
+  }
+  try {
+    await navigator.clipboard.writeText(url);
+    toast.success(copiedMsg);
+  } catch {
+    toast.error(url);
+  }
+}
