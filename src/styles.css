@@ -186,3 +186,75 @@
   animation: flag-pulse-glow 1.4s ease-in-out infinite;
 }
 
+/* ============================================================
+   RTL overrides for shadcn primitives (Stage 3 QA).
+   Targets the directional classes baked into shadcn UI
+   components so each primitive doesn't need to be forked.
+   ============================================================ */
+
+/* Dialog / Sheet / AlertDialog close button — top-right in LTR,
+   should be top-start (left) in RTL. */
+[dir="rtl"] .absolute.right-4.top-4 {
+  right: auto;
+  left: 1rem;
+}
+
+/* Dropdown / Context / Menubar item check indicators (absolute left-2). */
+[dir="rtl"] [role="menuitem"] > span.absolute.left-2,
+[dir="rtl"] [role="menuitemcheckbox"] > span.absolute.left-2,
+[dir="rtl"] [role="menuitemradio"] > span.absolute.left-2 {
+  left: auto;
+  right: 0.5rem;
+}
+/* Select item check indicator (absolute right-2). */
+[dir="rtl"] [role="option"] > span.absolute.right-2 {
+  right: auto;
+  left: 0.5rem;
+}
+
+/* Dropdown/Context/Menubar sub-trigger chevron: ml-auto + mirror glyph. */
+[dir="rtl"] [role="menuitem"] > svg.ml-auto {
+  margin-left: 0;
+  margin-right: auto;
+  transform: rotate(180deg);
+}
+
+/* Shortcut text pinned with ml-auto — flip to end-side. */
+[dir="rtl"] .ml-auto.text-xs.tracking-widest,
+[dir="rtl"] span.ml-auto.text-xs {
+  margin-left: 0;
+  margin-right: auto;
+}
+
+/* Menu / Select items with pl-8 pr-2 (indicator gutter) — swap. */
+[dir="rtl"] [role="menuitem"].pl-8.pr-2,
+[dir="rtl"] [role="menuitemcheckbox"].pl-8.pr-2,
+[dir="rtl"] [role="menuitemradio"].pl-8.pr-2 {
+  padding-left: 0.5rem;
+  padding-right: 2rem;
+}
+[dir="rtl"] [role="option"].pl-2.pr-8 {
+  padding-left: 2rem;
+  padding-right: 0.5rem;
+}
+
+/* Table headers default to text-left. */
+[dir="rtl"] table th.text-left {
+  text-align: right;
+}
+
+/* Sheet: when side="right" is used, mirror in RTL (start = left edge). */
+[dir="rtl"] [data-slot="sheet-content"].right-0 {
+  right: auto;
+  left: 0;
+  border-right-width: 0;
+  border-left-width: 1px;
+}
+[dir="rtl"] [data-slot="sheet-content"].left-0 {
+  left: auto;
+  right: 0;
+  border-left-width: 0;
+  border-right-width: 1px;
+}
+
+
