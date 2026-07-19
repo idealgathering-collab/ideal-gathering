@@ -1,7 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { CalendarClock, MapPin, Users, ArrowLeft, Coffee, Lock } from "lucide-react";
+import { CalendarClock, MapPin, Users, ArrowLeft, Coffee, Lock, CalendarPlus, Share2 } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { MenuSection } from "@/components/menu-section";
 import { GatheringChat, GatheringChecklist } from "@/components/gathering-room";
