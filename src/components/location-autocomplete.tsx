@@ -141,7 +141,7 @@ export function LocationAutocomplete({
   return (
     <div ref={wrapRef} className="relative">
       <div className="relative">
-        <MapPin className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+        <MapPin className="pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
         <Input
           id={id}
           required={required}
