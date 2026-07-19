@@ -1,23 +1,31 @@
-## Stage 3 – Farsi/RTL Cross-Route Visual QA
+## Stage 3 RTL QA — Cross-Route Visual Pass
 
-### 1. Static sweep (code)
-- **Non-primitive files**: `rg` for `ml-|mr-|pl-|pr-|text-left|text-right|left-|right-` outside `src/components/ui/`. Convert to logical (`ms-`, `me-`, `ps-`, `pe-`, `text-start`, `text-end`) except positional absolute anchors that are intentionally viewport-fixed (hero blobs, decorators in `hero-poster.tsx`, dashed line in `index.tsx`). For `location-autocomplete.tsx` icon absolute anchors: convert to `start-3` / `end-3`.
-- **shadcn primitives** (~40 hits under `src/components/ui/`): keep primitives unforked; extend the scoped `[dir="rtl"]` block in `src/styles.css` where needed. Confirm existing overrides cover Dialog close btn, Sheet side, DropdownMenu/Select indicator gutter, ContextMenu/Menubar sub-chevrons. Add overrides for any newly-audited primitives actually used: `alert-dialog`, `sidebar`, `command`, `pagination`, `breadcrumb`, `navigation-menu`, `drawer` — but only if a route uses them.
-- **Directional icons**: audit `Chevron*` / `Arrow*` usages; ensure every navigational instance has `rtl:rotate-180`. Explicitly do NOT flip: logo (spin animation), `Check`, `Search`, `Bell`, `MapPin`, `Share2`, `CalendarPlus`, `Menu`, `Home`, `Shield`, `Lock`, `Coffee`, `Sparkles`.
+### 1. Static sweep (already largely clean)
+Grep confirms all non-primitive files use logical properties. Remaining hits are intentional decorative absolutes (`hero-poster.tsx` blur blobs, `index.tsx` dashed connector line) — leave untouched. Re-scan under `src/routes/_authenticated/**`, `src/components/gathering-room.tsx`, `menu-section.tsx`, `venue-dashboard-preview.tsx`, `admin.tsx`, `venue.dashboard.tsx`, `businesses.$id.tsx`, `dashboard.tsx`, `create-gathering.tsx`, `profile.tsx`, `gatherings.$id.tsx` for any missed `ml-/mr-/pl-/pr-/text-left/text-right/left-N/right-N` and convert to logical or add `[dir="rtl"]` override.
 
-### 2. Bidi number/date formatting
-- Verify `formatDateTime` in `src/lib/gatherings.ts` uses locale-aware `Intl.DateTimeFormat` for fa (already done in Stage 2). Grep for remaining `toLocaleDateString('en'|'tr')` / hardcoded locales in admin, venue dashboard, notifications, profile. Wrap mixed Latin-numeral spans in `<bdi>` where garbling appears.
+### 2. shadcn primitive audit (extend `src/styles.css` overrides)
+Existing overrides cover Dialog close btn, Sheet side, Dropdown/Context/Menubar/Select indicator gutter & sub-chevron, table `th.text-left`. Add if a used route needs it:
+- `drawer` header `sm:text-left` → `sm:text-start` via override.
+- `dialog` header `sm:text-left` — same.
+- `calendar` `pl-2 pr-1` chevron button — flip.
+- Verify Popover (notifications bell) alignment via `align="end"` behaves in RTL (Radix flips automatically — likely fine, screenshot to confirm).
 
-### 3. Live Playwright RTL pass
-Set `fa` in localStorage, navigate each route at 1280×1800, screenshot, view:
-- `/`, `/explore`, `/partnership`, `/auth`, `/venue/auth`, `/waitlist`
-- Authenticated (using injected Supabase session if `LOVABLE_BROWSER_AUTH_STATUS=injected`): `/dashboard`, `/profile`, `/create-gathering`, `/gatherings/<id>` (share + calendar buttons, chat, checklist), `/notifications` dropdown, mobile hamburger at 390×844, `/venue/dashboard`, `/businesses/<id>`, `/admin` (users / venues / gatherings tabs).
-- If auth status is `signed_out` / `external_unmanaged`, flag those routes as code-fixed-but-visually-unverified in the report.
+### 3. Directional icon audit
+Grep every `Chevron*` / `Arrow*` / back-button `←` in routes and components. Ensure each navigational instance has `rtl:rotate-180`. Explicitly keep unflipped: logo (spin), `Check`, `Search`, `Bell`, `MapPin`, `Share2`, `CalendarPlus`, `Menu`, `Home`, `Shield`, `Lock`, `Coffee`, `Sparkles`, `Plus`, `X`. Flag `notifications-bell` badge (`-end-0.5`) — already logical.
 
-For each screenshot check: menu/dialog side, table row alignment, card flex order, icon direction, number/date rendering, back-button chevron.
+### 4. Bidi number/date rendering
+Confirm `formatDateTime` in `src/lib/gatherings.ts` and `relativeTime` in `src/lib/notifications.ts` pass `lang`. Grep `toLocaleDateString\(|toLocaleString\(|toLocaleTimeString\(|Intl\.DateTimeFormat\(` across `src/` for any hardcoded `'en'`/`'tr'`. Wrap Latin-numeral spans embedded in Farsi sentences with `<bdi>` where garbling appears in screenshots (e.g. seat counts like "3/5" inside `sample.taken`).
 
-### 4. Fixes + report
-Apply targeted edits (logical-property swaps, `rtl:rotate-180` add/remove, `[dir="rtl"]` CSS overrides, `<bdi>` wraps). Report file-by-file with a short list of what was untouched and why, and explicitly flag any authenticated route that could not be visually confirmed.
+### 5. Live Playwright RTL pass
+Set `localStorage.language = 'fa'` and screenshot each route at 1280×1800 (and mobile 390×844 for hamburger):
+- Public: `/`, `/explore`, `/partnership`, `/auth`, `/venue/auth`, `/waitlist`.
+- Authenticated (if `LOVABLE_BROWSER_AUTH_STATUS=injected`): `/dashboard`, `/profile` (neighborhood dropdown), `/create-gathering`, `/gatherings/<id>` (share/calendar buttons, chat, checklist), `/notifications` dropdown open, `/venue/dashboard`, `/businesses/<id>`, `/admin` (users / venues / gatherings tabs).
+- If session unavailable → mark those routes code-fixed-but-visually-unverified.
+
+Per screenshot check: menu/dialog side, table row alignment, card flex order, icon direction, number/date rendering, back-button chevron, hamburger sheet slides from correct side.
+
+### 6. Fix + report
+Apply minimal targeted edits — logical-property swaps, `rtl:rotate-180` add/remove, `[dir="rtl"]` CSS overrides, `<bdi>` wraps where numerals garble. Report file-by-file with visual-vs-code-only status per route.
 
 ### Out of scope
-- No behavior/logic changes, no new translations (Stage 2 owns copy), no forking shadcn source files.
+No behavior/logic changes, no new translations, no forking shadcn source, no touching intentional decorative absolutes in hero-poster or index dashed line.
