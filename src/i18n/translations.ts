@@ -1,9 +1,9 @@
 export type Lang = "en" | "tr" | "fa";
 
-export const LANGS: { code: Lang; label: string; short: string }[] = [
-  { code: "en", label: "English", short: "EN" },
-  { code: "tr", label: "Türkçe", short: "TR" },
-  { code: "fa", label: "فارسی", short: "FA" },
+export const LANGS: { code: Lang; label: string; short: string; flag: string }[] = [
+  { code: "en", label: "English", short: "EN", flag: "🇬🇧" },
+  { code: "tr", label: "Türkçe", short: "TR", flag: "🇹🇷" },
+  { code: "fa", label: "فارسی", short: "FA", flag: "🇮🇷" },
 ];
 
 type Dict = Record<string, string>;
