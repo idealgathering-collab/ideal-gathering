@@ -1493,6 +1493,9 @@ export const translations: Record<Lang, Dict> = {
     "gd.manageVenue": "مدیریت مکان",
     "gd.waitingApproval": "در انتظار بررسی توسط مدیر.",
     "gd.rejectedMsg": "این گردهمایی توسط مدیر رد شد.",
+    "gd.addToCalendar": "افزودن به تقویم",
+    "gd.share": "اشتراک‌گذاری",
+    "gd.linkCopied": "پیوند در کلیپ‌بورد کپی شد",
     "gd.cancelledMsg": "این گردهمایی لغو شده است.",
     "gd.seatsLeft": "{n} باقی مانده",
 
