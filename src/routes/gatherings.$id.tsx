@@ -175,6 +175,34 @@ function GatheringDetail() {
               </Button>
             )
           )}
+          {g.status === "approved" && isMember && (
+            <Button
+              variant="outline"
+              className="rounded-full"
+              onClick={() =>
+                downloadIcs({
+                  id: g.id,
+                  subject: g.subject,
+                  description: g.description,
+                  startsAt: g.starts_at,
+                  location: [g.business?.name ?? g.venue_name, g.business?.city ?? g.neighborhood]
+                    .filter(Boolean)
+                    .join(" — "),
+                })
+              }
+            >
+              <CalendarPlus className="me-1.5 h-4 w-4" />
+              {t("gd.addToCalendar")}
+            </Button>
+          )}
+          <Button
+            variant="outline"
+            className="rounded-full"
+            onClick={() => shareGathering(g.subject, g.description ?? "", t("gd.linkCopied"))}
+          >
+            <Share2 className="me-1.5 h-4 w-4" />
+            {t("gd.share")}
+          </Button>
           {g.status !== "approved" && (isHost || isOwner) && (
             <div className="rounded-full bg-sunshine px-4 py-2 text-sm text-sunshine-foreground">
               {g.status === "proposed"
