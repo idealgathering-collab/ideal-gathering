@@ -242,6 +242,7 @@ export const translations: Record<Lang, Dict> = {
     "dash.status.approved": "Approved",
     "dash.status.proposed": "Proposed",
     "dash.status.cancelled": "Cancelled",
+    "dash.status.rejected": "Rejected",
 
     // Gathering detail
     "gd.allGatherings": "All gatherings",
