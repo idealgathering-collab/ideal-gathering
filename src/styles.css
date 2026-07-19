@@ -150,6 +150,12 @@
     font-family: "Vazirmatn", var(--font-display);
     letter-spacing: 0;
   }
+
+  /* Ensure flag emojis fall back to a system emoji font even under Vazirmatn. */
+  .emoji-font {
+    font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji",
+      "Twemoji Mozilla", "EmojiOne Color", sans-serif;
+  }
 }
 
 @utility bg-gradient-hero {
