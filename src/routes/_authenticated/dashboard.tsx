@@ -54,6 +54,7 @@ function Dashboard() {
   function statusLabel(s: string) {
     if (s === "approved") return t("dash.status.approved");
     if (s === "proposed") return t("dash.status.proposed");
+    if (s === "rejected") return t("dash.status.rejected");
     if (s === "cancelled") return t("dash.status.cancelled");
     return s;
   }
