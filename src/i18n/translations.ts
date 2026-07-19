@@ -259,8 +259,8 @@ export const translations: Record<Lang, Dict> = {
     "gd.notFound.title": "Not found",
     "gd.notFound.body": "This gathering doesn't exist or isn't public.",
     "gd.manageVenue": "Manage venue",
-    "gd.waitingApproval": "Waiting for the venue to approve.",
-    "gd.approveFromDashboard": "Approve this gathering from your business dashboard.",
+    "gd.waitingApproval": "Waiting for admin review.",
+    "gd.rejectedMsg": "This gathering was rejected by an admin.",
     "gd.cancelledMsg": "This gathering is cancelled.",
     "gd.seatsLeft": "{n} left",
 
