@@ -856,6 +856,7 @@ export const translations: Record<Lang, Dict> = {
     "dash.status.approved": "Onaylı",
     "dash.status.proposed": "Önerildi",
     "dash.status.cancelled": "İptal",
+    "dash.status.rejected": "Reddedildi",
 
     // Gathering detail
     "gd.allGatherings": "Tüm buluşmalar",
