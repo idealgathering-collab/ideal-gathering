@@ -26,7 +26,7 @@ type Row = {
   address: string;
   city: string | null;
   status: string;
-  rejection_reason: string | null;
+  reject_reason: string | null;
 };
 
 export function SavedLocationsSection({ countryCode }: { countryCode?: string | null }) {
@@ -41,7 +41,7 @@ export function SavedLocationsSection({ countryCode }: { countryCode?: string | 
     if (!user) return;
     const { data, error } = await supabase
       .from("saved_locations")
-      .select("id,label,address,city,status,rejection_reason")
+      .select("id,label,address,city,status,reject_reason")
       .eq("user_id", user.id)
       .order("created_at", { ascending: false });
     if (error) {
@@ -127,9 +127,9 @@ export function SavedLocationsSection({ countryCode }: { countryCode?: string | 
                       {r.city ? ` · ${r.city}` : ""}
                     </span>
                   </p>
-                  {r.status === "rejected" && r.rejection_reason && (
+                  {r.status === "rejected" && r.reject_reason && (
                     <p className="mt-2 text-xs text-destructive">
-                      {t("savedLoc.reason")}: {r.rejection_reason}
+                      {t("savedLoc.reason")}: {r.reject_reason}
                     </p>
                   )}
                 </div>
