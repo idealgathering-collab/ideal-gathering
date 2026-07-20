@@ -1,104 +1,76 @@
-## Goal
-Replace the free-text venue picker in create-gathering with a grouped dropdown: approved partner venues + the user's own approved saved locations, plus an inline "add new location" flow that reuses `LocationAutocomplete`. Add owner CRUD in profile and an admin approval queue mirroring the venue queue.
+## Saved locations for hosting
 
-## 1. Migration — new `saved_locations` table
+Replace the free-text venue picker in create-gathering with a grouped dropdown of approved partner venues and the user's own approved saved locations, with admin review for new user-submitted locations.
 
-```sql
-CREATE TABLE public.saved_locations (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id uuid NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
-  label text NOT NULL,
-  address text NOT NULL,
-  city text,
-  neighborhood text,
-  lat numeric,
-  lng numeric,
-  status text NOT NULL DEFAULT 'pending' CHECK (status IN ('pending','approved','rejected')),
-  reject_reason text,
-  created_at timestamptz NOT NULL DEFAULT now(),
-  updated_at timestamptz NOT NULL DEFAULT now()
-);
+### 1. Database migration — `public.saved_locations`
 
-GRANT SELECT, INSERT, UPDATE, DELETE ON public.saved_locations TO authenticated;
-GRANT ALL ON public.saved_locations TO service_role;
+Columns: `id`, `user_id (uuid → auth.users)`, `label (text)`, `address (text)`, `city (text null)`, `neighborhood (text null)`, `lat (numeric null)`, `lng (numeric null)`, `status (text default 'pending' check in pending/approved/rejected)`, `reject_reason (text null)`, `created_at`, `updated_at`.
 
-ALTER TABLE public.saved_locations ENABLE ROW LEVEL SECURITY;
+Same status pattern as `businesses` (text + check, not a new enum, to stay consistent with the existing pattern).
 
--- Owner: read/insert/update/delete own rows
-CREATE POLICY "own_select" ON public.saved_locations FOR SELECT TO authenticated
-  USING (auth.uid() = user_id);
-CREATE POLICY "own_insert" ON public.saved_locations FOR INSERT TO authenticated
-  WITH CHECK (auth.uid() = user_id AND status = 'pending');
-CREATE POLICY "own_update" ON public.saved_locations FOR UPDATE TO authenticated
-  USING (auth.uid() = user_id) WITH CHECK (auth.uid() = user_id);
-CREATE POLICY "own_delete" ON public.saved_locations FOR DELETE TO authenticated
-  USING (auth.uid() = user_id);
+GRANTs: `authenticated` (select/insert/update/delete), `service_role` (all). No `anon`.
 
--- Admin: read + update status on all
-CREATE POLICY "admin_select" ON public.saved_locations FOR SELECT TO authenticated
-  USING (private.has_role(auth.uid(), 'admin'::app_role));
-CREATE POLICY "admin_update" ON public.saved_locations FOR UPDATE TO authenticated
-  USING (private.has_role(auth.uid(), 'admin'::app_role));
+RLS policies:
+- Owner select / delete: `auth.uid() = user_id`.
+- Owner insert: `auth.uid() = user_id AND status = 'pending'` (users can only create pending rows).
+- Owner update: `auth.uid() = user_id` — plus a `BEFORE UPDATE` trigger that raises if the owner tries to change `status` (only admins may). Mirrors the pattern used for `businesses` and `gatherings`.
+- Admin select / update: `private.has_role(auth.uid(), 'admin')`.
 
--- Owner cannot self-approve — mirror businesses pattern
-CREATE OR REPLACE FUNCTION public.prevent_saved_location_status_change_by_owner()
-RETURNS trigger LANGUAGE plpgsql SECURITY DEFINER
-SET search_path = public, private AS $$
-BEGIN
-  IF NEW.status IS DISTINCT FROM OLD.status
-     AND NOT private.has_role(auth.uid(), 'admin'::app_role) THEN
-    RAISE EXCEPTION 'Only admins can change saved location status';
-  END IF;
-  RETURN NEW;
-END; $$;
+`updated_at` trigger reuses the existing `public.update_updated_at_column()`.
 
-CREATE TRIGGER trg_saved_locations_status_guard
-  BEFORE UPDATE ON public.saved_locations
-  FOR EACH ROW EXECUTE FUNCTION public.prevent_saved_location_status_change_by_owner();
+### 2. Create-gathering form — grouped dropdown
 
-CREATE TRIGGER trg_saved_locations_updated
-  BEFORE UPDATE ON public.saved_locations
-  FOR EACH ROW EXECUTE FUNCTION public.update_updated_at_column();
-```
+`src/routes/_authenticated/create-gathering.tsx`:
+- Remove the existing two selects (business + table) and free-text location field.
+- One `<Select>` whose option value encodes the source: `venue:<bizId>:<tableId>` or `saved:<savedLocId>`, plus a trailing `__add` sentinel.
+- Two `<SelectGroup>`s labeled "Partner venues" and "Your saved locations".
+- Selecting `__add` opens a shared dialog (see §5) instead of setting form state.
+- Submit reads the prefix:
+  - `venue:*` → insert with `business_id`, `table_id`, `venue_name = biz.name`, `neighborhood = biz.city` (unchanged behavior).
+  - `saved:*` → insert with `business_id=null`, `table_id=null`, `venue_name = saved.label`, `neighborhood = saved.neighborhood || saved.city`, plus `address / city / lat / lng` copied through.
+- Two parallel queries via TanStack Query: existing `list_approved_businesses` RPC + `saved_locations` for the current user filtered to `status='approved'`.
 
-## 2. Code changes
+### 3. Profile — "My saved locations" section
 
-**`src/routes/_authenticated/create-gathering.tsx`**
-- Fetch approved partner venues (existing RPC) AND `saved_locations` where `user_id = me AND status = 'approved'` in parallel.
-- Replace `business_id`/`table_id` Selects with a single grouped `Select`:
-  - Group "Partner venues": one item per (business, table) pair, value = `venue:<bizId>:<tableId>`.
-  - Group "Your saved locations": value = `saved:<savedId>`.
-  - Trailing item "+ Add new location" (value = `__add`) opens a Dialog containing `LocationAutocomplete` + a `label` input; on save inserts into `saved_locations` (status pending) and shows a toast "Awaiting admin approval — you can pick it here once approved." Invalidates the saved-locations query.
-- Insert into `gatherings`:
-  - Partner selection → keep current shape (business_id, table_id, venue_name, neighborhood from biz).
-  - Saved-location selection → business_id = null, table_id = null, venue_name = saved.label, neighborhood = saved.neighborhood ?? saved.city ?? '', plus address/city/lat/lng from the saved row (columns already exist).
-- Drop the "no venues" empty state gate — a user with saved locations can still host.
-- Zod schema updated: `location: z.string()` discriminated by prefix.
+New component `src/components/saved-locations-section.tsx` rendered in `src/routes/_authenticated/profile.tsx` above the danger zone:
+- Lists the user's saved locations with a status badge (pending / approved / rejected) and, if rejected, the `reject_reason`.
+- Inline rename (updates `label`) and delete (with AlertDialog confirm).
+- "Add location" button opens the shared dialog from §5.
 
-**`src/routes/_authenticated/profile.tsx`**
-- New "My saved locations" section under the profile form:
-  - List rows with label, address, status badge (pending/approved/rejected + reject_reason if any).
-  - Inline rename (label only), delete button with confirm.
-  - "Add location" button opens the same Dialog as create-gathering (extract to `src/components/saved-location-dialog.tsx` for reuse).
+### 4. Admin — Saved locations queue
 
-**`src/routes/_authenticated/admin.tsx`**
-- Add third top-level section "Saved locations" (or a tab within existing Cafés/Venues area — mirroring the existing venue approval queue exactly): pending list, detail pane, approve/reject with reason (reuses `RejectReasonDialog`). On approve/reject: update `saved_locations.status` (+ `reject_reason`) and emit a notification to the owner via existing `admin.functions.ts` helper — extend it with `notifySavedLocationDecision`.
+`src/routes/_authenticated/admin.tsx`: new `TabsTrigger value="locations"` between Gatherings and Users, and a new `SavedLocationsAdminSection` component:
+- Inner tabs Pending / Approved / Rejected (mirrors the venues section).
+- Reads directly from `saved_locations` under the admin RLS policy.
+- Owner display name fetched via existing `get_public_profiles` RPC.
+- Approve is one click; Reject opens a Dialog requiring a reason (mirrors existing venue reject flow), then updates `status` + `reject_reason` and sends a notification.
 
-**`src/lib/admin.functions.ts`**
-- Add `listSavedLocations`, `setSavedLocationStatus({ id, status, reason })` server fns using `requireSupabaseAuth` + admin role check (same shape as existing gathering fns).
+### 5. Shared dialog — `SavedLocationDialog`
 
-**`src/components/saved-location-dialog.tsx`** (new, shared)
-- Wraps `LocationAutocomplete` + label input + submit.
+New `src/components/saved-location-dialog.tsx`, reused by both the create-gathering "+ Add" flow and the profile section. Wraps the existing `LocationAutocomplete` component (no rebuild); collects `label` + picked address; inserts a `pending` row; toasts and closes.
 
-**`src/i18n/translations.ts`**
-- Add EN/TR/FA keys: `create.locationGroup.partners`, `create.locationGroup.saved`, `create.addLocation`, `create.locationPending`, `profile.savedLocations.*`, `admin.savedLocations.*`.
+### 6. Notifications
 
-## 3. Risks / notes
-- `LocationAutocomplete` currently hardcodes `countryCodes="tr"`. For IR users this returns nothing — pass user's `profile.country` (lowercased) as the prop, fall back to `undefined` (worldwide) if unknown. Small extra read in the dialog.
-- Nullable `business_id`/`table_id` already allowed by schema; existing views (`explore`, `gathering-card`, `gatherings.$id`) already handle the null case per user's confirmation.
-- The pending→approved flow means a freshly-added saved location won't appear in the dropdown until an admin acts. Toast text must make that explicit; also surface it in profile.
-- No changes to gathering RLS needed (host_id + verified email + origin/status only).
-- Reusing `RejectReasonDialog` and notification pattern keeps admin UX consistent.
+Extend `NotificationType` in `src/lib/notifications.ts` with `saved_location_approved` and `saved_location_rejected`. Admin approve/reject calls `insertNotification` so the user sees the outcome in the bell.
 
-## Out of scope (per user)
-gathering-card, gatherings.$id, explore, businesses, venue_tables — untouched.
+### 7. i18n
+
+Add EN/TR/FA keys for the new UI: dropdown labels, "+ Add new location", empty states, dialog copy, profile section, admin tab + reject dialog, and the two notification titles/bodies. Also add `common.cancel / save / delete` if not already present.
+
+### Files touched
+
+- New: `supabase/migrations/*_saved_locations.sql`
+- New: `src/components/saved-location-dialog.tsx`
+- New: `src/components/saved-locations-section.tsx`
+- Edit: `src/routes/_authenticated/create-gathering.tsx`
+- Edit: `src/routes/_authenticated/profile.tsx` (import + render new section)
+- Edit: `src/routes/_authenticated/admin.tsx` (new tab + section component)
+- Edit: `src/lib/notifications.ts` (extend union)
+- Edit: `src/i18n/translations.ts` (EN/TR/FA keys)
+
+### Risks / notes
+
+- `gatherings.venue_name` and `neighborhood` are NOT NULL — the `saved:*` branch must always populate them (falling back to `label` and `city` respectively).
+- The status-change trigger must be `SECURITY DEFINER` with `search_path` locked, and `EXECUTE` revoked from `PUBLIC/anon/authenticated`, to stay consistent with the current security-memory guidance for trigger-only definer functions.
+- Owners must not be able to flip their own row to `approved` — enforced by the trigger, not the RLS `WITH CHECK` alone (RLS can't compare OLD vs NEW).
+- No changes to `gatherings` schema, RLS, `gathering-card.tsx`, `gatherings.$id.tsx`, or `explore.tsx`.
