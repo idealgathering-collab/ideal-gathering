@@ -4,7 +4,9 @@ export type NotificationType =
   | "business_approved"
   | "business_rejected"
   | "gathering_approved"
-  | "gathering_rejected";
+  | "gathering_rejected"
+  | "saved_location_approved"
+  | "saved_location_rejected";
 
 export type NotificationRow = {
   id: string;
