@@ -442,6 +442,8 @@ function ProfilePage() {
           </Button>
         </div>
 
+        <SavedLocationsSection countryCode={country || null} />
+
         {/* Danger zone */}
         <section className="mt-8 rounded-3xl border border-destructive/40 bg-card p-6">
           <h2 className="font-display text-xl text-destructive">{t("profile.danger")}</h2>
