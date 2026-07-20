@@ -6,6 +6,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { LANGS, useI18n } from "@/i18n";
+import { LangFlag } from "@/components/flag-icons";
 
 export function LanguageSwitcher() {
   const { lang, setLang, t } = useI18n();
@@ -17,10 +18,10 @@ export function LanguageSwitcher() {
         <Button
           variant="ghost"
           size="icon"
-          className="rounded-full ring-2 ring-primary/60 shadow-[0_0_12px_hsl(280_60%_50%/0.45)] hover:animate-flag-pulse"
+          className="rounded-full ring-2 ring-primary/60 shadow-[0_0_12px_hsl(280_60%_50%/0.45)] hover:animate-flag-pulse overflow-hidden"
           aria-label={t("nav.language")}
         >
-          <span className="emoji-font text-lg leading-none" aria-hidden="true">{current.flag}</span>
+          <LangFlag code={current.code} className="h-5 w-5 rounded-full object-cover" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
@@ -34,14 +35,13 @@ export function LanguageSwitcher() {
             >
               <span
                 className={
-                  "emoji-font me-2 inline-grid h-7 w-7 place-items-center rounded-full text-base leading-none transition hover:animate-flag-pulse " +
+                  "me-2 inline-grid h-7 w-7 place-items-center rounded-full overflow-hidden transition hover:animate-flag-pulse " +
                   (active
                     ? "ring-2 ring-primary/70 shadow-[0_0_10px_hsl(280_60%_50%/0.55)]"
                     : "ring-1 ring-border")
                 }
-                aria-hidden="true"
               >
-                {l.flag}
+                <LangFlag code={l.code} className="h-full w-full object-cover" />
               </span>
               {l.label}
             </DropdownMenuItem>
