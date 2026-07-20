@@ -97,6 +97,7 @@ function AdminPage() {
           <TabsList>
             <TabsTrigger value="venues">{t("admin.section.venues")}</TabsTrigger>
             <TabsTrigger value="gatherings">{t("admin.section.gatherings")}</TabsTrigger>
+            <TabsTrigger value="locations">{t("admin.section.savedLocations")}</TabsTrigger>
             <TabsTrigger value="users">{t("admin.section.users")}</TabsTrigger>
           </TabsList>
           <TabsContent value="venues" className="mt-6">
@@ -104,6 +105,9 @@ function AdminPage() {
           </TabsContent>
           <TabsContent value="gatherings" className="mt-6">
             <GatheringsSection />
+          </TabsContent>
+          <TabsContent value="locations" className="mt-6">
+            <SavedLocationsAdminSection />
           </TabsContent>
           <TabsContent value="users" className="mt-6">
             <UsersSection />
@@ -945,6 +949,189 @@ export function VenueEditForm({
           {saving ? "…" : t("admin.venue.save")}
         </Button>
       </div>
+    </div>
+  );
+}
+
+// ------------------------------ Saved locations ------------------------------
+
+type SavedLocRow = {
+  id: string;
+  label: string;
+  address: string;
+  city: string | null;
+  status: "pending" | "approved" | "rejected";
+  reject_reason: string | null;
+  user_id: string;
+  created_at: string;
+};
+
+function SavedLocationsAdminSection() {
+  const t = useT();
+  const [tab, setTab] = useState<"pending" | "approved" | "rejected">("pending");
+  const [rows, setRows] = useState<SavedLocRow[] | null>(null);
+  const [owners, setOwners] = useState<Record<string, { display_name: string | null }>>({});
+  const [busy, setBusy] = useState<string | null>(null);
+  const [rejectTarget, setRejectTarget] = useState<SavedLocRow | null>(null);
+  const [rejectReason, setRejectReason] = useState("");
+
+  async function load() {
+    setRows(null);
+    const { data, error } = await supabase
+      .from("saved_locations")
+      .select("id,label,address,city,status,reject_reason,user_id,created_at")
+      .eq("status", tab)
+      .order("created_at", { ascending: false })
+      .limit(200);
+    if (error) {
+      toast.error(error.message);
+      setRows([]);
+      return;
+    }
+    const list = (data ?? []) as SavedLocRow[];
+    setRows(list);
+    const ids = Array.from(new Set(list.map((r) => r.user_id)));
+    if (ids.length) {
+      const { data: profs } = await supabase.rpc("get_public_profiles", { _ids: ids });
+      const map: Record<string, { display_name: string | null }> = {};
+      for (const p of profs ?? []) map[(p as { id: string }).id] = { display_name: (p as { display_name: string | null }).display_name };
+      setOwners(map);
+    } else {
+      setOwners({});
+    }
+  }
+
+  useEffect(() => {
+    load();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tab]);
+
+  async function setStatus(row: SavedLocRow, status: "approved" | "rejected", reason?: string) {
+    setBusy(row.id);
+    const patch: { status: "approved" | "rejected"; reject_reason: string | null } = {
+      status,
+      reject_reason: status === "rejected" ? reason?.trim() || null : null,
+    };
+    const { error } = await supabase.from("saved_locations").update(patch).eq("id", row.id);
+    setBusy(null);
+    if (error) return toast.error(error.message);
+    try {
+      await insertNotification({
+        recipient_id: row.user_id,
+        type: status === "approved" ? "saved_location_approved" : "saved_location_rejected",
+        title: status === "approved" ? t("notif.savedLoc.approved.title") : t("notif.savedLoc.rejected.title"),
+        body:
+          status === "approved"
+            ? t("notif.savedLoc.approved.body")
+            : reason?.trim() || null,
+        related_id: row.id,
+      });
+    } catch (e) {
+      // non-fatal
+      console.warn("notify saved-loc failed", e);
+    }
+    toast.success(status === "approved" ? t("admin.savedLoc.set.approved") : t("admin.savedLoc.set.rejected"));
+    load();
+  }
+
+  return (
+    <div>
+      <Tabs value={tab} onValueChange={(v) => setTab(v as typeof tab)}>
+        <TabsList>
+          <TabsTrigger value="pending">{t("admin.savedLoc.pending")}</TabsTrigger>
+          <TabsTrigger value="approved">{t("admin.savedLoc.approved")}</TabsTrigger>
+          <TabsTrigger value="rejected">{t("admin.savedLoc.rejected")}</TabsTrigger>
+        </TabsList>
+        <TabsContent value={tab} className="mt-4">
+          {rows === null ? (
+            <p className="text-sm text-muted-foreground">…</p>
+          ) : rows.length === 0 ? (
+            <p className="rounded-2xl border border-dashed border-border p-6 text-center text-sm text-muted-foreground">
+              {t(`admin.savedLoc.empty.${tab}` as never)}
+            </p>
+          ) : (
+            <div className="grid gap-3">
+              {rows.map((r) => (
+                <div key={r.id} className="rounded-2xl border border-border p-4">
+                  <div className="flex flex-wrap items-start justify-between gap-3">
+                    <div className="min-w-0">
+                      <p className="font-medium">{r.label}</p>
+                      <p className="mt-1 text-sm text-muted-foreground">
+                        {r.address}
+                        {r.city ? ` · ${r.city}` : ""}
+                      </p>
+                      <p className="mt-1 text-xs text-muted-foreground">
+                        {t("admin.savedLoc.owner")}: {owners[r.user_id]?.display_name ?? r.user_id.slice(0, 8)} ·{" "}
+                        {formatDateTime(r.created_at)}
+                      </p>
+                      {r.status === "rejected" && r.reject_reason && (
+                        <p className="mt-1 text-xs text-destructive">{r.reject_reason}</p>
+                      )}
+                    </div>
+                    {r.status === "pending" && (
+                      <div className="flex items-center gap-2">
+                        <Button
+                          size="sm"
+                          disabled={busy === r.id}
+                          onClick={() => setStatus(r, "approved")}
+                          className="rounded-full"
+                        >
+                          {t("admin.venue.approve")}
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          disabled={busy === r.id}
+                          onClick={() => {
+                            setRejectTarget(r);
+                            setRejectReason("");
+                          }}
+                          className="rounded-full"
+                        >
+                          {t("admin.venue.reject")}
+                        </Button>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </TabsContent>
+      </Tabs>
+
+      <Dialog open={!!rejectTarget} onOpenChange={(v) => !v && setRejectTarget(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{t("admin.savedLoc.rejectTitle")}</DialogTitle>
+          </DialogHeader>
+          <div className="grid gap-2">
+            <Label>{t("savedLoc.reason")}</Label>
+            <Textarea
+              value={rejectReason}
+              maxLength={500}
+              onChange={(e) => setRejectReason(e.target.value)}
+              rows={4}
+            />
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setRejectTarget(null)}>
+              {t("common.cancel")}
+            </Button>
+            <Button
+              variant="destructive"
+              disabled={!rejectReason.trim() || busy === rejectTarget?.id}
+              onClick={async () => {
+                if (!rejectTarget) return;
+                await setStatus(rejectTarget, "rejected", rejectReason);
+                setRejectTarget(null);
+              }}
+            >
+              {t("admin.venue.reject")}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

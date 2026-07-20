@@ -23,6 +23,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { useT } from "@/i18n";
+import { SavedLocationsSection } from "@/components/saved-locations-section";
 import { useQueryClient } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/_authenticated/profile")({
@@ -441,6 +442,8 @@ function ProfilePage() {
             {saving ? "…" : t("profile.save")}
           </Button>
         </div>
+
+        <SavedLocationsSection countryCode={country || null} />
 
         {/* Danger zone */}
         <section className="mt-8 rounded-3xl border border-destructive/40 bg-card p-6">
