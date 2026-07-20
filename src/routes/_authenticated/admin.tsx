@@ -1076,7 +1076,7 @@ function SavedLocationsAdminSection() {
                           onClick={() => setStatus(r, "approved")}
                           className="rounded-full"
                         >
-                          {t("admin.venue.approve")}
+                          {t("admin.approve")}
                         </Button>
                         <Button
                           size="sm"
@@ -1088,7 +1088,7 @@ function SavedLocationsAdminSection() {
                           }}
                           className="rounded-full"
                         >
-                          {t("admin.venue.reject")}
+                          {t("admin.reject")}
                         </Button>
                       </div>
                     )}
@@ -1127,7 +1127,7 @@ function SavedLocationsAdminSection() {
                 setRejectTarget(null);
               }}
             >
-              {t("admin.venue.reject")}
+              {t("admin.reject")}
             </Button>
           </DialogFooter>
         </DialogContent>
