@@ -633,8 +633,7 @@ export const translations: Record<Lang, Dict> = {
     "common.delete": "Delete",
 
     // Create-gathering location picker
-    "create.location": "Location",
-    "create.locationPh": "Pick a partner venue or your saved location",
+
     "create.groupPartners": "Partner venues",
     "create.groupSaved": "Your saved locations",
     "create.addLocation": "+ Add a new location",
