@@ -1,0 +1,1 @@
+REVOKE EXECUTE ON FUNCTION public.prevent_saved_location_status_change_by_owner() FROM PUBLIC, anon, authenticated;
