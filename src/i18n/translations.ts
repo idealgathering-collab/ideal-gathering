@@ -626,6 +626,63 @@ export const translations: Record<Lang, Dict> = {
     "dash.venueHint": "Own a cafe or restaurant?",
     "dash.venueHintLink": "Open the venue portal →",
     "nav.explore": "Explore",
+
+    // Common
+    "common.cancel": "Cancel",
+    "common.save": "Save",
+    "common.delete": "Delete",
+
+    // Create-gathering location picker
+    "create.location": "Location",
+    "create.locationPh": "Pick a partner venue or your saved location",
+    "create.groupPartners": "Partner venues",
+    "create.groupSaved": "Your saved locations",
+    "create.addLocation": "+ Add a new location",
+    "create.pickLocation": "Pick a location first",
+    "create.noLocationsYet": "No partner venues yet — add your own location below.",
+
+    // Saved locations (shared dialog + profile section)
+    "savedLoc.addTitle": "Add a location",
+    "savedLoc.addHint": "Give it a name and search for the address. It will be reviewed before you can host there.",
+    "savedLoc.label": "Name",
+    "savedLoc.labelPh": "e.g. Bebek sahil, my studio, park bench",
+    "savedLoc.address": "Address",
+    "savedLoc.addressPh": "Start typing a place or address…",
+    "savedLoc.submit": "Submit for review",
+    "savedLoc.submitted": "Submitted — an admin will review it shortly.",
+    "savedLoc.labelRequired": "Give this location a short name",
+    "savedLoc.pickFromList": "Pick an address from the suggestions",
+    "savedLoc.list.title": "My saved locations",
+    "savedLoc.list.hint": "Places you can pick when hosting. New locations need admin approval.",
+    "savedLoc.list.empty": "You haven't saved any locations yet.",
+    "savedLoc.addBtn": "Add location",
+    "savedLoc.status.pending": "Pending review",
+    "savedLoc.status.approved": "Approved",
+    "savedLoc.status.rejected": "Rejected",
+    "savedLoc.rename": "Rename",
+    "savedLoc.renamePh": "New name",
+    "savedLoc.deleteConfirm": "Delete this saved location?",
+    "savedLoc.deleteDone": "Deleted",
+    "savedLoc.renamed": "Renamed",
+    "savedLoc.reason": "Reason",
+
+    // Admin saved-locations queue
+    "admin.section.savedLocations": "Saved locations",
+    "admin.savedLoc.pending": "Pending",
+    "admin.savedLoc.approved": "Approved",
+    "admin.savedLoc.rejected": "Rejected",
+    "admin.savedLoc.empty.pending": "No pending locations.",
+    "admin.savedLoc.empty.approved": "No approved locations yet.",
+    "admin.savedLoc.empty.rejected": "No rejected locations.",
+    "admin.savedLoc.owner": "Owner",
+    "admin.savedLoc.set.approved": "Location approved",
+    "admin.savedLoc.set.rejected": "Location rejected",
+    "admin.savedLoc.rejectTitle": "Reject location",
+
+    // Notifications: saved location
+    "notif.savedLoc.approved.title": "Your location was approved",
+    "notif.savedLoc.approved.body": "You can now pick it when hosting a Gathering.",
+    "notif.savedLoc.rejected.title": "Your location was not approved",
   },
 
 
