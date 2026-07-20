@@ -167,7 +167,7 @@ export const translations: Record<Lang, Dict> = {
     "create.neighborhood": "Neighborhood",
     "create.neighborhoodPh": "e.g. Kadıköy",
     "create.location": "Location",
-    "create.locationPh": "Search neighborhood or address…",
+    "create.locationPh": "Pick a partner venue or your saved location",
     "reg.addressPh": "Search address…",
 
     // Home extras
@@ -843,7 +843,7 @@ export const translations: Record<Lang, Dict> = {
     "create.neighborhood": "Semt",
     "create.neighborhoodPh": "örn. Kadıköy",
     "create.location": "Konum",
-    "create.locationPh": "Semt veya adres ara…",
+    "create.locationPh": "Ortak mekân veya kayıtlı konumunu seç",
     "reg.addressPh": "Adres ara…",
 
     // Home extras
@@ -1461,7 +1461,7 @@ export const translations: Record<Lang, Dict> = {
     "create.neighborhood": "محله",
     "create.neighborhoodPh": "مثلاً: تجریش",
     "create.location": "موقعیت",
-    "create.locationPh": "جست‌وجوی محله یا نشانی…",
+    "create.locationPh": "یک مکان شریک یا مکان ذخیره‌شده انتخاب کنید",
     "reg.addressPh": "جست‌وجوی نشانی…",
 
     // Home extras
