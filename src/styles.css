@@ -278,3 +278,26 @@
 }
 
 
+
+/* ============================================================
+   Round-table (landing) — CSS 3D utilities
+   ============================================================ */
+@utility rt-perspective {
+  perspective: 1400px;
+  perspective-origin: 50% 35%;
+}
+@utility rt-preserve-3d {
+  transform-style: preserve-3d;
+}
+
+@keyframes rt-ambient-drift {
+  0%, 100% { transform: rotateX(58deg) rotateZ(calc(var(--rt-rot, 0deg) - 2deg)); }
+  50%      { transform: rotateX(58deg) rotateZ(calc(var(--rt-rot, 0deg) + 2deg)); }
+}
+@utility rt-drift {
+  animation: rt-ambient-drift 18s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rt-drift { animation: none !important; }
+}
