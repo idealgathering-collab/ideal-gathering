@@ -291,8 +291,8 @@
 }
 
 @keyframes rt-ambient-drift {
-  0%, 100% { transform: rotateX(58deg) rotateZ(calc(var(--rt-rot, 0deg) - 2deg)); }
-  50%      { transform: rotateX(58deg) rotateZ(calc(var(--rt-rot, 0deg) + 2deg)); }
+  0%, 100% { transform: rotateX(58deg) rotateY(-2deg); }
+  50%      { transform: rotateX(58deg) rotateY(2deg); }
 }
 @utility rt-drift {
   animation: rt-ambient-drift 18s ease-in-out infinite;
