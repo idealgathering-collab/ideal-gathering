@@ -18,8 +18,9 @@ function BusinessDetail() {
   const { data: biz } = useQuery({
     queryKey: ["business-public", id],
     queryFn: async () => {
-      const [{ data: bizRows, error: bizErr }, tablesRes, gatheringsRes, menuRes] = await Promise.all([
-        supabase.rpc("get_approved_business", { _id: id }),
+      const { getApprovedBusiness } = await import("@/lib/public-data.functions");
+      const [base, tablesRes, gatheringsRes, menuRes] = await Promise.all([
+        getApprovedBusiness({ data: { id } }),
         supabase.from("venue_tables").select("id,label,capacity").eq("business_id", id),
         supabase
           .from("gatherings")
@@ -32,14 +33,12 @@ function BusinessDetail() {
           .eq("business_id", id)
           .order("sort_order"),
       ]);
-      if (bizErr) throw bizErr;
-      const base = (bizRows ?? [])[0];
       if (!base) return null;
       return {
         ...base,
         venue_tables: tablesRes.data ?? [],
-        gatherings: gatheringsRes.data ?? [],
-        menu_items: menuRes.data ?? [],
+        gatherings: (gatheringsRes.data ?? []) as Array<{ id: string; subject: string; status: string; starts_at: string; seats: number; table: { label: string } | null }>,
+        menu_items: (menuRes.data ?? []) as Array<{ id: string; name: string; description: string | null; category: string | null; price: number | null; currency: string | null }>,
       };
     },
   });

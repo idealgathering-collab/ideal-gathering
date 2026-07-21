@@ -89,16 +89,16 @@ function CreateGathering() {
   const { data: partners } = useQuery({
     queryKey: ["partner-options"],
     queryFn: async (): Promise<PartnerOption[]> => {
-      const { data: bizList, error } = await supabase.rpc("list_approved_businesses");
-      if (error) throw error;
-      const ids = (bizList ?? []).map((b: { id: string }) => b.id);
+      const { listApprovedBusinesses } = await import("@/lib/public-data.functions");
+      const bizList = await listApprovedBusinesses();
+      const ids = bizList.map((b) => b.id);
       if (ids.length === 0) return [];
       const { data: tables } = await supabase
         .from("venue_tables")
         .select("id,label,capacity,business_id")
         .in("business_id", ids);
       const bizMap = new Map<string, { name: string; city: string | null }>();
-      for (const b of bizList ?? []) bizMap.set((b as { id: string }).id, { name: (b as { name: string }).name, city: (b as { city: string | null }).city });
+      for (const b of bizList) bizMap.set(b.id, { name: b.name, city: b.city });
       return (tables ?? []).map((tbl) => {
         const biz = bizMap.get(tbl.business_id) ?? { name: "—", city: null };
         return {

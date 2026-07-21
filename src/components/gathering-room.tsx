@@ -27,9 +27,10 @@ type Profile = { id: string; display_name: string | null; avatar_url: string | n
 
 async function loadProfiles(ids: string[]): Promise<Record<string, Profile>> {
   if (ids.length === 0) return {};
-  const { data } = await supabase.rpc("get_public_profiles", { _ids: ids });
+  const { getPublicProfiles } = await import("@/lib/public-data.functions");
+  const data = await getPublicProfiles({ data: { ids } });
   const map: Record<string, Profile> = {};
-  for (const p of (data ?? []) as Profile[]) map[p.id] = p;
+  for (const p of data) map[p.id] = p;
   return map;
 }
 
