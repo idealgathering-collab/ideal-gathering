@@ -1,95 +1,96 @@
-# Phase 1 — Round Table Landing Page
+# Phase 1 — Round Table Landing
 
-Full replacement of `/` with a single-viewport, no-scroll CSS-3D round table. Six seats map to six pitches; a persistent thin footer bar carries legal links and the primary signup CTA.
+## 1. Design tokens (reusable, in `src/styles.css`)
 
-## Assumptions (flagging for correction)
-- **i18n**: New copy goes into `translations.en` and `translations.tr` only. Farsi strings are explicitly out of scope per your note — the FA keys will fall back to EN until a later pass.
-- **"Open tables" seat**: opens a `Dialog` (shadcn) listing live approved gatherings via the existing `fetchApprovedGatherings` query, with a link to `/explore` for the full list. No new route.
-- **Header**: kept as-is (site-header stays mounted above the table view). "No-scroll" means the table area itself fits in one viewport under the header + above the footer bar; the page as a whole has `overflow-hidden` on the main region.
-- **Fonts**: load Fraunces + Inter via `<link>` in `__root.tsx` head (per Tailwind v4 rules). No new npm dep.
-- **No new animation lib**: pure CSS transforms + transitions + a tiny `requestAnimationFrame` loop (or CSS `@keyframes`) for ambient drift.
+Add under `@theme inline` so utilities like `bg-parchment`, `text-ink-navy`, `bg-ember`, `border-sage` become available project-wide (later phases can reuse them without redefining).
+
+- `--ink-navy: oklch(0.25 0.03 250)` — text / base
+- `--parchment: oklch(0.95 0.02 80)` — page surface
+- `--ember: oklch(0.58 0.15 45)` — primary accent
+- `--sage: oklch(0.62 0.06 130)` — secondary accent
+- `--font-serif-warm: "Fraunces", ui-serif, Georgia, serif` — headings
+- `--font-sans-humanist: "Inter", ui-sans-serif, system-ui, sans-serif` — body
+
+Fonts loaded via `<link>` tags in `src/routes/__root.tsx` (Fraunces + Inter from Google Fonts). No URL `@import` in styles.css.
+
+Also add three reusable 3D utilities so Gathering Room can adopt the same primitives later:
+
+- `@utility rt-perspective { perspective: 1400px; perspective-origin: 50% 40%; }`
+- `@utility rt-preserve-3d { transform-style: preserve-3d; }`
+- `@utility rt-drift { animation: rt-ambient-drift 18s ease-in-out infinite; }` (paused under `prefers-reduced-motion`)
+
+## 2. Table component — `src/components/round-table/RoundTable.tsx`
+
+Two nested 3D layers so ring rotation and ambient wiggle don't fight each other:
+
+- **Layer A** (`rotateX(58deg)` + `rt-drift`) — pure decorative tilt + ambient `rotateY` oscillation (±2°).
+- **Layer B** (`rotateZ(--rt-rot)`) — the ring; holds the disc, inner ring detail, center marker, and 6 seats.
+
+Disc rendered with layered radial gradient + inset/outer `box-shadow` (no blur filters, no glow) for physical grounding.
+
+Each seat = a full-size overlay rotated by its ring angle, with a nested button pinned to the top edge. The button counter-rotates on Z and X to face the camera; on active it lifts (`translateZ` 10→46px) and scales (1 → 1.14). Inactive seats dim to `opacity: 0.6`.
+
+Interaction:
+- Desktop: click seat → snaps rotation so that seat is at the front angle (180°), lifts.
+- Mobile / any pointer: pointer-drag rotates the ring; on release, snaps to the nearest seat (shortest-path rotation math).
+- Keyboard: `ArrowLeft/Right/Up/Down` cycles seats (handled in the page).
+- Reduced motion: `rt-drift` is disabled globally under `prefers-reduced-motion`; snap transitions remain (they're functional, not decorative).
+
+Seat touch targets: `min-h-[52px] min-w-[52px]` + surrounding padding on the tap wrapper → ≥44px met.
+
+No animation library added. Pure CSS transforms + transitions + one keyframe.
+
+## 3. Landing page — `src/routes/index.tsx` (full replacement)
+
+Layout: full-viewport flex column, `min-h-[100dvh]`, no scroll. `SiteHeader` on top (unchanged). Main is `flex-1` with a two-column grid on `lg` (table left, panel right), single column on mobile (table above, panel below). Persistent slim footer bar always visible at bottom of the viewport, not below-the-fold.
+
+Six seats and their panel content:
+
+| # | Seat | Panel |
+|---|---|---|
+| 1 | Welcome (default active) | tagline + value prop |
+| 2 | How it works | 3-step summary in prose |
+| 3 | For cafés | venue-partner pitch + CTA → `/partnership` |
+| 4 | For guests | guest pitch + CTA → `/auth?mode=signup` |
+| 5 | Manifesto | philosophy paragraph |
+| 6 | Open tables | short teaser + **"See open tables"** button that opens a shadcn `Dialog` |
+
+**Open tables modal**: shadcn `Dialog`, lazy-loads `fetchApprovedGatherings` (`useQuery` with `enabled: tablesOpen`), renders up to 6 `GatheringCard`s, empty state, plus "View all" → `/explore`. Live list stays out of the fixed table view as required.
+
+Panel is a soft parchment card that fades in on seat change (existing `animate-fade-in`). Mobile also gets dot-pagination below the panel.
+
+SEO: hidden `sr-only` block mirrors all 6 seat titles + bodies as real `<h2>/<p>` for crawlers and screen readers, since the visible content is one panel at a time.
+
+Footer bar: `Privacy` + `Terms` links (left) and a single ember pill CTA `Join Ideal Gathering` → `/auth?mode=signup` (right).
+
+## 4. i18n (EN + TR only per scope)
+
+New keys under `landing.table.*` in `src/i18n/translations.ts`:
+
+- 6 × seat labels
+- 6 × panel triplets (eyebrow / title / body)
+- CTAs (`cafes.cta`, `guests.cta`, `tables.open`, `tables.viewAll`, `tables.empty`)
+- `aria.stage`, `seo.h1`, `footer.cta`
+
+Farsi block is left untouched this turn per scope. (If FA users hit the page before the FA follow-up ships, they'll see EN fallbacks for the new keys via the existing i18n fallback path.)
+
+## Scope adherence
+
+- No changes to Gathering Room, dashboards, profile, explore, event-list, or auth routes/flows.
+- No Supabase schema changes.
+- `SiteHeader` and its nav logic untouched — only the page body is replaced.
+- Farsi strings not modified.
 
 ## Files touched
 
-**New**
-- `src/components/round-table/RoundTable.tsx` — the 3D scene: perspective stage, table disc, seat ring, ambient drift, selection state, mobile drag-to-rotate, reduced-motion handling.
-- `src/components/round-table/Seat.tsx` — single seat button (44px+ hit target), depth-based scale/opacity, active lift.
-- `src/components/round-table/SeatPanel.tsx` — the content panel that renders the active seat's copy (Welcome / How / Cafés / Guests / Manifesto / Open tables trigger).
-- `src/components/round-table/OpenTablesDialog.tsx` — modal listing live gatherings (reuses `GatheringCard`).
-- `src/components/round-table/seats.ts` — seat config array (id, i18n key, icon, panel renderer key).
-- `src/components/round-table/useTableInteraction.ts` — hook: pointer drag → rotation, keyboard arrow support, reduced-motion, active-seat derivation.
+- `src/styles.css` — tokens + 3D utilities + drift keyframes
+- `src/routes/__root.tsx` — Fraunces + Inter `<link>` tags
+- `src/routes/index.tsx` — full replacement
+- `src/components/round-table/RoundTable.tsx` — new
+- `src/i18n/translations.ts` — new `landing.table.*` keys (EN + TR)
 
-**Modified**
-- `src/routes/index.tsx` — replace entire body with `<SiteHeader />` + `<RoundTableStage />` + `<LandingFooterBar />`. Delete imports of `HeroPoster`, `ManifestoSection`, `NeighborhoodsSection`, `GatheringCard` list, sample cards, etc.
-- `src/components/site-footer.tsx` — leave alone; add a **new** slim `LandingFooterBar` component inline in the landing route (or as `src/components/landing-footer-bar.tsx`) — the full `SiteFooter` is not used on the landing page.
-- `src/styles.css` — add new design tokens (see below) alongside existing ones (existing plum/sunshine/tangerine tokens are **kept** so other routes don't break). Add `@keyframes table-drift` and a `.perspective-stage` / `.preserve-3d` utility set.
-- `src/routes/__root.tsx` — add Fraunces + Inter `<link>` tags to head (preconnect + stylesheet).
-- `src/i18n/translations.ts` — add `landing.table.*` keys (seat labels, panel copy, footer CTA) in EN + TR.
+## Open assumptions (flag if wrong)
 
-**Untouched (explicit)**
-- Gathering room, dashboards, profile, explore, auth, all Supabase code, existing header/nav logic, Farsi translations.
-
-## Design tokens (added to `src/styles.css`)
-
-```css
-:root {
-  --ink-navy: oklch(0.25 0.03 250);       /* #1B2430 */
-  --parchment: oklch(0.95 0.02 80);       /* #F6EFE4 */
-  --ember: oklch(0.58 0.15 45);           /* #C4622D */
-  --sage: oklch(0.62 0.06 130);           /* #7C8F6E */
-  --font-serif-warm: "Fraunces", ui-serif, Georgia, serif;
-  --font-sans-humanist: "Inter", ui-sans-serif, system-ui, sans-serif;
-}
-@theme inline {
-  --color-ink-navy: var(--ink-navy);
-  --color-parchment: var(--parchment);
-  --color-ember: var(--ember);
-  --color-sage: var(--sage);
-}
-```
-
-Existing plum/sunshine/tangerine tokens stay in place so unrelated routes render unchanged. Later phases can migrate to the new palette route by route.
-
-## 3D technique
-
-```text
-.perspective-stage { perspective: 1400px; perspective-origin: 50% 30%; }
-.table-group       { transform-style: preserve-3d; transform: rotateX(58deg) rotateZ(var(--rot)); }
-.table-disc        { transform: translateZ(0); box-shadow: layered rims for grounding; }
-.seat              { transform: rotateZ(var(--seat-angle)) translateY(var(--radius)) rotateZ(calc(-1 * var(--seat-angle))) translateZ(var(--lift)); }
-```
-
-- Ambient drift: CSS `@keyframes` on `.table-group` nudges `rotateZ` ±3° over ~18s; paused under `prefers-reduced-motion`.
-- Seat selection lifts `--lift` from 0 to 40px, scale 1 → 1.12, unselected seats fade to 55% opacity.
-- Depth ordering handled by `translateZ` on each seat inside the tilted group — no `z-index` hacks.
-
-## Interaction
-
-- **Desktop**: click seat → select; arrow keys rotate through seats; Escape closes Open-Tables dialog.
-- **Mobile**: pointer drag on the stage rotates the ring; the seat whose projected screen-Y is highest (front-most) becomes active. Dot pagination row below the stage as fallback + a11y control.
-- **Reduced motion**: drift disabled; selection uses a plain fade+scale (no lift travel).
-
-## Layout
-
-```text
-┌─ SiteHeader (unchanged) ────────────────────┐
-│                                             │
-│   ┌──────────────┐   ┌────────────────────┐ │
-│   │ 3D table     │   │ SeatPanel          │ │
-│   │  (stage)     │   │ - active seat copy │ │
-│   │  seats × 6   │   │ - CTA if relevant  │ │
-│   └──────────────┘   └────────────────────┘ │
-│   dots (mobile only)                        │
-│                                             │
-├─ LandingFooterBar: [Privacy] [Terms] [CTA] ─┤
-```
-
-On mobile the two columns stack; the stage takes ~55vh, panel ~30vh, footer ~15vh — everything fits in one viewport.
-
-## Risks
-- **Perf on low-end mobile**: 3D transforms + drift can jank. Mitigation: `will-change: transform` only on the table group, drift disabled under reduced-motion, no filters/blurs.
-- **Text-in-3D readability**: seat labels live on a flat, non-tilted overlay layer (counter-rotated) so text never distorts.
-- **Header height variability**: use `min-h-[calc(100dvh-var(--header-h))]` with a CSS var set by the header, or a simple `100dvh` flex column — I'll use the latter for simplicity.
-- **SEO**: current landing has rich sections that Google indexes. Replacing with a one-view app-like page loses that surface. Copy inside the SeatPanel + a visually-hidden `<section>` list mirroring the six seat contents keeps the crawlable text.
-
-Confirm the assumptions above (i18n scope, Open-tables as modal, header stays) and I'll implement.
+1. "No-scroll" is per-viewport at typical desktop and mobile heights; on very short viewports (<600px landscape phones) some vertical compression is acceptable rather than shrinking the table below usability.
+2. Modal for Open Tables is the shadcn `Dialog` primitive (already in the project) — not a full-screen sheet.
+3. Header stays mounted above the table (the request says "keep existing nav/header logic untouched"). If you want the landing to be truly chrome-less with just the table + footer, say so and I'll hide the header on `/` only.
