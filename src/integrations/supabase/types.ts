@@ -247,6 +247,13 @@ export type Database = {
             foreignKeyName: "gatherings_business_id_fkey"
             columns: ["business_id"]
             isOneToOne: false
+            referencedRelation: "approved_businesses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gatherings_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
             referencedRelation: "businesses"
             referencedColumns: ["id"]
           },
@@ -297,6 +304,13 @@ export type Database = {
           updated_at?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "menu_items_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "approved_businesses"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "menu_items_business_id_fkey"
             columns: ["business_id"]
@@ -471,6 +485,13 @@ export type Database = {
             foreignKeyName: "venue_tables_business_id_fkey"
             columns: ["business_id"]
             isOneToOne: false
+            referencedRelation: "approved_businesses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "venue_tables_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
             referencedRelation: "businesses"
             referencedColumns: ["id"]
           },
@@ -505,47 +526,66 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      approved_businesses: {
+        Row: {
+          address: string | null
+          city: string | null
+          cover_url: string | null
+          created_at: string | null
+          description: string | null
+          id: string | null
+          lat: number | null
+          lng: number | null
+          menu_link: string | null
+          name: string | null
+        }
+        Insert: {
+          address?: string | null
+          city?: string | null
+          cover_url?: string | null
+          created_at?: string | null
+          description?: string | null
+          id?: string | null
+          lat?: number | null
+          lng?: number | null
+          menu_link?: string | null
+          name?: string | null
+        }
+        Update: {
+          address?: string | null
+          city?: string | null
+          cover_url?: string | null
+          created_at?: string | null
+          description?: string | null
+          id?: string | null
+          lat?: number | null
+          lng?: number | null
+          menu_link?: string | null
+          name?: string | null
+        }
+        Relationships: []
+      }
+      public_profiles: {
+        Row: {
+          avatar_url: string | null
+          display_name: string | null
+          id: string | null
+        }
+        Insert: {
+          avatar_url?: string | null
+          display_name?: string | null
+          id?: string | null
+        }
+        Update: {
+          avatar_url?: string | null
+          display_name?: string | null
+          id?: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
-      get_approved_business: {
-        Args: { _id: string }
-        Returns: {
-          address: string
-          city: string
-          cover_url: string
-          created_at: string
-          description: string
-          id: string
-          lat: number
-          lng: number
-          menu_link: string
-          name: string
-        }[]
-      }
-      get_public_profiles: {
-        Args: { _ids: string[] }
-        Returns: {
-          avatar_url: string
-          display_name: string
-          id: string
-        }[]
-      }
-      list_approved_businesses: {
-        Args: never
-        Returns: {
-          address: string
-          city: string
-          cover_url: string
-          created_at: string
-          description: string
-          id: string
-          lat: number
-          lng: number
-          menu_link: string
-          name: string
-        }[]
-      }
+      [_ in never]: never
     }
     Enums: {
       app_role: "admin" | "business_owner" | "user" | "venue"
