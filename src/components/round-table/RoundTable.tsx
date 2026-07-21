@@ -190,44 +190,44 @@ function SeatButton({
   label: string;
 }) {
   const Icon = seat.icon;
-  // Ring wrapper: place at angle around the disc.
-  const wrapperStyle: CSSProperties = {
-    transform: `rotateZ(${angle}deg) translateY(-42%)`,
-    transformStyle: "preserve-3d",
-  };
-  // Seat itself: counter-rotate Z to keep label upright in the tilted plane,
-  // counter-rotate X to face the camera, and lift on active.
+  // Outer full-size overlay rotated around center to position seat around ring.
+  // Inner holder pinned to the top edge of the disc; the button counter-rotates
+  // to face the camera and lifts on active.
   const seatStyle: CSSProperties = {
-    transform: `rotateZ(${-angle}deg) rotateX(-58deg) translateZ(${isActive ? 44 : 8}px) scale(${isActive ? 1.12 : 1})`,
-    transition: "transform 500ms cubic-bezier(0.22,1,0.36,1), opacity 300ms ease, box-shadow 300ms ease",
-    opacity: isActive ? 1 : 0.62,
+    transform: `rotateZ(${-angle}deg) rotateX(-58deg) translateZ(${isActive ? 46 : 10}px) scale(${isActive ? 1.14 : 1})`,
+    transition: "transform 500ms cubic-bezier(0.22,1,0.36,1), opacity 300ms ease, background-color 300ms ease",
+    opacity: isActive ? 1 : 0.6,
     transformStyle: "preserve-3d",
   };
   return (
     <div
-      className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
-      style={wrapperStyle}
-      aria-hidden={false}
+      className="rt-preserve-3d pointer-events-none absolute inset-0"
+      style={{ transform: `rotateZ(${angle}deg)` }}
     >
-      <button
-        type="button"
-        onClick={(e) => {
-          e.stopPropagation();
-          onSelect();
-        }}
-        onPointerDown={(e) => e.stopPropagation()}
-        aria-pressed={isActive}
-        aria-label={label}
-        className={`grid min-h-[56px] min-w-[56px] place-items-center rounded-full border text-parchment shadow-[0_10px_20px_-8px_rgba(0,0,0,0.5)] transition-colors ${
-          isActive
-            ? "border-ember bg-ember"
-            : "border-parchment/40 bg-ink-navy/85 hover:bg-ink-navy"
-        }`}
-        style={seatStyle}
+      <div
+        className="rt-preserve-3d pointer-events-auto absolute left-1/2 top-[7%] -translate-x-1/2"
       >
-        <Icon className="h-5 w-5" />
-        <span className="sr-only">{label}</span>
-      </button>
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            onSelect();
+          }}
+          onPointerDown={(e) => e.stopPropagation()}
+          aria-pressed={isActive}
+          aria-label={label}
+          className={`grid min-h-[52px] min-w-[52px] place-items-center rounded-full border text-parchment shadow-[0_10px_20px_-8px_rgba(0,0,0,0.55)] ${
+            isActive
+              ? "border-ember bg-ember"
+              : "border-parchment/40 bg-ink-navy/85 hover:bg-ink-navy"
+          }`}
+          style={seatStyle}
+        >
+          <Icon className="h-5 w-5" />
+          <span className="sr-only">{label}</span>
+        </button>
+      </div>
     </div>
   );
 }
+
