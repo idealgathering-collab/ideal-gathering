@@ -121,58 +121,68 @@ export function RoundTable({ activeIndex, onActiveChange, t }: Props) {
         className="pointer-events-none absolute bottom-[10%] left-1/2 h-10 w-[70%] -translate-x-1/2 rounded-[50%] bg-ink-navy/25 blur-2xl"
       />
 
-      {/* the tilted scene */}
+      {/* Layer A: tilt + ambient wiggle. Purely decorative. */}
       <div
         className={`rt-preserve-3d relative aspect-square w-[92%] ${dragging ? "" : "rt-drift"}`}
         style={{
-          ...rotStyle,
-          transform: "rotateX(58deg) rotateZ(var(--rt-rot, 0deg))",
-          transition: dragging ? "none" : "transform 700ms cubic-bezier(0.22,1,0.36,1)",
+          transform: "rotateX(58deg)",
           willChange: "transform",
         }}
       >
-        {/* table disc */}
+        {/* Layer B: rotation of the ring itself. */}
         <div
-          aria-hidden
-          className="absolute inset-[8%] rounded-full"
+          className="rt-preserve-3d absolute inset-0"
           style={{
-            background:
-              "radial-gradient(circle at 35% 30%, oklch(0.72 0.09 55) 0%, oklch(0.55 0.11 50) 55%, oklch(0.38 0.09 45) 100%)",
-            boxShadow:
-              "inset 0 0 0 2px color-mix(in oklab, var(--ember) 40%, transparent), inset 0 12px 24px rgba(0,0,0,0.25), 0 30px 60px -20px rgba(0,0,0,0.4)",
-            transform: "translateZ(0)",
+            ...rotStyle,
+            transform: "rotateZ(var(--rt-rot, 0deg))",
+            transition: dragging ? "none" : "transform 700ms cubic-bezier(0.22,1,0.36,1)",
+            willChange: "transform",
           }}
-        />
-        {/* inner ring detail */}
-        <div
-          aria-hidden
-          className="absolute inset-[22%] rounded-full border border-parchment/25"
-          style={{ transform: "translateZ(2px)" }}
-        />
-        {/* center marker */}
-        <div
-          aria-hidden
-          className="absolute left-1/2 top-1/2 h-6 w-6 -translate-x-1/2 -translate-y-1/2 rounded-full bg-parchment/70"
-          style={{ transform: "translate(-50%,-50%) translateZ(4px)" }}
-        />
+        >
+          {/* table disc */}
+          <div
+            aria-hidden
+            className="absolute inset-[8%] rounded-full"
+            style={{
+              background:
+                "radial-gradient(circle at 35% 30%, oklch(0.72 0.09 55) 0%, oklch(0.55 0.11 50) 55%, oklch(0.38 0.09 45) 100%)",
+              boxShadow:
+                "inset 0 0 0 2px color-mix(in oklab, var(--ember) 40%, transparent), inset 0 12px 24px rgba(0,0,0,0.25), 0 30px 60px -20px rgba(0,0,0,0.4)",
+              transform: "translateZ(0)",
+            }}
+          />
+          {/* inner ring detail */}
+          <div
+            aria-hidden
+            className="absolute inset-[22%] rounded-full border border-parchment/25"
+            style={{ transform: "translateZ(2px)" }}
+          />
+          {/* center marker */}
+          <div
+            aria-hidden
+            className="absolute left-1/2 top-1/2 h-6 w-6 -translate-x-1/2 -translate-y-1/2 rounded-full bg-parchment/70"
+            style={{ transform: "translate(-50%,-50%) translateZ(4px)" }}
+          />
 
-        {/* seats */}
-        {SEATS.map((seat, i) => {
-          const angle = i * STEP;
-          const isActive = i === activeIndex;
-          return (
-            <SeatButton
-              key={seat.id}
-              seat={seat}
-              angle={angle}
-              isActive={isActive}
-              onSelect={() => onActiveChange(i)}
-              label={t(seat.labelKey)}
-            />
-          );
-        })}
+          {/* seats */}
+          {SEATS.map((seat, i) => {
+            const angle = i * STEP;
+            const isActive = i === activeIndex;
+            return (
+              <SeatButton
+                key={seat.id}
+                seat={seat}
+                angle={angle}
+                isActive={isActive}
+                onSelect={() => onActiveChange(i)}
+                label={t(seat.labelKey)}
+              />
+            );
+          })}
+        </div>
       </div>
     </div>
+
   );
 }
 
