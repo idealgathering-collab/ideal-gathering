@@ -49,6 +49,14 @@
   --color-plum: var(--plum);
   --color-plum-foreground: var(--plum-foreground);
 
+  --color-ink-navy: var(--ink-navy);
+  --color-parchment: var(--parchment);
+  --color-ember: var(--ember);
+  --color-sage: var(--sage);
+
+  --font-serif-warm: "Fraunces", ui-serif, Georgia, serif;
+  --font-sans-humanist: "Inter", ui-sans-serif, system-ui, sans-serif;
+
   --color-sidebar: var(--sidebar);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar-primary: var(--sidebar-primary);
@@ -113,6 +121,12 @@
   --sidebar-accent-foreground: oklch(0.18 0.05 300);
   --sidebar-border: oklch(0.88 0.03 300);
   --sidebar-ring: oklch(0.55 0.22 280);
+
+  /* Round-table palette (Phase 1 landing) */
+  --ink-navy: oklch(0.25 0.03 250);
+  --parchment: oklch(0.95 0.02 80);
+  --ember: oklch(0.58 0.15 45);
+  --sage: oklch(0.62 0.06 130);
 }
 
 @layer base {
@@ -264,3 +278,26 @@
 }
 
 
+
+/* ============================================================
+   Round-table (landing) — CSS 3D utilities
+   ============================================================ */
+@utility rt-perspective {
+  perspective: 1400px;
+  perspective-origin: 50% 35%;
+}
+@utility rt-preserve-3d {
+  transform-style: preserve-3d;
+}
+
+@keyframes rt-ambient-drift {
+  0%, 100% { transform: rotateX(58deg) rotateY(-2deg); }
+  50%      { transform: rotateX(58deg) rotateY(2deg); }
+}
+@utility rt-drift {
+  animation: rt-ambient-drift 18s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rt-drift { animation: none !important; }
+}

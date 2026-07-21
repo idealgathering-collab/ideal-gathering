@@ -1,76 +1,95 @@
-## Saved locations for hosting
+# Phase 1 — Round Table Landing Page
 
-Replace the free-text venue picker in create-gathering with a grouped dropdown of approved partner venues and the user's own approved saved locations, with admin review for new user-submitted locations.
+Full replacement of `/` with a single-viewport, no-scroll CSS-3D round table. Six seats map to six pitches; a persistent thin footer bar carries legal links and the primary signup CTA.
 
-### 1. Database migration — `public.saved_locations`
+## Assumptions (flagging for correction)
+- **i18n**: New copy goes into `translations.en` and `translations.tr` only. Farsi strings are explicitly out of scope per your note — the FA keys will fall back to EN until a later pass.
+- **"Open tables" seat**: opens a `Dialog` (shadcn) listing live approved gatherings via the existing `fetchApprovedGatherings` query, with a link to `/explore` for the full list. No new route.
+- **Header**: kept as-is (site-header stays mounted above the table view). "No-scroll" means the table area itself fits in one viewport under the header + above the footer bar; the page as a whole has `overflow-hidden` on the main region.
+- **Fonts**: load Fraunces + Inter via `<link>` in `__root.tsx` head (per Tailwind v4 rules). No new npm dep.
+- **No new animation lib**: pure CSS transforms + transitions + a tiny `requestAnimationFrame` loop (or CSS `@keyframes`) for ambient drift.
 
-Columns: `id`, `user_id (uuid → auth.users)`, `label (text)`, `address (text)`, `city (text null)`, `neighborhood (text null)`, `lat (numeric null)`, `lng (numeric null)`, `status (text default 'pending' check in pending/approved/rejected)`, `reject_reason (text null)`, `created_at`, `updated_at`.
+## Files touched
 
-Same status pattern as `businesses` (text + check, not a new enum, to stay consistent with the existing pattern).
+**New**
+- `src/components/round-table/RoundTable.tsx` — the 3D scene: perspective stage, table disc, seat ring, ambient drift, selection state, mobile drag-to-rotate, reduced-motion handling.
+- `src/components/round-table/Seat.tsx` — single seat button (44px+ hit target), depth-based scale/opacity, active lift.
+- `src/components/round-table/SeatPanel.tsx` — the content panel that renders the active seat's copy (Welcome / How / Cafés / Guests / Manifesto / Open tables trigger).
+- `src/components/round-table/OpenTablesDialog.tsx` — modal listing live gatherings (reuses `GatheringCard`).
+- `src/components/round-table/seats.ts` — seat config array (id, i18n key, icon, panel renderer key).
+- `src/components/round-table/useTableInteraction.ts` — hook: pointer drag → rotation, keyboard arrow support, reduced-motion, active-seat derivation.
 
-GRANTs: `authenticated` (select/insert/update/delete), `service_role` (all). No `anon`.
+**Modified**
+- `src/routes/index.tsx` — replace entire body with `<SiteHeader />` + `<RoundTableStage />` + `<LandingFooterBar />`. Delete imports of `HeroPoster`, `ManifestoSection`, `NeighborhoodsSection`, `GatheringCard` list, sample cards, etc.
+- `src/components/site-footer.tsx` — leave alone; add a **new** slim `LandingFooterBar` component inline in the landing route (or as `src/components/landing-footer-bar.tsx`) — the full `SiteFooter` is not used on the landing page.
+- `src/styles.css` — add new design tokens (see below) alongside existing ones (existing plum/sunshine/tangerine tokens are **kept** so other routes don't break). Add `@keyframes table-drift` and a `.perspective-stage` / `.preserve-3d` utility set.
+- `src/routes/__root.tsx` — add Fraunces + Inter `<link>` tags to head (preconnect + stylesheet).
+- `src/i18n/translations.ts` — add `landing.table.*` keys (seat labels, panel copy, footer CTA) in EN + TR.
 
-RLS policies:
-- Owner select / delete: `auth.uid() = user_id`.
-- Owner insert: `auth.uid() = user_id AND status = 'pending'` (users can only create pending rows).
-- Owner update: `auth.uid() = user_id` — plus a `BEFORE UPDATE` trigger that raises if the owner tries to change `status` (only admins may). Mirrors the pattern used for `businesses` and `gatherings`.
-- Admin select / update: `private.has_role(auth.uid(), 'admin')`.
+**Untouched (explicit)**
+- Gathering room, dashboards, profile, explore, auth, all Supabase code, existing header/nav logic, Farsi translations.
 
-`updated_at` trigger reuses the existing `public.update_updated_at_column()`.
+## Design tokens (added to `src/styles.css`)
 
-### 2. Create-gathering form — grouped dropdown
+```css
+:root {
+  --ink-navy: oklch(0.25 0.03 250);       /* #1B2430 */
+  --parchment: oklch(0.95 0.02 80);       /* #F6EFE4 */
+  --ember: oklch(0.58 0.15 45);           /* #C4622D */
+  --sage: oklch(0.62 0.06 130);           /* #7C8F6E */
+  --font-serif-warm: "Fraunces", ui-serif, Georgia, serif;
+  --font-sans-humanist: "Inter", ui-sans-serif, system-ui, sans-serif;
+}
+@theme inline {
+  --color-ink-navy: var(--ink-navy);
+  --color-parchment: var(--parchment);
+  --color-ember: var(--ember);
+  --color-sage: var(--sage);
+}
+```
 
-`src/routes/_authenticated/create-gathering.tsx`:
-- Remove the existing two selects (business + table) and free-text location field.
-- One `<Select>` whose option value encodes the source: `venue:<bizId>:<tableId>` or `saved:<savedLocId>`, plus a trailing `__add` sentinel.
-- Two `<SelectGroup>`s labeled "Partner venues" and "Your saved locations".
-- Selecting `__add` opens a shared dialog (see §5) instead of setting form state.
-- Submit reads the prefix:
-  - `venue:*` → insert with `business_id`, `table_id`, `venue_name = biz.name`, `neighborhood = biz.city` (unchanged behavior).
-  - `saved:*` → insert with `business_id=null`, `table_id=null`, `venue_name = saved.label`, `neighborhood = saved.neighborhood || saved.city`, plus `address / city / lat / lng` copied through.
-- Two parallel queries via TanStack Query: existing `list_approved_businesses` RPC + `saved_locations` for the current user filtered to `status='approved'`.
+Existing plum/sunshine/tangerine tokens stay in place so unrelated routes render unchanged. Later phases can migrate to the new palette route by route.
 
-### 3. Profile — "My saved locations" section
+## 3D technique
 
-New component `src/components/saved-locations-section.tsx` rendered in `src/routes/_authenticated/profile.tsx` above the danger zone:
-- Lists the user's saved locations with a status badge (pending / approved / rejected) and, if rejected, the `reject_reason`.
-- Inline rename (updates `label`) and delete (with AlertDialog confirm).
-- "Add location" button opens the shared dialog from §5.
+```text
+.perspective-stage { perspective: 1400px; perspective-origin: 50% 30%; }
+.table-group       { transform-style: preserve-3d; transform: rotateX(58deg) rotateZ(var(--rot)); }
+.table-disc        { transform: translateZ(0); box-shadow: layered rims for grounding; }
+.seat              { transform: rotateZ(var(--seat-angle)) translateY(var(--radius)) rotateZ(calc(-1 * var(--seat-angle))) translateZ(var(--lift)); }
+```
 
-### 4. Admin — Saved locations queue
+- Ambient drift: CSS `@keyframes` on `.table-group` nudges `rotateZ` ±3° over ~18s; paused under `prefers-reduced-motion`.
+- Seat selection lifts `--lift` from 0 to 40px, scale 1 → 1.12, unselected seats fade to 55% opacity.
+- Depth ordering handled by `translateZ` on each seat inside the tilted group — no `z-index` hacks.
 
-`src/routes/_authenticated/admin.tsx`: new `TabsTrigger value="locations"` between Gatherings and Users, and a new `SavedLocationsAdminSection` component:
-- Inner tabs Pending / Approved / Rejected (mirrors the venues section).
-- Reads directly from `saved_locations` under the admin RLS policy.
-- Owner display name fetched via existing `get_public_profiles` RPC.
-- Approve is one click; Reject opens a Dialog requiring a reason (mirrors existing venue reject flow), then updates `status` + `reject_reason` and sends a notification.
+## Interaction
 
-### 5. Shared dialog — `SavedLocationDialog`
+- **Desktop**: click seat → select; arrow keys rotate through seats; Escape closes Open-Tables dialog.
+- **Mobile**: pointer drag on the stage rotates the ring; the seat whose projected screen-Y is highest (front-most) becomes active. Dot pagination row below the stage as fallback + a11y control.
+- **Reduced motion**: drift disabled; selection uses a plain fade+scale (no lift travel).
 
-New `src/components/saved-location-dialog.tsx`, reused by both the create-gathering "+ Add" flow and the profile section. Wraps the existing `LocationAutocomplete` component (no rebuild); collects `label` + picked address; inserts a `pending` row; toasts and closes.
+## Layout
 
-### 6. Notifications
+```text
+┌─ SiteHeader (unchanged) ────────────────────┐
+│                                             │
+│   ┌──────────────┐   ┌────────────────────┐ │
+│   │ 3D table     │   │ SeatPanel          │ │
+│   │  (stage)     │   │ - active seat copy │ │
+│   │  seats × 6   │   │ - CTA if relevant  │ │
+│   └──────────────┘   └────────────────────┘ │
+│   dots (mobile only)                        │
+│                                             │
+├─ LandingFooterBar: [Privacy] [Terms] [CTA] ─┤
+```
 
-Extend `NotificationType` in `src/lib/notifications.ts` with `saved_location_approved` and `saved_location_rejected`. Admin approve/reject calls `insertNotification` so the user sees the outcome in the bell.
+On mobile the two columns stack; the stage takes ~55vh, panel ~30vh, footer ~15vh — everything fits in one viewport.
 
-### 7. i18n
+## Risks
+- **Perf on low-end mobile**: 3D transforms + drift can jank. Mitigation: `will-change: transform` only on the table group, drift disabled under reduced-motion, no filters/blurs.
+- **Text-in-3D readability**: seat labels live on a flat, non-tilted overlay layer (counter-rotated) so text never distorts.
+- **Header height variability**: use `min-h-[calc(100dvh-var(--header-h))]` with a CSS var set by the header, or a simple `100dvh` flex column — I'll use the latter for simplicity.
+- **SEO**: current landing has rich sections that Google indexes. Replacing with a one-view app-like page loses that surface. Copy inside the SeatPanel + a visually-hidden `<section>` list mirroring the six seat contents keeps the crawlable text.
 
-Add EN/TR/FA keys for the new UI: dropdown labels, "+ Add new location", empty states, dialog copy, profile section, admin tab + reject dialog, and the two notification titles/bodies. Also add `common.cancel / save / delete` if not already present.
-
-### Files touched
-
-- New: `supabase/migrations/*_saved_locations.sql`
-- New: `src/components/saved-location-dialog.tsx`
-- New: `src/components/saved-locations-section.tsx`
-- Edit: `src/routes/_authenticated/create-gathering.tsx`
-- Edit: `src/routes/_authenticated/profile.tsx` (import + render new section)
-- Edit: `src/routes/_authenticated/admin.tsx` (new tab + section component)
-- Edit: `src/lib/notifications.ts` (extend union)
-- Edit: `src/i18n/translations.ts` (EN/TR/FA keys)
-
-### Risks / notes
-
-- `gatherings.venue_name` and `neighborhood` are NOT NULL — the `saved:*` branch must always populate them (falling back to `label` and `city` respectively).
-- The status-change trigger must be `SECURITY DEFINER` with `search_path` locked, and `EXECUTE` revoked from `PUBLIC/anon/authenticated`, to stay consistent with the current security-memory guidance for trigger-only definer functions.
-- Owners must not be able to flip their own row to `approved` — enforced by the trigger, not the RLS `WITH CHECK` alone (RLS can't compare OLD vs NEW).
-- No changes to `gatherings` schema, RLS, `gathering-card.tsx`, `gatherings.$id.tsx`, or `explore.tsx`.
+Confirm the assumptions above (i18n scope, Open-tables as modal, header stays) and I'll implement.
