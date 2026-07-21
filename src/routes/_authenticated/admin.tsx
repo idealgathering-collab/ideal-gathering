@@ -992,9 +992,10 @@ function SavedLocationsAdminSection() {
     setRows(list);
     const ids = Array.from(new Set(list.map((r) => r.user_id)));
     if (ids.length) {
-      const { data: profs } = await supabase.rpc("get_public_profiles", { _ids: ids });
+      const { getPublicProfiles } = await import("@/lib/public-data.functions");
+      const profs = await getPublicProfiles({ data: { ids } });
       const map: Record<string, { display_name: string | null }> = {};
-      for (const p of profs ?? []) map[(p as { id: string }).id] = { display_name: (p as { display_name: string | null }).display_name };
+      for (const p of profs) map[p.id] = { display_name: p.display_name };
       setOwners(map);
     } else {
       setOwners({});
