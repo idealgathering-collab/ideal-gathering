@@ -121,6 +121,12 @@
   --sidebar-accent-foreground: oklch(0.18 0.05 300);
   --sidebar-border: oklch(0.88 0.03 300);
   --sidebar-ring: oklch(0.55 0.22 280);
+
+  /* Round-table palette (Phase 1 landing) */
+  --ink-navy: oklch(0.25 0.03 250);
+  --parchment: oklch(0.95 0.02 80);
+  --ember: oklch(0.58 0.15 45);
+  --sage: oklch(0.62 0.06 130);
 }
 
 @layer base {
