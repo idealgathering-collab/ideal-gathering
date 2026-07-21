@@ -49,6 +49,14 @@
   --color-plum: var(--plum);
   --color-plum-foreground: var(--plum-foreground);
 
+  --color-ink-navy: var(--ink-navy);
+  --color-parchment: var(--parchment);
+  --color-ember: var(--ember);
+  --color-sage: var(--sage);
+
+  --font-serif-warm: "Fraunces", ui-serif, Georgia, serif;
+  --font-sans-humanist: "Inter", ui-sans-serif, system-ui, sans-serif;
+
   --color-sidebar: var(--sidebar);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar-primary: var(--sidebar-primary);
