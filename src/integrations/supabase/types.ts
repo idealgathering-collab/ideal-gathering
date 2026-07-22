@@ -21,6 +21,7 @@ export type Database = {
           cover_url: string
           created_at: string
           description: string
+          description_extra: string
           id: string
           lat: number
           lng: number
@@ -30,6 +31,7 @@ export type Database = {
           owner_id: string
           phone: string
           status: Database["public"]["Enums"]["business_status"]
+          street_number: string
         }
         Insert: {
           address: string
@@ -37,6 +39,7 @@ export type Database = {
           cover_url: string
           created_at?: string
           description: string
+          description_extra?: string
           id?: string
           lat: number
           lng: number
@@ -46,6 +49,7 @@ export type Database = {
           owner_id: string
           phone: string
           status?: Database["public"]["Enums"]["business_status"]
+          street_number?: string
         }
         Update: {
           address?: string
@@ -53,6 +57,7 @@ export type Database = {
           cover_url?: string
           created_at?: string
           description?: string
+          description_extra?: string
           id?: string
           lat?: number
           lng?: number
@@ -62,6 +67,7 @@ export type Database = {
           owner_id?: string
           phone?: string
           status?: Database["public"]["Enums"]["business_status"]
+          street_number?: string
         }
         Relationships: []
       }
@@ -386,6 +392,7 @@ export type Database = {
           address: string
           city: string | null
           created_at: string
+          description: string
           id: string
           label: string
           lat: number | null
@@ -393,6 +400,7 @@ export type Database = {
           neighborhood: string | null
           reject_reason: string | null
           status: string
+          street_number: string
           updated_at: string
           user_id: string
         }
@@ -400,6 +408,7 @@ export type Database = {
           address: string
           city?: string | null
           created_at?: string
+          description?: string
           id?: string
           label: string
           lat?: number | null
@@ -407,6 +416,7 @@ export type Database = {
           neighborhood?: string | null
           reject_reason?: string | null
           status?: string
+          street_number?: string
           updated_at?: string
           user_id: string
         }
@@ -414,6 +424,7 @@ export type Database = {
           address?: string
           city?: string | null
           created_at?: string
+          description?: string
           id?: string
           label?: string
           lat?: number | null
@@ -421,6 +432,7 @@ export type Database = {
           neighborhood?: string | null
           reject_reason?: string | null
           status?: string
+          street_number?: string
           updated_at?: string
           user_id?: string
         }

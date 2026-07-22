@@ -20,7 +20,8 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
-import { LocationAutocomplete, type LocationValue } from "@/components/location-autocomplete";
+import { ClientOnly } from "@tanstack/react-router";
+import { LocationMapPicker, type MapLocationValue } from "@/components/location-map-picker";
 import { MenuSection } from "@/components/menu-section";
 import { VerifyEmailBanner } from "@/components/verify-email-banner";
 import { LanguageSwitcher } from "@/components/language-switcher";
@@ -39,6 +40,8 @@ const bizSchema = z.object({
   city: z.string().trim().min(1).max(120),
   lat: z.number(),
   lng: z.number(),
+  street_number: z.string().trim().min(1, "Add street / house number").max(80),
+  description_extra: z.string().trim().min(1, "Add a short description").max(200),
   phone: z.string().trim().min(5).max(40),
   mobile: z.string().trim().min(5).max(40),
   cover_url: z.string().url().max(600),
@@ -191,6 +194,8 @@ type BizRow = {
   city: string;
   lat: number;
   lng: number;
+  street_number: string;
+  description_extra: string;
   phone: string;
   mobile: string;
   cover_url: string;
@@ -216,11 +221,26 @@ function BusinessForm({
     city: business?.city ?? "",
     lat: business?.lat ?? 0,
     lng: business?.lng ?? 0,
+    street_number: business?.street_number ?? "",
+    description_extra: business?.description_extra ?? "",
     phone: business?.phone ?? "",
     mobile: business?.mobile ?? "",
     cover_url: business?.cover_url ?? "",
     menu_link: business?.menu_link ?? "",
   });
+  const [picked, setPicked] = useState<MapLocationValue | null>(
+    business && business.lat && business.lng
+      ? {
+          display_name: business.address,
+          address: business.address,
+          city: business.city,
+          lat: business.lat,
+          lng: business.lng,
+          street_number: business.street_number ?? "",
+          description: business.description_extra ?? "",
+        }
+      : null,
+  );
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
 
@@ -320,17 +340,29 @@ function BusinessForm({
           />
         </div>
 
+
         <div className="grid gap-2">
           <Label>{t("venueDash.address")} *</Label>
-          <LocationAutocomplete
-            value={form.address}
-            onChange={(text) => setForm((f) => ({ ...f, address: text }))}
-            onSelect={(loc: LocationValue) =>
-              setForm((f) => ({ ...f, address: loc.address, city: loc.city || f.city, lat: loc.lat, lng: loc.lng }))
-            }
-            placeholder={t("venueDash.addressPh")}
-            required
-          />
+          <ClientOnly fallback={<div className="h-72 rounded-2xl border border-border bg-muted/30" />}>
+            <LocationMapPicker
+              value={picked}
+              onChange={(v) => {
+                setPicked(v);
+                if (v) {
+                  setForm((f) => ({
+                    ...f,
+                    address: v.address,
+                    city: v.city || f.city,
+                    lat: v.lat,
+                    lng: v.lng,
+                    street_number: v.street_number,
+                    description_extra: v.description,
+                  }));
+                }
+              }}
+              countryCode="tr"
+            />
+          </ClientOnly>
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2">
