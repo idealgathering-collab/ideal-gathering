@@ -20,7 +20,8 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
-import { LocationAutocomplete, type LocationValue } from "@/components/location-autocomplete";
+import { ClientOnly } from "@tanstack/react-router";
+import { LocationMapPicker, type MapLocationValue } from "@/components/location-map-picker";
 import { MenuSection } from "@/components/menu-section";
 import { VerifyEmailBanner } from "@/components/verify-email-banner";
 import { LanguageSwitcher } from "@/components/language-switcher";
@@ -39,6 +40,8 @@ const bizSchema = z.object({
   city: z.string().trim().min(1).max(120),
   lat: z.number(),
   lng: z.number(),
+  street_number: z.string().trim().min(1, "Add street / house number").max(80),
+  description_extra: z.string().trim().min(1, "Add a short description").max(200),
   phone: z.string().trim().min(5).max(40),
   mobile: z.string().trim().min(5).max(40),
   cover_url: z.string().url().max(600),
@@ -191,6 +194,8 @@ type BizRow = {
   city: string;
   lat: number;
   lng: number;
+  street_number: string;
+  description_extra: string;
   phone: string;
   mobile: string;
   cover_url: string;
