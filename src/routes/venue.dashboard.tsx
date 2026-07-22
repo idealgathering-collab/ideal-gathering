@@ -221,11 +221,26 @@ function BusinessForm({
     city: business?.city ?? "",
     lat: business?.lat ?? 0,
     lng: business?.lng ?? 0,
+    street_number: business?.street_number ?? "",
+    description_extra: business?.description_extra ?? "",
     phone: business?.phone ?? "",
     mobile: business?.mobile ?? "",
     cover_url: business?.cover_url ?? "",
     menu_link: business?.menu_link ?? "",
   });
+  const [picked, setPicked] = useState<MapLocationValue | null>(
+    business && business.lat && business.lng
+      ? {
+          display_name: business.address,
+          address: business.address,
+          city: business.city,
+          lat: business.lat,
+          lng: business.lng,
+          street_number: business.street_number ?? "",
+          description: business.description_extra ?? "",
+        }
+      : null,
+  );
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
 
@@ -336,6 +351,30 @@ function BusinessForm({
             placeholder={t("venueDash.addressPh")}
             required
           />
+        </div>
+
+        <div className="grid gap-2">
+          <Label>{t("venueDash.address")} *</Label>
+          <ClientOnly fallback={<div className="h-72 rounded-2xl border border-border bg-muted/30" />}>
+            <LocationMapPicker
+              value={picked}
+              onChange={(v) => {
+                setPicked(v);
+                if (v) {
+                  setForm((f) => ({
+                    ...f,
+                    address: v.address,
+                    city: v.city || f.city,
+                    lat: v.lat,
+                    lng: v.lng,
+                    street_number: v.street_number,
+                    description_extra: v.description,
+                  }));
+                }
+              }}
+              countryCode="tr"
+            />
+          </ClientOnly>
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2">
