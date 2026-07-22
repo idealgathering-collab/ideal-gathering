@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { toast } from "sonner";
+import { ClientOnly } from "@tanstack/react-router";
 import {
   Dialog,
   DialogContent,
@@ -11,7 +12,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { LocationAutocomplete, type LocationValue } from "@/components/location-autocomplete";
+import { LocationMapPicker, type MapLocationValue } from "@/components/location-map-picker";
 import { supabase } from "@/integrations/supabase/client";
 import { useSession } from "@/hooks/use-session";
 import { useT } from "@/i18n";
@@ -28,20 +29,20 @@ export function SavedLocationDialog({ open, onOpenChange, onSaved, countryCode }
   const t = useT();
   const { user } = useSession();
   const [label, setLabel] = useState("");
-  const [text, setText] = useState("");
-  const [picked, setPicked] = useState<LocationValue | null>(null);
+  const [picked, setPicked] = useState<MapLocationValue | null>(null);
   const [busy, setBusy] = useState(false);
 
   function reset() {
     setLabel("");
-    setText("");
     setPicked(null);
   }
 
   async function submit() {
     if (!user) return;
     if (!label.trim()) return toast.error(t("savedLoc.labelRequired"));
-    if (!picked) return toast.error(t("savedLoc.pickFromList"));
+    if (!picked) return toast.error(t("savedLoc.pickOnMap"));
+    if (!picked.street_number.trim()) return toast.error(t("savedLoc.streetRequired"));
+    if (!picked.description.trim()) return toast.error(t("savedLoc.descRequired"));
     setBusy(true);
     try {
       const { data, error } = await supabase
@@ -54,7 +55,9 @@ export function SavedLocationDialog({ open, onOpenChange, onSaved, countryCode }
           neighborhood: null,
           lat: picked.lat,
           lng: picked.lng,
-        })
+          street_number: picked.street_number.trim(),
+          description: picked.description.trim(),
+        } as never)
         .select("id")
         .single();
       if (error) throw error;
@@ -77,7 +80,7 @@ export function SavedLocationDialog({ open, onOpenChange, onSaved, countryCode }
         onOpenChange(v);
       }}
     >
-      <DialogContent>
+      <DialogContent className="max-h-[92vh] overflow-y-auto sm:max-w-lg">
         <DialogHeader>
           <DialogTitle>{t("savedLoc.addTitle")}</DialogTitle>
           <DialogDescription>{t("savedLoc.addHint")}</DialogDescription>
@@ -92,19 +95,13 @@ export function SavedLocationDialog({ open, onOpenChange, onSaved, countryCode }
               onChange={(e) => setLabel(e.target.value)}
             />
           </div>
-          <div className="grid gap-2">
-            <Label>{t("savedLoc.address")}</Label>
-            <LocationAutocomplete
-              value={text}
-              onChange={setText}
-              onSelect={(v) => {
-                setPicked(v);
-                setText(v.display_name);
-              }}
-              countryCodes={(countryCode ?? "tr").toLowerCase()}
-              placeholder={t("savedLoc.addressPh")}
+          <ClientOnly fallback={<div className="h-72 rounded-2xl border border-border bg-muted/30" />}>
+            <LocationMapPicker
+              value={picked}
+              onChange={setPicked}
+              countryCode={countryCode ?? "tr"}
             />
-          </div>
+          </ClientOnly>
         </div>
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)} disabled={busy}>
