@@ -340,18 +340,6 @@ function BusinessForm({
           />
         </div>
 
-        <div className="grid gap-2">
-          <Label>{t("venueDash.address")} *</Label>
-          <LocationAutocomplete
-            value={form.address}
-            onChange={(text) => setForm((f) => ({ ...f, address: text }))}
-            onSelect={(loc: LocationValue) =>
-              setForm((f) => ({ ...f, address: loc.address, city: loc.city || f.city, lat: loc.lat, lng: loc.lng }))
-            }
-            placeholder={t("venueDash.addressPh")}
-            required
-          />
-        </div>
 
         <div className="grid gap-2">
           <Label>{t("venueDash.address")} *</Label>
