@@ -28,13 +28,81 @@ function Home() {
   const t = useT();
   void t;
 
+  const particles = Array.from({ length: 32 }, (_, i) => {
+    const seed = i * 9301 + 49297;
+    return {
+      x: seed % 100,
+      y: (seed * 3) % 100,
+      size: 1 + ((i * 7) % 3),
+      delay: (i % 8) * 0.6,
+      duration: 6 + (i % 5),
+      opacity: 0.3 + ((i % 5) * 0.12),
+    };
+  });
+
+  const nodes = [
+    { x: 15, y: 22 }, { x: 32, y: 12 }, { x: 55, y: 20 }, { x: 78, y: 14 },
+    { x: 88, y: 40 }, { x: 72, y: 78 }, { x: 42, y: 85 }, { x: 12, y: 68 },
+  ];
+  const edges: Array<[number, number]> = [
+    [0, 1], [1, 2], [2, 3], [3, 4], [4, 5], [5, 6], [6, 7], [7, 0],
+    [1, 7], [2, 6], [0, 2], [4, 6],
+  ];
+
   return (
-    <div className="relative flex min-h-[100dvh] flex-col items-center justify-between px-6 py-8 text-center">
-      <div aria-hidden className="pointer-events-none absolute left-1/2 top-1/3 -z-10 h-[520px] w-[520px] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-60 blur-3xl"
-        style={{ background: "radial-gradient(circle, rgba(124,58,237,0.35) 0%, transparent 70%)" }}
+    <div className="relative flex min-h-[100dvh] flex-col items-center justify-center overflow-hidden px-6 py-6 text-center">
+      {/* Nebula blobs */}
+      <div aria-hidden className="pointer-events-none absolute -left-24 top-[-10%] -z-10 h-[560px] w-[560px] rounded-full opacity-80 blur-3xl"
+        style={{ background: "radial-gradient(circle, rgba(124,58,237,0.55) 0%, rgba(109,40,217,0.2) 45%, transparent 75%)", animation: "nebula-drift 18s ease-in-out infinite" }}
+      />
+      <div aria-hidden className="pointer-events-none absolute -right-24 top-[10%] -z-10 h-[520px] w-[520px] rounded-full opacity-70 blur-3xl"
+        style={{ background: "radial-gradient(circle, rgba(167,139,250,0.5) 0%, rgba(139,92,246,0.18) 45%, transparent 75%)", animation: "nebula-drift-2 22s ease-in-out infinite" }}
+      />
+      <div aria-hidden className="pointer-events-none absolute left-1/2 top-1/2 -z-10 h-[620px] w-[620px] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-70 blur-3xl"
+        style={{ background: "radial-gradient(circle, rgba(124,58,237,0.45) 0%, rgba(76,29,149,0.2) 40%, transparent 70%)" }}
+      />
+      <div aria-hidden className="pointer-events-none absolute bottom-[-15%] left-1/3 -z-10 h-[440px] w-[440px] rounded-full opacity-60 blur-3xl"
+        style={{ background: "radial-gradient(circle, rgba(217,70,239,0.35) 0%, transparent 70%)", animation: "nebula-drift 26s ease-in-out infinite" }}
       />
 
-      <div className="h-4" />
+      {/* Constellation network */}
+      <svg aria-hidden className="pointer-events-none absolute inset-0 -z-10 h-full w-full" preserveAspectRatio="none" viewBox="0 0 100 100">
+        <defs>
+          <linearGradient id="edge-grad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stopColor="rgba(167,139,250,0.6)" />
+            <stop offset="100%" stopColor="rgba(124,58,237,0.15)" />
+          </linearGradient>
+        </defs>
+        {edges.map(([a, b], i) => (
+          <line key={i} x1={nodes[a].x} y1={nodes[a].y} x2={nodes[b].x} y2={nodes[b].y}
+            stroke="url(#edge-grad)" strokeWidth={0.15} vectorEffect="non-scaling-stroke"
+            style={{ animation: `edge-pulse 4s ease-in-out ${i * 0.35}s infinite` }}
+          />
+        ))}
+        {nodes.map((n, i) => (
+          <circle key={i} cx={n.x} cy={n.y} r={0.6} fill="#C4B5FD"
+            style={{ animation: `node-pulse 3.5s ease-in-out ${i * 0.4}s infinite`, filter: "drop-shadow(0 0 2px rgba(167,139,250,0.9))" }}
+          />
+        ))}
+      </svg>
+
+      {/* Floating particles */}
+      <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
+        {particles.map((p, i) => (
+          <span key={i} className="absolute rounded-full"
+            style={{
+              left: `${p.x}%`, top: `${p.y}%`,
+              width: `${p.size}px`, height: `${p.size}px`,
+              background: i % 3 === 0 ? "#A78BFA" : "#C4B5FD",
+              opacity: p.opacity,
+              boxShadow: "0 0 6px rgba(167,139,250,0.7)",
+              animation: `particle-float ${p.duration}s ease-in-out ${p.delay}s infinite`,
+            }}
+          />
+        ))}
+      </div>
+
+
 
       <div className="flex max-w-xl flex-col items-center gap-6">
         <div className="flex flex-col items-center gap-3">
