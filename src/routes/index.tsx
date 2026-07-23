@@ -37,12 +37,17 @@ function Home() {
       <div className="h-4" />
 
       <div className="flex max-w-xl flex-col items-center gap-6">
-        <div className="flex flex-col items-center gap-2">
-          <Sparkles className="h-6 w-6" style={{ color: "#A78BFA" }} aria-hidden />
+        <div className="flex flex-col items-center gap-3">
+          <img
+            src={logoAsset.url}
+            alt="Ideal Gathering"
+            className="h-16 w-16 rounded-full object-contain"
+          />
           <div className="text-[24px] font-bold text-white tracking-tight">
             Ideal Gathering
           </div>
         </div>
+
 
         <h1
           className="text-[40px] sm:text-[48px] font-bold text-white leading-[1.05]"
