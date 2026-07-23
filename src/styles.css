@@ -194,6 +194,34 @@
   50% { box-shadow: 0 0 18px hsl(280 60% 55% / 0.75); transform: scale(1.08); }
 }
 
+@keyframes nebula-drift {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(30px, -20px, 0) scale(1.08); }
+}
+@keyframes nebula-drift-2 {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(-25px, 25px, 0) scale(1.12); }
+}
+@keyframes particle-float {
+  0%, 100% { transform: translate3d(0, 0, 0); opacity: 0.4; }
+  50% { transform: translate3d(0, -14px, 0); opacity: 1; }
+}
+@keyframes node-pulse {
+  0%, 100% { opacity: 0.5; r: 0.6; }
+  50% { opacity: 1; r: 0.9; }
+}
+@keyframes edge-pulse {
+  0%, 100% { opacity: 0.25; }
+  50% { opacity: 0.75; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [style*="nebula-drift"], [style*="particle-float"],
+  [style*="node-pulse"], [style*="edge-pulse"] {
+    animation: none !important;
+  }
+
+
 @utility animate-logo-spin {
   animation: logo-idle-spin 24s linear infinite;
 }
