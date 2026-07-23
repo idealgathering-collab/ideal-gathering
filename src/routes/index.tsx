@@ -1,232 +1,131 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
-import { ArrowRight, ArrowLeft, ArrowRight as ArrowRightIcon } from "lucide-react";
-import { SiteHeader } from "@/components/site-header";
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-} from "@/components/ui/dialog";
-import { GatheringCard } from "@/components/gathering-card";
-import { RoundTable, SEATS } from "@/components/round-table/RoundTable";
-import { fetchApprovedGatherings } from "@/lib/gatherings";
+import { Sparkles } from "lucide-react";
 import { useT } from "@/i18n";
 
 export const Route = createFileRoute("/")({
   component: Home,
+  head: () => ({
+    meta: [
+      { title: "Ideal Gathering — Where strangers become friends" },
+      {
+        name: "description",
+        content:
+          "Curated conversations at Istanbul's best cafes. Join the table and turn strangers into friends.",
+      },
+      { property: "og:title", content: "Ideal Gathering" },
+      {
+        property: "og:description",
+        content: "Curated conversations at Istanbul's best cafes.",
+      },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+    ],
+  }),
 });
 
 function Home() {
   const t = useT();
-  const [active, setActive] = useState(0);
-  const [tablesOpen, setTablesOpen] = useState(false);
-  const { data: gatherings } = useQuery({
-    queryKey: ["gatherings", "approved"],
-    queryFn: fetchApprovedGatherings,
-    enabled: tablesOpen,
-  });
-
-  // Keyboard arrows rotate seats
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "ArrowRight" || e.key === "ArrowDown") {
-        setActive((i) => (i + 1) % SEATS.length);
-      } else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
-        setActive((i) => (i - 1 + SEATS.length) % SEATS.length);
-      }
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, []);
-
-  const seat = SEATS[active];
+  void t;
 
   return (
-    <div className="flex min-h-[100dvh] flex-col bg-parchment text-ink-navy">
-      <SiteHeader />
+    <div className="relative flex min-h-[100dvh] flex-col items-center justify-between px-6 py-8 text-center">
+      <div aria-hidden className="pointer-events-none absolute left-1/2 top-1/3 -z-10 h-[520px] w-[520px] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-60 blur-3xl"
+        style={{ background: "radial-gradient(circle, rgba(124,58,237,0.35) 0%, transparent 70%)" }}
+      />
 
-      <main className="relative flex flex-1 flex-col overflow-hidden">
-        {/* subtle ambient background */}
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-0 opacity-70"
-          style={{
-            backgroundImage:
-              "radial-gradient(circle at 15% 20%, color-mix(in oklab, var(--ember) 18%, transparent) 0%, transparent 45%), radial-gradient(circle at 85% 80%, color-mix(in oklab, var(--sage) 20%, transparent) 0%, transparent 50%)",
-          }}
-        />
+      <div className="h-4" />
 
-        <div className="relative z-10 mx-auto grid w-full max-w-6xl flex-1 grid-cols-1 items-center gap-6 px-4 pb-3 pt-4 lg:grid-cols-[1.05fr_0.95fr] lg:gap-10 lg:px-8">
-          {/* Table stage */}
-          <div className="order-1 flex h-[54vh] items-center justify-center lg:h-full">
-            <RoundTable activeIndex={active} onActiveChange={setActive} t={t} />
-          </div>
-
-          {/* Panel */}
-          <div className="order-2 flex flex-col justify-center">
-            <SeatPanel
-              seatId={seat.id}
-              t={t}
-              onOpenTables={() => setTablesOpen(true)}
-            />
-
-            {/* Dot pagination (mobile a11y) */}
-            <div className="mt-5 flex items-center justify-center gap-2 lg:hidden">
-              {SEATS.map((s, i) => (
-                <button
-                  key={s.id}
-                  type="button"
-                  onClick={() => setActive(i)}
-                  aria-label={t(s.labelKey)}
-                  aria-current={i === active ? "true" : undefined}
-                  className={`h-2 rounded-full transition-all ${
-                    i === active ? "w-6 bg-ember" : "w-2 bg-ink-navy/30"
-                  }`}
-                />
-              ))}
-            </div>
+      <div className="flex max-w-xl flex-col items-center gap-6">
+        <div className="flex flex-col items-center gap-2">
+          <Sparkles className="h-6 w-6" style={{ color: "#A78BFA" }} aria-hidden />
+          <div className="text-[24px] font-bold text-white tracking-tight">
+            Ideal Gathering
           </div>
         </div>
 
-        {/* SR-only content mirror (SEO) */}
-        <div className="sr-only">
-          <h1>{t("landing.table.seo.h1")}</h1>
-          {SEATS.map((s) => (
-            <section key={s.id}>
-              <h2>{t(s.labelKey)}</h2>
-              <p>{t(`landing.table.panel.${s.id}.body`)}</p>
-            </section>
-          ))}
-        </div>
-
-        {/* Persistent footer bar */}
-        <FooterBar t={t} />
-      </main>
-
-      <Dialog open={tablesOpen} onOpenChange={setTablesOpen}>
-        <DialogContent className="max-w-3xl">
-          <DialogHeader>
-            <DialogTitle style={{ fontFamily: "var(--font-serif-warm)" }}>
-              {t("landing.table.panel.tables.title")}
-            </DialogTitle>
-            <DialogDescription>
-              {t("landing.table.panel.tables.body")}
-            </DialogDescription>
-          </DialogHeader>
-          <div className="max-h-[60vh] overflow-y-auto">
-            {gatherings && gatherings.length > 0 ? (
-              <div className="grid gap-4 sm:grid-cols-2">
-                {gatherings.slice(0, 6).map((g) => (
-                  <GatheringCard key={g.id} g={g} />
-                ))}
-              </div>
-            ) : (
-              <p className="py-10 text-center text-sm text-muted-foreground">
-                {t("landing.table.panel.tables.empty")}
-              </p>
-            )}
-          </div>
-          <div className="flex justify-end">
-            <Button asChild variant="ghost" className="rounded-full">
-              <Link to="/explore">
-                {t("landing.table.panel.tables.viewAll")} <ArrowRight className="ms-1 h-4 w-4 rtl:hidden" />
-                <ArrowLeft className="ms-1 hidden h-4 w-4 rtl:inline" />
-              </Link>
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
-    </div>
-  );
-}
-
-function SeatPanel({
-  seatId,
-  t,
-  onOpenTables,
-}: {
-  seatId: string;
-  t: (k: string) => string;
-  onOpenTables: () => void;
-}) {
-  const eyebrow = t(`landing.table.panel.${seatId}.eyebrow`);
-  const title = t(`landing.table.panel.${seatId}.title`);
-  const body = t(`landing.table.panel.${seatId}.body`);
-  return (
-    <div
-      key={seatId}
-      className="animate-fade-in rounded-3xl border border-ink-navy/10 bg-parchment/70 p-6 shadow-[0_20px_50px_-30px_rgba(0,0,0,0.35)] backdrop-blur sm:p-8"
-    >
-      <div className="text-xs font-medium uppercase tracking-[0.18em] text-ember">
-        {eyebrow}
-      </div>
-      <h2
-        className="mt-3 text-3xl leading-tight sm:text-4xl"
-        style={{ fontFamily: "var(--font-serif-warm)" }}
-      >
-        {title}
-      </h2>
-      <p
-        className="mt-4 text-base leading-relaxed text-ink-navy/75"
-        style={{ fontFamily: "var(--font-sans-humanist)" }}
-      >
-        {body}
-      </p>
-
-      {seatId === "tables" ? (
-        <div className="mt-6">
-          <Button
-            onClick={onOpenTables}
-            className="rounded-full bg-ember text-parchment hover:bg-ember/90"
-          >
-            {t("landing.table.panel.tables.open")}{" "}
-            <ArrowRightIcon className="ms-1 h-4 w-4 rtl:rotate-180" />
-          </Button>
-        </div>
-      ) : seatId === "cafes" ? (
-        <div className="mt-6">
-          <Button asChild variant="outline" className="rounded-full border-ink-navy/30">
-            <Link to="/partnership">{t("landing.table.panel.cafes.cta")}</Link>
-          </Button>
-        </div>
-      ) : seatId === "guests" ? (
-        <div className="mt-6">
-          <Button asChild className="rounded-full bg-ink-navy text-parchment hover:bg-ink-navy/90">
-            <Link to="/auth" search={{ mode: "signup" }}>
-              {t("landing.table.panel.guests.cta")}
-            </Link>
-          </Button>
-        </div>
-      ) : null}
-    </div>
-  );
-}
-
-function FooterBar({ t }: { t: (k: string) => string }) {
-  return (
-    <div className="relative z-10 border-t border-ink-navy/10 bg-parchment/80 backdrop-blur">
-      <div className="mx-auto flex w-full max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-3 text-sm lg:px-8">
-        <div className="flex items-center gap-4 text-ink-navy/70">
-          <Link to="/privacy" className="hover:text-ink-navy">
-            {t("footer.privacy")}
-          </Link>
-          <Link to="/terms" className="hover:text-ink-navy">
-            {t("footer.terms")}
-          </Link>
-        </div>
-        <Button
-          asChild
-          size="sm"
-          className="rounded-full bg-ember text-parchment hover:bg-ember/90"
+        <h1
+          className="text-[40px] sm:text-[48px] font-bold text-white leading-[1.05]"
+          style={{ textShadow: "0 0 40px rgba(124, 58, 237, 0.35)" }}
         >
-          <Link to="/auth" search={{ mode: "signup" }}>
-            {t("landing.table.footer.cta")}
+          Where strangers<br />become friends
+        </h1>
+
+        <p className="text-[17px] sm:text-[18px]" style={{ color: "#C4B5FD" }}>
+          Curated conversations at Istanbul's best cafes
+        </p>
+
+        <Link
+          to="/waitlist"
+          className="mt-2 inline-flex items-center justify-center rounded-[12px] px-8 py-4 text-base font-semibold text-white transition-all duration-300"
+          style={{
+            background: "linear-gradient(135deg, #7C3AED, #6D28D9)",
+            boxShadow: "0 0 20px rgba(124, 58, 237, 0.4)",
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.boxShadow = "0 0 30px rgba(124, 58, 237, 0.6)";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.boxShadow = "0 0 20px rgba(124, 58, 237, 0.4)";
+          }}
+        >
+          Join the Table
+        </Link>
+
+        <div className="text-sm" style={{ color: "#A78BFA" }}>
+          2,000+ connections made ✦
+        </div>
+
+        <div className="mt-2 flex items-center gap-3">
+          <Link
+            to="/waitlist"
+            className="inline-flex items-center justify-center rounded-[12px] border px-6 py-2.5 text-sm font-medium transition-all"
+            style={{
+              borderColor: "rgba(139, 92, 246, 0.4)",
+              color: "#A78BFA",
+              background: "transparent",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.borderColor = "rgba(139, 92, 246, 0.9)";
+              e.currentTarget.style.boxShadow = "0 0 18px rgba(139, 92, 246, 0.35)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.borderColor = "rgba(139, 92, 246, 0.4)";
+              e.currentTarget.style.boxShadow = "none";
+            }}
+          >
+            Sign Up
           </Link>
-        </Button>
+          <Link
+            to="/auth"
+            className="inline-flex items-center justify-center rounded-[12px] border px-6 py-2.5 text-sm font-medium transition-all"
+            style={{
+              borderColor: "rgba(139, 92, 246, 0.4)",
+              color: "#A78BFA",
+              background: "transparent",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.borderColor = "rgba(139, 92, 246, 0.9)";
+              e.currentTarget.style.boxShadow = "0 0 18px rgba(139, 92, 246, 0.35)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.borderColor = "rgba(139, 92, 246, 0.4)";
+              e.currentTarget.style.boxShadow = "none";
+            }}
+          >
+            Log In
+          </Link>
+        </div>
+      </div>
+
+      <div
+        className="flex items-center gap-3 text-xs"
+        style={{ color: "rgba(196, 181, 253, 0.5)" }}
+      >
+        <Link to="/partnership" className="hover:text-white/80 transition-colors">About</Link>
+        <span>·</span>
+        <Link to="/venue/auth" className="hover:text-white/80 transition-colors">For Venues</Link>
+        <span>·</span>
+        <Link to="/terms" className="hover:text-white/80 transition-colors">Terms</Link>
       </div>
     </div>
   );

@@ -136,35 +136,35 @@
 
   html,
   body {
-    background-color: var(--color-background);
-    color: var(--color-foreground);
-    font-family: var(--font-sans);
-    font-feature-settings: "ss01", "ss02";
+    background-color: #0F0A1E;
+    color: #C4B5FD;
+    font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
+  }
+
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background:
+      radial-gradient(ellipse at 80% 20%, rgba(124, 58, 237, 0.15) 0%, transparent 50%),
+      radial-gradient(ellipse at 20% 80%, rgba(109, 40, 217, 0.10) 0%, transparent 50%),
+      #0F0A1E;
   }
 
   h1, h2, h3, h4 {
-    font-family: var(--font-display);
-    letter-spacing: -0.01em;
+    font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
+    color: #FFFFFF;
+    font-weight: 700;
+    letter-spacing: -0.02em;
     line-height: 1.05;
   }
 
   :lang(fa),
   [dir="rtl"] {
-    font-family: "Vazirmatn", var(--font-sans);
+    font-family: "Vazirmatn", "Inter", sans-serif;
   }
-
-  :lang(fa) h1,
-  :lang(fa) h2,
-  :lang(fa) h3,
-  :lang(fa) h4,
-  [dir="rtl"] h1,
-  [dir="rtl"] h2,
-  [dir="rtl"] h3,
-  [dir="rtl"] h4 {
-    font-family: "Vazirmatn", var(--font-display);
-    letter-spacing: 0;
-  }
-
 }
 
 @utility bg-gradient-hero {
