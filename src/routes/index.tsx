@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Sparkles } from "lucide-react";
 import { useT } from "@/i18n";
+import logoAsset from "@/assets/ideal-gathering-logo.png.asset.json";
+
 
 export const Route = createFileRoute("/")({
   component: Home,
