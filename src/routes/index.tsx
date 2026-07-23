@@ -53,6 +53,10 @@ function Home() {
 
   return (
     <div className="relative flex min-h-[100dvh] flex-col items-center justify-center overflow-hidden px-6 py-6 text-center">
+      <div className="absolute top-4 right-4 z-10">
+        <LanguageSwitcher />
+      </div>
+
       {/* Nebula blobs */}
       <div aria-hidden className="pointer-events-none absolute -left-24 top-[-10%] -z-10 h-[560px] w-[560px] rounded-full opacity-80 blur-3xl"
         style={{ background: "radial-gradient(circle, rgba(124,58,237,0.55) 0%, rgba(109,40,217,0.2) 45%, transparent 75%)", animation: "nebula-drift 18s ease-in-out infinite" }}
