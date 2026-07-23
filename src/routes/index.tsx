@@ -1,6 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useT } from "@/i18n";
+import { LanguageSwitcher } from "@/components/language-switcher";
 import logoAsset from "@/assets/ideal-gathering-logo.png.asset.json";
+
 
 
 export const Route = createFileRoute("/")({
