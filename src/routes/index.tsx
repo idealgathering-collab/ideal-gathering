@@ -135,7 +135,7 @@ function Home() {
         </p>
 
         <Link
-          to="/waitlist"
+          to="/auth"
           className="mt-2 inline-flex items-center justify-center rounded-[12px] px-8 py-4 text-base font-semibold text-white transition-all duration-300"
           style={{
             background: "linear-gradient(135deg, #7C3AED, #6D28D9)",
@@ -148,53 +148,36 @@ function Home() {
             e.currentTarget.style.boxShadow = "0 0 20px rgba(124, 58, 237, 0.4)";
           }}
         >
-          Join the Table
+          Join a Gathering
         </Link>
 
-        <div className="text-sm" style={{ color: "#A78BFA" }}>
-          2,000+ connections made ✦
-        </div>
+        <Link
+          to="/venue/auth"
+          className="inline-flex items-center justify-center rounded-[12px] border px-6 py-2.5 text-sm font-medium transition-all"
+          style={{
+            borderColor: "rgba(139, 92, 246, 0.4)",
+            color: "#A78BFA",
+            background: "transparent",
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.borderColor = "rgba(139, 92, 246, 0.9)";
+            e.currentTarget.style.boxShadow = "0 0 18px rgba(139, 92, 246, 0.35)";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.borderColor = "rgba(139, 92, 246, 0.4)";
+            e.currentTarget.style.boxShadow = "none";
+          }}
+        >
+          Partner With Us
+        </Link>
 
-        <div className="mt-2 flex items-center gap-3">
-          <Link
-            to="/waitlist"
-            className="inline-flex items-center justify-center rounded-[12px] border px-6 py-2.5 text-sm font-medium transition-all"
-            style={{
-              borderColor: "rgba(139, 92, 246, 0.4)",
-              color: "#A78BFA",
-              background: "transparent",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.borderColor = "rgba(139, 92, 246, 0.9)";
-              e.currentTarget.style.boxShadow = "0 0 18px rgba(139, 92, 246, 0.35)";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.borderColor = "rgba(139, 92, 246, 0.4)";
-              e.currentTarget.style.boxShadow = "none";
-            }}
-          >
-            Sign Up
-          </Link>
-          <Link
-            to="/auth"
-            className="inline-flex items-center justify-center rounded-[12px] border px-6 py-2.5 text-sm font-medium transition-all"
-            style={{
-              borderColor: "rgba(139, 92, 246, 0.4)",
-              color: "#A78BFA",
-              background: "transparent",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.borderColor = "rgba(139, 92, 246, 0.9)";
-              e.currentTarget.style.boxShadow = "0 0 18px rgba(139, 92, 246, 0.35)";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.borderColor = "rgba(139, 92, 246, 0.4)";
-              e.currentTarget.style.boxShadow = "none";
-            }}
-          >
-            Log In
-          </Link>
-        </div>
+        <Link
+          to="/auth"
+          className="text-sm font-medium transition-colors hover:text-white"
+          style={{ color: "rgba(196, 181, 253, 0.7)" }}
+        >
+          Log In
+        </Link>
       </div>
 
       <div

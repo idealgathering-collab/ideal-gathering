@@ -1,12 +1,9 @@
-## Restore language switcher on landing page
+Update the landing page (`src/routes/index.tsx`) to remove the waitlist concept and replace the current calls-to-action with the new three-part layout:
 
-The existing `LanguageSwitcher` component (`src/components/language-switcher.tsx`) is untouched — it still renders the 3-flag dropdown (English, Turkish, Farsi) with the pulsing purple ring. It just isn't mounted on the redesigned home page anymore.
+1. Primary CTA: "Join a Gathering" purple gradient button → links to `/auth` (for user signup/signin).
+2. Secondary CTA: "Partner With Us" outlined button → links to `/venue/auth` (for venue/business partners).
+3. Tertiary text link: "Log In" small text link below the buttons → links to `/auth`.
 
-### Change
+Remove all existing `/waitlist` links, the "Sign Up" secondary button, the "Join the Table" primary button, and the hardcoded "2,000+ connections made" stat line. Keep the visual effects (nebula blobs, particles, constellation), logo, headline, subtext, language switcher, and bottom footer links intact.
 
-In `src/routes/index.tsx`:
-
-1. Import `LanguageSwitcher` from `@/components/language-switcher`.
-2. Inside the root `<div>` of `Home`, add an absolutely-positioned wrapper in the top-right corner (above the background layers), e.g. `<div className="absolute top-4 right-4 z-10"><LanguageSwitcher /></div>`.
-
-No other files change. No new component, no styling changes to the switcher itself.
+No backend or route changes are required; this is purely a homepage UI copy/link update.
