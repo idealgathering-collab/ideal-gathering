@@ -220,6 +220,9 @@
   [style*="node-pulse"], [style*="edge-pulse"] {
     animation: none !important;
   }
+}
+
+
 
 
 @utility animate-logo-spin {
