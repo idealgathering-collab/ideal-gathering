@@ -53,11 +53,11 @@ function Home() {
           className="text-[40px] sm:text-[48px] font-bold text-white leading-[1.05]"
           style={{ textShadow: "0 0 40px rgba(124, 58, 237, 0.35)" }}
         >
-          Where strangers<br />become friends
+          No one will be<br />alone anymore.
         </h1>
 
-        <p className="text-[17px] sm:text-[18px]" style={{ color: "#C4B5FD" }}>
-          Curated conversations at Istanbul's best cafes
+        <p className="text-[20px] sm:text-[22px] font-medium" style={{ color: "#C4B5FD" }}>
+          Just Gather
         </p>
 
         <Link
