@@ -28,7 +28,7 @@ export const Route = createFileRoute("/")({
 
 function Home() {
   const t = useT();
-  void t;
+
 
   const particles = Array.from({ length: 32 }, (_, i) => {
     const seed = i * 9301 + 49297;
