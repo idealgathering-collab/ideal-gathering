@@ -1,5 +1,5 @@
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
-import { ArrowLeft, Home, LogOut, Menu, Shield, User as UserIcon } from "lucide-react";
+import { ArrowLeft, LogOut, Menu, Shield, User as UserIcon } from "lucide-react";
 import { NotificationsBell } from "@/components/notifications-bell";
 import { useEffect, useState } from "react";
 import logoAsset from "@/assets/ideal-gathering-logo.png.asset.json";
