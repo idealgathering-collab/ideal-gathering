@@ -52,7 +52,7 @@ function Home() {
   ];
 
   return (
-    <div className="relative flex min-h-[100dvh] flex-col items-center justify-center overflow-hidden px-6 py-6 text-center">
+    <div className="landing-dark relative flex min-h-[100dvh] flex-col items-center justify-center overflow-hidden px-6 py-6 text-center">
       <div className="absolute top-4 right-4 z-10">
         <LanguageSwitcher />
       </div>
