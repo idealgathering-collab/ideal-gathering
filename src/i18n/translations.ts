@@ -1450,6 +1450,20 @@ export const translations: Record<Lang, Dict> = {
     "landing.table.panel.tables.empty": "Şu an açık masa yok. İlk ev sahibi sen ol.",
     "landing.table.panel.tables.viewAll": "Hepsini gör",
     "landing.table.footer.cta": "Ideal Gathering'e katıl",
+
+    // Landing v2 (nebula hero)
+    "landing.v2.brand": "Ideal Gathering",
+    "landing.v2.title": "Kimse artık\nyalnız olmayacak.",
+    "landing.v2.subtitle": "Sadece Buluş",
+    "landing.v2.cta.join": "Bir Buluşmaya Katıl",
+    "landing.v2.cta.partner": "Bizimle Ortak Ol",
+    "landing.v2.cta.login": "Giriş Yap",
+    "landing.v2.footer.about": "Hakkında",
+    "landing.v2.footer.venues": "Mekânlar İçin",
+    "landing.v2.footer.terms": "Şartlar",
+    "landing.v2.meta.title": "Ideal Gathering — Kimse artık yalnız olmayacak",
+    "landing.v2.meta.description": "İstanbul'un en iyi kafelerinde özenle hazırlanmış sohbetler. Masaya katıl, yabancıları arkadaşa dönüştür.",
+    "landing.v2.meta.ogDescription": "İstanbul'un en iyi kafelerinde özenle hazırlanmış sohbetler.",
   },
   fa: {
     // Nav
