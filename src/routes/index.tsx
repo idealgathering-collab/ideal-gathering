@@ -118,20 +118,20 @@ function Home() {
             className="h-16 w-16 rounded-full object-contain"
           />
           <div className="text-[24px] font-bold text-white tracking-tight">
-            Ideal Gathering
+            {t("landing.v2.brand")}
           </div>
         </div>
 
 
         <h1
-          className="text-[40px] sm:text-[48px] font-bold text-white leading-[1.05]"
+          className="text-[40px] sm:text-[48px] font-bold text-white leading-[1.05] whitespace-pre-line"
           style={{ textShadow: "0 0 40px rgba(124, 58, 237, 0.35)" }}
         >
-          No one will be<br />alone anymore.
+          {t("landing.v2.title")}
         </h1>
 
         <p className="text-[20px] sm:text-[22px] font-medium" style={{ color: "#C4B5FD" }}>
-          Just Gather
+          {t("landing.v2.subtitle")}
         </p>
 
         <Link
@@ -149,7 +149,7 @@ function Home() {
             e.currentTarget.style.boxShadow = "0 0 20px rgba(124, 58, 237, 0.4)";
           }}
         >
-          Join a Gathering
+          {t("landing.v2.cta.join")}
         </Link>
 
         <Link
@@ -169,7 +169,7 @@ function Home() {
             e.currentTarget.style.boxShadow = "none";
           }}
         >
-          Partner With Us
+          {t("landing.v2.cta.partner")}
         </Link>
 
         <Link
@@ -177,7 +177,7 @@ function Home() {
           className="text-sm font-medium transition-colors hover:text-white"
           style={{ color: "rgba(196, 181, 253, 0.7)" }}
         >
-          Log In
+          {t("landing.v2.cta.login")}
         </Link>
       </div>
 
@@ -185,12 +185,13 @@ function Home() {
         className="mt-10 flex items-center gap-3 text-xs"
         style={{ color: "rgba(196, 181, 253, 0.5)" }}
       >
-        <Link to="/partnership" className="hover:text-white/80 transition-colors">About</Link>
+        <Link to="/partnership" className="hover:text-white/80 transition-colors">{t("landing.v2.footer.about")}</Link>
         <span>·</span>
-        <Link to="/venue/auth" className="hover:text-white/80 transition-colors">For Venues</Link>
+        <Link to="/venue/auth" className="hover:text-white/80 transition-colors">{t("landing.v2.footer.venues")}</Link>
         <span>·</span>
-        <Link to="/terms" className="hover:text-white/80 transition-colors">Terms</Link>
+        <Link to="/terms" className="hover:text-white/80 transition-colors">{t("landing.v2.footer.terms")}</Link>
       </div>
+
 
     </div>
   );
