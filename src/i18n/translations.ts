@@ -2174,6 +2174,20 @@ export const translations: Record<Lang, Dict> = {
     "landing.table.panel.tables.empty": "در حال حاضر میز آزادی نیست. اولین میزبان باش.",
     "landing.table.panel.tables.viewAll": "همه را ببین",
     "landing.table.footer.cta": "به Ideal Gathering بپیوند",
+
+    // Landing v2 (nebula hero)
+    "landing.v2.brand": "Ideal Gathering",
+    "landing.v2.title": "دیگر هیچ‌کس\nتنها نخواهد بود.",
+    "landing.v2.subtitle": "فقط گرد هم بیا",
+    "landing.v2.cta.join": "به یک گردهمایی بپیوند",
+    "landing.v2.cta.partner": "با ما همکاری کن",
+    "landing.v2.cta.login": "ورود",
+    "landing.v2.footer.about": "درباره",
+    "landing.v2.footer.venues": "برای مکان‌ها",
+    "landing.v2.footer.terms": "شرایط",
+    "landing.v2.meta.title": "Ideal Gathering — دیگر هیچ‌کس تنها نخواهد بود",
+    "landing.v2.meta.description": "گفتگوهای گزیده در بهترین کافه‌های استانبول. به میز بپیوند و غریبه‌ها را به دوست تبدیل کن.",
+    "landing.v2.meta.ogDescription": "گفتگوهای گزیده در بهترین کافه‌های استانبول.",
   },
 };
 
