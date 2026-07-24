@@ -136,6 +136,7 @@ function Home() {
 
         <Link
           to="/auth"
+          search={{ mode: "signup" }}
           className="mt-2 inline-flex items-center justify-center rounded-[12px] px-8 py-4 text-base font-semibold text-white transition-all duration-300"
           style={{
             background: "linear-gradient(135deg, #7C3AED, #6D28D9)",
