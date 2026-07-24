@@ -724,6 +724,20 @@ export const translations: Record<Lang, Dict> = {
     "landing.table.panel.tables.empty": "No open tables right now. Be the first to host one.",
     "landing.table.panel.tables.viewAll": "View all",
     "landing.table.footer.cta": "Join Ideal Gathering",
+
+    // Landing v2 (nebula hero)
+    "landing.v2.brand": "Ideal Gathering",
+    "landing.v2.title": "No one will be\nalone anymore.",
+    "landing.v2.subtitle": "Just Gather",
+    "landing.v2.cta.join": "Join a Gathering",
+    "landing.v2.cta.partner": "Partner With Us",
+    "landing.v2.cta.login": "Log In",
+    "landing.v2.footer.about": "About",
+    "landing.v2.footer.venues": "For Venues",
+    "landing.v2.footer.terms": "Terms",
+    "landing.v2.meta.title": "Ideal Gathering — No one will be alone anymore",
+    "landing.v2.meta.description": "Curated conversations at Istanbul's best cafes. Join the table and turn strangers into friends.",
+    "landing.v2.meta.ogDescription": "Curated conversations at Istanbul's best cafes.",
   },
 
 
@@ -1436,6 +1450,20 @@ export const translations: Record<Lang, Dict> = {
     "landing.table.panel.tables.empty": "Şu an açık masa yok. İlk ev sahibi sen ol.",
     "landing.table.panel.tables.viewAll": "Hepsini gör",
     "landing.table.footer.cta": "Ideal Gathering'e katıl",
+
+    // Landing v2 (nebula hero)
+    "landing.v2.brand": "Ideal Gathering",
+    "landing.v2.title": "Kimse artık\nyalnız olmayacak.",
+    "landing.v2.subtitle": "Sadece Buluş",
+    "landing.v2.cta.join": "Bir Buluşmaya Katıl",
+    "landing.v2.cta.partner": "Bizimle Ortak Ol",
+    "landing.v2.cta.login": "Giriş Yap",
+    "landing.v2.footer.about": "Hakkında",
+    "landing.v2.footer.venues": "Mekânlar İçin",
+    "landing.v2.footer.terms": "Şartlar",
+    "landing.v2.meta.title": "Ideal Gathering — Kimse artık yalnız olmayacak",
+    "landing.v2.meta.description": "İstanbul'un en iyi kafelerinde özenle hazırlanmış sohbetler. Masaya katıl, yabancıları arkadaşa dönüştür.",
+    "landing.v2.meta.ogDescription": "İstanbul'un en iyi kafelerinde özenle hazırlanmış sohbetler.",
   },
   fa: {
     // Nav
@@ -2146,6 +2174,20 @@ export const translations: Record<Lang, Dict> = {
     "landing.table.panel.tables.empty": "در حال حاضر میز آزادی نیست. اولین میزبان باش.",
     "landing.table.panel.tables.viewAll": "همه را ببین",
     "landing.table.footer.cta": "به Ideal Gathering بپیوند",
+
+    // Landing v2 (nebula hero)
+    "landing.v2.brand": "Ideal Gathering",
+    "landing.v2.title": "دیگر هیچ‌کس\nتنها نخواهد بود.",
+    "landing.v2.subtitle": "فقط گرد هم بیا",
+    "landing.v2.cta.join": "به یک گردهمایی بپیوند",
+    "landing.v2.cta.partner": "با ما همکاری کن",
+    "landing.v2.cta.login": "ورود",
+    "landing.v2.footer.about": "درباره",
+    "landing.v2.footer.venues": "برای مکان‌ها",
+    "landing.v2.footer.terms": "شرایط",
+    "landing.v2.meta.title": "Ideal Gathering — دیگر هیچ‌کس تنها نخواهد بود",
+    "landing.v2.meta.description": "گفتگوهای گزیده در بهترین کافه‌های استانبول. به میز بپیوند و غریبه‌ها را به دوست تبدیل کن.",
+    "landing.v2.meta.ogDescription": "گفتگوهای گزیده در بهترین کافه‌های استانبول.",
   },
 };
 
