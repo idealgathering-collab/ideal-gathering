@@ -69,7 +69,7 @@ export function SiteHeader() {
             </Button>
           )}
 
-          <Link to="/" className="flex items-center gap-2 group">
+          <Link to={user ? "/dashboard" : "/"} className="flex items-center gap-2 group">
             <img
               src={logoAsset.url}
               alt="Ideal Gathering"
@@ -79,18 +79,6 @@ export function SiteHeader() {
               Ideal <span className="italic text-primary">Gathering</span>
             </span>
           </Link>
-
-          <Button
-            asChild
-            variant="ghost"
-            size="icon"
-            aria-label={t("nav.home")}
-            className="rounded-full"
-          >
-            <Link to="/">
-              <Home className="h-4 w-4" />
-            </Link>
-          </Button>
         </div>
 
         <nav className="flex items-center gap-1.5">
