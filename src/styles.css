@@ -54,6 +54,13 @@
   --color-ember: var(--ember);
   --color-sage: var(--sage);
 
+  --color-dark-bg: var(--dark-bg);
+  --color-dark-primary: var(--dark-primary);
+  --color-dark-secondary: var(--dark-secondary);
+  --color-dark-heading: var(--dark-heading);
+  --color-nebula-purple: var(--nebula-purple);
+  --color-nebula-violet: var(--nebula-violet);
+
   --font-serif-warm: "Fraunces", ui-serif, Georgia, serif;
   --font-sans-humanist: "Inter", ui-sans-serif, system-ui, sans-serif;
 
