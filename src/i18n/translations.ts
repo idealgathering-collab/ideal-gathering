@@ -1360,6 +1360,8 @@ export const translations: Record<Lang, Dict> = {
     "dash.venueHint": "Kafeniz veya restoranınız mı var?",
     "dash.venueHintLink": "Mekân panelini aç →",
     "nav.explore": "Keşfet",
+    "bottomNav.myGatherings": "Buluşmalarım",
+    "bottomNav.chat": "Sohbet",
 
     "common.cancel": "İptal",
     "common.save": "Kaydet",
