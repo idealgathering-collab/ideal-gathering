@@ -134,6 +134,37 @@
   --parchment: oklch(0.95 0.02 80);
   --ember: oklch(0.58 0.15 45);
   --sage: oklch(0.62 0.06 130);
+
+  /* Dark nebula theme tokens */
+  --dark-bg: #0F0A1E;
+  --dark-primary: #A78BFA;
+  --dark-secondary: #C4B5FD;
+  --dark-heading: #FFFFFF;
+  --nebula-purple: #7C3AED;
+  --nebula-violet: #6D28D9;
+
+  --nebula-glow-1: radial-gradient(
+    ellipse 60% 50% at 80% 20%,
+    color-mix(in srgb, var(--nebula-purple) 35%, transparent) 0%,
+    transparent 60%
+  );
+  --nebula-glow-2: radial-gradient(
+    ellipse 55% 45% at 20% 80%,
+    color-mix(in srgb, var(--nebula-violet) 28%, transparent) 0%,
+    transparent 60%
+  );
+  --nebula-glow-3: radial-gradient(
+    ellipse 50% 40% at 50% 50%,
+    color-mix(in srgb, var(--dark-primary) 18%, transparent) 0%,
+    transparent 65%
+  );
+
+  --glass-card-bg: color-mix(in srgb, var(--nebula-violet) 12%, transparent);
+  --glass-card-border: color-mix(in srgb, var(--dark-primary) 22%, transparent);
+  --glass-card-glow: 0 0 40px -10px color-mix(in srgb, var(--dark-primary) 35%, transparent);
+
+  --glow-button-gradient: linear-gradient(135deg, var(--nebula-purple) 0%, var(--nebula-violet) 100%);
+  --glow-button-shadow: 0 0 24px -4px color-mix(in srgb, var(--dark-primary) 55%, transparent);
 }
 
 @layer base {
