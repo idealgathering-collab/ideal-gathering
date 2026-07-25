@@ -626,6 +626,8 @@ export const translations: Record<Lang, Dict> = {
     "dash.venueHint": "Own a cafe or restaurant?",
     "dash.venueHintLink": "Open the venue portal →",
     "nav.explore": "Explore",
+    "bottomNav.myGatherings": "My Gatherings",
+    "bottomNav.chat": "Chat",
 
     // Common
     "common.cancel": "Cancel",
@@ -1358,6 +1360,8 @@ export const translations: Record<Lang, Dict> = {
     "dash.venueHint": "Kafeniz veya restoranınız mı var?",
     "dash.venueHintLink": "Mekân panelini aç →",
     "nav.explore": "Keşfet",
+    "bottomNav.myGatherings": "Buluşmalarım",
+    "bottomNav.chat": "Sohbet",
 
     "common.cancel": "İptal",
     "common.save": "Kaydet",
@@ -2082,6 +2086,8 @@ export const translations: Record<Lang, Dict> = {
     "dash.venueHint": "کافه یا رستوران دارید؟",
     "dash.venueHintLink": "بازکردن پنل مکان ←",
     "nav.explore": "کشف",
+    "bottomNav.myGatherings": "گردهمایی‌های من",
+    "bottomNav.chat": "گفت‌وگو",
 
     "common.cancel": "لغو",
     "common.save": "ذخیره",
