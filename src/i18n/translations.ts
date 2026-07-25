@@ -626,6 +626,8 @@ export const translations: Record<Lang, Dict> = {
     "dash.venueHint": "Own a cafe or restaurant?",
     "dash.venueHintLink": "Open the venue portal →",
     "nav.explore": "Explore",
+    "bottomNav.myGatherings": "My Gatherings",
+    "bottomNav.chat": "Chat",
 
     // Common
     "common.cancel": "Cancel",
