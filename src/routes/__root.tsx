@@ -14,6 +14,7 @@ import { reportLovableError } from "../lib/lovable-error-reporting";
 import { Toaster } from "@/components/ui/sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { LanguageProvider, useT } from "@/i18n";
+import { MobileTabBar } from "@/components/mobile-tab-bar";
 
 
 function NotFoundComponent() {
@@ -153,7 +154,10 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <LanguageProvider>
-        <Outlet />
+        <div className="pb-20 sm:pb-0">
+          <Outlet />
+        </div>
+        <MobileTabBar />
         <Toaster richColors position="top-center" />
       </LanguageProvider>
     </QueryClientProvider>

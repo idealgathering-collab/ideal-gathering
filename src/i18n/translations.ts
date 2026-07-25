@@ -2086,6 +2086,8 @@ export const translations: Record<Lang, Dict> = {
     "dash.venueHint": "کافه یا رستوران دارید؟",
     "dash.venueHintLink": "بازکردن پنل مکان ←",
     "nav.explore": "کشف",
+    "bottomNav.myGatherings": "گردهمایی‌های من",
+    "bottomNav.chat": "گفت‌وگو",
 
     "common.cancel": "لغو",
     "common.save": "ذخیره",
