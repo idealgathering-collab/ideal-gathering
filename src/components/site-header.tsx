@@ -179,3 +179,22 @@ export function SiteHeader() {
     </header>
   );
 }
+
+function NavLink({ to, pathname, children }: { to: string; pathname: string; children: React.ReactNode }) {
+  const active = pathname === to || pathname.startsWith(to + "/");
+  return (
+    <Button
+      asChild
+      variant="ghost"
+      size="sm"
+      className={
+        "hidden sm:inline-flex rounded-full transition-shadow " +
+        (active
+          ? "text-dark-heading bg-white/10 shadow-[0_0_20px_-4px_color-mix(in_srgb,var(--dark-primary)_60%,transparent)]"
+          : "text-dark-secondary hover:text-dark-heading hover:bg-white/5")
+      }
+    >
+      <Link to={to as never}>{children}</Link>
+    </Button>
+  );
+}
