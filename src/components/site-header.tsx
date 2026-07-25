@@ -51,7 +51,7 @@ export function SiteHeader() {
   }
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-border/60 bg-background/85 backdrop-blur-xl">
+    <header className="glass-card sticky top-0 z-40 w-full text-dark-secondary">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-3 px-4">
         <div className="flex items-center gap-1.5">
           {showBack && (
@@ -75,8 +75,8 @@ export function SiteHeader() {
               alt="Ideal Gathering"
               className="h-9 w-9 rounded-full object-contain animate-logo-spin"
             />
-            <span className="font-display text-xl leading-none hidden xs:inline sm:inline">
-              Ideal <span className="italic text-primary">Gathering</span>
+            <span className="font-display text-xl leading-none hidden xs:inline sm:inline text-dark-heading">
+              Ideal <span className="italic text-dark-primary">Gathering</span>
             </span>
           </Link>
         </div>
@@ -85,22 +85,16 @@ export function SiteHeader() {
           <LanguageSwitcher />
           {user ? (
             <>
-              <Button asChild variant="ghost" size="sm" className="hidden sm:inline-flex">
-                <Link to="/dashboard">{t("nav.dashboard")}</Link>
-              </Button>
-              <Button asChild variant="ghost" size="sm" className="hidden sm:inline-flex">
-                <Link to="/profile">{t("nav.profile")}</Link>
-              </Button>
+              <NavLink to="/dashboard" pathname={pathname}>{t("nav.dashboard")}</NavLink>
+              <NavLink to="/profile" pathname={pathname}>{t("nav.profile")}</NavLink>
               {isAdmin && (
-                <Button asChild variant="ghost" size="sm" className="hidden sm:inline-flex">
-                  <Link to="/admin">
-                    <Shield className="me-1 h-3.5 w-3.5" />
-                    {t("nav.admin")}
-                  </Link>
-                </Button>
+                <NavLink to="/admin" pathname={pathname}>
+                  <Shield className="me-1 h-3.5 w-3.5" />
+                  {t("nav.admin")}
+                </NavLink>
               )}
               <NotificationsBell />
-              <Button asChild size="sm" className="rounded-full">
+              <Button asChild size="sm" className="glow-button rounded-full hidden sm:inline-flex">
                 <Link to="/create-gathering">{t("nav.host")}</Link>
               </Button>
               <Button
@@ -108,7 +102,7 @@ export function SiteHeader() {
                 size="icon"
                 onClick={handleSignOut}
                 aria-label={t("nav.signOut")}
-                className="rounded-full hidden sm:inline-flex"
+                className="rounded-full hidden sm:inline-flex text-dark-secondary hover:text-dark-heading hover:bg-white/5"
               >
                 <LogOut className="h-4 w-4" />
               </Button>
@@ -183,5 +177,24 @@ export function SiteHeader() {
         </nav>
       </div>
     </header>
+  );
+}
+
+function NavLink({ to, pathname, children }: { to: string; pathname: string; children: React.ReactNode }) {
+  const active = pathname === to || pathname.startsWith(to + "/");
+  return (
+    <Button
+      asChild
+      variant="ghost"
+      size="sm"
+      className={
+        "hidden sm:inline-flex rounded-full transition-shadow " +
+        (active
+          ? "text-dark-heading bg-white/10 shadow-[0_0_20px_-4px_color-mix(in_srgb,var(--dark-primary)_60%,transparent)]"
+          : "text-dark-secondary hover:text-dark-heading hover:bg-white/5")
+      }
+    >
+      <Link to={to as never}>{children}</Link>
+    </Button>
   );
 }
