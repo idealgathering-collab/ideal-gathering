@@ -54,6 +54,13 @@
   --color-ember: var(--ember);
   --color-sage: var(--sage);
 
+  --color-dark-bg: var(--dark-bg);
+  --color-dark-primary: var(--dark-primary);
+  --color-dark-secondary: var(--dark-secondary);
+  --color-dark-heading: var(--dark-heading);
+  --color-nebula-purple: var(--nebula-purple);
+  --color-nebula-violet: var(--nebula-violet);
+
   --font-serif-warm: "Fraunces", ui-serif, Georgia, serif;
   --font-sans-humanist: "Inter", ui-sans-serif, system-ui, sans-serif;
 
@@ -127,6 +134,37 @@
   --parchment: oklch(0.95 0.02 80);
   --ember: oklch(0.58 0.15 45);
   --sage: oklch(0.62 0.06 130);
+
+  /* Dark nebula theme tokens */
+  --dark-bg: #0F0A1E;
+  --dark-primary: #A78BFA;
+  --dark-secondary: #C4B5FD;
+  --dark-heading: #FFFFFF;
+  --nebula-purple: #7C3AED;
+  --nebula-violet: #6D28D9;
+
+  --nebula-glow-1: radial-gradient(
+    ellipse 60% 50% at 80% 20%,
+    color-mix(in srgb, var(--nebula-purple) 35%, transparent) 0%,
+    transparent 60%
+  );
+  --nebula-glow-2: radial-gradient(
+    ellipse 55% 45% at 20% 80%,
+    color-mix(in srgb, var(--nebula-violet) 28%, transparent) 0%,
+    transparent 60%
+  );
+  --nebula-glow-3: radial-gradient(
+    ellipse 50% 40% at 50% 50%,
+    color-mix(in srgb, var(--dark-primary) 18%, transparent) 0%,
+    transparent 65%
+  );
+
+  --glass-card-bg: color-mix(in srgb, var(--nebula-violet) 12%, transparent);
+  --glass-card-border: color-mix(in srgb, var(--dark-primary) 22%, transparent);
+  --glass-card-glow: 0 0 40px -10px color-mix(in srgb, var(--dark-primary) 35%, transparent);
+
+  --glow-button-gradient: linear-gradient(135deg, var(--nebula-purple) 0%, var(--nebula-violet) 100%);
+  --glow-button-shadow: 0 0 24px -4px color-mix(in srgb, var(--dark-primary) 55%, transparent);
 }
 
 @layer base {
@@ -195,6 +233,34 @@
 }
 @utility shadow-soft {
   box-shadow: var(--shadow-soft);
+}
+
+@utility nebula-bg {
+  background-color: var(--dark-bg);
+  background-image: var(--nebula-glow-1), var(--nebula-glow-2), var(--nebula-glow-3);
+}
+
+@utility glass-card {
+  background: var(--glass-card-bg);
+  backdrop-filter: blur(20px) saturate(150%);
+  border: 1px solid var(--glass-card-border);
+  box-shadow: var(--glass-card-glow);
+}
+
+@utility glow-button {
+  background-image: var(--glow-button-gradient);
+  color: var(--dark-heading);
+  box-shadow: var(--glow-button-shadow);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+
+  &:hover {
+    box-shadow: 0 0 32px -2px color-mix(in srgb, var(--dark-primary) 70%, transparent);
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
 }
 
 @keyframes logo-idle-spin {
