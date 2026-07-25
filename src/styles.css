@@ -235,6 +235,34 @@
   box-shadow: var(--shadow-soft);
 }
 
+@utility nebula-bg {
+  background-color: var(--dark-bg);
+  background-image: var(--nebula-glow-1), var(--nebula-glow-2), var(--nebula-glow-3);
+}
+
+@utility glass-card {
+  background: var(--glass-card-bg);
+  backdrop-filter: blur(20px) saturate(150%);
+  border: 1px solid var(--glass-card-border);
+  box-shadow: var(--glass-card-glow);
+}
+
+@utility glow-button {
+  background-image: var(--glow-button-gradient);
+  color: var(--dark-heading);
+  box-shadow: var(--glow-button-shadow);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+
+  &:hover {
+    box-shadow: 0 0 32px -2px color-mix(in srgb, var(--dark-primary) 70%, transparent);
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
 @keyframes logo-idle-spin {
   to { transform: rotate(360deg); }
 }
