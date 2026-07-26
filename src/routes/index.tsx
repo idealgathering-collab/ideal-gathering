@@ -1,6 +1,8 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useEffect } from "react";
 import { useT } from "@/i18n";
 import { LanguageSwitcher } from "@/components/language-switcher";
+import { useSession } from "@/hooks/use-session";
 import logoAsset from "@/assets/ideal-gathering-logo.png.asset.json";
 
 
@@ -28,7 +30,22 @@ export const Route = createFileRoute("/")({
 
 function Home() {
   const t = useT();
+  const { session, loading } = useSession();
+  const navigate = useNavigate();
 
+  useEffect(() => {
+    if (!loading && session) {
+      navigate({ to: "/dashboard", replace: true });
+    }
+  }, [loading, session, navigate]);
+
+  if (loading) {
+    return (
+      <div className="landing-dark relative flex min-h-[100dvh] items-center justify-center overflow-hidden">
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-white/20 border-t-white" />
+      </div>
+    );
+  }
 
   const particles = Array.from({ length: 32 }, (_, i) => {
     const seed = i * 9301 + 49297;
