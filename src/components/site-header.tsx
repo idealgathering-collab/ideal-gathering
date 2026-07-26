@@ -104,43 +104,6 @@ export function SiteHeader() {
                 <LogOut className="h-4 w-4" />
               </Button>
 
-              {/* Mobile hamburger */}
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    aria-label={t("nav.menu")}
-                    className="rounded-full sm:hidden"
-                  >
-                    <Menu className="h-4 w-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuItem asChild>
-                    <Link to="/dashboard">{t("nav.dashboard")}</Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link to="/profile">
-                      <UserIcon className="me-2 h-4 w-4" />
-                      {t("nav.profile")}
-                    </Link>
-                  </DropdownMenuItem>
-                  {isAdmin && (
-                    <DropdownMenuItem asChild>
-                      <Link to="/admin">
-                        <Shield className="me-2 h-4 w-4" />
-                        {t("nav.admin")}
-                      </Link>
-                    </DropdownMenuItem>
-                  )}
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem onSelect={handleSignOut}>
-                    <LogOut className="me-2 h-4 w-4" />
-                    {t("nav.signOut")}
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
             </>
           ) : (
             <>
