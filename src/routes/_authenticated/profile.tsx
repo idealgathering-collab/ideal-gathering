@@ -467,6 +467,26 @@ function ProfilePage() {
 
         <SavedLocationsSection countryCode={country || null} />
 
+        {/* Account actions */}
+        <section className="mt-8 rounded-3xl border border-border bg-card p-6">
+          <h2 className="font-display text-xl">{t("profile.account") || "Account"}</h2>
+          <div className="mt-4 flex flex-wrap gap-3">
+            {isAdmin && (
+              <Button asChild variant="outline" className="rounded-full">
+                <Link to="/admin">
+                  <Shield className="me-2 h-4 w-4" />
+                  {t("nav.admin")}
+                </Link>
+              </Button>
+            )}
+            <Button variant="outline" className="rounded-full" onClick={handleSignOut}>
+              <LogOut className="me-2 h-4 w-4" />
+              {t("nav.signOut")}
+            </Button>
+          </div>
+        </section>
+
+
         {/* Danger zone */}
         <section className="mt-8 rounded-3xl border border-destructive/40 bg-card p-6">
           <h2 className="font-display text-xl text-destructive">{t("profile.danger")}</h2>
