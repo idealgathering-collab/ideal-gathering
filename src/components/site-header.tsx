@@ -114,24 +114,6 @@ export function SiteHeader() {
                 <Link to="/auth" search={{ mode: "signup" }}>{t("nav.join")}</Link>
               </Button>
 
-              {/* Mobile hamburger */}
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    aria-label={t("nav.menu")}
-                    className="rounded-full sm:hidden"
-                  >
-                    <Menu className="h-4 w-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuItem asChild>
-                    <Link to="/partnership">{t("nav.partnership")}</Link>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
             </>
           )}
         </nav>
