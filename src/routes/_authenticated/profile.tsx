@@ -1,7 +1,7 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
-import { X } from "lucide-react";
+import { LogOut, Shield, X } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { supabase } from "@/integrations/supabase/client";
 import { useSession } from "@/hooks/use-session";
@@ -65,7 +65,29 @@ function ProfilePage() {
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
   const [confirmText, setConfirmText] = useState("");
   const [deleting, setDeleting] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
   const avatarRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (!user) {
+      setIsAdmin(false);
+      return;
+    }
+    supabase
+      .from("user_roles")
+      .select("role")
+      .eq("user_id", user.id)
+      .eq("role", "admin")
+      .maybeSingle()
+      .then(({ data }) => setIsAdmin(!!data));
+  }, [user]);
+
+  async function handleSignOut() {
+    await qc.cancelQueries();
+    qc.clear();
+    await supabase.auth.signOut();
+    navigate({ to: "/", replace: true });
+  }
 
   useEffect(() => {
     if (!user) return;
@@ -444,6 +466,26 @@ function ProfilePage() {
         </div>
 
         <SavedLocationsSection countryCode={country || null} />
+
+        {/* Account actions */}
+        <section className="mt-8 rounded-3xl border border-border bg-card p-6">
+          <h2 className="font-display text-xl">{t("profile.account") || "Account"}</h2>
+          <div className="mt-4 flex flex-wrap gap-3">
+            {isAdmin && (
+              <Button asChild variant="outline" className="rounded-full">
+                <Link to="/admin">
+                  <Shield className="me-2 h-4 w-4" />
+                  {t("nav.admin")}
+                </Link>
+              </Button>
+            )}
+            <Button variant="outline" className="rounded-full" onClick={handleSignOut}>
+              <LogOut className="me-2 h-4 w-4" />
+              {t("nav.signOut")}
+            </Button>
+          </div>
+        </section>
+
 
         {/* Danger zone */}
         <section className="mt-8 rounded-3xl border border-destructive/40 bg-card p-6">

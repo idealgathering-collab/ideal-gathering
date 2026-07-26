@@ -1,18 +1,11 @@
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
-import { ArrowLeft, LogOut, Menu, Shield, User as UserIcon } from "lucide-react";
+import { ArrowLeft, LogOut, Shield } from "lucide-react";
 import { NotificationsBell } from "@/components/notifications-bell";
 import { useEffect, useState } from "react";
 import logoAsset from "@/assets/ideal-gathering-logo.png.asset.json";
 
 
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { useSession } from "@/hooks/use-session";
 import { supabase } from "@/integrations/supabase/client";
 import { useQueryClient } from "@tanstack/react-query";
@@ -111,43 +104,6 @@ export function SiteHeader() {
                 <LogOut className="h-4 w-4" />
               </Button>
 
-              {/* Mobile hamburger */}
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    aria-label={t("nav.menu")}
-                    className="rounded-full sm:hidden"
-                  >
-                    <Menu className="h-4 w-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuItem asChild>
-                    <Link to="/dashboard">{t("nav.dashboard")}</Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link to="/profile">
-                      <UserIcon className="me-2 h-4 w-4" />
-                      {t("nav.profile")}
-                    </Link>
-                  </DropdownMenuItem>
-                  {isAdmin && (
-                    <DropdownMenuItem asChild>
-                      <Link to="/admin">
-                        <Shield className="me-2 h-4 w-4" />
-                        {t("nav.admin")}
-                      </Link>
-                    </DropdownMenuItem>
-                  )}
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem onSelect={handleSignOut}>
-                    <LogOut className="me-2 h-4 w-4" />
-                    {t("nav.signOut")}
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
             </>
           ) : (
             <>
@@ -158,24 +114,6 @@ export function SiteHeader() {
                 <Link to="/auth" search={{ mode: "signup" }}>{t("nav.join")}</Link>
               </Button>
 
-              {/* Mobile hamburger */}
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    aria-label={t("nav.menu")}
-                    className="rounded-full sm:hidden"
-                  >
-                    <Menu className="h-4 w-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuItem asChild>
-                    <Link to="/partnership">{t("nav.partnership")}</Link>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
             </>
           )}
         </nav>
