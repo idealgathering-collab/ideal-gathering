@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { Plus, Users, Compass, Store } from "lucide-react";
+import { Plus, Users, Compass } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { supabase } from "@/integrations/supabase/client";
 import { useSession } from "@/hooks/use-session";
@@ -79,18 +79,6 @@ function Dashboard() {
                 <Plus className="me-1.5 h-4 w-4" /> {t("dash.propose")}
               </Link>
             </Button>
-          </div>
-        </div>
-
-        <div className="mt-6 rounded-3xl border border-dashed border-border bg-card p-5 text-sm text-muted-foreground">
-          <div className="flex items-center gap-2">
-            <Store className="h-4 w-4 text-primary" />
-            <span>
-              {t("dash.venueHint")}{" "}
-              <Link to="/venue/auth" className="text-primary underline underline-offset-2">
-                {t("dash.venueHintLink")}
-              </Link>
-            </span>
           </div>
         </div>
 
