@@ -1,18 +1,11 @@
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
-import { ArrowLeft, LogOut, Menu, Shield, User as UserIcon } from "lucide-react";
+import { ArrowLeft, LogOut, Shield } from "lucide-react";
 import { NotificationsBell } from "@/components/notifications-bell";
 import { useEffect, useState } from "react";
 import logoAsset from "@/assets/ideal-gathering-logo.png.asset.json";
 
 
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { useSession } from "@/hooks/use-session";
 import { supabase } from "@/integrations/supabase/client";
 import { useQueryClient } from "@tanstack/react-query";
