@@ -86,7 +86,11 @@ export function SiteHeader() {
           {user ? (
             <>
               <NavLink to="/dashboard" pathname={pathname}>{t("nav.dashboard")}</NavLink>
+              <NavLink to="/explore" pathname={pathname}>{t("nav.explore")}</NavLink>
+              <NavLink to="/dashboard" pathname={pathname}>{t("nav.myGatherings")}</NavLink>
+              <NavLink to="/dashboard" pathname={pathname}>{t("nav.chat")}</NavLink>
               <NavLink to="/profile" pathname={pathname}>{t("nav.profile")}</NavLink>
+
               {isAdmin && (
                 <NavLink to="/admin" pathname={pathname}>
                   <Shield className="me-1 h-3.5 w-3.5" />
