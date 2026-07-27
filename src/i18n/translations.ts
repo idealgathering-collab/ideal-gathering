@@ -630,6 +630,10 @@ export const translations: Record<Lang, Dict> = {
     "nav.chat": "Chat",
     "bottomNav.myGatherings": "My Gatherings",
     "bottomNav.chat": "Chat",
+    "chat.eyebrow": "Messages",
+    "chat.title": "Your gathering chats",
+    "chat.empty": "Join or host a gathering to start chatting.",
+    "chat.loading": "Loading…",
 
 
     // Common
@@ -1367,6 +1371,10 @@ export const translations: Record<Lang, Dict> = {
     "nav.chat": "Sohbet",
     "bottomNav.myGatherings": "Buluşmalarım",
     "bottomNav.chat": "Sohbet",
+    "chat.eyebrow": "Mesajlar",
+    "chat.title": "Buluşma sohbetleriniz",
+    "chat.empty": "Sohbet başlatmak için bir buluşmaya katıl veya ev sahibi ol.",
+    "chat.loading": "Yükleniyor…",
 
 
     "common.cancel": "İptal",
@@ -2096,6 +2104,10 @@ export const translations: Record<Lang, Dict> = {
     "nav.chat": "گفت‌وگو",
     "bottomNav.myGatherings": "گردهمایی‌های من",
     "bottomNav.chat": "گفت‌وگو",
+    "chat.eyebrow": "پیام‌ها",
+    "chat.title": "گفت‌وگوهای گردهمایی شما",
+    "chat.empty": "برای شروع گفت‌وگو به گردهمایی بپیوندید یا میزبان شوید.",
+    "chat.loading": "در حال بارگذاری…",
 
 
     "common.cancel": "لغو",
