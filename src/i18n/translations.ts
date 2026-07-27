@@ -634,6 +634,12 @@ export const translations: Record<Lang, Dict> = {
     "chat.title": "Your gathering chats",
     "chat.empty": "Join or host a gathering to start chatting.",
     "chat.loading": "Loading…",
+    "myg.eyebrow": "Your plans",
+    "myg.title": "My Gatherings",
+    "myg.attending": "Attending",
+    "myg.hosting": "Hosting",
+    "myg.noAttending": "You're not attending any upcoming gatherings yet.",
+    "myg.noHosting": "You're not hosting any upcoming gatherings yet.",
 
 
     // Common
