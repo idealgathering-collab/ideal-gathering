@@ -18,7 +18,7 @@ export function MobileTabBar() {
   const tabs: Tab[] = [
     { to: "/dashboard", label: t("nav.dashboard"), icon: LayoutDashboard, match: (p) => p === "/dashboard" },
     { to: "/explore", label: t("nav.explore"), icon: Compass, match: (p) => p.startsWith("/explore") },
-    { to: "/dashboard", label: t("bottomNav.myGatherings"), icon: CalendarHeart, match: (p) => p.startsWith("/gatherings") },
+    { to: "/my-gatherings", label: t("bottomNav.myGatherings"), icon: CalendarHeart, match: (p) => p.startsWith("/my-gatherings") || p.startsWith("/gatherings") },
     { to: "/chat", label: t("bottomNav.chat"), icon: MessageCircle, match: (p) => p.startsWith("/chat") },
     { to: "/profile", label: t("nav.profile"), icon: UserIcon, match: (p) => p.startsWith("/profile") },
   ];
