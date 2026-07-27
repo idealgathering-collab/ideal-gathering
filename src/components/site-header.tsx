@@ -80,7 +80,7 @@ export function SiteHeader() {
             <>
               <NavLink to="/dashboard" pathname={pathname}>{t("nav.dashboard")}</NavLink>
               <NavLink to="/explore" pathname={pathname}>{t("nav.explore")}</NavLink>
-              <NavLink to="/dashboard" pathname={pathname}>{t("nav.myGatherings")}</NavLink>
+              <NavLink to="/my-gatherings" pathname={pathname}>{t("nav.myGatherings")}</NavLink>
               <NavLink to="/chat" pathname={pathname}>{t("nav.chat")}</NavLink>
               <NavLink to="/profile" pathname={pathname}>{t("nav.profile")}</NavLink>
 

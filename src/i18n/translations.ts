@@ -634,6 +634,12 @@ export const translations: Record<Lang, Dict> = {
     "chat.title": "Your gathering chats",
     "chat.empty": "Join or host a gathering to start chatting.",
     "chat.loading": "Loading…",
+    "myg.eyebrow": "Your plans",
+    "myg.title": "My Gatherings",
+    "myg.attending": "Attending",
+    "myg.hosting": "Hosting",
+    "myg.noAttending": "You're not attending any upcoming gatherings yet.",
+    "myg.noHosting": "You're not hosting any upcoming gatherings yet.",
 
 
     // Common
@@ -1375,6 +1381,12 @@ export const translations: Record<Lang, Dict> = {
     "chat.title": "Buluşma sohbetleriniz",
     "chat.empty": "Sohbet başlatmak için bir buluşmaya katıl veya ev sahibi ol.",
     "chat.loading": "Yükleniyor…",
+    "myg.eyebrow": "Planların",
+    "myg.title": "Buluşmalarım",
+    "myg.attending": "Katıldıkların",
+    "myg.hosting": "Ev sahipliği yaptıkların",
+    "myg.noAttending": "Yaklaşan bir buluşmaya katılmıyorsun.",
+    "myg.noHosting": "Yaklaşan bir buluşmaya ev sahipliği yapmıyorsun.",
 
 
     "common.cancel": "İptal",
@@ -2108,6 +2120,12 @@ export const translations: Record<Lang, Dict> = {
     "chat.title": "گفت‌وگوهای گردهمایی شما",
     "chat.empty": "برای شروع گفت‌وگو به گردهمایی بپیوندید یا میزبان شوید.",
     "chat.loading": "در حال بارگذاری…",
+    "myg.eyebrow": "برنامه‌های شما",
+    "myg.title": "گردهمایی‌های من",
+    "myg.attending": "در حال شرکت",
+    "myg.hosting": "میزبانی",
+    "myg.noAttending": "هنوز در گردهمایی آینده‌ای شرکت نمی‌کنید.",
+    "myg.noHosting": "هنوز میزبان گردهمایی آینده‌ای نیستید.",
 
 
     "common.cancel": "لغو",
