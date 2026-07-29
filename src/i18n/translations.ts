@@ -243,6 +243,18 @@ export const translations: Record<Lang, Dict> = {
     "dash.status.proposed": "Proposed",
     "dash.status.cancelled": "Cancelled",
     "dash.status.rejected": "Rejected",
+    "dash.next.title": "Your Next Gathering",
+    "dash.next.none": "No upcoming gatherings.",
+    "dash.next.find": "Find a Gathering",
+    "dash.quick.title": "Quick actions",
+    "dash.quick.browse": "Browse Gatherings",
+    "dash.quick.host": "Host a Gathering",
+    "dash.quick.my": "My Gatherings",
+    "dash.quick.chat": "Chat",
+    "dash.summary.title": "Activity summary",
+    "dash.summary.upcoming": "Upcoming gatherings",
+    "dash.summary.hosted": "Gatherings hosted",
+
 
     // Gathering detail
     "gd.allGatherings": "All gatherings",
