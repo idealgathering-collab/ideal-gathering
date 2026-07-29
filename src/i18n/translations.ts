@@ -1004,6 +1004,18 @@ export const translations: Record<Lang, Dict> = {
     "dash.status.proposed": "Önerildi",
     "dash.status.cancelled": "İptal",
     "dash.status.rejected": "Reddedildi",
+    "dash.next.title": "Sıradaki Buluşman",
+    "dash.next.none": "Yaklaşan buluşma yok.",
+    "dash.next.find": "Buluşma Bul",
+    "dash.quick.title": "Hızlı işlemler",
+    "dash.quick.browse": "Buluşmalara Göz At",
+    "dash.quick.host": "Buluşmaya Ev Sahipliği Yap",
+    "dash.quick.my": "Buluşmalarım",
+    "dash.quick.chat": "Sohbet",
+    "dash.summary.title": "Aktivite özeti",
+    "dash.summary.upcoming": "Yaklaşan buluşmalar",
+    "dash.summary.hosted": "Ev sahipliği yapılan buluşmalar",
+
 
     // Gathering detail
     "gd.allGatherings": "Tüm buluşmalar",
@@ -1745,6 +1757,18 @@ export const translations: Record<Lang, Dict> = {
     "dash.status.proposed": "پیشنهادشده",
     "dash.status.cancelled": "لغو شد",
     "dash.status.rejected": "رد شد",
+    "dash.next.title": "گردهمایی بعدی شما",
+    "dash.next.none": "گردهمایی پیش‌رو نیست.",
+    "dash.next.find": "پیدا کردن گردهمایی",
+    "dash.quick.title": "عملیات سریع",
+    "dash.quick.browse": "مرور گردهمایی‌ها",
+    "dash.quick.host": "میزبانی گردهمایی",
+    "dash.quick.my": "گردهمایی‌های من",
+    "dash.quick.chat": "چت",
+    "dash.summary.title": "خلاصه فعالیت",
+    "dash.summary.upcoming": "گردهمایی‌های پیش‌رو",
+    "dash.summary.hosted": "گردهمایی‌های میزبانی‌شده",
+
 
     // Gathering detail
     "gd.allGatherings": "همهٔ گردهمایی‌ها",
