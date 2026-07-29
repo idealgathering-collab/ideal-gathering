@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { MessageCircle } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
+import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useSession } from "@/hooks/use-session";
 import { formatDateTime } from "@/lib/gatherings";
@@ -87,7 +88,16 @@ function ChatIndex() {
               </Link>
             ))
           ) : (
-            <p className="text-sm text-muted-foreground">{t("chat.empty")}</p>
+            <div className="mt-8 flex flex-col items-center justify-center rounded-2xl border border-dashed border-border bg-card p-10 text-center">
+              <div className="rounded-full bg-primary/10 p-4">
+                <MessageCircle className="h-8 w-8 text-primary" />
+              </div>
+              <h3 className="mt-4 font-display text-xl">{t("chat.empty.title")}</h3>
+              <p className="mt-2 max-w-xs text-sm text-muted-foreground">{t("chat.empty.body")}</p>
+              <Button asChild className="mt-6 rounded-full">
+                <Link to="/explore">{t("chat.empty.cta")}</Link>
+              </Button>
+            </div>
           )}
         </div>
       </main>
