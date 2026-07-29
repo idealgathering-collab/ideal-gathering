@@ -1,3 +1,4 @@
+import type { ElementType } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { Compass, Plus, Users, MessageCircle, Calendar, ArrowRight } from "lucide-react";
@@ -7,8 +8,8 @@ import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useSession } from "@/hooks/use-session";
 import type { GatheringCard as GCard } from "@/lib/gatherings";
-import { formatDateTime } from "@/lib/gatherings";
-import { useI18n, useT } from "@/i18n";
+import { useT } from "@/i18n";
+
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   component: Dashboard,
