@@ -176,7 +176,8 @@ function Dashboard() {
   );
 }
 
-function QuickTile({ icon: Icon, label, to }: { icon: React.ElementType; label: string; to: string }) {
+function QuickTile({ icon: Icon, label, to }: { icon: ElementType; label: string; to: string }) {
+
   return (
     <Link
       to={to}
