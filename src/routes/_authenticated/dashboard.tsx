@@ -51,8 +51,8 @@ function toCard(r: Row): GCard {
 function Dashboard() {
   const { user } = useSession();
   const t = useT();
-  const { lang } = useI18n();
   const nowIso = new Date(Date.now() - 3 * 60 * 60 * 1000).toISOString();
+
 
   const { data, isLoading } = useQuery({
     queryKey: ["dashboard", user?.id],
