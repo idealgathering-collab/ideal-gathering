@@ -95,7 +95,8 @@ function Home() {
 
 
       {/* Constellation network */}
-      <svg aria-hidden className="pointer-events-none absolute inset-0 -z-10 h-full w-full" preserveAspectRatio="none" viewBox="0 0 100 100">
+      <svg aria-hidden className="pointer-events-none absolute inset-0 z-10 h-full w-full" preserveAspectRatio="none" viewBox="0 0 100 100">
+
         <defs>
           <linearGradient id="edge-grad" x1="0" y1="0" x2="1" y2="1">
             <stop offset="0%" stopColor="rgba(167,139,250,0.6)" />
