@@ -187,23 +187,13 @@
     line-height: 1.05;
   }
 
-  /* Landing page dark theme (scoped) */
+  /* Landing page dark theme (scoped) — background is provided by the illustrated scene in index.tsx */
   .landing-dark {
-    background-color: #0F0A1E;
+    background-color: transparent;
     color: #C4B5FD;
   }
-  .landing-dark::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    z-index: -1;
-    pointer-events: none;
-    background:
-      radial-gradient(ellipse at 80% 20%, rgba(124, 58, 237, 0.15) 0%, transparent 50%),
-      radial-gradient(ellipse at 20% 80%, rgba(109, 40, 217, 0.10) 0%, transparent 50%),
-      #0F0A1E;
-  }
   .landing-dark h1,
+
   .landing-dark h2,
   .landing-dark h3,
   .landing-dark h4 {
