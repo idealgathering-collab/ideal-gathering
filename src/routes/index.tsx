@@ -71,26 +71,27 @@ function Home() {
   ];
 
   return (
-    <div className="landing-dark relative flex min-h-[100dvh] flex-col items-center justify-center overflow-hidden px-6 py-6 text-center">
-      <div className="absolute top-4 right-4 z-10">
+    <div className="landing-dark relative z-0 flex min-h-[100dvh] flex-col items-center justify-center overflow-hidden px-6 py-6 text-center">
+      <div className="absolute top-4 right-4 z-50">
         <LanguageSwitcher />
       </div>
 
       {/* Illustrated fantasy café background */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 -z-20 bg-cover bg-center"
+        className="pointer-events-none absolute inset-0 z-0 bg-cover bg-center"
         style={{ backgroundImage: `url(${landingBgAsset.url})` }}
       />
       {/* Dark readability overlay — stronger at top/bottom, lighter in center */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 -z-10"
+        className="pointer-events-none absolute inset-0 z-10"
         style={{
           background:
             "radial-gradient(ellipse at 50% 45%, rgba(15,10,30,0.35) 0%, rgba(15,10,30,0.75) 60%, rgba(15,10,30,0.92) 100%)",
         }}
       />
+
 
 
       {/* Constellation network */}
