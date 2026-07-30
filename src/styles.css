@@ -281,10 +281,20 @@
   0%, 100% { opacity: 0.25; }
   50% { opacity: 0.75; }
 }
+@keyframes bg-ambient-drift {
+  0%   { transform: scale(1.04) translate3d(0, 0, 0); }
+  33%  { transform: scale(1.08) translate3d(-1.2%, -0.8%, 0); }
+  66%  { transform: scale(1.06) translate3d(1%, 0.6%, 0); }
+  100% { transform: scale(1.04) translate3d(0, 0, 0); }
+}
+@utility animate-bg-drift {
+  animation: bg-ambient-drift 42s ease-in-out infinite;
+}
 
 @media (prefers-reduced-motion: reduce) {
   [style*="nebula-drift"], [style*="particle-float"],
-  [style*="node-pulse"], [style*="edge-pulse"] {
+  [style*="node-pulse"], [style*="edge-pulse"],
+  .animate-bg-drift {
     animation: none !important;
   }
 }
