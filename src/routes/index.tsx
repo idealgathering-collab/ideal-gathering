@@ -4,6 +4,8 @@ import { useT } from "@/i18n";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { useSession } from "@/hooks/use-session";
 import logoAsset from "@/assets/ideal-gathering-logo.png.asset.json";
+import landingBgAsset from "@/assets/landing-fantasy-cafe.png.asset.json";
+
 
 
 
