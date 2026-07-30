@@ -470,6 +470,33 @@ function ProfilePage() {
         {/* Account actions */}
         <section className="mt-8 rounded-3xl border border-border bg-card p-6">
           <h2 className="font-display text-xl">{t("profile.account") || "Account"}</h2>
+          {isAdmin && (
+            <div className="mt-4 rounded-2xl border border-border/70 bg-muted/30 p-4">
+              <p className="text-sm text-muted-foreground">
+                {t("profile.switchViews") || "Switch views (admin only)"}
+              </p>
+              <div className="mt-3 flex flex-wrap gap-2">
+                <Button asChild variant="outline" size="sm" className="rounded-full">
+                  <Link to="/dashboard">
+                    <LayoutDashboard className="me-2 h-4 w-4" />
+                    {t("nav.dashboard")}
+                  </Link>
+                </Button>
+                <Button asChild variant="outline" size="sm" className="rounded-full">
+                  <Link to="/venue/dashboard">
+                    <Store className="me-2 h-4 w-4" />
+                    {t("venueDash.eyebrow") || "Venue"}
+                  </Link>
+                </Button>
+                <Button asChild variant="outline" size="sm" className="rounded-full">
+                  <Link to="/admin">
+                    <Shield className="me-2 h-4 w-4" />
+                    {t("nav.admin")}
+                  </Link>
+                </Button>
+              </div>
+            </div>
+          )}
           <div className="mt-4 flex flex-wrap gap-3">
             {isAdmin && (
               <Button asChild variant="outline" className="rounded-full">
