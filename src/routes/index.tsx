@@ -76,19 +76,22 @@ function Home() {
         <LanguageSwitcher />
       </div>
 
-      {/* Nebula blobs */}
-      <div aria-hidden className="pointer-events-none absolute -left-24 top-[-10%] -z-10 h-[560px] w-[560px] rounded-full opacity-80 blur-3xl"
-        style={{ background: "radial-gradient(circle, rgba(124,58,237,0.55) 0%, rgba(109,40,217,0.2) 45%, transparent 75%)", animation: "nebula-drift 18s ease-in-out infinite" }}
+      {/* Illustrated fantasy café background */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 -z-20 bg-cover bg-center"
+        style={{ backgroundImage: `url(${landingBgAsset.url})` }}
       />
-      <div aria-hidden className="pointer-events-none absolute -right-24 top-[10%] -z-10 h-[520px] w-[520px] rounded-full opacity-70 blur-3xl"
-        style={{ background: "radial-gradient(circle, rgba(167,139,250,0.5) 0%, rgba(139,92,246,0.18) 45%, transparent 75%)", animation: "nebula-drift-2 22s ease-in-out infinite" }}
+      {/* Dark readability overlay — stronger at top/bottom, lighter in center */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 -z-10"
+        style={{
+          background:
+            "radial-gradient(ellipse at 50% 45%, rgba(15,10,30,0.35) 0%, rgba(15,10,30,0.75) 60%, rgba(15,10,30,0.92) 100%)",
+        }}
       />
-      <div aria-hidden className="pointer-events-none absolute left-1/2 top-1/2 -z-10 h-[620px] w-[620px] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-70 blur-3xl"
-        style={{ background: "radial-gradient(circle, rgba(124,58,237,0.45) 0%, rgba(76,29,149,0.2) 40%, transparent 70%)" }}
-      />
-      <div aria-hidden className="pointer-events-none absolute bottom-[-15%] left-1/3 -z-10 h-[440px] w-[440px] rounded-full opacity-60 blur-3xl"
-        style={{ background: "radial-gradient(circle, rgba(217,70,239,0.35) 0%, transparent 70%)", animation: "nebula-drift 26s ease-in-out infinite" }}
-      />
+
 
       {/* Constellation network */}
       <svg aria-hidden className="pointer-events-none absolute inset-0 -z-10 h-full w-full" preserveAspectRatio="none" viewBox="0 0 100 100">
