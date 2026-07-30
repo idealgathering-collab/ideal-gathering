@@ -9,13 +9,15 @@ export const Route = createFileRoute("/_authenticated")({
       throw redirect({ to: "/auth", search: { redirect: location.href, mode: "signin" } });
     }
     // If this account is a venue, keep it inside the venue portal.
-    const { data: venueRole } = await supabase
+    // Admins are exempt: they can move freely between all panels.
+    const { data: roles } = await supabase
       .from("user_roles")
       .select("role")
       .eq("user_id", data.user.id)
-      .eq("role", "venue")
-      .maybeSingle();
-    if (venueRole) {
+      .in("role", ["venue", "admin"]);
+    const isAdmin = (roles ?? []).some((r) => r.role === "admin");
+    const isVenue = (roles ?? []).some((r) => r.role === "venue");
+    if (isVenue && !isAdmin) {
       throw redirect({ to: "/venue/dashboard" });
     }
     return { user: data.user };
