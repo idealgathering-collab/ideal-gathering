@@ -117,7 +117,8 @@ function Home() {
       </svg>
 
       {/* Floating particles */}
-      <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
+      <div aria-hidden className="pointer-events-none absolute inset-0 z-10 overflow-hidden">
+
         {particles.map((p, i) => (
           <span key={i} className="absolute rounded-full"
             style={{
