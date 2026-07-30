@@ -86,12 +86,12 @@ function Home() {
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0 z-[15]"
-
         style={{
           background:
             "radial-gradient(ellipse at 50% 45%, rgba(15,10,30,0.35) 0%, rgba(15,10,30,0.75) 60%, rgba(15,10,30,0.92) 100%)",
         }}
       />
+
 
 
 
