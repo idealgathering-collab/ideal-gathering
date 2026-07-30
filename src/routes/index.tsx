@@ -133,8 +133,9 @@ function Home() {
 
 
 
-      <div className="flex max-w-xl flex-col items-center gap-6">
+      <div className="relative z-20 flex max-w-xl flex-col items-center gap-6">
         <div className="flex flex-col items-center gap-3">
+
           <img
             src={logoAsset.url}
             alt="Ideal Gathering"
