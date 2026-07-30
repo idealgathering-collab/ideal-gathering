@@ -293,7 +293,8 @@
 
 @media (prefers-reduced-motion: reduce) {
   [style*="nebula-drift"], [style*="particle-float"],
-  [style*="node-pulse"], [style*="edge-pulse"] {
+  [style*="node-pulse"], [style*="edge-pulse"],
+  .animate-bg-drift {
     animation: none !important;
   }
 }
