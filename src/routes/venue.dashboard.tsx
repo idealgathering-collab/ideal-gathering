@@ -55,7 +55,7 @@ function VenueDashboard() {
   const t = useT();
   const [roleChecked, setRoleChecked] = useState(false);
 
-  // gate: venue role required
+  // gate: venue role required (admins may also view the venue portal)
   useEffect(() => {
     if (sessLoading) return;
     if (!user) {
@@ -66,10 +66,9 @@ function VenueDashboard() {
       .from("user_roles")
       .select("role")
       .eq("user_id", user.id)
-      .eq("role", "venue")
-      .maybeSingle()
+      .in("role", ["venue", "admin"])
       .then(({ data }) => {
-        if (!data) {
+        if (!data || data.length === 0) {
           toast.error(t("venueAuth.notVenue"));
           navigate({ to: "/" });
         } else {
