@@ -76,11 +76,15 @@ function Home() {
         <LanguageSwitcher />
       </div>
 
-      {/* Illustrated fantasy café background */}
+      {/* Illustrated fantasy café background (slow ambient drift) */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 z-0 bg-cover bg-center"
-        style={{ backgroundImage: `url(${landingBgAsset.url})` }}
+        className="pointer-events-none absolute z-0 bg-cover bg-center animate-bg-drift"
+        style={{
+          backgroundImage: `url(${landingBgAsset.url})`,
+          inset: "-4%",
+          willChange: "transform",
+        }}
       />
       {/* Dark readability overlay — stronger at top/bottom, lighter in center */}
       <div
