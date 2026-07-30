@@ -206,9 +206,10 @@ function Home() {
       </div>
 
       <div
-        className="mt-10 flex items-center gap-3 text-xs"
+        className="relative z-20 mt-10 flex items-center gap-3 text-xs"
         style={{ color: "rgba(196, 181, 253, 0.5)" }}
       >
+
         <Link to="/partnership" className="hover:text-white/80 transition-colors">{t("landing.v2.footer.about")}</Link>
         <span>·</span>
         <Link to="/venue/auth" className="hover:text-white/80 transition-colors">{t("landing.v2.footer.venues")}</Link>
