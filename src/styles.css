@@ -337,7 +337,7 @@
 @media (prefers-reduced-motion: reduce) {
   [style*="nebula-drift"], [style*="particle-float"],
   [style*="node-pulse"], [style*="edge-pulse"],
-  .animate-bg-drift {
+  .animate-bg-drift, .magic-glow-text, .magic-shimmer-text {
     animation: none !important;
   }
 }
