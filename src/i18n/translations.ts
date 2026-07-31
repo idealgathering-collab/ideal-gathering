@@ -758,7 +758,7 @@ export const translations: Record<Lang, Dict> = {
 
     // Landing v2 (nebula hero)
     "landing.v2.brand": "Ideal Gathering",
-    "landing.v2.title": "No one will be\nalone anymore.",
+    "landing.v2.title": "No One Will Be Alone Anymore",
     "landing.v2.subtitle": "Just Gather",
     "landing.v2.cta.join": "Join a Gathering",
     "landing.v2.cta.partner": "Partner With Us",
@@ -766,7 +766,7 @@ export const translations: Record<Lang, Dict> = {
     "landing.v2.footer.about": "About",
     "landing.v2.footer.venues": "For Venues",
     "landing.v2.footer.terms": "Terms",
-    "landing.v2.meta.title": "Ideal Gathering — No one will be alone anymore",
+    "landing.v2.meta.title": "Ideal Gathering — No One Will Be Alone Anymore",
     "landing.v2.meta.description": "Curated conversations at Istanbul's best cafes. Join the table and turn strangers into friends.",
     "landing.v2.meta.ogDescription": "Curated conversations at Istanbul's best cafes.",
   },
