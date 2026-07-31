@@ -279,9 +279,35 @@
   50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
 }
+@keyframes magic-glow-pulse-intense {
+  0%, 100% {
+    text-shadow:
+      0 0 14px color-mix(in srgb, var(--dark-primary) 95%, transparent),
+      0 0 34px color-mix(in srgb, var(--nebula-purple) 85%, transparent),
+      0 0 66px color-mix(in srgb, var(--nebula-violet) 70%, transparent),
+      0 0 100px color-mix(in srgb, var(--dark-secondary) 50%, transparent),
+      0 0 140px color-mix(in srgb, var(--tangerine) 35%, transparent);
+    opacity: 1;
+  }
+  50% {
+    text-shadow:
+      0 0 20px color-mix(in srgb, var(--dark-primary) 100%, transparent),
+      0 0 50px color-mix(in srgb, var(--nebula-purple) 95%, transparent),
+      0 0 92px color-mix(in srgb, var(--nebula-violet) 85%, transparent),
+      0 0 140px color-mix(in srgb, var(--dark-secondary) 70%, transparent),
+      0 0 190px color-mix(in srgb, var(--tangerine) 50%, transparent);
+    opacity: 1;
+  }
+}
 @utility magic-glow-text {
   color: var(--dark-heading);
   animation: magic-glow-pulse 3s ease-in-out infinite;
+  outline: none;
+
+  &:hover,
+  &:focus-visible {
+    animation-name: magic-glow-pulse-intense;
+  }
 }
 @utility magic-shimmer-text {
   background-image: linear-gradient(
