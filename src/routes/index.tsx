@@ -166,7 +166,10 @@ function Home() {
           {t("landing.v2.title")}
         </h1>
 
-        <p className="magic-glow-text mt-5 text-[20px] sm:text-[22px] font-medium tracking-wide">
+        <p
+          tabIndex={0}
+          className="magic-glow-text mt-5 cursor-default text-[20px] sm:text-[22px] font-medium tracking-wide"
+        >
           {t("landing.v2.subtitle")}
         </p>
 
