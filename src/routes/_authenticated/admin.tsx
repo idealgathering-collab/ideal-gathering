@@ -378,8 +378,10 @@ function VenueDetail({
             onCancel={() => setEditing(false)}
             onSaved={async () => {
               setEditing(false);
-              const { data } = await supabase.from("businesses").select("*").eq("id", venue.id).maybeSingle();
+              const { getAdminBusiness } = await import("@/lib/business.functions");
+              const data = await getAdminBusiness({ data: { id: venue.id } });
               if (data) setCurrent(data as VenueRow);
+
             }}
           />
         )}
