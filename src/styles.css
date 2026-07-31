@@ -256,6 +256,49 @@
 @keyframes logo-idle-spin {
   to { transform: rotate(360deg); }
 }
+@keyframes magic-glow-pulse {
+  0%, 100% {
+    text-shadow:
+      0 0 8px color-mix(in srgb, var(--dark-primary) 70%, transparent),
+      0 0 22px color-mix(in srgb, var(--nebula-purple) 55%, transparent),
+      0 0 42px color-mix(in srgb, var(--nebula-violet) 35%, transparent),
+      0 0 64px color-mix(in srgb, var(--dark-secondary) 20%, transparent);
+    opacity: 0.95;
+  }
+  50% {
+    text-shadow:
+      0 0 12px color-mix(in srgb, var(--dark-primary) 90%, transparent),
+      0 0 32px color-mix(in srgb, var(--nebula-purple) 75%, transparent),
+      0 0 62px color-mix(in srgb, var(--nebula-violet) 55%, transparent),
+      0 0 92px color-mix(in srgb, var(--tangerine) 30%, transparent);
+    opacity: 1;
+  }
+}
+@keyframes magic-shimmer {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+@utility magic-glow-text {
+  color: var(--dark-heading);
+  animation: magic-glow-pulse 3s ease-in-out infinite;
+}
+@utility magic-shimmer-text {
+  background-image: linear-gradient(
+    90deg,
+    var(--dark-secondary) 0%,
+    var(--dark-heading) 25%,
+    var(--tangerine) 50%,
+    var(--dark-heading) 75%,
+    var(--dark-secondary) 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: magic-shimmer 4s linear infinite;
+}
+
 @keyframes flag-pulse-glow {
   0%, 100% { box-shadow: 0 0 6px hsl(280 60% 50% / 0.35); transform: scale(1); }
   50% { box-shadow: 0 0 18px hsl(280 60% 55% / 0.75); transform: scale(1.08); }
@@ -294,7 +337,7 @@
 @media (prefers-reduced-motion: reduce) {
   [style*="nebula-drift"], [style*="particle-float"],
   [style*="node-pulse"], [style*="edge-pulse"],
-  .animate-bg-drift {
+  .animate-bg-drift, .magic-glow-text, .magic-shimmer-text {
     animation: none !important;
   }
 }

@@ -166,7 +166,7 @@ function Home() {
           {t("landing.v2.title")}
         </h1>
 
-        <p className="mt-5 text-[20px] sm:text-[22px] font-medium" style={{ color: "#C4B5FD" }}>
+        <p className="magic-glow-text mt-5 text-[20px] sm:text-[22px] font-medium tracking-wide">
           {t("landing.v2.subtitle")}
         </p>
 
