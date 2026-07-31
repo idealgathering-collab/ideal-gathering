@@ -127,15 +127,12 @@ function VenuesSection() {
   const [tick, setTick] = useState(0);
 
   useEffect(() => {
-    supabase
-      .from("businesses")
-      .select("id, name, city, address, cover_url, status, owner_id, created_at")
-      .order("created_at", { ascending: false })
-      .then(({ data, error }) => {
-        if (error) toast.error(error.message);
-        else setVenues((data as VenueRow[]) ?? []);
-      });
+    import("@/lib/business.functions")
+      .then(({ listAdminBusinesses }) => listAdminBusinesses())
+      .then((data) => setVenues((data as VenueRow[]) ?? []))
+      .catch((e) => toast.error(e instanceof Error ? e.message : String(e)));
   }, [tick]);
+
 
   const [rejectTarget, setRejectTarget] = useState<VenueRow | null>(null);
 

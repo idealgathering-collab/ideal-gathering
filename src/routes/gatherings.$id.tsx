@@ -35,14 +35,11 @@ function GatheringDetail() {
     queryKey: ["gathering-is-owner", g?.business?.id, user?.id],
     enabled: !!user && !!g?.business?.id,
     queryFn: async () => {
-      const { count } = await supabase
-        .from("businesses")
-        .select("id", { count: "exact", head: true })
-        .eq("id", g!.business!.id)
-        .eq("owner_id", user!.id);
-      return (count ?? 0) > 0;
+      const { isBusinessOwner } = await import("@/lib/business.functions");
+      return await isBusinessOwner({ data: { id: g!.business!.id } });
     },
   });
+
 
   async function join() {
     if (!user) {
