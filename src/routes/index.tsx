@@ -140,7 +140,7 @@ function Home() {
 
 
 
-      <div className="relative z-20 flex max-w-xl flex-col items-center gap-6">
+      <div className="relative z-20 flex max-w-xl flex-col items-center">
         <div className="flex flex-col items-center gap-3">
 
           <img
@@ -148,27 +148,32 @@ function Home() {
             alt="Ideal Gathering"
             className="h-16 w-16 rounded-full object-contain"
           />
-          <div className="text-[24px] font-bold text-white tracking-tight">
+          <div
+            className="font-serif-warm text-[26px] font-semibold text-white tracking-tight"
+            style={{ textShadow: "0 0 24px rgba(196, 181, 253, 0.35)" }}
+          >
             {t("landing.v2.brand")}
           </div>
         </div>
 
-
         <h1
-          className="text-[40px] sm:text-[48px] font-bold text-white leading-[1.05] whitespace-pre-line"
-          style={{ textShadow: "0 0 40px rgba(124, 58, 237, 0.35)" }}
+          className="font-serif-warm mt-8 text-[42px] sm:text-[52px] font-semibold text-white leading-[1.06] tracking-[-0.01em] whitespace-pre-line"
+          style={{
+            textShadow:
+              "0 0 40px rgba(124, 58, 237, 0.45), 0 0 90px rgba(212, 160, 74, 0.18)",
+          }}
         >
           {t("landing.v2.title")}
         </h1>
 
-        <p className="text-[20px] sm:text-[22px] font-medium" style={{ color: "#C4B5FD" }}>
+        <p className="mt-5 text-[20px] sm:text-[22px] font-medium" style={{ color: "#C4B5FD" }}>
           {t("landing.v2.subtitle")}
         </p>
 
         <Link
           to="/auth"
           search={{ mode: "signup" }}
-          className="mt-2 inline-flex items-center justify-center rounded-[12px] px-8 py-4 text-base font-semibold text-white transition-all duration-300"
+          className="mt-14 inline-flex items-center justify-center rounded-[12px] px-9 py-4 text-base font-semibold text-white transition-all duration-300"
           style={{
             background: "linear-gradient(135deg, #7C3AED, #6D28D9)",
             boxShadow: "0 0 20px rgba(124, 58, 237, 0.4)",
@@ -182,41 +187,14 @@ function Home() {
         >
           {t("landing.v2.cta.join")}
         </Link>
-
-        <Link
-          to="/venue/auth"
-          className="inline-flex items-center justify-center rounded-[12px] border px-6 py-2.5 text-sm font-medium transition-all"
-          style={{
-            borderColor: "rgba(139, 92, 246, 0.4)",
-            color: "#A78BFA",
-            background: "transparent",
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.borderColor = "rgba(139, 92, 246, 0.9)";
-            e.currentTarget.style.boxShadow = "0 0 18px rgba(139, 92, 246, 0.35)";
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.borderColor = "rgba(139, 92, 246, 0.4)";
-            e.currentTarget.style.boxShadow = "none";
-          }}
-        >
-          {t("landing.v2.cta.partner")}
-        </Link>
-
-        <Link
-          to="/auth"
-          className="text-sm font-medium transition-colors hover:text-white"
-          style={{ color: "rgba(196, 181, 253, 0.7)" }}
-        >
-          {t("landing.v2.cta.login")}
-        </Link>
       </div>
 
       <div
-        className="relative z-20 mt-10 flex items-center gap-3 text-xs"
+        className="relative z-20 mt-12 flex flex-wrap items-center justify-center gap-3 text-xs"
         style={{ color: "rgba(196, 181, 253, 0.5)" }}
       >
-
+        <Link to="/auth" className="hover:text-white/80 transition-colors">{t("landing.v2.cta.login")}</Link>
+        <span>·</span>
         <Link to="/partnership" className="hover:text-white/80 transition-colors">{t("landing.v2.footer.about")}</Link>
         <span>·</span>
         <Link to="/venue/auth" className="hover:text-white/80 transition-colors">{t("landing.v2.footer.venues")}</Link>
