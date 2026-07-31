@@ -81,14 +81,10 @@ function VenueDashboard() {
     queryKey: ["venue-biz", user?.id],
     enabled: !!user && roleChecked,
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("businesses")
-        .select("*, venue_tables(id,label,capacity)")
-        .eq("owner_id", user!.id)
-        .maybeSingle();
-      if (error) throw error;
-      return data;
+      const { getMyBusiness } = await import("@/lib/business.functions");
+      return await getMyBusiness();
     },
+
   });
 
   async function signOut() {
