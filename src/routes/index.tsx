@@ -144,7 +144,7 @@ function Home() {
       </div>
 
       {/* Glass panel */}
-      <div className="cosmic-panel relative z-20 flex w-full max-w-[440px] flex-col items-center overflow-hidden px-6 py-8 text-center sm:px-9 sm:py-10">
+      <div className="cosmic-panel relative z-20 flex w-full max-w-[440px] flex-col items-center overflow-hidden px-6 py-6 text-center sm:px-9 sm:py-8">
         <CrescentMark />
 
         <div
@@ -161,7 +161,7 @@ function Home() {
         </div>
 
         <h1
-          className="font-serif-warm mt-6 text-[34px] sm:text-[40px] font-semibold text-white leading-[1.05] tracking-[-0.015em] whitespace-pre-line"
+          className="font-serif-warm mt-5 text-[32px] sm:text-[38px] font-semibold text-white leading-[1.05] tracking-[-0.015em] whitespace-pre-line"
           style={{
             textShadow:
               "0 0 40px rgba(124, 58, 237, 0.5), 0 0 90px rgba(212, 160, 74, 0.16)",
@@ -180,7 +180,7 @@ function Home() {
         <Link
           to="/auth"
           search={{ mode: "signup" }}
-          className="cosmic-cta mt-8 inline-flex w-full items-center justify-center gap-3 rounded-full px-8 py-4 text-base font-semibold text-white"
+          className="cosmic-cta mt-7 inline-flex w-full items-center justify-center gap-3 rounded-full px-8 py-4 text-base font-semibold text-white"
         >
           <TeacupIcon />
           {t("landing.v2.cta.table")}
@@ -193,11 +193,11 @@ function Home() {
           width={1024}
           height={768}
           loading="lazy"
-          className="mt-7 w-full max-w-[330px] animate-constellation-float select-none"
+          className="mt-5 w-full max-w-[300px] animate-constellation-float select-none"
           style={{ filter: "drop-shadow(0 0 26px rgba(124,58,237,0.45))" }}
         />
 
-        <div className="mt-7 grid w-full grid-cols-2 gap-3">
+        <div className="mt-6 grid w-full grid-cols-2 gap-3">
           <Link
             to="/auth"
             search={{ mode: "signup" }}
