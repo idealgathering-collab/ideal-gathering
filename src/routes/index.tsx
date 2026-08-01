@@ -6,6 +6,7 @@ import { LanguageSwitcher } from "@/components/language-switcher";
 import { useSession } from "@/hooks/use-session";
 import nebulaAsset from "@/assets/landing-nebula-skyline.jpg.asset.json";
 import constellationAsset from "@/assets/constellation-people.png.asset.json";
+import logoAsset from "@/assets/ideal-gathering-logo.png.asset.json";
 
 export const Route = createFileRoute("/")({
   component: Home,
@@ -30,22 +31,14 @@ export const Route = createFileRoute("/")({
 
 function CrescentMark() {
   return (
-    <svg
-      aria-hidden
-      viewBox="0 0 64 64"
-      className="h-11 w-11"
-      fill="none"
-      stroke="rgba(196,181,253,0.85)"
-      strokeWidth={1.2}
-      style={{ filter: "drop-shadow(0 0 8px rgba(167,139,250,0.6))" }}
-    >
-      <ellipse cx="32" cy="32" rx="26" ry="14" opacity="0.45" />
-      <path d="M38 20a14 14 0 1 0 0 24 17 17 0 0 1 0-24Z" opacity="0.95" />
-      <circle cx="32" cy="8" r="1.6" fill="rgba(233,226,255,0.95)" stroke="none" />
-      <circle cx="7" cy="34" r="1.2" fill="rgba(233,226,255,0.8)" stroke="none" />
-      <circle cx="57" cy="30" r="1.2" fill="rgba(233,226,255,0.8)" stroke="none" />
-      <path d="M32 24l1.6 4.4L38 30l-4.4 1.6L32 36l-1.6-4.4L26 30l4.4-1.6L32 24Z" fill="rgba(233,226,255,0.9)" stroke="none" />
-    </svg>
+    <img
+      src={logoAsset.url}
+      alt="Ideal Gathering logo"
+      width={96}
+      height={96}
+      className="h-14 w-14 rounded-full object-contain"
+      style={{ filter: "drop-shadow(0 0 14px rgba(167,139,250,0.65))" }}
+    />
   );
 }
 
