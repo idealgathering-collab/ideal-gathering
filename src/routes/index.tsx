@@ -226,7 +226,9 @@ function Home() {
           <Link to="/terms" className="hover:text-white/80 transition-colors">{t("landing.v2.footer.terms")}</Link>
         </div>
 
-        <CrescentMark />
+        <div className="mt-5 scale-50 opacity-50">
+          <CrescentMark />
+        </div>
       </div>
     </div>
   );
