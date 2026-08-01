@@ -360,13 +360,94 @@
   animation: bg-ambient-drift 42s ease-in-out infinite;
 }
 
+/* ---- Cosmic landing (nebula / glass panel) ---- */
+@keyframes star-twinkle {
+  0%, 100% { opacity: 0.25; transform: scale(0.85); }
+  50%      { opacity: 1; transform: scale(1.15); }
+}
+@utility animate-star-twinkle {
+  animation-name: star-twinkle;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+
+@keyframes constellation-float {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50%      { transform: translate3d(0, -8px, 0); }
+}
+@utility animate-constellation-float {
+  animation: constellation-float 9s ease-in-out infinite;
+}
+
+@utility cosmic-scene {
+  background-color: #0A0616;
+}
+
+@utility cosmic-panel {
+  border-radius: 34px;
+  background: linear-gradient(
+    160deg,
+    color-mix(in srgb, var(--dark-primary) 12%, transparent) 0%,
+    color-mix(in srgb, var(--nebula-violet) 8%, transparent) 45%,
+    color-mix(in srgb, var(--dark-bg) 30%, transparent) 100%
+  );
+  backdrop-filter: blur(18px) saturate(140%);
+  border: 1px solid color-mix(in srgb, var(--dark-primary) 30%, transparent);
+  box-shadow:
+    0 0 60px -12px color-mix(in srgb, var(--nebula-purple) 55%, transparent),
+    inset 0 1px 0 color-mix(in srgb, var(--dark-secondary) 30%, transparent);
+}
+
+@utility cosmic-cta {
+  position: relative;
+  background-image: linear-gradient(135deg, #7C3AED 0%, #8B5CF6 50%, #6D28D9 100%);
+  border: 1px solid color-mix(in srgb, var(--dark-secondary) 75%, transparent);
+  box-shadow:
+    0 0 26px -2px color-mix(in srgb, var(--nebula-purple) 75%, transparent),
+    inset 0 1px 0 rgba(255, 255, 255, 0.35);
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 18%;
+    right: 18%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.9), transparent);
+  }
+
+  &:hover {
+    box-shadow:
+      0 0 42px 0 color-mix(in srgb, var(--nebula-purple) 90%, transparent),
+      inset 0 1px 0 rgba(255, 255, 255, 0.45);
+    transform: translateY(-1px);
+  }
+}
+
+@utility cosmic-outline-btn {
+  color: var(--dark-secondary);
+  border: 1px solid color-mix(in srgb, var(--dark-primary) 55%, transparent);
+  background: color-mix(in srgb, var(--nebula-violet) 10%, transparent);
+  box-shadow: 0 0 16px -6px color-mix(in srgb, var(--dark-primary) 70%, transparent);
+  transition: color 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+
+  &:hover {
+    color: #FFFFFF;
+    border-color: color-mix(in srgb, var(--dark-primary) 90%, transparent);
+    box-shadow: 0 0 24px -4px color-mix(in srgb, var(--dark-primary) 85%, transparent);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   [style*="nebula-drift"], [style*="particle-float"],
   [style*="node-pulse"], [style*="edge-pulse"],
-  .animate-bg-drift, .magic-glow-text, .magic-shimmer-text {
+  .animate-bg-drift, .magic-glow-text, .magic-shimmer-text,
+  .animate-star-twinkle, .animate-constellation-float {
     animation: none !important;
   }
 }
+
 
 
 
