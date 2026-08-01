@@ -1,13 +1,11 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect } from "react";
+import { UserPlus, Lock } from "lucide-react";
 import { useT } from "@/i18n";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { useSession } from "@/hooks/use-session";
-import logoAsset from "@/assets/ideal-gathering-logo.png.asset.json";
-import landingBgAsset from "@/assets/landing-fantasy-cafe.png.asset.json";
-
-
-
+import nebulaAsset from "@/assets/landing-nebula-skyline.jpg.asset.json";
+import constellationAsset from "@/assets/constellation-people.png.asset.json";
 
 export const Route = createFileRoute("/")({
   component: Home,
@@ -30,6 +28,46 @@ export const Route = createFileRoute("/")({
   }),
 });
 
+function CrescentMark() {
+  return (
+    <svg
+      aria-hidden
+      viewBox="0 0 64 64"
+      className="h-11 w-11"
+      fill="none"
+      stroke="rgba(196,181,253,0.85)"
+      strokeWidth={1.2}
+      style={{ filter: "drop-shadow(0 0 8px rgba(167,139,250,0.6))" }}
+    >
+      <ellipse cx="32" cy="32" rx="26" ry="14" opacity="0.45" />
+      <path d="M38 20a14 14 0 1 0 0 24 17 17 0 0 1 0-24Z" opacity="0.95" />
+      <circle cx="32" cy="8" r="1.6" fill="rgba(233,226,255,0.95)" stroke="none" />
+      <circle cx="7" cy="34" r="1.2" fill="rgba(233,226,255,0.8)" stroke="none" />
+      <circle cx="57" cy="30" r="1.2" fill="rgba(233,226,255,0.8)" stroke="none" />
+      <path d="M32 24l1.6 4.4L38 30l-4.4 1.6L32 36l-1.6-4.4L26 30l4.4-1.6L32 24Z" fill="rgba(233,226,255,0.9)" stroke="none" />
+    </svg>
+  );
+}
+
+function Sparkle({ className }: { className?: string }) {
+  return (
+    <svg aria-hidden viewBox="0 0 24 24" className={className} fill="currentColor">
+      <path d="M12 2l2.2 6.4L21 12l-6.8 2.6L12 22l-2.2-7.4L3 12l6.8-3.6L12 2Z" />
+    </svg>
+  );
+}
+
+function TeacupIcon() {
+  return (
+    <svg aria-hidden viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth={1.6} strokeLinecap="round">
+      <path d="M4 9h13v4a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5V9Z" />
+      <path d="M17 10h1.6a2.4 2.4 0 0 1 0 4.8H17" />
+      <path d="M3 21h16" />
+      <path d="M11 3.2l.7 1.8 1.8.7-1.8.7-.7 1.8-.7-1.8L8.5 5.7l1.8-.7L11 3.2Z" fill="currentColor" stroke="none" />
+    </svg>
+  );
+}
+
 function Home() {
   const t = useT();
   const { session, loading } = useSession();
@@ -43,124 +81,90 @@ function Home() {
 
   if (loading) {
     return (
-      <div className="landing-dark relative flex min-h-[100dvh] items-center justify-center overflow-hidden">
+      <div className="landing-dark cosmic-scene relative flex min-h-[100dvh] items-center justify-center overflow-hidden">
         <div className="h-8 w-8 animate-spin rounded-full border-2 border-white/20 border-t-white" />
       </div>
     );
   }
 
-  const particles = Array.from({ length: 32 }, (_, i) => {
+  const stars = Array.from({ length: 44 }, (_, i) => {
     const seed = i * 9301 + 49297;
     return {
       x: seed % 100,
-      y: (seed * 3) % 100,
-      size: 1 + ((i * 7) % 3),
-      delay: (i % 8) * 0.6,
-      duration: 6 + (i % 5),
-      opacity: 0.3 + ((i % 5) * 0.12),
+      y: (seed * 7) % 100,
+      size: 1 + ((i * 5) % 3),
+      delay: (i % 9) * 0.5,
+      duration: 3 + (i % 5),
     };
   });
 
-  const nodes = [
-    { x: 15, y: 22 }, { x: 32, y: 12 }, { x: 55, y: 20 }, { x: 78, y: 14 },
-    { x: 88, y: 40 }, { x: 72, y: 78 }, { x: 42, y: 85 }, { x: 12, y: 68 },
-  ];
-  const edges: Array<[number, number]> = [
-    [0, 1], [1, 2], [2, 3], [3, 4], [4, 5], [5, 6], [6, 7], [7, 0],
-    [1, 7], [2, 6], [0, 2], [4, 6],
-  ];
-
   return (
-    <div className="landing-dark relative z-0 flex min-h-[100dvh] flex-col items-center justify-center overflow-hidden px-6 py-6 text-center">
+    <div className="landing-dark cosmic-scene relative z-0 flex min-h-[100dvh] items-center justify-center overflow-hidden p-3 sm:p-6">
       <div className="absolute top-4 right-4 z-50">
         <LanguageSwitcher />
       </div>
 
-      {/* Illustrated fantasy café background (slow ambient drift) */}
+      {/* Nebula + Istanbul skyline backdrop */}
       <div
         aria-hidden
         className="pointer-events-none absolute z-0 bg-cover bg-center animate-bg-drift"
         style={{
-          backgroundImage: `url(${landingBgAsset.url})`,
+          backgroundImage: `url(${nebulaAsset.url})`,
           inset: "-4%",
           willChange: "transform",
         }}
       />
-      {/* Dark readability overlay — stronger at top/bottom, lighter in center */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 z-[15]"
+        className="pointer-events-none absolute inset-0 z-[5]"
         style={{
           background:
-            "radial-gradient(ellipse at 50% 45%, rgba(15,10,30,0.35) 0%, rgba(15,10,30,0.75) 60%, rgba(15,10,30,0.92) 100%)",
+            "radial-gradient(ellipse at 50% 45%, rgba(10,6,22,0.25) 0%, rgba(10,6,22,0.7) 65%, rgba(10,6,22,0.92) 100%)",
         }}
       />
 
-
-
-
-      {/* Constellation network */}
-      <svg aria-hidden className="pointer-events-none absolute inset-0 z-10 h-full w-full" preserveAspectRatio="none" viewBox="0 0 100 100">
-
-        <defs>
-          <linearGradient id="edge-grad" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stopColor="rgba(167,139,250,0.6)" />
-            <stop offset="100%" stopColor="rgba(124,58,237,0.15)" />
-          </linearGradient>
-        </defs>
-        {edges.map(([a, b], i) => (
-          <line key={i} x1={nodes[a].x} y1={nodes[a].y} x2={nodes[b].x} y2={nodes[b].y}
-            stroke="url(#edge-grad)" strokeWidth={0.15} vectorEffect="non-scaling-stroke"
-            style={{ animation: `edge-pulse 4s ease-in-out ${i * 0.35}s infinite` }}
-          />
-        ))}
-        {nodes.map((n, i) => (
-          <circle key={i} cx={n.x} cy={n.y} r={0.6} fill="#C4B5FD"
-            style={{ animation: `node-pulse 3.5s ease-in-out ${i * 0.4}s infinite`, filter: "drop-shadow(0 0 2px rgba(167,139,250,0.9))" }}
-          />
-        ))}
-      </svg>
-
-      {/* Floating particles */}
-      <div aria-hidden className="pointer-events-none absolute inset-0 z-10 overflow-hidden">
-
-        {particles.map((p, i) => (
-          <span key={i} className="absolute rounded-full"
+      {/* Twinkling starfield */}
+      <div aria-hidden className="pointer-events-none absolute inset-0 z-[8] overflow-hidden">
+        {stars.map((s, i) => (
+          <span
+            key={i}
+            className="absolute rounded-full animate-star-twinkle"
             style={{
-              left: `${p.x}%`, top: `${p.y}%`,
-              width: `${p.size}px`, height: `${p.size}px`,
-              background: i % 3 === 0 ? "#A78BFA" : "#C4B5FD",
-              opacity: p.opacity,
-              boxShadow: "0 0 6px rgba(167,139,250,0.7)",
-              animation: `particle-float ${p.duration}s ease-in-out ${p.delay}s infinite`,
+              left: `${s.x}%`,
+              top: `${s.y}%`,
+              width: `${s.size}px`,
+              height: `${s.size}px`,
+              background: i % 4 === 0 ? "#A78BFA" : "#EDE9FE",
+              boxShadow: "0 0 6px rgba(196,181,253,0.8)",
+              animationDelay: `${s.delay}s`,
+              animationDuration: `${s.duration}s`,
             }}
           />
         ))}
       </div>
 
+      {/* Glass panel */}
+      <div className="cosmic-panel relative z-20 flex w-full max-w-[440px] flex-col items-center overflow-hidden px-6 py-8 text-center sm:px-9 sm:py-10">
+        <CrescentMark />
 
+        <div
+          className="font-serif-warm mt-3 text-[24px] font-semibold text-white tracking-tight"
+          style={{ textShadow: "0 0 24px rgba(196, 181, 253, 0.4)" }}
+        >
+          {t("landing.v2.brand")}
+        </div>
 
-      <div className="relative z-20 flex max-w-xl flex-col items-center">
-        <div className="flex flex-col items-center gap-3">
-
-          <img
-            src={logoAsset.url}
-            alt="Ideal Gathering"
-            className="h-16 w-16 rounded-full object-contain"
-          />
-          <div
-            className="font-serif-warm text-[26px] font-semibold text-white tracking-tight"
-            style={{ textShadow: "0 0 24px rgba(196, 181, 253, 0.35)" }}
-          >
-            {t("landing.v2.brand")}
-          </div>
+        <div className="mt-3 flex w-full max-w-[260px] items-center gap-2">
+          <span className="h-px flex-1" style={{ background: "linear-gradient(90deg, transparent, rgba(167,139,250,0.55))" }} />
+          <Sparkle className="h-3 w-3" />
+          <span className="h-px flex-1" style={{ background: "linear-gradient(270deg, transparent, rgba(167,139,250,0.55))" }} />
         </div>
 
         <h1
-          className="font-serif-warm mt-8 text-[42px] sm:text-[52px] font-semibold text-white leading-[1.06] tracking-[-0.01em] whitespace-pre-line"
+          className="font-serif-warm mt-6 text-[34px] sm:text-[40px] font-semibold text-white leading-[1.05] tracking-[-0.015em] whitespace-pre-line"
           style={{
             textShadow:
-              "0 0 40px rgba(124, 58, 237, 0.45), 0 0 90px rgba(212, 160, 74, 0.18)",
+              "0 0 40px rgba(124, 58, 237, 0.5), 0 0 90px rgba(212, 160, 74, 0.16)",
           }}
         >
           {t("landing.v2.title")}
@@ -168,7 +172,7 @@ function Home() {
 
         <p
           tabIndex={0}
-          className="magic-glow-text mt-5 cursor-default text-[20px] sm:text-[22px] font-medium tracking-wide"
+          className="magic-glow-text mt-4 cursor-default text-[19px] sm:text-[21px] font-medium tracking-wide"
         >
           {t("landing.v2.subtitle")}
         </p>
@@ -176,36 +180,54 @@ function Home() {
         <Link
           to="/auth"
           search={{ mode: "signup" }}
-          className="mt-14 inline-flex items-center justify-center rounded-[12px] px-9 py-4 text-base font-semibold text-white transition-all duration-300"
-          style={{
-            background: "linear-gradient(135deg, #7C3AED, #6D28D9)",
-            boxShadow: "0 0 20px rgba(124, 58, 237, 0.4)",
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.boxShadow = "0 0 30px rgba(124, 58, 237, 0.6)";
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.boxShadow = "0 0 20px rgba(124, 58, 237, 0.4)";
-          }}
+          className="cosmic-cta mt-8 inline-flex w-full items-center justify-center gap-3 rounded-full px-8 py-4 text-base font-semibold text-white"
         >
-          {t("landing.v2.cta.join")}
+          <TeacupIcon />
+          {t("landing.v2.cta.table")}
         </Link>
+
+        {/* Constellation of people */}
+        <img
+          src={constellationAsset.url}
+          alt="A constellation of people connected together"
+          width={1024}
+          height={768}
+          loading="lazy"
+          className="mt-7 w-full max-w-[330px] animate-constellation-float select-none"
+          style={{ filter: "drop-shadow(0 0 26px rgba(124,58,237,0.45))" }}
+        />
+
+        <div className="mt-7 grid w-full grid-cols-2 gap-3">
+          <Link
+            to="/auth"
+            search={{ mode: "signup" }}
+            className="cosmic-outline-btn inline-flex items-center justify-center gap-2 rounded-2xl px-4 py-3 text-sm font-medium"
+          >
+            <UserPlus className="h-4 w-4" />
+            {t("landing.v2.cta.signup")}
+          </Link>
+          <Link
+            to="/auth"
+            className="cosmic-outline-btn inline-flex items-center justify-center gap-2 rounded-2xl px-4 py-3 text-sm font-medium"
+          >
+            <Lock className="h-4 w-4" />
+            {t("landing.v2.cta.login")}
+          </Link>
+        </div>
+
+        <div
+          className="mt-6 flex flex-wrap items-center justify-center gap-3 text-xs"
+          style={{ color: "rgba(196, 181, 253, 0.55)" }}
+        >
+          <Link to="/partnership" className="hover:text-white/80 transition-colors">{t("landing.v2.footer.about")}</Link>
+          <span>·</span>
+          <Link to="/venue/auth" className="hover:text-white/80 transition-colors">{t("landing.v2.footer.venues")}</Link>
+          <span>·</span>
+          <Link to="/terms" className="hover:text-white/80 transition-colors">{t("landing.v2.footer.terms")}</Link>
+        </div>
+
+        <CrescentMark />
       </div>
-
-      <div
-        className="relative z-20 mt-12 flex flex-wrap items-center justify-center gap-3 text-xs"
-        style={{ color: "rgba(196, 181, 253, 0.5)" }}
-      >
-        <Link to="/auth" className="hover:text-white/80 transition-colors">{t("landing.v2.cta.login")}</Link>
-        <span>·</span>
-        <Link to="/partnership" className="hover:text-white/80 transition-colors">{t("landing.v2.footer.about")}</Link>
-        <span>·</span>
-        <Link to="/venue/auth" className="hover:text-white/80 transition-colors">{t("landing.v2.footer.venues")}</Link>
-        <span>·</span>
-        <Link to="/terms" className="hover:text-white/80 transition-colors">{t("landing.v2.footer.terms")}</Link>
-      </div>
-
-
     </div>
   );
 }
