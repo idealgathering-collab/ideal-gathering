@@ -161,7 +161,7 @@ function Home() {
         </div>
 
         <h1
-          className="font-serif-warm mt-5 text-[32px] sm:text-[38px] font-semibold text-white leading-[1.05] tracking-[-0.015em] whitespace-pre-line"
+          className="font-serif-warm mt-4 text-[28px] sm:text-[38px] font-semibold text-white leading-[1.05] tracking-[-0.015em] whitespace-pre-line"
           style={{
             textShadow:
               "0 0 40px rgba(124, 58, 237, 0.5), 0 0 90px rgba(212, 160, 74, 0.16)",
@@ -172,7 +172,7 @@ function Home() {
 
         <p
           tabIndex={0}
-          className="magic-glow-text mt-4 cursor-default text-[19px] sm:text-[21px] font-medium tracking-wide"
+          className="magic-glow-text mt-3 sm:mt-4 cursor-default text-[19px] sm:text-[21px] font-medium tracking-wide"
         >
           {t("landing.v2.subtitle")}
         </p>
@@ -180,7 +180,7 @@ function Home() {
         <Link
           to="/auth"
           search={{ mode: "signup" }}
-          className="cosmic-cta mt-7 inline-flex w-full items-center justify-center gap-3 rounded-full px-8 py-4 text-base font-semibold text-white"
+          className="cosmic-cta mt-5 sm:mt-7 inline-flex w-full items-center justify-center gap-3 rounded-full px-8 py-4 text-base font-semibold text-white"
         >
           <TeacupIcon />
           {t("landing.v2.cta.table")}
@@ -193,11 +193,11 @@ function Home() {
           width={1024}
           height={768}
           loading="lazy"
-          className="mt-5 w-full max-w-[300px] animate-constellation-float select-none"
+          className="mt-4 w-full max-w-[230px] sm:mt-5 sm:max-w-[300px] animate-constellation-float select-none"
           style={{ filter: "drop-shadow(0 0 26px rgba(124,58,237,0.45))" }}
         />
 
-        <div className="mt-6 grid w-full grid-cols-2 gap-3">
+        <div className="mt-5 sm:mt-6 grid w-full grid-cols-2 gap-3">
           <Link
             to="/auth"
             search={{ mode: "signup" }}
