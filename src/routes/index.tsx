@@ -142,6 +142,7 @@ function HowItWorksSection() {
                 icon={CalendarDays}
                 title={t("landing.v2.how.cafes.step3.title")}
                 body={t("landing.v2.how.cafes.step3.body")}
+                isLast
               />
             </div>
           </div>
@@ -172,6 +173,7 @@ function HowItWorksSection() {
                 icon={Armchair}
                 title={t("landing.v2.how.guests.step3.title")}
                 body={t("landing.v2.how.guests.step3.body")}
+                isLast
               />
             </div>
           </div>
