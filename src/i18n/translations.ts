@@ -771,6 +771,23 @@ export const translations: Record<Lang, Dict> = {
     "landing.v2.meta.title": "Ideal Gathering — No One Will Be Alone Anymore",
     "landing.v2.meta.description": "Curated conversations at Istanbul's best cafes. Join the table and turn strangers into friends.",
     "landing.v2.meta.ogDescription": "Curated conversations at Istanbul's best cafes.",
+
+    // Landing v2 — How it works
+    "landing.v2.how.title": "How it works",
+    "landing.v2.how.cafes.title": "For cafes & restaurants",
+    "landing.v2.how.cafes.step1.title": "Register your venue",
+    "landing.v2.how.cafes.step1.body": "Create a venue account and tell us about your cafe or restaurant.",
+    "landing.v2.how.cafes.step2.title": "Get approved",
+    "landing.v2.how.cafes.step2.body": "We review your profile so guests know exactly what to expect.",
+    "landing.v2.how.cafes.step3.title": "Host gatherings",
+    "landing.v2.how.cafes.step3.body": "Approve or propose themed tables and fill your quiet hours.",
+    "landing.v2.how.guests.title": "For guests",
+    "landing.v2.how.guests.step1.title": "Create your account",
+    "landing.v2.how.guests.step1.body": "Sign up and verify your email in seconds.",
+    "landing.v2.how.guests.step2.title": "Explore gatherings",
+    "landing.v2.how.guests.step2.body": "Find a subject and table that speaks to you.",
+    "landing.v2.how.guests.step3.title": "Join the table",
+    "landing.v2.how.guests.step3.body": "Reserve your seat and show up ready to connect.",
   },
 
 
@@ -1530,6 +1547,23 @@ export const translations: Record<Lang, Dict> = {
     "landing.v2.meta.title": "Ideal Gathering — Kimse artık yalnız olmayacak",
     "landing.v2.meta.description": "İstanbul'un en iyi kafelerinde özenle hazırlanmış sohbetler. Masaya katıl, yabancıları arkadaşa dönüştür.",
     "landing.v2.meta.ogDescription": "İstanbul'un en iyi kafelerinde özenle hazırlanmış sohbetler.",
+
+    // Landing v2 — How it works
+    "landing.v2.how.title": "Nasıl çalışır",
+    "landing.v2.how.cafes.title": "Kafeler ve restoranlar için",
+    "landing.v2.how.cafes.step1.title": "Mekânını kaydet",
+    "landing.v2.how.cafes.step1.body": "Mekân hesabı oluştur ve kafeni ya da restoranını tanıt.",
+    "landing.v2.how.cafes.step2.title": "Onay al",
+    "landing.v2.how.cafes.step2.body": "Profilin incelenir; misafirler ne bekleyeceğini bilir.",
+    "landing.v2.how.cafes.step3.title": "Buluşmalar düzenle",
+    "landing.v2.how.cafes.step3.body": "Konulu masaları onayla veya öner, sessiz saatlerini doldur.",
+    "landing.v2.how.guests.title": "Misafirler için",
+    "landing.v2.how.guests.step1.title": "Hesabını oluştur",
+    "landing.v2.how.guests.step1.body": "Hızlıca kaydol ve e-postanı doğrula.",
+    "landing.v2.how.guests.step2.title": "Buluşmaları keşfet",
+    "landing.v2.how.guests.step2.body": "Seni konuşan bir konu ve masa bul.",
+    "landing.v2.how.guests.step3.title": "Masaya katıl",
+    "landing.v2.how.guests.step3.body": "Koltuğunu ayır ve bağ kurmaya hazır gel.",
   },
   fa: {
     // Nav
@@ -2287,6 +2321,23 @@ export const translations: Record<Lang, Dict> = {
     "landing.v2.meta.title": "Ideal Gathering — دیگر هیچ‌کس تنها نخواهد بود",
     "landing.v2.meta.description": "گفتگوهای گزیده در بهترین کافه‌های استانبول. به میز بپیوند و غریبه‌ها را به دوست تبدیل کن.",
     "landing.v2.meta.ogDescription": "گفتگوهای گزیده در بهترین کافه‌های استانبول.",
+
+    // Landing v2 — How it works
+    "landing.v2.how.title": "چگونه کار می‌کند",
+    "landing.v2.how.cafes.title": "برای کافه‌ها و رستوران‌ها",
+    "landing.v2.how.cafes.step1.title": "مکان خود را ثبت کن",
+    "landing.v2.how.cafes.step1.body": "حساب مکان بساز و کافه یا رستورانت را معرفی کن.",
+    "landing.v2.how.cafes.step2.title": "تأیید شو",
+    "landing.v2.how.cafes.step2.body": "پروفایلت بررسی می‌شود تا مهمانان بدانند چه انتظاری داشته باشند.",
+    "landing.v2.how.cafes.step3.title": "گردهمایی برگزار کن",
+    "landing.v2.how.cafes.step3.body": "میزهای موضوعی را تأیید یا پیشنهاد بده و ساعت‌های خلوتت را پر کن.",
+    "landing.v2.how.guests.title": "برای مهمان‌ها",
+    "landing.v2.how.guests.step1.title": "حساب بساز",
+    "landing.v2.how.guests.step1.body": "در چند ثانیه ثبت‌نام کن و ایمیلت را تأیید کن.",
+    "landing.v2.how.guests.step2.title": "گردهمایی‌ها را بگرد",
+    "landing.v2.how.guests.step2.body": "موضوع و میزی که با تو حرف می‌زند پیدا کن.",
+    "landing.v2.how.guests.step3.title": "به میز بپیوند",
+    "landing.v2.how.guests.step3.body": "صندلیت را رزرو کن و آمادهٔ ارتباط بیا.",
   },
 };
 
