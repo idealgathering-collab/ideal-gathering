@@ -181,13 +181,20 @@
     font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
   }
 
+  body {
+    background-image: var(--nebula-glow-1), var(--nebula-glow-2), var(--nebula-glow-3);
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+  }
+
   h1, h2, h3, h4 {
     font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
-    color: var(--color-foreground);
+    color: #FFFFFF;
     font-weight: 700;
     letter-spacing: -0.02em;
     line-height: 1.05;
   }
+
 
   /* Landing page dark theme (scoped) — background is provided by the illustrated scene in index.tsx */
   .landing-dark {
