@@ -77,57 +77,59 @@
 :root {
   --radius: 1rem;
 
-  --background: oklch(0.98 0.01 85);
-  --foreground: oklch(0.18 0.05 300);
+  /* Cosmic nebula theme (site-wide, matches landing page) */
+  --background: oklch(0.16 0.05 300);
+  --foreground: oklch(0.87 0.06 300);
 
-  --card: oklch(0.99 0.01 85);
-  --card-foreground: oklch(0.18 0.05 300);
-  --popover: oklch(0.99 0.01 85);
-  --popover-foreground: oklch(0.18 0.05 300);
+  --card: oklch(0.22 0.06 300);
+  --card-foreground: oklch(0.93 0.03 300);
+  --popover: oklch(0.21 0.06 300);
+  --popover-foreground: oklch(0.93 0.03 300);
 
-  /* Deep vibrant purple */
-  --primary: oklch(0.42 0.22 280);
-  --primary-foreground: oklch(0.98 0.01 85);
-  --plum: oklch(0.42 0.22 280);
-  --plum-foreground: oklch(0.98 0.01 85);
+  /* Vibrant purple */
+  --primary: oklch(0.56 0.23 295);
+  --primary-foreground: oklch(0.99 0.005 300);
+  --plum: oklch(0.27 0.12 295);
+  --plum-foreground: oklch(0.99 0.005 300);
 
   /* Soft violet */
-  --secondary: oklch(0.62 0.2 280);
-  --secondary-foreground: oklch(0.98 0.01 85);
+  --secondary: oklch(0.3 0.08 295);
+  --secondary-foreground: oklch(0.92 0.04 300);
   --tangerine: oklch(0.72 0.18 80);
   --tangerine-foreground: oklch(0.18 0.05 300);
 
   /* Warm amber/gold highlight */
-  --accent: oklch(0.85 0.15 85);
-  --accent-foreground: oklch(0.18 0.05 300);
+  --accent: oklch(0.32 0.09 295);
+  --accent-foreground: oklch(0.94 0.03 300);
   --sunshine: oklch(0.85 0.15 85);
   --sunshine-foreground: oklch(0.18 0.05 300);
 
-  --muted: oklch(0.94 0.02 85);
-  --muted-foreground: oklch(0.45 0.05 300);
+  --muted: oklch(0.26 0.06 300);
+  --muted-foreground: oklch(0.72 0.06 300);
 
-  --destructive: oklch(0.6 0.22 25);
+  --destructive: oklch(0.58 0.22 25);
   --destructive-foreground: oklch(0.99 0.01 35);
 
-  --border: oklch(0.88 0.03 300);
-  --input: oklch(0.92 0.02 85);
-  --ring: oklch(0.55 0.22 280);
+  --border: oklch(0.34 0.07 295);
+  --input: oklch(0.3 0.07 295);
+  --ring: oklch(0.7 0.15 295);
 
-  --gradient-hero: linear-gradient(135deg, oklch(0.38 0.22 280) 0%, oklch(0.52 0.22 280) 45%, oklch(0.72 0.18 80) 100%);
+  --gradient-hero: linear-gradient(135deg, #0F0A1E 0%, #1E1038 45%, #2A1055 100%);
   --gradient-warm: linear-gradient(135deg, oklch(0.85 0.15 85) 0%, oklch(0.72 0.18 80) 100%);
-  --gradient-cool: linear-gradient(135deg, oklch(0.42 0.22 280) 0%, oklch(0.32 0.18 280) 100%);
-  --shadow-plum: 0 20px 40px -20px color-mix(in oklab, oklch(0.42 0.22 280) 45%, transparent);
+  --gradient-cool: linear-gradient(135deg, #1B1033 0%, #0F0A1E 100%);
+  --shadow-plum: 0 20px 40px -20px color-mix(in oklab, oklch(0.42 0.22 280) 65%, transparent);
   --shadow-tangerine: 0 20px 40px -20px color-mix(in oklab, oklch(0.72 0.18 80) 45%, transparent);
-  --shadow-soft: 0 8px 30px -12px color-mix(in oklab, oklch(0.18 0.05 300) 20%, transparent);
+  --shadow-soft: 0 8px 30px -12px rgba(0, 0, 0, 0.55);
 
-  --sidebar: oklch(0.99 0.01 85);
-  --sidebar-foreground: oklch(0.18 0.05 300);
-  --sidebar-primary: oklch(0.42 0.22 280);
-  --sidebar-primary-foreground: oklch(0.98 0.01 85);
-  --sidebar-accent: oklch(0.94 0.02 85);
-  --sidebar-accent-foreground: oklch(0.18 0.05 300);
-  --sidebar-border: oklch(0.88 0.03 300);
-  --sidebar-ring: oklch(0.55 0.22 280);
+  --sidebar: oklch(0.2 0.06 300);
+  --sidebar-foreground: oklch(0.9 0.04 300);
+  --sidebar-primary: oklch(0.56 0.23 295);
+  --sidebar-primary-foreground: oklch(0.99 0.005 300);
+  --sidebar-accent: oklch(0.28 0.07 300);
+  --sidebar-accent-foreground: oklch(0.93 0.03 300);
+  --sidebar-border: oklch(0.34 0.07 295);
+  --sidebar-ring: oklch(0.7 0.15 295);
+
 
   /* Round-table palette (Phase 1 landing) */
   --ink-navy: oklch(0.25 0.03 250);
@@ -179,13 +181,20 @@
     font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
   }
 
+  body {
+    background-image: var(--nebula-glow-1), var(--nebula-glow-2), var(--nebula-glow-3);
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+  }
+
   h1, h2, h3, h4 {
     font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
-    color: var(--color-foreground);
+    color: #FFFFFF;
     font-weight: 700;
     letter-spacing: -0.02em;
     line-height: 1.05;
   }
+
 
   /* Landing page dark theme (scoped) — background is provided by the illustrated scene in index.tsx */
   .landing-dark {
