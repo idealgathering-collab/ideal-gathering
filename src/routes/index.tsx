@@ -74,11 +74,13 @@ function StepCard({
   icon: Icon,
   title,
   body,
+  isLast,
 }: {
   number: number;
   icon: ComponentType<{ className?: string }>;
   title: string;
   body: string;
+  isLast?: boolean;
 }) {
   return (
     <div className="flex items-start gap-4 text-start">
@@ -86,9 +88,11 @@ function StepCard({
         <span className="flex h-8 w-8 items-center justify-center rounded-full bg-sunshine/90 text-[11px] font-bold text-sunshine-foreground">
           {number}
         </span>
-        <div className="h-full w-px bg-gradient-to-b from-sunshine/50 to-transparent last:hidden" aria-hidden />
+        {!isLast && (
+          <div className="h-10 w-px bg-gradient-to-b from-sunshine/50 to-transparent" aria-hidden />
+        )}
       </div>
-      <div className="flex-1 pb-6">
+      <div className={`flex-1 ${isLast ? "" : "pb-6"}`}>
         <div className="mb-1.5 inline-flex items-center gap-2 text-sm font-semibold text-white">
           <Icon className="h-4 w-4 text-sunshine" />
           {title}
