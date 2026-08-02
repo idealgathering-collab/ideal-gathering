@@ -69,6 +69,114 @@ function TeacupIcon() {
   );
 }
 
+function StepCard({
+  number,
+  icon: Icon,
+  title,
+  body,
+}: {
+  number: number;
+  icon: React.ComponentType<{ className?: string }>;
+  title: string;
+  body: string;
+}) {
+  return (
+    <div className="flex items-start gap-4 text-start">
+      <div className="flex flex-col items-center gap-1.5">
+        <span className="flex h-8 w-8 items-center justify-center rounded-full bg-sunshine/90 text-[11px] font-bold text-sunshine-foreground">
+          {number}
+        </span>
+        <div className="h-full w-px bg-gradient-to-b from-sunshine/50 to-transparent last:hidden" aria-hidden />
+      </div>
+      <div className="flex-1 pb-6">
+        <div className="mb-1.5 inline-flex items-center gap-2 text-sm font-semibold text-white">
+          <Icon className="h-4 w-4 text-sunshine" />
+          {title}
+        </div>
+        <p className="text-sm leading-relaxed text-[rgba(196,181,253,0.75)]">{body}</p>
+      </div>
+    </div>
+  );
+}
+
+function HowItWorksSection() {
+  const t = useT();
+  return (
+    <section className="relative z-20 w-full px-4 py-16 sm:py-24">
+      <div className="mx-auto max-w-5xl">
+        <div className="mb-10 text-center sm:mb-14">
+          <h2 className="font-serif-warm text-3xl font-semibold text-white sm:text-4xl">
+            {t("landing.v2.how.title")}
+          </h2>
+          <div className="mx-auto mt-3 h-px w-24 bg-gradient-to-r from-transparent via-sunshine/60 to-transparent" />
+        </div>
+
+        <div className="grid gap-6 md:grid-cols-2">
+          {/* Cafes */}
+          <div className="cosmic-panel p-6 sm:p-8">
+            <div className="mb-6 flex items-center gap-3">
+              <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-sunshine/15 text-sunshine">
+                <Store className="h-5 w-5" />
+              </span>
+              <h3 className="font-display text-xl text-white">{t("landing.v2.how.cafes.title")}</h3>
+            </div>
+            <div className="flex flex-col">
+              <StepCard
+                number={1}
+                icon={Store}
+                title={t("landing.v2.how.cafes.step1.title")}
+                body={t("landing.v2.how.cafes.step1.body")}
+              />
+              <StepCard
+                number={2}
+                icon={ClipboardCheck}
+                title={t("landing.v2.how.cafes.step2.title")}
+                body={t("landing.v2.how.cafes.step2.body")}
+              />
+              <StepCard
+                number={3}
+                icon={CalendarDays}
+                title={t("landing.v2.how.cafes.step3.title")}
+                body={t("landing.v2.how.cafes.step3.body")}
+              />
+            </div>
+          </div>
+
+          {/* Guests */}
+          <div className="cosmic-panel p-6 sm:p-8">
+            <div className="mb-6 flex items-center gap-3">
+              <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-primary/20 text-primary">
+                <UserPlus className="h-5 w-5" />
+              </span>
+              <h3 className="font-display text-xl text-white">{t("landing.v2.how.guests.title")}</h3>
+            </div>
+            <div className="flex flex-col">
+              <StepCard
+                number={1}
+                icon={UserPlus}
+                title={t("landing.v2.how.guests.step1.title")}
+                body={t("landing.v2.how.guests.step1.body")}
+              />
+              <StepCard
+                number={2}
+                icon={Compass}
+                title={t("landing.v2.how.guests.step2.title")}
+                body={t("landing.v2.how.guests.step2.body")}
+              />
+              <StepCard
+                number={3}
+                icon={Armchair}
+                title={t("landing.v2.how.guests.step3.title")}
+                body={t("landing.v2.how.guests.step3.body")}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function Home() {
   const t = useT();
   const { session, loading } = useSession();
@@ -100,7 +208,7 @@ function Home() {
   });
 
   return (
-    <div className="landing-dark cosmic-scene relative z-0 flex min-h-[100dvh] items-center justify-center overflow-hidden p-3 sm:p-6">
+    <div className="landing-dark cosmic-scene relative z-0 overflow-hidden">
       <div className="absolute top-4 right-4 z-50">
         <LanguageSwitcher />
       </div>
@@ -108,7 +216,7 @@ function Home() {
       {/* Nebula + Istanbul skyline backdrop */}
       <div
         aria-hidden
-        className="pointer-events-none absolute z-0 bg-cover bg-center animate-bg-drift"
+        className="pointer-events-none fixed inset-0 z-0 bg-cover bg-center animate-bg-drift"
         style={{
           backgroundImage: `url(${nebulaAsset.url})`,
           inset: "-4%",
@@ -117,7 +225,7 @@ function Home() {
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 z-[5]"
+        className="pointer-events-none fixed inset-0 z-[5]"
         style={{
           background:
             "radial-gradient(ellipse at 50% 45%, rgba(10,6,22,0.25) 0%, rgba(10,6,22,0.7) 65%, rgba(10,6,22,0.92) 100%)",
@@ -125,7 +233,7 @@ function Home() {
       />
 
       {/* Twinkling starfield */}
-      <div aria-hidden className="pointer-events-none absolute inset-0 z-[8] overflow-hidden">
+      <div aria-hidden className="pointer-events-none fixed inset-0 z-[8] overflow-hidden">
         {stars.map((s, i) => (
           <span
             key={i}
@@ -144,93 +252,98 @@ function Home() {
         ))}
       </div>
 
-      {/* Glass panel */}
-      <div className="cosmic-panel relative z-20 flex w-full max-w-[440px] flex-col items-center overflow-hidden px-6 py-6 text-center sm:px-9 sm:py-8">
-        <CrescentMark />
+      {/* Hero */}
+      <section className="relative z-10 flex min-h-[100dvh] items-center justify-center p-3 sm:p-6">
+        {/* Glass panel */}
+        <div className="cosmic-panel relative flex w-full max-w-[440px] flex-col items-center overflow-hidden px-6 py-6 text-center sm:px-9 sm:py-8">
+          <CrescentMark />
 
-        <div
-          className="font-serif-warm mt-3 text-[24px] font-semibold text-white tracking-tight"
-          style={{ textShadow: "0 0 24px rgba(196, 181, 253, 0.4)" }}
-        >
-          {t("landing.v2.brand")}
-        </div>
+          <div
+            className="font-serif-warm mt-3 text-[24px] font-semibold text-white tracking-tight"
+            style={{ textShadow: "0 0 24px rgba(196, 181, 253, 0.4)" }}
+          >
+            {t("landing.v2.brand")}
+          </div>
 
-        <div className="mt-3 flex w-full max-w-[260px] items-center gap-2">
-          <span className="h-px flex-1" style={{ background: "linear-gradient(90deg, transparent, rgba(167,139,250,0.55))" }} />
-          <Sparkle className="h-3 w-3" />
-          <span className="h-px flex-1" style={{ background: "linear-gradient(270deg, transparent, rgba(167,139,250,0.55))" }} />
-        </div>
+          <div className="mt-3 flex w-full max-w-[260px] items-center gap-2">
+            <span className="h-px flex-1" style={{ background: "linear-gradient(90deg, transparent, rgba(167,139,250,0.55))" }} />
+            <Sparkle className="h-3 w-3" />
+            <span className="h-px flex-1" style={{ background: "linear-gradient(270deg, transparent, rgba(167,139,250,0.55))" }} />
+          </div>
 
-        <h1
-          className="font-serif-warm mt-4 text-[28px] sm:text-[38px] font-semibold text-white leading-[1.05] tracking-[-0.015em] whitespace-pre-line"
-          style={{
-            textShadow:
-              "0 0 40px rgba(124, 58, 237, 0.5), 0 0 90px rgba(212, 160, 74, 0.16)",
-          }}
-        >
-          {t("landing.v2.title")}
-        </h1>
+          <h1
+            className="font-serif-warm mt-4 text-[28px] sm:text-[38px] font-semibold text-white leading-[1.05] tracking-[-0.015em] whitespace-pre-line"
+            style={{
+              textShadow:
+                "0 0 40px rgba(124, 58, 237, 0.5), 0 0 90px rgba(212, 160, 74, 0.16)",
+            }}
+          >
+            {t("landing.v2.title")}
+          </h1>
 
-        <p
-          tabIndex={0}
-          className="magic-glow-text mt-3 sm:mt-4 cursor-default text-[19px] sm:text-[21px] font-medium tracking-wide"
-        >
-          {t("landing.v2.subtitle")}
-        </p>
+          <p
+            tabIndex={0}
+            className="magic-glow-text mt-3 sm:mt-4 cursor-default text-[19px] sm:text-[21px] font-medium tracking-wide"
+          >
+            {t("landing.v2.subtitle")}
+          </p>
 
-        <Link
-          to="/auth"
-          search={{ mode: "signup" }}
-          className="cosmic-cta mt-5 sm:mt-7 inline-flex w-full items-center justify-center gap-3 rounded-full px-8 py-4 text-base font-semibold text-white"
-        >
-          <TeacupIcon />
-          {t("landing.v2.cta.table")}
-        </Link>
-
-        {/* Constellation of people */}
-        <img
-          src={constellationAsset.url}
-          alt="A constellation of people connected together"
-          width={1024}
-          height={768}
-          loading="lazy"
-          className="mt-4 w-full max-w-[230px] sm:mt-5 sm:max-w-[300px] animate-constellation-float select-none"
-          style={{ filter: "drop-shadow(0 0 26px rgba(124,58,237,0.45))" }}
-        />
-
-        <div className="mt-5 sm:mt-6 grid w-full grid-cols-2 gap-3">
           <Link
             to="/auth"
             search={{ mode: "signup" }}
-            className="cosmic-outline-btn inline-flex items-center justify-center gap-2 rounded-2xl px-4 py-3 text-sm font-medium"
+            className="cosmic-cta mt-5 sm:mt-7 inline-flex w-full items-center justify-center gap-3 rounded-full px-8 py-4 text-base font-semibold text-white"
           >
-            <UserPlus className="h-4 w-4" />
-            {t("landing.v2.cta.signup")}
+            <TeacupIcon />
+            {t("landing.v2.cta.table")}
           </Link>
-          <Link
-            to="/auth"
-            className="cosmic-outline-btn inline-flex items-center justify-center gap-2 rounded-2xl px-4 py-3 text-sm font-medium"
+
+          {/* Constellation of people */}
+          <img
+            src={constellationAsset.url}
+            alt="A constellation of people connected together"
+            width={1024}
+            height={768}
+            loading="lazy"
+            className="mt-4 w-full max-w-[230px] sm:mt-5 sm:max-w-[300px] animate-constellation-float select-none"
+            style={{ filter: "drop-shadow(0 0 26px rgba(124,58,237,0.45))" }}
+          />
+
+          <div className="mt-5 sm:mt-6 grid w-full grid-cols-2 gap-3">
+            <Link
+              to="/auth"
+              search={{ mode: "signup" }}
+              className="cosmic-outline-btn inline-flex items-center justify-center gap-2 rounded-2xl px-4 py-3 text-sm font-medium"
+            >
+              <UserPlus className="h-4 w-4" />
+              {t("landing.v2.cta.signup")}
+            </Link>
+            <Link
+              to="/auth"
+              className="cosmic-outline-btn inline-flex items-center justify-center gap-2 rounded-2xl px-4 py-3 text-sm font-medium"
+            >
+              <Lock className="h-4 w-4" />
+              {t("landing.v2.cta.login")}
+            </Link>
+          </div>
+
+          <div
+            className="mt-6 flex flex-wrap items-center justify-center gap-3 text-xs"
+            style={{ color: "rgba(196, 181, 253, 0.55)" }}
           >
-            <Lock className="h-4 w-4" />
-            {t("landing.v2.cta.login")}
-          </Link>
-        </div>
+            <Link to="/partnership" className="hover:text-white/80 transition-colors">{t("landing.v2.footer.about")}</Link>
+            <span>·</span>
+            <Link to="/venue/auth" className="hover:text-white/80 transition-colors">{t("landing.v2.footer.venues")}</Link>
+            <span>·</span>
+            <Link to="/terms" className="hover:text-white/80 transition-colors">{t("landing.v2.footer.terms")}</Link>
+          </div>
 
-        <div
-          className="mt-6 flex flex-wrap items-center justify-center gap-3 text-xs"
-          style={{ color: "rgba(196, 181, 253, 0.55)" }}
-        >
-          <Link to="/partnership" className="hover:text-white/80 transition-colors">{t("landing.v2.footer.about")}</Link>
-          <span>·</span>
-          <Link to="/venue/auth" className="hover:text-white/80 transition-colors">{t("landing.v2.footer.venues")}</Link>
-          <span>·</span>
-          <Link to="/terms" className="hover:text-white/80 transition-colors">{t("landing.v2.footer.terms")}</Link>
+          <div className="mt-5 scale-50 opacity-50">
+            <CrescentMark />
+          </div>
         </div>
+      </section>
 
-        <div className="mt-5 scale-50 opacity-50">
-          <CrescentMark />
-        </div>
-      </div>
+      <HowItWorksSection />
     </div>
   );
 }
