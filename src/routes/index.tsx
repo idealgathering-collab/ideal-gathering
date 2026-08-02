@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useEffect } from "react";
+import { useEffect, type ComponentType } from "react";
 import {
   UserPlus,
   Lock,
@@ -76,7 +76,7 @@ function StepCard({
   body,
 }: {
   number: number;
-  icon: React.ComponentType<{ className?: string }>;
+  icon: ComponentType<{ className?: string }>;
   title: string;
   body: string;
 }) {
