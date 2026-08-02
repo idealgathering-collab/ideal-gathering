@@ -1,6 +1,14 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect } from "react";
-import { UserPlus, Lock } from "lucide-react";
+import {
+  UserPlus,
+  Lock,
+  Store,
+  ClipboardCheck,
+  CalendarDays,
+  Compass,
+  Armchair,
+} from "lucide-react";
 import { useT } from "@/i18n";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { useSession } from "@/hooks/use-session";
