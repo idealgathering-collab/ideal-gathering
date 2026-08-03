@@ -265,13 +265,56 @@ function Home() {
               width: `${s.size}px`,
               height: `${s.size}px`,
               background: i % 4 === 0 ? "#A78BFA" : "#EDE9FE",
-              boxShadow: "0 0 6px rgba(196,181,253,0.8)",
+              boxShadow: i % 4 === 0
+                ? "0 0 10px rgba(167,139,250,1), 0 0 20px rgba(124,58,237,0.7)"
+                : "0 0 8px rgba(237,233,254,0.95), 0 0 16px rgba(196,181,253,0.6)",
               animationDelay: `${s.delay}s`,
               animationDuration: `${s.duration}s`,
             }}
           />
         ))}
       </div>
+
+      {/* Shooting stars */}
+      <div aria-hidden className="pointer-events-none fixed inset-0 z-[8] overflow-hidden">
+        {shootingStars.map((s, i) => (
+          <span
+            key={i}
+            className="animate-shooting-star absolute h-px w-[140px] rounded-full"
+            style={{
+              top: s.top,
+              left: s.left,
+              background:
+                "linear-gradient(90deg, transparent, rgba(237,233,254,0.95), rgba(167,139,250,0.5), transparent)",
+              boxShadow: "0 0 12px rgba(196,181,253,0.9)",
+              animationDelay: `${s.delay}s`,
+              animationDuration: `${s.duration}s`,
+            }}
+          />
+        ))}
+      </div>
+
+      {/* Drifting sparkle motes */}
+      <div aria-hidden className="pointer-events-none fixed inset-0 z-[9] overflow-hidden">
+        {motes.map((m, i) => (
+          <span
+            key={i}
+            className="animate-sparkle-drift absolute rounded-full"
+            style={{
+              left: `${m.x}%`,
+              top: `${m.y}%`,
+              width: `${m.size}px`,
+              height: `${m.size}px`,
+              background: i % 3 === 0 ? "#F5D08A" : "#DDD6FE",
+              boxShadow: "0 0 12px rgba(196,181,253,0.9)",
+              animationDelay: `${m.delay}s`,
+              animationDuration: `${m.duration}s`,
+            }}
+          />
+        ))}
+      </div>
+
+
 
       {/* Hero */}
       <section className="relative z-10 flex min-h-[100dvh] items-center justify-center p-3 sm:p-6">
