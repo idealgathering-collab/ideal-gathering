@@ -44,11 +44,11 @@ function CrescentMark() {
       alt="Ideal Gathering logo"
       width={96}
       height={96}
-      className="h-14 w-14 rounded-full object-contain"
-      style={{ filter: "drop-shadow(0 0 14px rgba(167,139,250,0.65))" }}
+      className="animate-emblem-glow h-14 w-14 rounded-full object-contain"
     />
   );
 }
+
 
 function Sparkle({ className }: { className?: string }) {
   return (
@@ -202,7 +202,7 @@ function Home() {
     );
   }
 
-  const stars = Array.from({ length: 44 }, (_, i) => {
+  const stars = Array.from({ length: 80 }, (_, i) => {
     const seed = i * 9301 + 49297;
     return {
       x: seed % 100,
@@ -212,6 +212,21 @@ function Home() {
       duration: 3 + (i % 5),
     };
   });
+
+  const shootingStars = [
+    { top: "8%", left: "-8%", delay: 2, duration: 7 },
+    { top: "26%", left: "38%", delay: 9, duration: 8 },
+    { top: "58%", left: "-12%", delay: 15, duration: 9 },
+  ];
+
+  const motes = Array.from({ length: 18 }, (_, i) => ({
+    x: (i * 37) % 100,
+    y: (i * 53) % 100,
+    size: 2 + (i % 3),
+    delay: (i % 7) * 1.1,
+    duration: 6 + (i % 5),
+  }));
+
 
   return (
     <div className="landing-dark cosmic-scene relative z-0 overflow-hidden">
@@ -250,7 +265,9 @@ function Home() {
               width: `${s.size}px`,
               height: `${s.size}px`,
               background: i % 4 === 0 ? "#A78BFA" : "#EDE9FE",
-              boxShadow: "0 0 6px rgba(196,181,253,0.8)",
+              boxShadow: i % 4 === 0
+                ? "0 0 10px rgba(167,139,250,1), 0 0 20px rgba(124,58,237,0.7)"
+                : "0 0 8px rgba(237,233,254,0.95), 0 0 16px rgba(196,181,253,0.6)",
               animationDelay: `${s.delay}s`,
               animationDuration: `${s.duration}s`,
             }}
@@ -258,34 +275,80 @@ function Home() {
         ))}
       </div>
 
+      {/* Shooting stars */}
+      <div aria-hidden className="pointer-events-none fixed inset-0 z-[8] overflow-hidden">
+        {shootingStars.map((s, i) => (
+          <span
+            key={i}
+            className="animate-shooting-star absolute h-px w-[140px] rounded-full"
+            style={{
+              top: s.top,
+              left: s.left,
+              background:
+                "linear-gradient(90deg, transparent, rgba(237,233,254,0.95), rgba(167,139,250,0.5), transparent)",
+              boxShadow: "0 0 12px rgba(196,181,253,0.9)",
+              animationDelay: `${s.delay}s`,
+              animationDuration: `${s.duration}s`,
+            }}
+          />
+        ))}
+      </div>
+
+      {/* Drifting sparkle motes */}
+      <div aria-hidden className="pointer-events-none fixed inset-0 z-[9] overflow-hidden">
+        {motes.map((m, i) => (
+          <span
+            key={i}
+            className="animate-sparkle-drift absolute rounded-full"
+            style={{
+              left: `${m.x}%`,
+              top: `${m.y}%`,
+              width: `${m.size}px`,
+              height: `${m.size}px`,
+              background: i % 3 === 0 ? "#F5D08A" : "#DDD6FE",
+              boxShadow: "0 0 12px rgba(196,181,253,0.9)",
+              animationDelay: `${m.delay}s`,
+              animationDuration: `${m.duration}s`,
+            }}
+          />
+        ))}
+      </div>
+
+
+
       {/* Hero */}
       <section className="relative z-10 flex min-h-[100dvh] items-center justify-center p-3 sm:p-6">
-        {/* Glass panel */}
-        <div className="cosmic-panel relative flex w-full max-w-[440px] flex-col items-center overflow-hidden px-6 py-6 text-center sm:px-9 sm:py-8">
+        <div className="relative w-full max-w-[440px]">
+          {/* Aura behind the glass panel */}
+          <div
+            aria-hidden
+            className="cosmic-aura pointer-events-none absolute -inset-10 -z-10 rounded-[60px] blur-2xl"
+            style={{
+              background:
+                "radial-gradient(ellipse at 50% 40%, rgba(124,58,237,0.45) 0%, rgba(167,139,250,0.22) 45%, transparent 72%)",
+            }}
+          />
+          {/* Glass panel */}
+          <div className="cosmic-panel relative flex w-full flex-col items-center overflow-hidden px-6 py-6 text-center sm:px-9 sm:py-8">
           <CrescentMark />
 
           <div
             className="font-serif-warm mt-3 text-[24px] font-semibold text-white tracking-tight"
-            style={{ textShadow: "0 0 24px rgba(196, 181, 253, 0.4)" }}
+            style={{ textShadow: "0 0 18px rgba(196, 181, 253, 0.75), 0 0 42px rgba(124, 58, 237, 0.45)" }}
           >
             {t("landing.v2.brand")}
           </div>
 
           <div className="mt-3 flex w-full max-w-[260px] items-center gap-2">
-            <span className="h-px flex-1" style={{ background: "linear-gradient(90deg, transparent, rgba(167,139,250,0.55))" }} />
-            <Sparkle className="h-3 w-3" />
-            <span className="h-px flex-1" style={{ background: "linear-gradient(270deg, transparent, rgba(167,139,250,0.55))" }} />
+            <span className="h-px flex-1" style={{ background: "linear-gradient(90deg, transparent, rgba(167,139,250,0.85))" }} />
+            <Sparkle className="animate-star-twinkle h-3 w-3 [animation-duration:3.5s]" />
+            <span className="h-px flex-1" style={{ background: "linear-gradient(270deg, transparent, rgba(167,139,250,0.85))" }} />
           </div>
 
-          <h1
-            className="font-serif-warm mt-4 text-[28px] sm:text-[38px] font-semibold text-white leading-[1.05] tracking-[-0.015em] whitespace-pre-line"
-            style={{
-              textShadow:
-                "0 0 40px rgba(124, 58, 237, 0.5), 0 0 90px rgba(212, 160, 74, 0.16)",
-            }}
-          >
+          <h1 className="font-serif-warm animate-headline-glow mt-4 text-[28px] sm:text-[38px] font-semibold text-white leading-[1.05] tracking-[-0.015em] whitespace-pre-line">
             {t("landing.v2.title")}
           </h1>
+
 
           <p
             tabIndex={0}
@@ -346,8 +409,10 @@ function Home() {
           <div className="mt-5 scale-50 opacity-50">
             <CrescentMark />
           </div>
+          </div>
         </div>
       </section>
+
 
       <HowItWorksSection />
     </div>
