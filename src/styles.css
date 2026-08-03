@@ -568,3 +568,55 @@
 @media (prefers-reduced-motion: reduce) {
   .rt-drift { animation: none !important; }
 }
+
+/* ============================================================
+   Shared form field styling (inputs, selects, labels, errors)
+   ============================================================ */
+@utility form-panel {
+  border-radius: 1.5rem;
+  background: var(--glass-card-bg);
+  backdrop-filter: blur(14px);
+  border: 1px solid var(--glass-card-border);
+  box-shadow: var(--glass-card-glow);
+}
+
+@utility field-label {
+  color: color-mix(in srgb, var(--color-foreground) 88%, transparent);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+@utility field-surface {
+  background: color-mix(in srgb, var(--color-input) 28%, transparent);
+  border-color: color-mix(in srgb, var(--color-input) 90%, transparent);
+  color: var(--color-foreground);
+  transition: border-color 150ms ease, box-shadow 150ms ease, background-color 150ms ease;
+
+  &:hover:not(:disabled) {
+    border-color: color-mix(in srgb, var(--color-primary) 45%, transparent);
+  }
+  &:focus-visible,
+  &[data-state="open"] {
+    border-color: color-mix(in srgb, var(--color-primary) 70%, transparent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-ring) 25%, transparent);
+    outline: none;
+  }
+  &[aria-invalid="true"] {
+    border-color: color-mix(in srgb, var(--color-destructive) 70%, transparent);
+  }
+  &[aria-invalid="true"]:focus-visible {
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-destructive) 25%, transparent);
+  }
+}
+
+@utility field-hint {
+  color: var(--color-muted-foreground);
+  font-size: 0.75rem;
+}
+
+@utility field-error {
+  color: color-mix(in srgb, var(--color-destructive) 82%, white 18%);
+  font-size: 0.75rem;
+  font-weight: 500;
+}

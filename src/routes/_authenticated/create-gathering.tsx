@@ -67,6 +67,7 @@ function CreateGathering() {
   const qc = useQueryClient();
   const [loading, setLoading] = useState(false);
   const [addOpen, setAddOpen] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const [form, setForm] = useState({
     location: "",
     subject: "",
@@ -134,7 +135,15 @@ function CreateGathering() {
     if (!user) return;
     if (!emailVerified) return toast.error(t("create.verifyFirst"));
     try {
-      const v = schema.parse(form);
+      const parsed = schema.safeParse(form);
+      if (!parsed.success) {
+        const next: Record<string, string> = {};
+        for (const issue of parsed.error.issues) next[String(issue.path[0])] = issue.message;
+        setErrors(next);
+        return;
+      }
+      setErrors({});
+      const v = parsed.data;
       const iso = new Date(v.starts_at).toISOString();
       if (new Date(iso) < new Date()) return toast.error(t("create.futureTime"));
 
@@ -216,7 +225,7 @@ function CreateGathering() {
           </div>
         )}
 
-        <form onSubmit={submit} className="grid gap-5 rounded-3xl border border-border bg-card p-6 shadow-soft">
+        <form onSubmit={submit} className="form-panel grid gap-5 p-6">
           <div className="grid gap-2">
             <Label>{t("create.location")} *</Label>
             <Select
@@ -229,7 +238,7 @@ function CreateGathering() {
                 setForm({ ...form, location: v });
               }}
             >
-              <SelectTrigger>
+              <SelectTrigger aria-invalid={!!errors.location}>
                 <SelectValue placeholder={t("create.locationPh")} />
               </SelectTrigger>
               <SelectContent>
@@ -259,9 +268,8 @@ function CreateGathering() {
                 <SelectItem value={ADD_NEW}>{t("create.addLocation")}</SelectItem>
               </SelectContent>
             </Select>
-            {nothingToPick && (
-              <p className="text-xs text-muted-foreground">{t("create.noLocationsYet")}</p>
-            )}
+            {errors.location && <p className="field-error">{errors.location}</p>}
+            {nothingToPick && <p className="field-hint">{t("create.noLocationsYet")}</p>}
           </div>
 
           <div className="grid gap-2">
@@ -273,7 +281,9 @@ function CreateGathering() {
               value={form.subject}
               placeholder={t("create.subjectPh")}
               onChange={(e) => setForm({ ...form, subject: e.target.value })}
+              aria-invalid={!!errors.subject}
             />
+            {errors.subject && <p className="field-error">{errors.subject}</p>}
           </div>
 
           <div className="grid gap-2">
@@ -284,7 +294,9 @@ function CreateGathering() {
               value={form.description}
               onChange={(e) => setForm({ ...form, description: e.target.value })}
               placeholder={t("create.descriptionPh")}
+              aria-invalid={!!errors.description}
             />
+            {errors.description && <p className="field-error">{errors.description}</p>}
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2">
@@ -296,7 +308,9 @@ function CreateGathering() {
                 required
                 value={form.starts_at}
                 onChange={(e) => setForm({ ...form, starts_at: e.target.value })}
+                aria-invalid={!!errors.starts_at}
               />
+              {errors.starts_at && <p className="field-error">{errors.starts_at}</p>}
             </div>
             <div className="grid gap-2">
               <Label htmlFor="seats">{t("create.seats")} *</Label>
@@ -307,11 +321,13 @@ function CreateGathering() {
                 max={30}
                 value={form.seats}
                 onChange={(e) => setForm({ ...form, seats: Number(e.target.value) })}
+                aria-invalid={!!errors.seats}
               />
+              {errors.seats && <p className="field-error">{errors.seats}</p>}
             </div>
           </div>
 
-          <p className="rounded-2xl bg-sunshine/40 px-4 py-3 text-xs text-foreground/80">
+          <p className="field-hint rounded-2xl border border-border/60 bg-muted/30 px-4 py-3">
             {t("create.needsAdminApproval")}
           </p>
 

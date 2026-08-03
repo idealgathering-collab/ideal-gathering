@@ -120,7 +120,7 @@ function VenueAuth() {
           </Link>
         </div>
 
-        <div className="rounded-3xl border border-border bg-card p-8 shadow-plum">
+        <div className="form-panel p-8">
           <h1 className="font-display text-3xl">
             {mode === "signup" ? t("venueAuth.title.signup") : t("venueAuth.title.signin")}
           </h1>
@@ -160,7 +160,7 @@ function VenueAuth() {
             </div>
 
             {mode === "signup" && (
-              <label className="flex items-start gap-2 text-xs text-muted-foreground">
+              <label className="field-hint flex items-start gap-2">
                 <Checkbox checked={agree} onCheckedChange={(v) => setAgree(v === true)} className="mt-0.5" />
                 <span>
                   {t("consent.agree")} <Link to="/privacy" className="text-primary hover:underline">{t("consent.privacy")}</Link>{" "}
@@ -184,7 +184,7 @@ function VenueAuth() {
               : `${t("auth.noAccount")} ${t("auth.switchSignup")}`}
           </button>
 
-          <div className="mt-3 text-center text-xs text-muted-foreground">
+          <div className="field-hint mt-3 text-center">
             {t("venueAuth.notVenueHint")}{" "}
             <Link to="/auth" className="text-primary hover:underline">
               {t("venueAuth.userLogin")}
