@@ -409,8 +409,10 @@ function Home() {
           <div className="mt-5 scale-50 opacity-50">
             <CrescentMark />
           </div>
+          </div>
         </div>
       </section>
+
 
       <HowItWorksSection />
     </div>
