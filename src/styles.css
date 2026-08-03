@@ -575,15 +575,79 @@
   }
 }
 
+/* Mobile: tone down glow intensity and expensive blurs for performance */
+@media (max-width: 767px) {
+  .cosmic-panel {
+    backdrop-filter: blur(10px) saturate(125%);
+    animation-duration: 12s;
+  }
+  .cosmic-panel::after {
+    opacity: 0.4;
+    animation-duration: 20s;
+  }
+  .cosmic-cta {
+    animation-duration: 6.5s;
+  }
+  .cosmic-cta::after {
+    animation-duration: 7s;
+  }
+  .cosmic-aura {
+    opacity: 0.7;
+    animation-duration: 10s;
+  }
+  .animate-bg-drift {
+    animation-duration: 60s;
+  }
+  .animate-emblem-glow,
+  .animate-headline-glow,
+  .magic-glow-text {
+    animation-duration: 8s;
+  }
+  .glass-card {
+    backdrop-filter: blur(12px) saturate(130%);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+
   [style*="nebula-drift"], [style*="particle-float"],
   [style*="node-pulse"], [style*="edge-pulse"],
   .animate-bg-drift, .magic-glow-text, .magic-shimmer-text,
   .animate-star-twinkle, .animate-constellation-float,
   .cosmic-panel, .cosmic-panel::after, .cosmic-cta, .cosmic-cta::after,
   .cosmic-aura, .animate-shooting-star, .animate-sparkle-drift,
-  .animate-emblem-glow, .animate-headline-glow {
+  .animate-emblem-glow, .animate-headline-glow,
+  .animate-logo-spin, .animate-flag-pulse {
     animation: none !important;
+  }
+
+  /* Purely decorative motion layers add nothing without animation */
+  .animate-shooting-star,
+  .animate-sparkle-drift,
+  .cosmic-panel::after,
+  .cosmic-cta::after {
+    display: none !important;
+  }
+
+  .magic-shimmer-text {
+    -webkit-background-clip: initial;
+    background-clip: initial;
+    background-image: none;
+    color: var(--dark-heading);
+  }
+
+  .cosmic-cta:hover,
+  .cosmic-outline-btn:hover,
+  .hover-scale:hover {
+    transform: none !important;
   }
 }
 

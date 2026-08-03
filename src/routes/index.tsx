@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useEffect, type ComponentType } from "react";
+import { useEffect, useState, type ComponentType } from "react";
 import {
   UserPlus,
   Lock,
@@ -12,6 +12,7 @@ import {
 import { useT } from "@/i18n";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { useSession } from "@/hooks/use-session";
+import { useIsMobile } from "@/hooks/use-mobile";
 import nebulaAsset from "@/assets/landing-nebula-skyline.jpg.asset.json";
 import constellationAsset from "@/assets/constellation-people.png.asset.json";
 import logoAsset from "@/assets/ideal-gathering-logo.png.asset.json";
@@ -183,10 +184,24 @@ function HowItWorksSection() {
   );
 }
 
+function usePrefersReducedMotion() {
+  const [reduced, setReduced] = useState(false);
+  useEffect(() => {
+    const mql = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const onChange = () => setReduced(mql.matches);
+    onChange();
+    mql.addEventListener("change", onChange);
+    return () => mql.removeEventListener("change", onChange);
+  }, []);
+  return reduced;
+}
+
 function Home() {
   const t = useT();
   const { session, loading } = useSession();
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
+  const reducedMotion = usePrefersReducedMotion();
 
   useEffect(() => {
     if (!loading && session) {
@@ -202,7 +217,11 @@ function Home() {
     );
   }
 
-  const stars = Array.from({ length: 80 }, (_, i) => {
+  // Reduced-motion: no particles at all. Mobile: lighter counts for perf.
+  const starCount = reducedMotion ? 0 : isMobile ? 30 : 80;
+  const moteCount = reducedMotion ? 0 : isMobile ? 6 : 18;
+
+  const stars = Array.from({ length: starCount }, (_, i) => {
     const seed = i * 9301 + 49297;
     return {
       x: seed % 100,
@@ -213,13 +232,18 @@ function Home() {
     };
   });
 
-  const shootingStars = [
+  const allShootingStars = [
     { top: "8%", left: "-8%", delay: 2, duration: 7 },
     { top: "26%", left: "38%", delay: 9, duration: 8 },
     { top: "58%", left: "-12%", delay: 15, duration: 9 },
   ];
+  const shootingStars = reducedMotion
+    ? []
+    : isMobile
+      ? allShootingStars.slice(0, 1)
+      : allShootingStars;
 
-  const motes = Array.from({ length: 18 }, (_, i) => ({
+  const motes = Array.from({ length: moteCount }, (_, i) => ({
     x: (i * 37) % 100,
     y: (i * 53) % 100,
     size: 2 + (i % 3),
