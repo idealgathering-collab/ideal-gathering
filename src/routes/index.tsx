@@ -184,10 +184,24 @@ function HowItWorksSection() {
   );
 }
 
+function usePrefersReducedMotion() {
+  const [reduced, setReduced] = useState(false);
+  useEffect(() => {
+    const mql = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const onChange = () => setReduced(mql.matches);
+    onChange();
+    mql.addEventListener("change", onChange);
+    return () => mql.removeEventListener("change", onChange);
+  }, []);
+  return reduced;
+}
+
 function Home() {
   const t = useT();
   const { session, loading } = useSession();
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
+  const reducedMotion = usePrefersReducedMotion();
 
   useEffect(() => {
     if (!loading && session) {
