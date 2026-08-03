@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useEffect, type ComponentType } from "react";
+import { useEffect, useState, type ComponentType } from "react";
 import {
   UserPlus,
   Lock,
@@ -12,6 +12,7 @@ import {
 import { useT } from "@/i18n";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { useSession } from "@/hooks/use-session";
+import { useIsMobile } from "@/hooks/use-mobile";
 import nebulaAsset from "@/assets/landing-nebula-skyline.jpg.asset.json";
 import constellationAsset from "@/assets/constellation-people.png.asset.json";
 import logoAsset from "@/assets/ideal-gathering-logo.png.asset.json";
