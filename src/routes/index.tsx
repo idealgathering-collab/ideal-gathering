@@ -44,11 +44,11 @@ function CrescentMark() {
       alt="Ideal Gathering logo"
       width={96}
       height={96}
-      className="h-14 w-14 rounded-full object-contain"
-      style={{ filter: "drop-shadow(0 0 14px rgba(167,139,250,0.65))" }}
+      className="animate-emblem-glow h-14 w-14 rounded-full object-contain"
     />
   );
 }
+
 
 function Sparkle({ className }: { className?: string }) {
   return (
