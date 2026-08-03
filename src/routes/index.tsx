@@ -202,7 +202,7 @@ function Home() {
     );
   }
 
-  const stars = Array.from({ length: 44 }, (_, i) => {
+  const stars = Array.from({ length: 80 }, (_, i) => {
     const seed = i * 9301 + 49297;
     return {
       x: seed % 100,
@@ -212,6 +212,21 @@ function Home() {
       duration: 3 + (i % 5),
     };
   });
+
+  const shootingStars = [
+    { top: "8%", left: "-8%", delay: 2, duration: 7 },
+    { top: "26%", left: "38%", delay: 9, duration: 8 },
+    { top: "58%", left: "-12%", delay: 15, duration: 9 },
+  ];
+
+  const motes = Array.from({ length: 18 }, (_, i) => ({
+    x: (i * 37) % 100,
+    y: (i * 53) % 100,
+    size: 2 + (i % 3),
+    delay: (i % 7) * 1.1,
+    duration: 6 + (i % 5),
+  }));
+
 
   return (
     <div className="landing-dark cosmic-scene relative z-0 overflow-hidden">
