@@ -318,32 +318,37 @@ function Home() {
 
       {/* Hero */}
       <section className="relative z-10 flex min-h-[100dvh] items-center justify-center p-3 sm:p-6">
-        {/* Glass panel */}
-        <div className="cosmic-panel relative flex w-full max-w-[440px] flex-col items-center overflow-hidden px-6 py-6 text-center sm:px-9 sm:py-8">
+        <div className="relative w-full max-w-[440px]">
+          {/* Aura behind the glass panel */}
+          <div
+            aria-hidden
+            className="cosmic-aura pointer-events-none absolute -inset-10 -z-10 rounded-[60px] blur-2xl"
+            style={{
+              background:
+                "radial-gradient(ellipse at 50% 40%, rgba(124,58,237,0.45) 0%, rgba(167,139,250,0.22) 45%, transparent 72%)",
+            }}
+          />
+          {/* Glass panel */}
+          <div className="cosmic-panel relative flex w-full flex-col items-center overflow-hidden px-6 py-6 text-center sm:px-9 sm:py-8">
           <CrescentMark />
 
           <div
             className="font-serif-warm mt-3 text-[24px] font-semibold text-white tracking-tight"
-            style={{ textShadow: "0 0 24px rgba(196, 181, 253, 0.4)" }}
+            style={{ textShadow: "0 0 18px rgba(196, 181, 253, 0.75), 0 0 42px rgba(124, 58, 237, 0.45)" }}
           >
             {t("landing.v2.brand")}
           </div>
 
           <div className="mt-3 flex w-full max-w-[260px] items-center gap-2">
-            <span className="h-px flex-1" style={{ background: "linear-gradient(90deg, transparent, rgba(167,139,250,0.55))" }} />
-            <Sparkle className="h-3 w-3" />
-            <span className="h-px flex-1" style={{ background: "linear-gradient(270deg, transparent, rgba(167,139,250,0.55))" }} />
+            <span className="h-px flex-1" style={{ background: "linear-gradient(90deg, transparent, rgba(167,139,250,0.85))" }} />
+            <Sparkle className="animate-star-twinkle h-3 w-3 [animation-duration:3.5s]" />
+            <span className="h-px flex-1" style={{ background: "linear-gradient(270deg, transparent, rgba(167,139,250,0.85))" }} />
           </div>
 
-          <h1
-            className="font-serif-warm mt-4 text-[28px] sm:text-[38px] font-semibold text-white leading-[1.05] tracking-[-0.015em] whitespace-pre-line"
-            style={{
-              textShadow:
-                "0 0 40px rgba(124, 58, 237, 0.5), 0 0 90px rgba(212, 160, 74, 0.16)",
-            }}
-          >
+          <h1 className="font-serif-warm animate-headline-glow mt-4 text-[28px] sm:text-[38px] font-semibold text-white leading-[1.05] tracking-[-0.015em] whitespace-pre-line">
             {t("landing.v2.title")}
           </h1>
+
 
           <p
             tabIndex={0}
