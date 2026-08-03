@@ -217,7 +217,11 @@ function Home() {
     );
   }
 
-  const stars = Array.from({ length: 80 }, (_, i) => {
+  // Reduced-motion: no particles at all. Mobile: lighter counts for perf.
+  const starCount = reducedMotion ? 0 : isMobile ? 30 : 80;
+  const moteCount = reducedMotion ? 0 : isMobile ? 6 : 18;
+
+  const stars = Array.from({ length: starCount }, (_, i) => {
     const seed = i * 9301 + 49297;
     return {
       x: seed % 100,
@@ -228,13 +232,18 @@ function Home() {
     };
   });
 
-  const shootingStars = [
+  const allShootingStars = [
     { top: "8%", left: "-8%", delay: 2, duration: 7 },
     { top: "26%", left: "38%", delay: 9, duration: 8 },
     { top: "58%", left: "-12%", delay: 15, duration: 9 },
   ];
+  const shootingStars = reducedMotion
+    ? []
+    : isMobile
+      ? allShootingStars.slice(0, 1)
+      : allShootingStars;
 
-  const motes = Array.from({ length: 18 }, (_, i) => ({
+  const motes = Array.from({ length: moteCount }, (_, i) => ({
     x: (i * 37) % 100,
     y: (i * 53) % 100,
     size: 2 + (i % 3),
