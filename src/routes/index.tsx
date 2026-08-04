@@ -218,8 +218,8 @@ function Home() {
   }
 
   // Reduced-motion: no particles at all. Mobile: lighter counts for perf.
-  const starCount = reducedMotion ? 0 : isMobile ? 30 : 80;
-  const moteCount = reducedMotion ? 0 : isMobile ? 6 : 18;
+  const starCount = reducedMotion ? 0 : isMobile ? 15 : 80;
+  const moteCount = reducedMotion ? 0 : isMobile ? 4 : 18;
 
   const stars = Array.from({ length: starCount }, (_, i) => {
     const seed = i * 9301 + 49297;
