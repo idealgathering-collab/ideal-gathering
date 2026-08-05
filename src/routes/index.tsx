@@ -246,11 +246,7 @@ function Home() {
     { top: "26%", left: "38%", delay: 9, duration: 8 },
     { top: "58%", left: "-12%", delay: 15, duration: 9 },
   ];
-  const shootingStars = reducedMotion
-    ? []
-    : isMobile
-      ? allShootingStars.slice(0, 1)
-      : allShootingStars;
+  const shootingStars = reducedMotion || isMobile ? [] : allShootingStars;
 
   const motes = Array.from({ length: moteCount }, (_, i) => ({
     x: (i * 37) % 100,
