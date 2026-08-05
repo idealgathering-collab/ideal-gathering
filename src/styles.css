@@ -587,38 +587,44 @@
   }
 }
 
-/* Mobile: tone down glow intensity and expensive blurs for performance */
+/* Mobile: keep the look, drop the continuous compositing/repaint work */
 @media (max-width: 767px) {
   .cosmic-panel {
     backdrop-filter: blur(6px) saturate(115%);
-    animation-duration: 12s;
+    animation: none;
   }
   .cosmic-panel::after {
-    opacity: 0.4;
-    animation-duration: 20s;
+    display: none;
   }
   .cosmic-cta {
-    animation-duration: 6.5s;
+    animation: none;
   }
   .cosmic-cta::after {
-    animation-duration: 7s;
+    display: none;
   }
   .cosmic-aura {
     opacity: 0.7;
-    animation-duration: 10s;
+    animation: none;
   }
+  /* Animating a full-viewport background image is the single heaviest
+     scroll cost on mobile — keep it static. */
   .animate-bg-drift {
-    animation-duration: 60s;
+    animation: none;
+    transform: scale(1.04) translateZ(0);
+    will-change: auto;
   }
   .animate-emblem-glow,
   .animate-headline-glow,
+  .animate-constellation-float,
   .magic-glow-text {
-    animation-duration: 8s;
+    animation: none;
+    will-change: auto;
   }
   .glass-card {
-    backdrop-filter: blur(12px) saturate(130%);
+    backdrop-filter: blur(10px) saturate(125%);
   }
 }
+
 
 @media (prefers-reduced-motion: reduce) {
   *,
