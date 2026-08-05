@@ -25,6 +25,7 @@ export const Route = createFileRoute("/")({
         rel: "preload",
         as: "image",
         href: constellationAsset.url,
+        type: "image/jpeg",
         fetchPriority: "high",
       },
     ],
