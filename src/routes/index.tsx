@@ -20,6 +20,14 @@ import logoAsset from "@/assets/ideal-gathering-logo.png.asset.json";
 export const Route = createFileRoute("/")({
   component: Home,
   head: () => ({
+    links: [
+      {
+        rel: "preload",
+        as: "image",
+        href: constellationAsset.url,
+        fetchPriority: "high",
+      },
+    ],
     meta: [
       { title: "Ideal Gathering — No one will be alone anymore" },
       {
@@ -396,7 +404,9 @@ function Home() {
             alt="A constellation of people connected together"
             width={1024}
             height={768}
-            loading="lazy"
+            loading="eager"
+            fetchPriority="high"
+            decoding="async"
             className="mt-4 w-full max-w-[230px] sm:mt-5 sm:max-w-[300px] animate-constellation-float select-none"
             style={{ filter: "drop-shadow(0 0 26px rgba(124,58,237,0.45))" }}
           />
