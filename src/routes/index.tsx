@@ -403,13 +403,13 @@ function Home() {
           <img
             src={constellationAsset.url}
             alt="A constellation of people connected together"
-            width={1024}
-            height={768}
+            width={800}
+            height={800}
+            sizes="(max-width: 640px) 230px, 300px"
             loading="eager"
             fetchPriority="high"
             decoding="async"
-            className="mt-4 w-full max-w-[230px] sm:mt-5 sm:max-w-[300px] animate-constellation-float select-none"
-            style={{ filter: "drop-shadow(0 0 26px rgba(124,58,237,0.45))" }}
+            className="mt-4 h-auto w-full max-w-[230px] sm:mt-5 sm:max-w-[300px] animate-constellation-float select-none"
           />
 
           <div className="mt-5 sm:mt-6 grid w-full grid-cols-2 gap-3">
