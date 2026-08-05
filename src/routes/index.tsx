@@ -226,9 +226,9 @@ function Home() {
     );
   }
 
-  // Reduced-motion: no particles at all. Mobile: lighter counts for perf.
-  const starCount = reducedMotion ? 0 : isMobile ? 15 : 80;
-  const moteCount = reducedMotion ? 0 : isMobile ? 4 : 18;
+  // Reduced-motion or mobile: no particle layers at all (they force constant compositing).
+  const starCount = reducedMotion || isMobile ? 0 : 80;
+  const moteCount = reducedMotion || isMobile ? 0 : 18;
 
   const stars = Array.from({ length: starCount }, (_, i) => {
     const seed = i * 9301 + 49297;
