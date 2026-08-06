@@ -8,6 +8,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
 import { Button } from "@/components/ui/button";
 import { useT } from "@/i18n";
+import { LanguageSwitcher } from "@/components/language-switcher";
+
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -126,7 +128,11 @@ function AuthPage() {
               Ideal <span className="italic">Gathering</span>
             </span>
           </Link>
+          <div className="ms-auto">
+            <LanguageSwitcher />
+          </div>
         </div>
+
 
         <div className="rounded-3xl border border-border bg-card p-8 shadow-plum">
           <h1 className="font-display text-3xl">
