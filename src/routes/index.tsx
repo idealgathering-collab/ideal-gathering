@@ -374,16 +374,20 @@ function Home() {
             <span className="h-px flex-1" style={{ background: "linear-gradient(270deg, transparent, rgba(167,139,250,0.85))" }} />
           </div>
 
-          <h1 className="font-serif-warm animate-headline-glow mt-4 text-[28px] sm:text-[38px] font-semibold text-white leading-[1.05] tracking-[-0.015em] whitespace-pre-line">
+          <h1 className="font-serif-warm animate-headline-glow mt-4 text-[30px] sm:text-[42px] font-extrabold text-white leading-[1.05] tracking-[-0.03em] whitespace-pre-line">
             {t("landing.v2.title")}
           </h1>
 
 
           <p
             tabIndex={0}
-            className="magic-glow-text mt-3 sm:mt-4 cursor-default text-[19px] sm:text-[21px] font-medium tracking-wide"
+            className="magic-glow-text mt-3 cursor-default text-[18px] sm:text-[20px] font-semibold uppercase tracking-[0.22em]"
           >
             {t("landing.v2.subtitle")}
+          </p>
+
+          <p className="mt-3 max-w-[330px] text-[14px] leading-relaxed text-[rgba(221,214,254,0.72)]">
+            {t("landing.v2.mission")}
           </p>
 
           <Link
