@@ -9,6 +9,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useT } from "@/i18n";
+import { LanguageSwitcher } from "@/components/language-switcher";
+
 
 export const Route = createFileRoute("/venue/auth")({
   component: VenueAuth,
@@ -118,7 +120,11 @@ function VenueAuth() {
               Ideal <span className="italic">Gathering</span> · {t("venueAuth.for")}
             </span>
           </Link>
+          <div className="ms-auto">
+            <LanguageSwitcher />
+          </div>
         </div>
+
 
         <div className="form-panel p-8">
           <h1 className="font-display text-3xl">
