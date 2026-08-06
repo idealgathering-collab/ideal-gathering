@@ -61,8 +61,8 @@
   --color-nebula-purple: var(--nebula-purple);
   --color-nebula-violet: var(--nebula-violet);
 
-  --font-serif-warm: "Fraunces", ui-serif, Georgia, serif;
-  --font-sans-humanist: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-serif-warm: "Outfit", ui-sans-serif, system-ui, sans-serif;
+  --font-sans-humanist: "Figtree", ui-sans-serif, system-ui, sans-serif;
 
   --color-sidebar: var(--sidebar);
   --color-sidebar-foreground: var(--sidebar-foreground);
