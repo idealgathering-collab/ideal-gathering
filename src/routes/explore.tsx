@@ -7,19 +7,14 @@ import { GatheringCard } from "@/components/gathering-card";
 import { Button } from "@/components/ui/button";
 import { fetchApprovedGatherings } from "@/lib/gatherings";
 import { useT } from "@/i18n";
+import { localizedHead, normalizeLang } from "@/lib/seo";
 
 export const Route = createFileRoute("/explore")({
   component: Explore,
-  head: () => ({
-    meta: [
-      { title: "Explore Gatherings · Ideal Gathering" },
-      {
-        name: "description",
-        content:
-          "Browse upcoming gatherings around a subject at cafes and restaurants near you.",
-      },
-    ],
+  validateSearch: (search: Record<string, unknown>) => ({
+    lang: normalizeLang(search.lang),
   }),
+  head: ({ match }) => localizedHead("/explore", match.search.lang),
 });
 
 function Explore() {

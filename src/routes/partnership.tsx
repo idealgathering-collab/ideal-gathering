@@ -5,24 +5,13 @@ import { SiteFooter } from "@/components/site-footer";
 import { VenueDashboardPreview } from "@/components/venue-dashboard-preview";
 import { Button } from "@/components/ui/button";
 import { useT } from "@/i18n";
+import { localizedHead, normalizeLang } from "@/lib/seo";
 
 export const Route = createFileRoute("/partnership")({
-  head: () => ({
-    meta: [
-      { title: "Partnership — Ideal Gathering" },
-      {
-        name: "description",
-        content:
-          "Turn quiet hours into themed Gatherings at your cafe or restaurant. You approve every Gathering — full control, no bidding, no commitment.",
-      },
-      { property: "og:title", content: "Partnership — Ideal Gathering" },
-      {
-        property: "og:description",
-        content:
-          "Turn quiet hours into themed Gatherings at your cafe or restaurant. You approve every Gathering — full control.",
-      },
-    ],
+  validateSearch: (search: Record<string, unknown>) => ({
+    lang: normalizeLang(search.lang),
   }),
+  head: ({ match }) => localizedHead("/partnership", match.search.lang),
   component: Partnership,
 });
 
