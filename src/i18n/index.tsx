@@ -21,6 +21,12 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     try {
+      const fromUrl = new URLSearchParams(window.location.search).get("lang");
+      if (isLang(fromUrl)) {
+        setLangState(fromUrl);
+        window.localStorage.setItem(STORAGE_KEY, fromUrl);
+        return;
+      }
       const stored = window.localStorage.getItem(STORAGE_KEY);
       if (isLang(stored)) {
         setLangState(stored);
@@ -45,6 +51,11 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     setLangState(l);
     try {
       window.localStorage.setItem(STORAGE_KEY, l);
+      // Keep the URL in sync so each language has a distinct, indexable URL.
+      const url = new URL(window.location.href);
+      if (l === "en") url.searchParams.delete("lang");
+      else url.searchParams.set("lang", l);
+      window.history.replaceState(null, "", url.toString());
     } catch {
       // ignore
     }

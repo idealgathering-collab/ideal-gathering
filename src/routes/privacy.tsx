@@ -2,14 +2,12 @@ import { createFileRoute } from "@tanstack/react-router";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { useT } from "@/i18n";
+import { localizedHead, type SeoLang } from "@/lib/seo";
 
 export const Route = createFileRoute("/privacy")({
-  head: () => ({
-    meta: [
-      { title: "Privacy Policy — Ideal Gathering" },
-      { name: "description", content: "How Ideal Gathering collects, uses, and protects your data. KVKK-aware notice for users in Türkiye." },
-    ],
-  }),
+  validateSearch: (search: Record<string, unknown>): { lang?: SeoLang } =>
+    search.lang === "tr" || search.lang === "fa" ? { lang: search.lang } : {},
+  head: ({ match }) => localizedHead("/privacy", match.search.lang),
   component: PrivacyPage,
 });
 
