@@ -7,13 +7,12 @@ import { GatheringCard } from "@/components/gathering-card";
 import { Button } from "@/components/ui/button";
 import { fetchApprovedGatherings } from "@/lib/gatherings";
 import { useT } from "@/i18n";
-import { localizedHead, normalizeLang } from "@/lib/seo";
+import { localizedHead, type SeoLang } from "@/lib/seo";
 
 export const Route = createFileRoute("/explore")({
   component: Explore,
-  validateSearch: (search: Record<string, unknown>) => ({
-    lang: normalizeLang(search.lang),
-  }),
+  validateSearch: (search: Record<string, unknown>): { lang?: SeoLang } =>
+    search.lang === "tr" || search.lang === "fa" ? { lang: search.lang } : {},
   head: ({ match }) => localizedHead("/explore", match.search.lang),
 });
 

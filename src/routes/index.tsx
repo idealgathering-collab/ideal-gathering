@@ -10,7 +10,7 @@ import {
   Armchair,
 } from "lucide-react";
 import { useT } from "@/i18n";
-import { localizedHead, normalizeLang } from "@/lib/seo";
+import { localizedHead, type SeoLang } from "@/lib/seo";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { useSession } from "@/hooks/use-session";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -20,9 +20,8 @@ import logoAsset from "@/assets/ideal-gathering-logo.png.asset.json";
 
 export const Route = createFileRoute("/")({
   component: Home,
-  validateSearch: (search: Record<string, unknown>) => ({
-    lang: normalizeLang(search.lang),
-  }),
+  validateSearch: (search: Record<string, unknown>): { lang?: SeoLang } =>
+    search.lang === "tr" || search.lang === "fa" ? { lang: search.lang } : {},
   head: ({ match }) => {
     const seo = localizedHead("/", match.search.lang);
     return {

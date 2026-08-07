@@ -2,12 +2,11 @@ import { createFileRoute } from "@tanstack/react-router";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { useT } from "@/i18n";
-import { localizedHead, normalizeLang } from "@/lib/seo";
+import { localizedHead, type SeoLang } from "@/lib/seo";
 
 export const Route = createFileRoute("/terms")({
-  validateSearch: (search: Record<string, unknown>) => ({
-    lang: normalizeLang(search.lang),
-  }),
+  validateSearch: (search: Record<string, unknown>): { lang?: SeoLang } =>
+    search.lang === "tr" || search.lang === "fa" ? { lang: search.lang } : {},
   head: ({ match }) => localizedHead("/terms", match.search.lang),
   component: TermsPage,
 });

@@ -5,12 +5,11 @@ import { SiteFooter } from "@/components/site-footer";
 import { VenueDashboardPreview } from "@/components/venue-dashboard-preview";
 import { Button } from "@/components/ui/button";
 import { useT } from "@/i18n";
-import { localizedHead, normalizeLang } from "@/lib/seo";
+import { localizedHead, type SeoLang } from "@/lib/seo";
 
 export const Route = createFileRoute("/partnership")({
-  validateSearch: (search: Record<string, unknown>) => ({
-    lang: normalizeLang(search.lang),
-  }),
+  validateSearch: (search: Record<string, unknown>): { lang?: SeoLang } =>
+    search.lang === "tr" || search.lang === "fa" ? { lang: search.lang } : {},
   head: ({ match }) => localizedHead("/partnership", match.search.lang),
   component: Partnership,
 });
