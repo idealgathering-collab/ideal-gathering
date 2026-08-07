@@ -10,6 +10,7 @@ import {
   Armchair,
 } from "lucide-react";
 import { useT } from "@/i18n";
+import { localizedHead, normalizeLang } from "@/lib/seo";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { useSession } from "@/hooks/use-session";
 import { useIsMobile } from "@/hooks/use-mobile";
