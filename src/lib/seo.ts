@@ -137,3 +137,135 @@ export function localizedHead(path: string, rawLang: unknown) {
     ],
   };
 }
+
+/* ---------------------------------------------------------------------------
+ * Schema.org structured data (localized)
+ * ------------------------------------------------------------------------- */
+
+const SCHEMA_LOCALE: Record<SeoLang, string> = { en: "en", tr: "tr", fa: "fa" };
+
+export function jsonLdOrganization(lang: SeoLang) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "@id": `${SITE_URL}/#organization`,
+    name: "Ideal Gathering",
+    url: SITE_URL,
+    logo: `${SITE_URL}/favicon.ico`,
+    description: PAGE_SEO["/"][lang].description,
+    areaServed: { "@type": "City", name: "Istanbul" },
+    inLanguage: SCHEMA_LOCALE[lang],
+  };
+}
+
+export function jsonLdWebSite(lang: SeoLang) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "@id": `${SITE_URL}/#website`,
+    url: SITE_URL,
+    name: PAGE_SEO["/"][lang].title,
+    description: PAGE_SEO["/"][lang].description,
+    inLanguage: SCHEMA_LOCALE[lang],
+    publisher: { "@id": `${SITE_URL}/#organization` },
+  };
+}
+
+export type SchemaVenue = {
+  id?: string | null;
+  name: string;
+  city?: string | null;
+  address?: string | null;
+  cover_url?: string | null;
+};
+
+/** Restaurant / cafe venue node, reusable as an Event location. */
+export function jsonLdVenue(venue: SchemaVenue, lang: SeoLang) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Restaurant",
+    ...(venue.id ? { "@id": `${SITE_URL}/businesses/${venue.id}#venue` } : {}),
+    name: venue.name,
+    inLanguage: SCHEMA_LOCALE[lang],
+    ...(venue.cover_url ? { image: venue.cover_url } : {}),
+    ...(venue.city || venue.address
+      ? {
+          address: {
+            "@type": "PostalAddress",
+            ...(venue.address ? { streetAddress: venue.address } : {}),
+            ...(venue.city ? { addressLocality: venue.city } : {}),
+            addressCountry: "TR",
+          },
+        }
+      : {}),
+  };
+}
+
+export type SchemaGathering = {
+  id: string;
+  subject: string;
+  description?: string | null;
+  starts_at: string;
+  seats: number;
+  attendee_count?: number;
+  venue_name?: string | null;
+  neighborhood?: string | null;
+  business?: SchemaVenue | null;
+};
+
+export function jsonLdGathering(g: SchemaGathering, lang: SeoLang) {
+  const url = `${SITE_URL}/gatherings/${g.id}`;
+  const start = new Date(g.starts_at);
+  const end = new Date(start.getTime() + 2 * 60 * 60 * 1000);
+  const venue: SchemaVenue | null = g.business
+    ? g.business
+    : g.venue_name
+      ? { name: g.venue_name, city: g.neighborhood ?? null }
+      : null;
+  const full =
+    typeof g.attendee_count === "number" && g.attendee_count >= g.seats;
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "SocialEvent",
+    "@id": `${url}#event`,
+    url,
+    name: g.subject,
+    ...(g.description ? { description: g.description } : {}),
+    startDate: start.toISOString(),
+    endDate: end.toISOString(),
+    inLanguage: SCHEMA_LOCALE[lang],
+    eventStatus: "https://schema.org/EventScheduled",
+    eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
+    maximumAttendeeCapacity: g.seats,
+    ...(typeof g.attendee_count === "number"
+      ? { remainingAttendeeCapacity: Math.max(0, g.seats - g.attendee_count) }
+      : {}),
+    ...(venue ? { location: jsonLdVenue(venue, lang) } : {}),
+    organizer: { "@id": `${SITE_URL}/#organization` },
+    offers: {
+      "@type": "Offer",
+      url,
+      price: "0",
+      priceCurrency: "TRY",
+      availability: full
+        ? "https://schema.org/SoldOut"
+        : "https://schema.org/InStock",
+    },
+  };
+}
+
+export function jsonLdGatheringList(list: SchemaGathering[], lang: SeoLang) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: PAGE_SEO["/explore"][lang].title,
+    inLanguage: SCHEMA_LOCALE[lang],
+    numberOfItems: list.length,
+    itemListElement: list.slice(0, 25).map((g, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      item: jsonLdGathering(g, lang),
+    })),
+  };
+}
