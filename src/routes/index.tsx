@@ -10,7 +10,13 @@ import {
   Armchair,
 } from "lucide-react";
 import { useT } from "@/i18n";
-import { localizedHead, type SeoLang } from "@/lib/seo";
+import {
+  localizedHead,
+  normalizeLang,
+  jsonLdOrganization,
+  jsonLdWebSite,
+  type SeoLang,
+} from "@/lib/seo";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { useSession } from "@/hooks/use-session";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -36,6 +42,16 @@ export const Route = createFileRoute("/")({
         ...seo.links,
       ],
       meta: [...seo.meta, { property: "og:type", content: "website" }],
+      scripts: [
+        {
+          type: "application/ld+json",
+          children: JSON.stringify(jsonLdOrganization(normalizeLang(match.search.lang))),
+        },
+        {
+          type: "application/ld+json",
+          children: JSON.stringify(jsonLdWebSite(normalizeLang(match.search.lang))),
+        },
+      ],
     };
   },
 });
