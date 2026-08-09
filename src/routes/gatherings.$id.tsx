@@ -13,6 +13,8 @@ import { useSession } from "@/hooks/use-session";
 import { Button } from "@/components/ui/button";
 import { fetchGathering, formatDateTime } from "@/lib/gatherings";
 import { useI18n, useT } from "@/i18n";
+import { JsonLd } from "@/components/json-ld";
+import { jsonLdGathering } from "@/lib/seo";
 
 export const Route = createFileRoute("/gatherings/$id")({
   component: GatheringDetail,
@@ -96,7 +98,32 @@ function GatheringDetail() {
 
   return (
     <div className="min-h-screen bg-background">
+      <JsonLd
+        data={jsonLdGathering(
+          {
+            id: g.id,
+            subject: g.subject,
+            description: g.description,
+            starts_at: g.starts_at,
+            seats: g.seats,
+            attendee_count: attendees.length,
+            venue_name: g.venue_name,
+            neighborhood: g.neighborhood,
+            business: g.business
+              ? {
+                  id: g.business.id,
+                  name: g.business.name,
+                  city: g.business.city,
+                  address: g.business.address,
+                  cover_url: g.business.cover_url,
+                }
+              : null,
+          },
+          lang,
+        )}
+      />
       <SiteHeader />
+
       <div className="relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-hero" />
         {g.business?.cover_url && (

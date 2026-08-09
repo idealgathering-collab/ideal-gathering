@@ -6,8 +6,9 @@ import { SiteFooter } from "@/components/site-footer";
 import { GatheringCard } from "@/components/gathering-card";
 import { Button } from "@/components/ui/button";
 import { fetchApprovedGatherings } from "@/lib/gatherings";
-import { useT } from "@/i18n";
-import { localizedHead, type SeoLang } from "@/lib/seo";
+import { useI18n, useT } from "@/i18n";
+import { localizedHead, jsonLdGatheringList, type SeoLang } from "@/lib/seo";
+import { JsonLd } from "@/components/json-ld";
 
 export const Route = createFileRoute("/explore")({
   component: Explore,
@@ -18,6 +19,7 @@ export const Route = createFileRoute("/explore")({
 
 function Explore() {
   const t = useT();
+  const { lang } = useI18n();
   const { data: gatherings, isLoading } = useQuery({
     queryKey: ["gatherings", "approved"],
     queryFn: fetchApprovedGatherings,
@@ -27,6 +29,9 @@ function Explore() {
 
   return (
     <div className="min-h-screen bg-background">
+      {gatherings && gatherings.length > 0 && (
+        <JsonLd data={jsonLdGatheringList(gatherings, lang)} />
+      )}
       <SiteHeader />
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-hero opacity-95" />
