@@ -13,6 +13,8 @@ import { useSession } from "@/hooks/use-session";
 import { Button } from "@/components/ui/button";
 import { fetchGathering, formatDateTime } from "@/lib/gatherings";
 import { useI18n, useT } from "@/i18n";
+import { JsonLd } from "@/components/json-ld";
+import { jsonLdGathering } from "@/lib/seo";
 
 export const Route = createFileRoute("/gatherings/$id")({
   component: GatheringDetail,
