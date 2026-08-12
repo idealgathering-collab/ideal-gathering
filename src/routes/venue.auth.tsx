@@ -9,11 +9,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useT } from "@/i18n";
+import { localizedHead } from "@/lib/seo";
 import { LanguageSwitcher } from "@/components/language-switcher";
 
 
 export const Route = createFileRoute("/venue/auth")({
   component: VenueAuth,
+  head: () => localizedHead("/venue/auth", undefined),
 });
 
 const emailSchema = z.string().trim().email().max(255);

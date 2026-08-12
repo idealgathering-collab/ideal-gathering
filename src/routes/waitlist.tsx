@@ -11,18 +11,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useT } from "@/i18n";
+import { localizedHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/waitlist")({
-  head: () => ({
-    meta: [
-      { title: "Join the waitlist — Ideal Gathering" },
-      {
-        name: "description",
-        content:
-          "Reserve your spot on the Ideal Gathering guest waitlist. We'll invite you as tables open in your city.",
-      },
-    ],
-  }),
+  head: () => localizedHead("/waitlist", undefined),
   component: WaitlistPage,
 });
 

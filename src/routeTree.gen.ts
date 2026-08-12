@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as WaitlistRouteImport } from './routes/waitlist'
 import { Route as TermsRouteImport } from './routes/terms'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as PartnershipRouteImport } from './routes/partnership'
@@ -42,6 +43,11 @@ const WaitlistRoute = WaitlistRouteImport.update({
 const TermsRoute = TermsRouteImport.update({
   id: '/terms',
   path: '/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
@@ -168,6 +174,7 @@ export interface FileRoutesByFullPath {
   '/partnership': typeof PartnershipRoute
   '/privacy': typeof PrivacyRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
   '/waitlist': typeof WaitlistRoute
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
@@ -193,6 +200,7 @@ export interface FileRoutesByTo {
   '/partnership': typeof PartnershipRoute
   '/privacy': typeof PrivacyRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
   '/waitlist': typeof WaitlistRoute
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
@@ -220,6 +228,7 @@ export interface FileRoutesById {
   '/partnership': typeof PartnershipRoute
   '/privacy': typeof PrivacyRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
   '/waitlist': typeof WaitlistRoute
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
@@ -247,6 +256,7 @@ export interface FileRouteTypes {
     | '/partnership'
     | '/privacy'
     | '/reset-password'
+    | '/sitemap.xml'
     | '/terms'
     | '/waitlist'
     | '/.mcp/list-tools'
@@ -272,6 +282,7 @@ export interface FileRouteTypes {
     | '/partnership'
     | '/privacy'
     | '/reset-password'
+    | '/sitemap.xml'
     | '/terms'
     | '/waitlist'
     | '/.mcp/list-tools'
@@ -298,6 +309,7 @@ export interface FileRouteTypes {
     | '/partnership'
     | '/privacy'
     | '/reset-password'
+    | '/sitemap.xml'
     | '/terms'
     | '/waitlist'
     | '/.mcp/list-tools'
@@ -325,6 +337,7 @@ export interface RootRouteChildren {
   PartnershipRoute: typeof PartnershipRoute
   PrivacyRoute: typeof PrivacyRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TermsRoute: typeof TermsRoute
   WaitlistRoute: typeof WaitlistRoute
   Char91DotmcpChar93ListToolsRoute: typeof Char91DotmcpChar93ListToolsRoute
@@ -350,6 +363,13 @@ declare module '@tanstack/react-router' {
       path: '/terms'
       fullPath: '/terms'
       preLoaderRoute: typeof TermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/reset-password': {
@@ -541,6 +561,7 @@ const rootRouteChildren: RootRouteChildren = {
   PartnershipRoute: PartnershipRoute,
   PrivacyRoute: PrivacyRoute,
   ResetPasswordRoute: ResetPasswordRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
   TermsRoute: TermsRoute,
   WaitlistRoute: WaitlistRoute,
   Char91DotmcpChar93ListToolsRoute: Char91DotmcpChar93ListToolsRoute,

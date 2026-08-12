@@ -13,11 +13,22 @@ import { useSession } from "@/hooks/use-session";
 import { Button } from "@/components/ui/button";
 import { fetchGathering, formatDateTime } from "@/lib/gatherings";
 import { useI18n, useT } from "@/i18n";
-import { JsonLd } from "@/components/json-ld";
-import { jsonLdGathering } from "@/lib/seo";
+import { gatheringHead, type SeoLang } from "@/lib/seo";
+import { getPublicGathering } from "@/lib/public-data.functions";
 
 export const Route = createFileRoute("/gatherings/$id")({
   component: GatheringDetail,
+  validateSearch: (search: Record<string, unknown>): { lang?: SeoLang } =>
+    search.lang === "tr" || search.lang === "fa" ? { lang: search.lang } : {},
+  loader: async ({ params }) => {
+    try {
+      return { g: await getPublicGathering({ data: { id: params.id } }) };
+    } catch {
+      return { g: null };
+    }
+  },
+  head: ({ params, match, loaderData }) =>
+    gatheringHead(loaderData?.g ?? null, match.search.lang, params.id),
 });
 
 function GatheringDetail() {
@@ -98,30 +109,6 @@ function GatheringDetail() {
 
   return (
     <div className="min-h-screen bg-background">
-      <JsonLd
-        data={jsonLdGathering(
-          {
-            id: g.id,
-            subject: g.subject,
-            description: g.description,
-            starts_at: g.starts_at,
-            seats: g.seats,
-            attendee_count: attendees.length,
-            venue_name: g.venue_name,
-            neighborhood: g.neighborhood,
-            business: g.business
-              ? {
-                  id: g.business.id,
-                  name: g.business.name,
-                  city: g.business.city,
-                  address: g.business.address,
-                  cover_url: g.business.cover_url,
-                }
-              : null,
-          },
-          lang,
-        )}
-      />
       <SiteHeader />
 
       <div className="relative overflow-hidden">

@@ -9,6 +9,7 @@ import { lovable } from "@/integrations/lovable";
 import { Button } from "@/components/ui/button";
 import { useT } from "@/i18n";
 import { LanguageSwitcher } from "@/components/language-switcher";
+import { localizedHead } from "@/lib/seo";
 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -22,6 +23,7 @@ const searchSchema = z.object({
 export const Route = createFileRoute("/auth")({
   validateSearch: searchSchema,
   component: AuthPage,
+  head: () => localizedHead("/auth", undefined),
 });
 
 const emailSchema = z.string().trim().email("Enter a valid email").max(255);

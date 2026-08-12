@@ -101,9 +101,60 @@ export const PAGE_SEO: Record<string, Record<SeoLang, Copy>> = {
         "Ideal Gathering چگونه داده‌های شما را جمع‌آوری، استفاده و محافظت می‌کند. اطلاعیهٔ سازگار با KVKK برای کاربران ترکیه.",
     },
   },
+  "/auth": {
+    en: {
+      title: "Sign In or Join — Ideal Gathering",
+      description:
+        "Create your free Ideal Gathering account to join a table in Istanbul, or sign back in to see your upcoming gatherings.",
+    },
+    tr: {
+      title: "Giriş Yap veya Katıl — Ideal Gathering",
+      description:
+        "İstanbul'da bir masaya katılmak için ücretsiz Ideal Gathering hesabını oluştur ya da yaklaşan buluşmalarını görmek için giriş yap.",
+    },
+    fa: {
+      title: "ورود یا عضویت — Ideal Gathering",
+      description:
+        "برای پیوستن به یک میز در استانبول حساب رایگان Ideal Gathering بسازید یا برای دیدن گردهمایی‌های پیش‌رو وارد شوید.",
+    },
+  },
+  "/venue/auth": {
+    en: {
+      title: "Venue Sign In — Ideal Gathering",
+      description:
+        "Cafés and restaurants: create a venue account to list your tables and host themed gatherings during quiet hours.",
+    },
+    tr: {
+      title: "Mekân Girişi — Ideal Gathering",
+      description:
+        "Kafeler ve restoranlar: masalarınızı listelemek ve sakin saatlerde temalı buluşmalara ev sahipliği yapmak için mekân hesabı oluşturun.",
+    },
+    fa: {
+      title: "ورود مکان‌ها — Ideal Gathering",
+      description:
+        "کافه‌ها و رستوران‌ها: برای ثبت میزها و میزبانی گردهمایی‌های موضوعی در ساعت‌های خلوت، حساب مکان بسازید.",
+    },
+  },
+  "/waitlist": {
+    en: {
+      title: "Guest Waitlist — Ideal Gathering",
+      description:
+        "Tell us your city and interests and we'll invite you as new tables open up at cafés near you.",
+    },
+    tr: {
+      title: "Misafir Listesi — Ideal Gathering",
+      description:
+        "Şehrini ve ilgi alanlarını paylaş; yakınındaki kafelerde yeni masalar açıldıkça seni davet edelim.",
+    },
+    fa: {
+      title: "فهرست انتظار مهمان — Ideal Gathering",
+      description:
+        "شهر و علاقه‌مندی‌های خود را بگویید تا با باز شدن میزهای تازه در کافه‌های نزدیک، دعوت‌تان کنیم.",
+    },
+  },
 };
 
-function urlFor(path: string, lang: SeoLang) {
+export function urlFor(path: string, lang: SeoLang) {
   const base = `${SITE_URL}${path === "/" ? "/" : path}`;
   return lang === "en" ? base : `${base}?lang=${lang}`;
 }
@@ -267,5 +318,127 @@ export function jsonLdGatheringList(list: SchemaGathering[], lang: SeoLang) {
       position: i + 1,
       item: jsonLdGathering(g, lang),
     })),
+  };
+}
+
+/* ---------------------------------------------------------------------------
+ * Gathering detail head + sitemap route list
+ * ------------------------------------------------------------------------- */
+
+/** Public routes that belong in the sitemap. */
+export const PUBLIC_ROUTES = [
+  "/",
+  "/explore",
+  "/partnership",
+  "/waitlist",
+  "/terms",
+  "/privacy",
+] as const;
+
+const GATHERING_FALLBACK: Record<
+  SeoLang,
+  (args: { when: string; where: string; seats: number }) => string
+> = {
+  en: ({ when, where, seats }) =>
+    `A gathering around one subject on ${when}${where ? ` at ${where}` : ""}. ${seats} seat${seats === 1 ? "" : "s"} at the table — join on Ideal Gathering.`,
+  tr: ({ when, where, seats }) =>
+    `${when} tarihinde${where ? ` ${where} mekânında` : ""} tek bir konu etrafında bir buluşma. Masada ${seats} sandalye — Ideal Gathering'de katıl.`,
+  fa: ({ when, where, seats }) =>
+    `گردهمایی حول یک موضوع در ${when}${where ? ` در ${where}` : ""}. ${seats} صندلی سر میز — در Ideal Gathering بپیوندید.`,
+};
+
+const GATHERING_AT: Record<SeoLang, string> = { en: "at", tr: "—", fa: "در" };
+
+export type GatheringHeadInput = SchemaGathering & {
+  status?: string | null;
+  cover_url?: string | null;
+};
+
+function clampTitle(value: string) {
+  return value.length <= 60 ? value : `${value.slice(0, 57).trimEnd()}…`;
+}
+
+/**
+ * Localized title/description/OG/canonical/hreflang + Event JSON-LD for a
+ * single gathering. Pass `null` for a missing or non-public gathering.
+ */
+export function gatheringHead(
+  g: GatheringHeadInput | null,
+  rawLang: unknown,
+  id: string,
+) {
+  const lang = normalizeLang(rawLang);
+  const path = `/gatherings/${id}`;
+  const self = urlFor(path, lang);
+
+  if (!g) {
+    return {
+      meta: [
+        { title: "Gathering not found — Ideal Gathering" },
+        {
+          name: "description",
+          content:
+            "This gathering is no longer available. Browse upcoming gatherings on Ideal Gathering.",
+        },
+        { name: "robots", content: "noindex, follow" },
+      ],
+      links: [{ rel: "canonical", href: self }],
+    };
+  }
+
+  const venue = g.business?.name ?? g.venue_name ?? "";
+  const title = clampTitle(
+    venue ? `${g.subject} ${GATHERING_AT[lang]} ${venue}` : `${g.subject} — Ideal Gathering`,
+  );
+  const when = new Date(g.starts_at).toLocaleDateString(lang, {
+    month: "long",
+    day: "numeric",
+  });
+  const description = (
+    g.description?.trim() ||
+    GATHERING_FALLBACK[lang]({
+      when,
+      where: venue || g.neighborhood || "",
+      seats: Math.max(0, g.seats - (g.attendee_count ?? 0)),
+    })
+  ).slice(0, 300);
+
+  const image = g.business?.cover_url ?? g.cover_url ?? null;
+  const past = new Date(g.starts_at).getTime() < Date.now() - 3 * 60 * 60 * 1000;
+  const indexable = g.status !== "approved" ? false : !past;
+
+  return {
+    meta: [
+      { title },
+      { name: "description", content: description },
+      { property: "og:title", content: title },
+      { property: "og:description", content: description },
+      { property: "og:type", content: "article" },
+      { property: "og:url", content: self },
+      { property: "og:locale", content: OG_LOCALE[lang] },
+      { name: "twitter:card", content: "summary_large_image" },
+      ...(image
+        ? [
+            { property: "og:image", content: image },
+            { name: "twitter:image", content: image },
+          ]
+        : []),
+      ...(indexable ? [] : [{ name: "robots", content: "noindex, follow" }]),
+    ],
+    links: [
+      { rel: "canonical", href: self },
+      ...SEO_LANGS.map((l) => ({
+        rel: "alternate",
+        hrefLang: l,
+        href: urlFor(path, l),
+      })),
+      { rel: "alternate", hrefLang: "x-default", href: urlFor(path, "en") },
+    ],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify(jsonLdGathering(g, lang)),
+      },
+    ],
   };
 }
