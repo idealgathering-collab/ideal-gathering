@@ -101,6 +101,57 @@ export const PAGE_SEO: Record<string, Record<SeoLang, Copy>> = {
         "Ideal Gathering چگونه داده‌های شما را جمع‌آوری، استفاده و محافظت می‌کند. اطلاعیهٔ سازگار با KVKK برای کاربران ترکیه.",
     },
   },
+  "/auth": {
+    en: {
+      title: "Sign In or Join — Ideal Gathering",
+      description:
+        "Create your free Ideal Gathering account to join a table in Istanbul, or sign back in to see your upcoming gatherings.",
+    },
+    tr: {
+      title: "Giriş Yap veya Katıl — Ideal Gathering",
+      description:
+        "İstanbul'da bir masaya katılmak için ücretsiz Ideal Gathering hesabını oluştur ya da yaklaşan buluşmalarını görmek için giriş yap.",
+    },
+    fa: {
+      title: "ورود یا عضویت — Ideal Gathering",
+      description:
+        "برای پیوستن به یک میز در استانبول حساب رایگان Ideal Gathering بسازید یا برای دیدن گردهمایی‌های پیش‌رو وارد شوید.",
+    },
+  },
+  "/venue/auth": {
+    en: {
+      title: "Venue Sign In — Ideal Gathering",
+      description:
+        "Cafés and restaurants: create a venue account to list your tables and host themed gatherings during quiet hours.",
+    },
+    tr: {
+      title: "Mekân Girişi — Ideal Gathering",
+      description:
+        "Kafeler ve restoranlar: masalarınızı listelemek ve sakin saatlerde temalı buluşmalara ev sahipliği yapmak için mekân hesabı oluşturun.",
+    },
+    fa: {
+      title: "ورود مکان‌ها — Ideal Gathering",
+      description:
+        "کافه‌ها و رستوران‌ها: برای ثبت میزها و میزبانی گردهمایی‌های موضوعی در ساعت‌های خلوت، حساب مکان بسازید.",
+    },
+  },
+  "/waitlist": {
+    en: {
+      title: "Guest Waitlist — Ideal Gathering",
+      description:
+        "Tell us your city and interests and we'll invite you as new tables open up at cafés near you.",
+    },
+    tr: {
+      title: "Misafir Listesi — Ideal Gathering",
+      description:
+        "Şehrini ve ilgi alanlarını paylaş; yakınındaki kafelerde yeni masalar açıldıkça seni davet edelim.",
+    },
+    fa: {
+      title: "فهرست انتظار مهمان — Ideal Gathering",
+      description:
+        "شهر و علاقه‌مندی‌های خود را بگویید تا با باز شدن میزهای تازه در کافه‌های نزدیک، دعوت‌تان کنیم.",
+    },
+  },
 };
 
 export function urlFor(path: string, lang: SeoLang) {
