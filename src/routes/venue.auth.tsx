@@ -14,6 +14,7 @@ import { LanguageSwitcher } from "@/components/language-switcher";
 
 export const Route = createFileRoute("/venue/auth")({
   component: VenueAuth,
+  head: () => localizedHead("/venue/auth", undefined),
 });
 
 const emailSchema = z.string().trim().email().max(255);

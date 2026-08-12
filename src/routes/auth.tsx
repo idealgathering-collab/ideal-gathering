@@ -22,6 +22,7 @@ const searchSchema = z.object({
 export const Route = createFileRoute("/auth")({
   validateSearch: searchSchema,
   component: AuthPage,
+  head: () => localizedHead("/auth", undefined),
 });
 
 const emailSchema = z.string().trim().email("Enter a valid email").max(255);
