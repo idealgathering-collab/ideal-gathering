@@ -109,30 +109,6 @@ function GatheringDetail() {
 
   return (
     <div className="min-h-screen bg-background">
-      <JsonLd
-        data={jsonLdGathering(
-          {
-            id: g.id,
-            subject: g.subject,
-            description: g.description,
-            starts_at: g.starts_at,
-            seats: g.seats,
-            attendee_count: attendees.length,
-            venue_name: g.venue_name,
-            neighborhood: g.neighborhood,
-            business: g.business
-              ? {
-                  id: g.business.id,
-                  name: g.business.name,
-                  city: g.business.city,
-                  address: g.business.address,
-                  cover_url: g.business.cover_url,
-                }
-              : null,
-          },
-          lang,
-        )}
-      />
       <SiteHeader />
 
       <div className="relative overflow-hidden">
