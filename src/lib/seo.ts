@@ -103,7 +103,7 @@ export const PAGE_SEO: Record<string, Record<SeoLang, Copy>> = {
   },
 };
 
-function urlFor(path: string, lang: SeoLang) {
+export function urlFor(path: string, lang: SeoLang) {
   const base = `${SITE_URL}${path === "/" ? "/" : path}`;
   return lang === "en" ? base : `${base}?lang=${lang}`;
 }
