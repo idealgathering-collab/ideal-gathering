@@ -1,0 +1,18 @@
+# Ideal Gathering
+
+> Real tables at real cafés and restaurants in Istanbul. Each gathering has one subject and a few seats, so strangers can meet over something worth talking about.
+
+People join or host a gathering around a subject; cafés and restaurants register their venue and tables and approve the gatherings they host during quiet hours. The site is available in English, Turkish and Farsi via a `?lang=en|tr|fa` parameter.
+
+## Pages
+
+- [Home](/): What Ideal Gathering is, how it works, and how to join a table.
+- [Explore gatherings](/explore): Upcoming gatherings by subject, venue and date.
+- [Partnership](/partnership): For cafés and restaurants — how venue hosting and approval works.
+- [Guest waitlist](/waitlist): Share your city and interests to be invited as tables open.
+- [Terms of Service](/terms): Rules for using the platform.
+- [Privacy Policy](/privacy): How data is collected, used and protected (KVKK-aware).
+
+## Optional
+
+- [Sitemap](/sitemap.xml): All public URLs, including individual gathering pages.
