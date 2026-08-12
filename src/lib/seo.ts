@@ -320,3 +320,125 @@ export function jsonLdGatheringList(list: SchemaGathering[], lang: SeoLang) {
     })),
   };
 }
+
+/* ---------------------------------------------------------------------------
+ * Gathering detail head + sitemap route list
+ * ------------------------------------------------------------------------- */
+
+/** Public routes that belong in the sitemap. */
+export const PUBLIC_ROUTES = [
+  "/",
+  "/explore",
+  "/partnership",
+  "/waitlist",
+  "/terms",
+  "/privacy",
+] as const;
+
+const GATHERING_FALLBACK: Record<
+  SeoLang,
+  (args: { when: string; where: string; seats: number }) => string
+> = {
+  en: ({ when, where, seats }) =>
+    `A gathering around one subject on ${when}${where ? ` at ${where}` : ""}. ${seats} seat${seats === 1 ? "" : "s"} at the table — join on Ideal Gathering.`,
+  tr: ({ when, where, seats }) =>
+    `${when} tarihinde${where ? ` ${where} mekânında` : ""} tek bir konu etrafında bir buluşma. Masada ${seats} sandalye — Ideal Gathering'de katıl.`,
+  fa: ({ when, where, seats }) =>
+    `گردهمایی حول یک موضوع در ${when}${where ? ` در ${where}` : ""}. ${seats} صندلی سر میز — در Ideal Gathering بپیوندید.`,
+};
+
+const GATHERING_AT: Record<SeoLang, string> = { en: "at", tr: "—", fa: "در" };
+
+export type GatheringHeadInput = SchemaGathering & {
+  status?: string | null;
+  cover_url?: string | null;
+};
+
+function clampTitle(value: string) {
+  return value.length <= 60 ? value : `${value.slice(0, 57).trimEnd()}…`;
+}
+
+/**
+ * Localized title/description/OG/canonical/hreflang + Event JSON-LD for a
+ * single gathering. Pass `null` for a missing or non-public gathering.
+ */
+export function gatheringHead(
+  g: GatheringHeadInput | null,
+  rawLang: unknown,
+  id: string,
+) {
+  const lang = normalizeLang(rawLang);
+  const path = `/gatherings/${id}`;
+  const self = urlFor(path, lang);
+
+  if (!g) {
+    return {
+      meta: [
+        { title: "Gathering not found — Ideal Gathering" },
+        {
+          name: "description",
+          content:
+            "This gathering is no longer available. Browse upcoming gatherings on Ideal Gathering.",
+        },
+        { name: "robots", content: "noindex, follow" },
+      ],
+      links: [{ rel: "canonical", href: self }],
+    };
+  }
+
+  const venue = g.business?.name ?? g.venue_name ?? "";
+  const title = clampTitle(
+    venue ? `${g.subject} ${GATHERING_AT[lang]} ${venue}` : `${g.subject} — Ideal Gathering`,
+  );
+  const when = new Date(g.starts_at).toLocaleDateString(lang, {
+    month: "long",
+    day: "numeric",
+  });
+  const description = (
+    g.description?.trim() ||
+    GATHERING_FALLBACK[lang]({
+      when,
+      where: venue || g.neighborhood || "",
+      seats: Math.max(0, g.seats - (g.attendee_count ?? 0)),
+    })
+  ).slice(0, 300);
+
+  const image = g.business?.cover_url ?? g.cover_url ?? null;
+  const past = new Date(g.starts_at).getTime() < Date.now() - 3 * 60 * 60 * 1000;
+  const indexable = g.status !== "approved" ? false : !past;
+
+  return {
+    meta: [
+      { title },
+      { name: "description", content: description },
+      { property: "og:title", content: title },
+      { property: "og:description", content: description },
+      { property: "og:type", content: "article" },
+      { property: "og:url", content: self },
+      { property: "og:locale", content: OG_LOCALE[lang] },
+      { name: "twitter:card", content: "summary_large_image" },
+      ...(image
+        ? [
+            { property: "og:image", content: image },
+            { name: "twitter:image", content: image },
+          ]
+        : []),
+      ...(indexable ? [] : [{ name: "robots", content: "noindex, follow" }]),
+    ],
+    links: [
+      { rel: "canonical", href: self },
+      ...SEO_LANGS.map((l) => ({
+        rel: "alternate",
+        hrefLang: l,
+        href: urlFor(path, l),
+      })),
+      { rel: "alternate", hrefLang: "x-default", href: urlFor(path, "en") },
+    ],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify(jsonLdGathering(g, lang)),
+      },
+    ],
+  };
+}
