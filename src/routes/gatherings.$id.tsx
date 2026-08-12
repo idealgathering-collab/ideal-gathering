@@ -13,11 +13,22 @@ import { useSession } from "@/hooks/use-session";
 import { Button } from "@/components/ui/button";
 import { fetchGathering, formatDateTime } from "@/lib/gatherings";
 import { useI18n, useT } from "@/i18n";
-import { JsonLd } from "@/components/json-ld";
-import { jsonLdGathering } from "@/lib/seo";
+import { gatheringHead, type SeoLang } from "@/lib/seo";
+import { getPublicGathering } from "@/lib/public-data.functions";
 
 export const Route = createFileRoute("/gatherings/$id")({
   component: GatheringDetail,
+  validateSearch: (search: Record<string, unknown>): { lang?: SeoLang } =>
+    search.lang === "tr" || search.lang === "fa" ? { lang: search.lang } : {},
+  loader: async ({ params }) => {
+    try {
+      return { g: await getPublicGathering({ data: { id: params.id } }) };
+    } catch {
+      return { g: null };
+    }
+  },
+  head: ({ params, match, loaderData }) =>
+    gatheringHead(loaderData?.g ?? null, match.search.lang, params.id),
 });
 
 function GatheringDetail() {
