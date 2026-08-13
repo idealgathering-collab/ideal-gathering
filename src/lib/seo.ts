@@ -160,7 +160,8 @@ export function urlFor(path: string, lang: SeoLang) {
 }
 
 /**
- * Localized title/description/OG tags plus hreflang alternates for a public route.
+ * Localized title/description/OG tags, hreflang alternates and a WebPage
+ * JSON-LD node for a public route.
  */
 export function localizedHead(path: string, rawLang: unknown) {
   const lang = normalizeLang(rawLang);
@@ -186,8 +187,15 @@ export function localizedHead(path: string, rawLang: unknown) {
       })),
       { rel: "alternate", hrefLang: "x-default", href: urlFor(path, "en") },
     ],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify(jsonLdWebPage(path, lang)),
+      },
+    ],
   };
 }
+
 
 /* ---------------------------------------------------------------------------
  * Schema.org structured data (localized)
@@ -221,6 +229,25 @@ export function jsonLdWebSite(lang: SeoLang) {
     publisher: { "@id": `${SITE_URL}/#organization` },
   };
 }
+
+/** Per-page WebPage node, tied to the site's WebSite/Organization graph. */
+export function jsonLdWebPage(path: string, lang: SeoLang) {
+  const copy = PAGE_SEO[path]?.[lang] ?? PAGE_SEO["/"][lang];
+  const url = urlFor(path, lang);
+  return {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "@id": `${url}#webpage`,
+    url,
+    name: copy.title,
+    description: copy.description,
+    inLanguage: SCHEMA_LOCALE[lang],
+    isPartOf: { "@id": `${SITE_URL}/#website` },
+    publisher: { "@id": `${SITE_URL}/#organization` },
+  };
+}
+
+
 
 export type SchemaVenue = {
   id?: string | null;

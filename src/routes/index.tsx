@@ -47,6 +47,7 @@ export const Route = createFileRoute("/")({
       ],
       meta: [...seo.meta, { property: "og:type", content: "website" }],
       scripts: [
+        ...seo.scripts,
         {
           type: "application/ld+json",
           children: JSON.stringify(jsonLdOrganization(normalizeLang(match.search.lang))),
