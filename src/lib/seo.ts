@@ -230,6 +230,25 @@ export function jsonLdWebSite(lang: SeoLang) {
   };
 }
 
+/** Per-page WebPage node, tied to the site's WebSite/Organization graph. */
+export function jsonLdWebPage(path: string, lang: SeoLang) {
+  const copy = PAGE_SEO[path]?.[lang] ?? PAGE_SEO["/"][lang];
+  const url = urlFor(path, lang);
+  return {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "@id": `${url}#webpage`,
+    url,
+    name: copy.title,
+    description: copy.description,
+    inLanguage: SCHEMA_LOCALE[lang],
+    isPartOf: { "@id": `${SITE_URL}/#website` },
+    publisher: { "@id": `${SITE_URL}/#organization` },
+  };
+}
+
+
+
 export type SchemaVenue = {
   id?: string | null;
   name: string;
