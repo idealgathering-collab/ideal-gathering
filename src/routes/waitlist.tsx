@@ -11,10 +11,12 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useT } from "@/i18n";
-import { localizedHead } from "@/lib/seo";
+import { localizedHead, type SeoLang } from "@/lib/seo";
 
 export const Route = createFileRoute("/waitlist")({
-  head: () => localizedHead("/waitlist", undefined),
+  validateSearch: (search: Record<string, unknown>): { lang?: SeoLang } =>
+    search.lang === "tr" || search.lang === "fa" ? { lang: search.lang } : {},
+  head: ({ match }) => localizedHead("/waitlist", match.search.lang),
   component: WaitlistPage,
 });
 
