@@ -160,7 +160,8 @@ export function urlFor(path: string, lang: SeoLang) {
 }
 
 /**
- * Localized title/description/OG tags plus hreflang alternates for a public route.
+ * Localized title/description/OG tags, hreflang alternates and a WebPage
+ * JSON-LD node for a public route.
  */
 export function localizedHead(path: string, rawLang: unknown) {
   const lang = normalizeLang(rawLang);
@@ -186,8 +187,15 @@ export function localizedHead(path: string, rawLang: unknown) {
       })),
       { rel: "alternate", hrefLang: "x-default", href: urlFor(path, "en") },
     ],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify(jsonLdWebPage(path, lang)),
+      },
+    ],
   };
 }
+
 
 /* ---------------------------------------------------------------------------
  * Schema.org structured data (localized)
