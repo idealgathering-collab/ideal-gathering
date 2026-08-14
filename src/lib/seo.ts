@@ -105,17 +105,17 @@ export const PAGE_SEO: Record<string, Record<SeoLang, Copy>> = {
     en: {
       title: "Sign In or Join — Ideal Gathering",
       description:
-        "Create your free Ideal Gathering account to join a table in Istanbul, or sign back in to see your upcoming gatherings.",
+        "Create your free Ideal Gathering account to join a table near you, or sign back in to see your upcoming gatherings.",
     },
     tr: {
       title: "Giriş Yap veya Katıl — Ideal Gathering",
       description:
-        "İstanbul'da bir masaya katılmak için ücretsiz Ideal Gathering hesabını oluştur ya da yaklaşan buluşmalarını görmek için giriş yap.",
+        "Yakınındaki bir masaya katılmak için ücretsiz Ideal Gathering hesabını oluştur ya da yaklaşan buluşmalarını görmek için giriş yap.",
     },
     fa: {
       title: "ورود یا عضویت — Ideal Gathering",
       description:
-        "برای پیوستن به یک میز در استانبول حساب رایگان Ideal Gathering بسازید یا برای دیدن گردهمایی‌های پیش‌رو وارد شوید.",
+        "برای پیوستن به یک میز در نزدیکی خود حساب رایگان Ideal Gathering بسازید یا برای دیدن گردهمایی‌های پیش‌رو وارد شوید.",
     },
   },
   "/venue/auth": {
