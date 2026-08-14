@@ -84,24 +84,28 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
       { name: "theme-color", content: "#6b21a8" },
-      { title: "Ideal Gathering — Meet over coffee" },
+      { title: "Ideal Gathering — No One Will Be Alone Anymore" },
       {
         name: "description",
         content:
-          "Ideal Gathering brings people together at cafes and restaurants. Register your venue and tables, or join a gathering by subject near you.",
+          "Real tables at real cafés and restaurants. One subject, a few seats, and people worth meeting — join a gathering or host your own.",
       },
-      { property: "og:title", content: "Ideal Gathering — Meet over coffee" },
+      { property: "og:title", content: "Ideal Gathering — No One Will Be Alone Anymore" },
       {
         property: "og:description",
         content:
-          "Ideal Gathering brings people together at cafes and restaurants. Register your venue and tables, or join a gathering by subject near you.",
+          "Real tables at real cafés and restaurants. One subject, a few seats, and people worth meeting — join a gathering or host your own.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "Ideal Gathering — Meet over coffee" },
-      { name: "twitter:description", content: "Ideal Gathering brings people together at cafes and restaurants. Register your venue and tables, or join a gathering by subject near you." },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/77714ea7-8c79-411c-a1de-2a444258912b/id-preview-b85b3822--df4ffe27-d2b4-4499-9904-0c945a538777.lovable.app-1783601980258.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/77714ea7-8c79-411c-a1de-2a444258912b/id-preview-b85b3822--df4ffe27-d2b4-4499-9904-0c945a538777.lovable.app-1783601980258.png" },
+      { name: "twitter:title", content: "Ideal Gathering — No One Will Be Alone Anymore" },
+      {
+        name: "twitter:description",
+        content:
+          "Real tables at real cafés and restaurants. One subject, a few seats, and people worth meeting — join a gathering or host your own.",
+      },
+      { property: "og:image", content: "https://www.idealgathering.com/og-image.jpg" },
+      { name: "twitter:image", content: "https://www.idealgathering.com/og-image.jpg" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
