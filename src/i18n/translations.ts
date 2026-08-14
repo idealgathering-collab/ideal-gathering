@@ -797,7 +797,7 @@ export const translations: Record<Lang, Dict> = {
     "landing.v3.nav.login": "Log in",
     "landing.v3.nav.cta": "Join a gathering",
 
-    "landing.v3.hero.eyebrow": "Small tables · Real cafés · Istanbul",
+    "landing.v3.hero.eyebrow": "Small tables · Real people · Real life",
     "landing.v3.hero.title": "Meet real people over\none real conversation.",
     "landing.v3.hero.sub": "Ideal Gathering seats a few people around one subject at a neighbourhood café. Pick the subject, claim a seat, show up.",
     "landing.v3.hero.cta": "Join a gathering",
@@ -859,8 +859,8 @@ export const translations: Record<Lang, Dict> = {
     "landing.v3.traction.sub": "What is already built and running.",
     "landing.v3.traction.t1.title": "Three languages, natively",
     "landing.v3.traction.t1.body": "Full English, Turkish and Farsi — including right-to-left layout for Farsi.",
-    "landing.v3.traction.t2.title": "Istanbul first",
-    "landing.v3.traction.t2.body": "Launching neighbourhood by neighbourhood, with a curated city and district list built in.",
+    "landing.v3.traction.t2.title": "Launching city by city",
+    "landing.v3.traction.t2.body": "We're rolling out neighbourhood by neighbourhood, with a curated city and district list built in — starting soon.",
     "landing.v3.traction.t3.title": "Reviewed venues",
     "landing.v3.traction.t3.body": "Every café or restaurant passes an admin approval flow before it can host.",
     "landing.v3.traction.t4.title": "Verified membership",
@@ -872,7 +872,7 @@ export const translations: Record<Lang, Dict> = {
 
     "landing.v3.vision.eyebrow": "Where this goes",
     "landing.v3.vision.title": "A city where a table is always open.",
-    "landing.v3.vision.body": "We start with Istanbul's cafés and a handful of subjects. Next come more districts, more cities, and enough tables that finding company is as ordinary as finding coffee.",
+    "landing.v3.vision.body": "We start with a handful of cafés and subjects in one city. Next come more neighbourhoods, more cities, and enough tables that finding company is as ordinary as finding coffee.",
     "landing.v3.vision.future": "Long term, Ideal Gathering wants to be the default way people meet people offline — and the layer that fills the empty chairs local venues already have.",
 
     "landing.v3.final.title": "There's a seat with your name on it.",
@@ -1665,7 +1665,7 @@ export const translations: Record<Lang, Dict> = {
     "landing.v3.nav.login": "Giriş yap",
     "landing.v3.nav.cta": "Bir buluşmaya katıl",
 
-    "landing.v3.hero.eyebrow": "Küçük masalar · Gerçek kafeler · İstanbul",
+    "landing.v3.hero.eyebrow": "Küçük masalar · Gerçek insanlar · Gerçek hayat",
     "landing.v3.hero.title": "Gerçek insanlarla\ngerçek bir sohbet.",
     "landing.v3.hero.sub": "Ideal Gathering, mahalledeki bir kafede tek bir konu etrafında birkaç kişiyi aynı masaya oturtur. Konuyu seç, koltuğunu ayır, gel.",
     "landing.v3.hero.cta": "Bir buluşmaya katıl",
@@ -1727,8 +1727,8 @@ export const translations: Record<Lang, Dict> = {
     "landing.v3.traction.sub": "Şu an hazır ve çalışır durumda olanlar.",
     "landing.v3.traction.t1.title": "Üç dil, tam destekli",
     "landing.v3.traction.t1.body": "İngilizce, Türkçe ve Farsça — Farsça için sağdan sola yerleşim dahil.",
-    "landing.v3.traction.t2.title": "Önce İstanbul",
-    "landing.v3.traction.t2.body": "Mahalle mahalle büyüyoruz; şehir ve semt listesi hazır şekilde geliyor.",
+    "landing.v3.traction.t2.title": "Şehir şehir büyüyoruz",
+    "landing.v3.traction.t2.body": "Mahalle mahalle yayılıyoruz; şehir ve semt listesi hazır şekilde geliyor — çok yakında.",
     "landing.v3.traction.t3.title": "İncelenmiş mekânlar",
     "landing.v3.traction.t3.body": "Her kafe veya restoran ev sahipliği yapmadan önce yönetici onayından geçer.",
     "landing.v3.traction.t4.title": "Doğrulanmış üyelik",
@@ -1740,7 +1740,7 @@ export const translations: Record<Lang, Dict> = {
 
     "landing.v3.vision.eyebrow": "Bu iş nereye gidiyor",
     "landing.v3.vision.title": "Her zaman boş bir masası olan bir şehir.",
-    "landing.v3.vision.body": "İstanbul'un kafeleri ve birkaç konuyla başlıyoruz. Sonrasında daha çok semt, daha çok şehir ve arkadaşlık bulmayı kahve bulmak kadar sıradanlaştıracak kadar çok masa var.",
+    "landing.v3.vision.body": "Birkaç kafe ve konuyla tek bir şehirde başlıyoruz. Sonrasında daha çok semt, daha çok şehir ve arkadaşlık bulmayı kahve bulmak kadar sıradanlaştıracak kadar çok masa var.",
     "landing.v3.vision.future": "Uzun vadede Ideal Gathering, insanların çevrimdışı tanışmasının varsayılan yolu ve yerel mekânların boş sandalyelerini dolduran katman olmak istiyor.",
 
     "landing.v3.final.title": "Adının yazılı olduğu bir sandalye var.",
@@ -2531,7 +2531,7 @@ export const translations: Record<Lang, Dict> = {
     "landing.v3.nav.login": "ورود",
     "landing.v3.nav.cta": "به یک گردهمایی بپیوند",
 
-    "landing.v3.hero.eyebrow": "میزهای کوچک · کافه‌های واقعی · استانبول",
+    "landing.v3.hero.eyebrow": "میزهای کوچک · آدم‌های واقعی · زندگی واقعی",
     "landing.v3.hero.title": "آدم‌های واقعی،\nیک گفت‌وگوی واقعی.",
     "landing.v3.hero.sub": "Ideal Gathering چند نفر را دور یک موضوع، در کافه‌ای در محله‌تان، سر یک میز می‌نشاند. موضوع را انتخاب کن، صندلی‌ات را بگیر و بیا.",
     "landing.v3.hero.cta": "به یک گردهمایی بپیوند",
@@ -2593,8 +2593,8 @@ export const translations: Record<Lang, Dict> = {
     "landing.v3.traction.sub": "آنچه هم‌اکنون ساخته شده و کار می‌کند.",
     "landing.v3.traction.t1.title": "سه زبان، به‌طور کامل",
     "landing.v3.traction.t1.body": "انگلیسی، ترکی و فارسی — همراه با چیدمان راست‌به‌چپ برای فارسی.",
-    "landing.v3.traction.t2.title": "ابتدا استانبول",
-    "landing.v3.traction.t2.body": "محله به محله شروع می‌کنیم، با فهرست آمادهٔ شهرها و مناطق.",
+    "landing.v3.traction.t2.title": "شهر به شهر راه می‌اندازیم",
+    "landing.v3.traction.t2.body": "محله به محله گسترش می‌یابیم، با فهرست آمادهٔ شهرها و مناطق — به زودی.",
     "landing.v3.traction.t3.title": "مکان‌های بررسی‌شده",
     "landing.v3.traction.t3.body": "هر کافه یا رستوران پیش از میزبانی از مسیر تأیید مدیر عبور می‌کند.",
     "landing.v3.traction.t4.title": "عضویت تأییدشده",
@@ -2606,7 +2606,7 @@ export const translations: Record<Lang, Dict> = {
 
     "landing.v3.vision.eyebrow": "مسیر پیش رو",
     "landing.v3.vision.title": "شهری که همیشه یک میز باز دارد.",
-    "landing.v3.vision.body": "با کافه‌های استانبول و چند موضوع شروع می‌کنیم. بعد مناطق بیشتر، شهرهای بیشتر و آن‌قدر میز که پیدا کردن همراه به سادگی پیدا کردن قهوه شود.",
+    "landing.v3.vision.body": "با چند کافه و موضوع در یک شهر شروع می‌کنیم. بعد مناطق بیشتر، شهرهای بیشتر و آن‌قدر میز که پیدا کردن همراه به سادگی پیدا کردن قهوه شود.",
     "landing.v3.vision.future": "در بلندمدت، Ideal Gathering می‌خواهد راه پیش‌فرض آشنا شدن آدم‌ها در دنیای واقعی باشد و لایه‌ای که صندلی‌های خالی مکان‌های محلی را پر می‌کند.",
 
     "landing.v3.final.title": "یک صندلی به نام تو هست.",

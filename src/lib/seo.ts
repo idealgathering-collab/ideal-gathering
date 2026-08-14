@@ -20,17 +20,17 @@ export const PAGE_SEO: Record<string, Record<SeoLang, Copy>> = {
     en: {
       title: "Ideal Gathering — No One Will Be Alone Anymore",
       description:
-        "Real tables at real cafés in Istanbul. One subject, a few seats, and people worth meeting. Join a gathering or host your own.",
+        "Real tables at real cafés. One subject, a few seats, and people worth meeting. Join a gathering or host your own.",
     },
     tr: {
       title: "Ideal Gathering — Kimse Artık Yalnız Olmayacak",
       description:
-        "İstanbul'un kafelerinde gerçek masalar. Bir konu, birkaç sandalye ve tanışmaya değer insanlar. Bir buluşmaya katıl ya da kendin düzenle.",
+        "Gerçek kafelerde gerçek masalar. Bir konu, birkaç sandalye ve tanışmaya değer insanlar. Bir buluşmaya katıl ya da kendin düzenle.",
     },
     fa: {
       title: "Ideal Gathering — دیگر هیچ‌کس تنها نخواهد بود",
       description:
-        "میزهای واقعی در کافه‌های استانبول. یک موضوع، چند صندلی و آدم‌هایی که ارزش شناختن دارند. به یک گردهمایی بپیوندید یا خودتان میزبان شوید.",
+        "میزهای واقعی در کافه‌های واقعی. یک موضوع، چند صندلی و آدم‌هایی که ارزش شناختن دارند. به یک گردهمایی بپیوندید یا خودتان میزبان شوید.",
     },
   },
   "/explore": {
@@ -212,7 +212,6 @@ export function jsonLdOrganization(lang: SeoLang) {
     url: SITE_URL,
     logo: `${SITE_URL}/favicon.ico`,
     description: PAGE_SEO["/"][lang].description,
-    areaServed: { "@type": "City", name: "Istanbul" },
     inLanguage: SCHEMA_LOCALE[lang],
   };
 }
