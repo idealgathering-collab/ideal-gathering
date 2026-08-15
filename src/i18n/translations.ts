@@ -845,6 +845,9 @@ export const translations: Record<Lang, Dict> = {
     "landing.v3.matching.quiz.skip": "skip this one",
     "landing.v3.matching.quiz.doneLabel": "all done",
     "landing.v3.matching.quiz.doneTitle": "That's you, roughly. Here's your table.",
+    "landing.v3.matching.quiz.doneBody":
+      "Nothing is locked in — your answers just help us pick who you'd enjoy sitting with. Retake it whenever you like.",
+
     "landing.v3.matching.q1.q": "Friday night: you're…",
     "landing.v3.matching.q1.a1": "already texting the group chat a plan",
     "landing.v3.matching.q1.a2": "hoping someone else plans it",
