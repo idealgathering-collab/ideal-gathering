@@ -241,6 +241,7 @@ function Home() {
         <HeroSection />
         <DemoSection />
         <HowSection />
+        <MatchingSection />
         <ProblemSection />
         <FeaturesSection />
         <VenuesSection />
