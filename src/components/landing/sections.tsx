@@ -114,51 +114,16 @@ export function HowSection() {
 
 /* ---------------- Matching ---------------- */
 
-const QUIZ_OPTIONS: { icon: ComponentType<{ className?: string }>; k: string; selected: boolean }[] = [
-  { icon: Flame, k: "option1", selected: false },
-  { icon: Armchair, k: "option2", selected: true },
-  { icon: Moon, k: "option3", selected: false },
-];
-
-const MATCH_TRAITS: { k: string; fill: number; level: "high" | "good" }[] = [
-  { k: "trait1", fill: 92, level: "high" },
-  { k: "trait2", fill: 87, level: "high" },
-  { k: "trait3", fill: 74, level: "good" },
-];
-
 const CHIPS: { icon: ComponentType<{ className?: string }>; k: string }[] = [
   { icon: DoorOpen, k: "chip1" },
   { icon: Users, k: "chip2" },
   { icon: Clock, k: "chip3" },
 ];
 
-function MatchBar({ fill, level }: { fill: number; level: "high" | "good" }) {
-  const t = useT();
-  return (
-    <div className="mt-2">
-      <div className="h-2 w-full overflow-hidden rounded-full bg-white/10">
-        <div
-          className="h-full rounded-full transition-all duration-700"
-          style={{
-            width: `${fill}%`,
-            background:
-              level === "high"
-                ? "linear-gradient(90deg, #A78BFA 0%, #7C3AED 100%)"
-                : "linear-gradient(90deg, #F5D08A 0%, #F59E0B 100%)",
-          }}
-        />
-      </div>
-      <p className="mt-1 text-[11px] font-medium uppercase tracking-wider text-[rgba(196,181,253,0.7)]">
-        {t(`landing.v3.matching.match.level.${level}`)}
-      </p>
-    </div>
-  );
-}
-
 export function MatchingSection() {
   const t = useT();
   return (
-    <section className="relative z-20 px-4 py-20 sm:py-28">
+    <section id="matching" className="relative z-20 scroll-mt-20 px-4 py-20 sm:py-28">
       <div className="mx-auto max-w-6xl">
         <Reveal className="max-w-2xl text-center sm:text-start">
           <Eyebrow>{t("landing.v3.matching.eyebrow")}</Eyebrow>
@@ -168,76 +133,9 @@ export function MatchingSection() {
           </p>
         </Reveal>
 
-        <div className="mt-12 grid gap-6 md:grid-cols-2">
-          {/* Quiz card */}
-          <Reveal delay={70}>
-            <div className="cosmic-panel h-full p-6 sm:p-8">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-sunshine">
-                {t("landing.v3.matching.quiz.label")}
-              </p>
-              <h3 className="font-serif-warm mt-3 text-xl font-semibold text-white sm:text-2xl">
-                {t("landing.v3.matching.quiz.question")}
-              </h3>
-              <div className="mt-6 flex flex-col gap-3">
-                {QUIZ_OPTIONS.map((opt) => (
-                  <div
-                    key={opt.k}
-                    className={`flex items-center gap-3 rounded-2xl border p-3.5 transition-colors ${
-                      opt.selected
-                        ? "border-[rgba(167,139,250,0.55)] bg-[rgba(124,58,237,0.22)] text-white"
-                        : "border-white/10 bg-white/[0.035] text-[rgba(196,181,253,0.85)]"
-                    }`}
-                  >
-                    <span
-                      className={`inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl ${
-                        opt.selected ? "bg-[rgba(167,139,250,0.25)] text-[#EDE9FE]" : "bg-white/5 text-[rgba(196,181,253,0.7)]"
-                      }`}
-                    >
-                      <opt.icon className="h-4 w-4" />
-                    </span>
-                    <span className="text-sm font-medium leading-snug">
-                      {t(`landing.v3.matching.quiz.${opt.k}`)}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </Reveal>
-
-          {/* Match result card */}
-          <Reveal delay={140}>
-            <div className="cosmic-panel h-full p-6 sm:p-8">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-sunshine">
-                {t("landing.v3.matching.match.label")}
-              </p>
-              <div className="mt-5 flex items-center gap-2">
-                {["EM", "RT", "AL"].map((initials) => (
-                  <span
-                    key={initials}
-                    className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-[#A78BFA] to-[#7C3AED] text-xs font-bold text-white shadow-lg"
-                  >
-                    {initials}
-                  </span>
-                ))}
-                <span className="inline-flex h-10 w-10 items-center justify-center rounded-full border-2 border-dashed border-[rgba(196,181,253,0.45)] text-xs font-medium text-[rgba(196,181,253,0.7)]">
-                  +
-                </span>
-              </div>
-              <div className="mt-6 flex flex-col gap-4">
-                {MATCH_TRAITS.map((trait) => (
-                  <div key={trait.k}>
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm font-medium text-white">
-                        {t(`landing.v3.matching.match.${trait.k}`)}
-                      </span>
-                    </div>
-                    <MatchBar fill={trait.fill} level={trait.level} />
-                  </div>
-                ))}
-              </div>
-            </div>
-          </Reveal>
-        </div>
+        <Reveal delay={70}>
+          <MatchingQuiz />
+        </Reveal>
 
         <Reveal delay={210}>
           <div className="mt-10 flex flex-wrap items-center justify-center gap-3 sm:gap-4">
@@ -256,6 +154,7 @@ export function MatchingSection() {
     </section>
   );
 }
+
 
 /* ---------------- Problem ---------------- */
 
