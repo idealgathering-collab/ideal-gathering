@@ -100,6 +100,8 @@ export const translations: Record<Lang, Dict> = {
       "Create a venue account to register your cafe or restaurant and host gatherings. Guests, join the waitlist instead.",
     "auth.subtitle.signin": "Sign in to manage your venue and gatherings.",
     "auth.google": "Continue with Google",
+    "auth.quizSaved": "Your quiz result is saved — {persona}. We'll use it to seat you at the right table.",
+
     "auth.or": "or",
     "auth.name": "Your name",
     "auth.email": "Email",
