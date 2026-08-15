@@ -9,6 +9,8 @@ import { lovable } from "@/integrations/lovable";
 import { Button } from "@/components/ui/button";
 import { useT } from "@/i18n";
 import { LanguageSwitcher } from "@/components/language-switcher";
+import { QuizSavedNote } from "@/components/quiz-saved-note";
+
 import { localizedHead } from "@/lib/seo";
 
 import { Input } from "@/components/ui/input";
