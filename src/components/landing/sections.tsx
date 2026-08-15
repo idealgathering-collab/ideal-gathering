@@ -13,8 +13,6 @@ import {
   Smartphone,
   Bot,
   ArrowRight,
-  Flame,
-  Moon,
   DoorOpen,
   Clock,
 } from "lucide-react";
