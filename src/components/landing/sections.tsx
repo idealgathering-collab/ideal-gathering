@@ -13,6 +13,10 @@ import {
   Smartphone,
   Bot,
   ArrowRight,
+  Flame,
+  Moon,
+  DoorOpen,
+  Clock,
 } from "lucide-react";
 import type { ComponentType } from "react";
 import { useT } from "@/i18n";
