@@ -133,6 +133,7 @@ const CHIPS: { icon: ComponentType<{ className?: string }>; k: string }[] = [
 ];
 
 function MatchBar({ fill, level }: { fill: number; level: "high" | "good" }) {
+  const t = useT();
   return (
     <div className="mt-2">
       <div className="h-2 w-full overflow-hidden rounded-full bg-white/10">
@@ -148,7 +149,7 @@ function MatchBar({ fill, level }: { fill: number; level: "high" | "good" }) {
         />
       </div>
       <p className="mt-1 text-[11px] font-medium uppercase tracking-wider text-[rgba(196,181,253,0.7)]">
-        {level === "high" ? "high match" : "good match"}
+        {t(`landing.v3.matching.match.level.${level}`)}
       </p>
     </div>
   );
