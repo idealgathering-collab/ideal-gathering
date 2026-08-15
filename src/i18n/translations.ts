@@ -1809,6 +1809,9 @@ export const translations: Record<Lang, Dict> = {
     "landing.v3.matching.quiz.skip": "bunu geç",
     "landing.v3.matching.quiz.doneLabel": "tamamdır",
     "landing.v3.matching.quiz.doneTitle": "Aşağı yukarı sen busun. İşte masan.",
+    "landing.v3.matching.quiz.doneBody":
+      "Hiçbir şey kesin değil — cevapların sadece kiminle iyi anlaşacağını seçmemize yardım ediyor. İstediğin zaman tekrar çözebilirsin.",
+
     "landing.v3.matching.q1.q": "Cuma akşamı: sen…",
     "landing.v3.matching.q1.a1": "grup sohbetine çoktan plan yazıyorsun",
     "landing.v3.matching.q1.a2": "başkası plan yapsın diye bekliyorsun",
