@@ -22,6 +22,8 @@ import type { ComponentType } from "react";
 import { useT } from "@/i18n";
 import { Reveal } from "@/components/landing/reveal";
 import { TableDemo } from "@/components/landing/table-demo";
+import { MatchingQuiz } from "@/components/landing/matching-quiz";
+
 
 function Eyebrow({ children }: { children: React.ReactNode }) {
   return (
