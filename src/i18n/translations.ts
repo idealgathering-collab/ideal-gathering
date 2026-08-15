@@ -1067,6 +1067,8 @@ export const translations: Record<Lang, Dict> = {
       "Kafeni veya restoranını kaydetmek ve buluşmalara ev sahipliği yapmak için bir mekân hesabı oluştur. Misafirler bekleme listesine katılabilir.",
     "auth.subtitle.signin": "Mekânını ve buluşmalarını yönetmek için giriş yap.",
     "auth.google": "Google ile devam et",
+    "auth.quizSaved": "Test sonucun kaydedildi — {persona}. Doğru masaya oturtmak için kullanacağız.",
+
     "auth.or": "veya",
     "auth.name": "Adın",
     "auth.email": "E-posta",
