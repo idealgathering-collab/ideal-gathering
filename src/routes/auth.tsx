@@ -9,6 +9,8 @@ import { lovable } from "@/integrations/lovable";
 import { Button } from "@/components/ui/button";
 import { useT } from "@/i18n";
 import { LanguageSwitcher } from "@/components/language-switcher";
+import { QuizSavedNote } from "@/components/quiz-saved-note";
+
 import { localizedHead } from "@/lib/seo";
 
 import { Input } from "@/components/ui/input";
@@ -182,7 +184,10 @@ function AuthPage() {
             </>
           )}
 
+          {isSignup && !isForgot && <QuizSavedNote />}
+
           <form onSubmit={handleSubmit} className="grid gap-4">
+
             {isSignup && !isForgot && (
               <div className="grid gap-2">
                 <Label htmlFor="name">{t("auth.name")}</Label>
