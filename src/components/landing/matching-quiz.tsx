@@ -168,6 +168,12 @@ export function MatchingQuiz() {
                   ? t("landing.v3.matching.quiz.doneTitle")
                   : t("landing.v3.matching.q4.q")}
               </h3>
+              {done && (
+                <p className="mt-3 text-sm leading-relaxed text-[rgba(221,214,254,0.78)]">
+                  {t("landing.v3.matching.quiz.doneBody")}
+                </p>
+              )}
+
               {!done && (
                 <div className="mt-6 flex flex-col gap-3">
                   {QUIZ[3].options.map((opt, i) => {
