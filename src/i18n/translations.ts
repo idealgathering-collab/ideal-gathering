@@ -2771,6 +2771,9 @@ export const translations: Record<Lang, Dict> = {
     "landing.v3.matching.quiz.skip": "این یکی را رد کن",
     "landing.v3.matching.quiz.doneLabel": "تمام شد",
     "landing.v3.matching.quiz.doneTitle": "کم‌وبیش این تویی. این هم میزت.",
+    "landing.v3.matching.quiz.doneBody":
+      "چیزی قطعی نیست — پاسخ‌هایت فقط کمک می‌کنند بفهمیم کنار چه کسانی راحت‌تری. هر وقت خواستی دوباره انجامش بده.",
+
     "landing.v3.matching.q1.q": "جمعه‌شب: تو…",
     "landing.v3.matching.q1.a1": "داری توی گروه برنامه می‌نویسی",
     "landing.v3.matching.q1.a2": "منتظری یکی دیگه برنامه بچینه",
