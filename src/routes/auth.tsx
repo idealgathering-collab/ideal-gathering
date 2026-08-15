@@ -182,7 +182,10 @@ function AuthPage() {
             </>
           )}
 
+          {isSignup && !isForgot && <QuizSavedNote />}
+
           <form onSubmit={handleSubmit} className="grid gap-4">
+
             {isSignup && !isForgot && (
               <div className="grid gap-2">
                 <Label htmlFor="name">{t("auth.name")}</Label>
