@@ -17,6 +17,7 @@ import {
   FeaturesSection,
   FinalCtaSection,
   HowSection,
+  MatchingSection,
   ProblemSection,
   TractionSection,
   VenuesSection,
