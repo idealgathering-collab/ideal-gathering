@@ -17,6 +17,7 @@ import {
   FeaturesSection,
   FinalCtaSection,
   HowSection,
+  MatchingSection,
   ProblemSection,
   TractionSection,
   VenuesSection,
@@ -240,6 +241,7 @@ function Home() {
         <HeroSection />
         <DemoSection />
         <HowSection />
+        <MatchingSection />
         <ProblemSection />
         <FeaturesSection />
         <VenuesSection />
