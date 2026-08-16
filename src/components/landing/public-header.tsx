@@ -52,7 +52,7 @@ export function PublicHeader({
       }
     >
 
-      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-3 px-4">
+      <div className="relative mx-auto flex h-16 max-w-6xl items-center justify-between gap-3 px-4">
         <div className="flex items-center gap-1.5">
           {showBack && (
             <button
@@ -62,7 +62,7 @@ export function PublicHeader({
                 if (typeof window !== "undefined" && window.history.length > 1) window.history.back();
                 else navigate({ to: "/" });
               }}
-              className="inline-flex h-9 w-9 items-center justify-center rounded-full text-[rgba(221,214,254,0.78)] transition-colors hover:bg-white/5 hover:text-white"
+              className="inline-flex h-9 w-9 items-center justify-center rounded-full text-[rgba(221,214,254,0.78)] transition-colors hover:bg-white/5 hover:text-white md:absolute md:-left-10"
             >
               <ArrowLeft className="h-4 w-4 rtl:rotate-180" />
             </button>
