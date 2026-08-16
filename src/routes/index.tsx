@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { ArrowRight, Sparkles } from "lucide-react";
 import { useT } from "@/i18n";
 import {
@@ -10,8 +10,8 @@ import {
   type SeoLang,
 } from "@/lib/seo";
 import { useSession } from "@/hooks/use-session";
-import { useIsMobile } from "@/hooks/use-mobile";
 import { PublicHeader } from "@/components/landing/public-header";
+import { CosmicBackdrop } from "@/components/cosmic-backdrop";
 import {
   DemoSection,
   FeaturesSection,
@@ -25,7 +25,6 @@ import {
 } from "@/components/landing/sections";
 import { Reveal } from "@/components/landing/reveal";
 import { SiteFooter } from "@/components/site-footer";
-import nebulaAsset from "@/assets/landing-nebula-skyline.jpg.asset.json";
 import constellationAsset from "@/assets/constellation-people.png.asset.json";
 import logoAsset from "@/assets/ideal-gathering-logo.png.asset.json";
 
@@ -61,18 +60,6 @@ export const Route = createFileRoute("/")({
     };
   },
 });
-
-function usePrefersReducedMotion() {
-  const [reduced, setReduced] = useState(false);
-  useEffect(() => {
-    const mql = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const onChange = () => setReduced(mql.matches);
-    onChange();
-    mql.addEventListener("change", onChange);
-    return () => mql.removeEventListener("change", onChange);
-  }, []);
-  return reduced;
-}
 
 function HeroSection() {
   const t = useT();
@@ -169,8 +156,6 @@ function HeroSection() {
 function Home() {
   const { session, loading } = useSession();
   const navigate = useNavigate();
-  const isMobile = useIsMobile();
-  const reducedMotion = usePrefersReducedMotion();
 
   useEffect(() => {
     if (!loading && session) {
@@ -186,56 +171,11 @@ function Home() {
     );
   }
 
-  const starCount = reducedMotion || isMobile ? 0 : 70;
-
-  const stars = Array.from({ length: starCount }, (_, i) => {
-    const seed = i * 9301 + 49297;
-    return {
-      x: seed % 100,
-      y: (seed * 7) % 100,
-      size: 1 + ((i * 5) % 3),
-      delay: (i % 9) * 0.5,
-      duration: 3 + (i % 5),
-    };
-  });
-
   return (
     <div className="landing-dark cosmic-scene relative z-0 overflow-hidden">
       <PublicHeader />
 
-      {/* Nebula backdrop */}
-      <div
-        aria-hidden
-        className="pointer-events-none fixed inset-0 z-0 bg-cover bg-center"
-        style={{ backgroundImage: `url(${nebulaAsset.url})`, inset: "-4%" }}
-      />
-      <div
-        aria-hidden
-        className="pointer-events-none fixed inset-0 z-[5]"
-        style={{
-          background:
-            "radial-gradient(ellipse at 50% 30%, rgba(10,6,22,0.35) 0%, rgba(10,6,22,0.82) 60%, rgba(10,6,22,0.96) 100%)",
-        }}
-      />
-
-      {/* Twinkling starfield (desktop, motion-friendly only) */}
-      <div aria-hidden className="pointer-events-none fixed inset-0 z-[8] overflow-hidden">
-        {stars.map((s, i) => (
-          <span
-            key={i}
-            className="absolute rounded-full animate-star-twinkle"
-            style={{
-              left: `${s.x}%`,
-              top: `${s.y}%`,
-              width: `${s.size}px`,
-              height: `${s.size}px`,
-              background: i % 4 === 0 ? "#A78BFA" : "#EDE9FE",
-              animationDelay: `${s.delay}s`,
-              animationDuration: `${s.duration}s`,
-            }}
-          />
-        ))}
-      </div>
+      <CosmicBackdrop />
 
       <main>
         <HeroSection />
