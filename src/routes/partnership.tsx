@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, Check } from "lucide-react";
 import { PublicHeader } from "@/components/landing/public-header";
+import { CosmicBackdrop } from "@/components/cosmic-backdrop";
 import { SiteFooter } from "@/components/site-footer";
 import { VenueDashboardPreview } from "@/components/venue-dashboard-preview";
 import { Button } from "@/components/ui/button";
@@ -20,10 +21,11 @@ function Partnership() {
   const feats = [t("b2b.feat1"), t("b2b.feat2"), t("b2b.feat3")];
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="landing-dark cosmic-scene relative z-0 min-h-screen overflow-hidden bg-background">
       <PublicHeader anchors={[]} fillOnScroll={false} />
+      <CosmicBackdrop />
 
-      <section className="mx-auto max-w-6xl px-4 pb-20 pt-28 sm:pb-28 sm:pt-36">
+      <section className="relative z-10 mx-auto max-w-6xl px-4 pb-20 pt-28 sm:pb-28 sm:pt-36">
         <div className="grid gap-12 lg:grid-cols-[1fr_1.05fr] lg:items-center">
           <div>
             <div className="inline-flex items-center gap-2 rounded-full bg-tangerine/20 px-3 py-1 text-xs font-medium uppercase tracking-wide text-tangerine-foreground">
@@ -74,7 +76,7 @@ function Partnership() {
         </div>
       </section>
 
-      <section className="bg-gradient-hero">
+      <section className="relative z-10 bg-gradient-hero">
         <div className="mx-auto grid max-w-6xl gap-6 px-4 py-20 text-primary-foreground sm:grid-cols-[1.2fr_1fr] sm:items-center">
           <div>
             <h2 className="font-display text-4xl sm:text-5xl">
@@ -96,7 +98,7 @@ function Partnership() {
         </div>
       </section>
 
-      <SiteFooter />
+      <div className="relative z-10"><SiteFooter /></div>
     </div>
   );
 }
