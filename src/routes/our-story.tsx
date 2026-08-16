@@ -15,7 +15,7 @@ function OurStoryPage() {
   const t = useT();
   return (
     <div className="min-h-screen bg-background">
-      <PublicHeader anchors={[]} solid />
+      <PublicHeader anchors={[]} fillOnScroll={false} />
       <main className="mx-auto max-w-2xl px-4 pb-16 pt-28 sm:pb-20 sm:pt-32">
         <h1 className="font-display text-4xl sm:text-5xl text-dark-heading">{t("ourStory.title")}</h1>
 

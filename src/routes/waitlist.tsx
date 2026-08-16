@@ -90,7 +90,7 @@ function WaitlistPage() {
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-background">
-      <PublicHeader anchors={[]} solid />
+      <PublicHeader anchors={[]} fillOnScroll={false} />
       <div className="absolute inset-x-0 top-16 bottom-0 bg-gradient-hero opacity-90" />
       <div className="relative mx-auto flex max-w-md flex-col justify-center px-4 pb-12 pt-28">
         <Link to="/" className="mb-8 inline-flex items-center gap-2 text-primary-foreground">

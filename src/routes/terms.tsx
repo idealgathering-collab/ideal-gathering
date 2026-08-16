@@ -15,7 +15,7 @@ function TermsPage() {
   const t = useT();
   return (
     <div className="min-h-screen bg-background">
-      <PublicHeader anchors={[]} solid />
+      <PublicHeader anchors={[]} fillOnScroll={false} />
       <main className="mx-auto max-w-3xl px-4 pb-12 pt-28">
         <h1 className="font-display text-4xl">{t("terms.title")}</h1>
         <p className="mt-2 text-sm text-muted-foreground">{t("terms.updated")}</p>
