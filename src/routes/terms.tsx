@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { SiteHeader } from "@/components/site-header";
+import { PublicHeader } from "@/components/landing/public-header";
 import { SiteFooter } from "@/components/site-footer";
 import { useT } from "@/i18n";
 import { localizedHead, type SeoLang } from "@/lib/seo";
@@ -15,8 +15,8 @@ function TermsPage() {
   const t = useT();
   return (
     <div className="min-h-screen bg-background">
-      <SiteHeader />
-      <main className="mx-auto max-w-3xl px-4 py-12">
+      <PublicHeader anchors={[]} solid />
+      <main className="mx-auto max-w-3xl px-4 pb-12 pt-28">
         <h1 className="font-display text-4xl">{t("terms.title")}</h1>
         <p className="mt-2 text-sm text-muted-foreground">{t("terms.updated")}</p>
 
