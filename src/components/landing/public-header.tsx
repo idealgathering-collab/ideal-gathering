@@ -56,6 +56,12 @@ export function PublicHeader() {
               {t(a.key)}
             </a>
           ))}
+          <Link
+            to="/our-story"
+            className="rounded-full px-3 py-2 text-sm text-[rgba(221,214,254,0.78)] transition-colors hover:bg-white/5 hover:text-white"
+          >
+            {t("nav.ourStory")}
+          </Link>
         </nav>
 
         <div className="flex items-center gap-2">
