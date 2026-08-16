@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { PublicHeader } from "@/components/landing/public-header";
+import { CosmicBackdrop } from "@/components/cosmic-backdrop";
 import { SiteFooter } from "@/components/site-footer";
 import { useT } from "@/i18n";
 import { localizedHead, type SeoLang } from "@/lib/seo";
@@ -14,9 +15,10 @@ export const Route = createFileRoute("/privacy")({
 function PrivacyPage() {
   const t = useT();
   return (
-    <div className="min-h-screen bg-background">
+    <div className="landing-dark cosmic-scene relative z-0 min-h-screen overflow-hidden bg-background">
       <PublicHeader anchors={[]} fillOnScroll={false} />
-      <main className="mx-auto max-w-3xl px-4 pb-12 pt-28">
+      <CosmicBackdrop />
+      <main className="relative z-10 mx-auto max-w-3xl px-4 pb-12 pt-28">
         <h1 className="font-display text-4xl">{t("privacy.title")}</h1>
         <p className="mt-2 text-sm text-muted-foreground">{t("privacy.updated")}</p>
 
@@ -29,7 +31,7 @@ function PrivacyPage() {
         <Section title={t("privacy.kvkk.title")} body={t("privacy.kvkk.body")} />
         <Section title={t("privacy.contact.title")} body={t("privacy.contact.body")} />
       </main>
-      <SiteFooter />
+      <div className="relative z-10"><SiteFooter /></div>
     </div>
   );
 }

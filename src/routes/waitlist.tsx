@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { Sparkles } from "lucide-react";
 import logoAsset from "@/assets/ideal-gathering-logo.png.asset.json";
 import { PublicHeader } from "@/components/landing/public-header";
+import { CosmicBackdrop } from "@/components/cosmic-backdrop";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -89,10 +90,11 @@ function WaitlistPage() {
   }
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-background">
+    <div className="landing-dark cosmic-scene relative z-0 min-h-screen overflow-hidden bg-background">
       <PublicHeader anchors={[]} fillOnScroll={false} />
-      <div className="absolute inset-x-0 top-16 bottom-0 bg-gradient-hero opacity-90" />
-      <div className="relative mx-auto flex max-w-md flex-col justify-center px-4 pb-12 pt-28">
+      <CosmicBackdrop />
+      
+      <div className="relative z-10 mx-auto flex max-w-md flex-col justify-center px-4 pb-12 pt-28">
         <Link to="/" className="mb-8 inline-flex items-center gap-2 text-primary-foreground">
           <img src={logoAsset.url} alt="Ideal Gathering" className="h-9 w-9 rounded-full object-contain animate-logo-spin" />
           <span className="font-display text-xl">
