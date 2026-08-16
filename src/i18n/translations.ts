@@ -21,6 +21,19 @@ export const translations: Record<Lang, Dict> = {
     "nav.partnership": "Partnership",
     "nav.home": "Home",
     "nav.menu": "Menu",
+    "nav.ourStory": "Our Story",
+
+    // Our Story page
+    "ourStory.title": "Our Story",
+    "ourStory.p1": `A few years ago, we had a standing weekly gathering. No invite required, no one ever had to say "see you next week" — it was just fixed. It started as six of us. Then it grew into a rotating group of ten to fifteen. Some weeks it was a game, some weeks it was just food, but most weeks it wasn't really about the activity at all. It was about being around each other. That was the whole rule: show up.`,
+    "ourStory.p2": `Then life did what life does. People started moving to other cities, some emigrating entirely, chasing new jobs and building new weekends elsewhere. The group scattered a little at a time, until one week the gathering just wasn't there anymore. No one ended it. It just stopped happening.`,
+    "ourStory.p3": `I went looking for something to fill that gap — and found plenty of things to do on a weekend, but nothing that felt like what we'd had. Everything was either built around a vibe that didn't fit, packed with organized activities I didn't want, or priced for an event, not a hangout. Nobody was offering the version I actually wanted: let's just get a coffee and go for a walk.`,
+    "ourStory.p4": `So I started sketching an idea. When I went to register the obvious name, Gathering.com was long gone — so I bought idealgathering.com instead, mostly just to make sure I wouldn't lose it while I figured out what came next. At the time I didn't know the first thing about startups, let alone how software got built. Learning all of it myself would have taken years I didn't have, so I made a decision early on: focus on the business side, the part I actually understood, and bring in programmers for the rest.`,
+    "ourStory.p5": `What followed was a genuinely hard stretch. Three internet blackouts and two periods of war in a single year, and every time, the business had to change shape to survive. The last blackout lasted about two months. It killed the business as it existed then, and the programmers I'd been working with moved on. I had to start over completely — this time building it myself, with my brother by my side.`,
+    "ourStory.p6": `That's where Gathering comes from. Not a polished vision handed down from a boardroom, but a small, ordinary thing — six friends around a table who never had to plan it — rebuilt into something anyone can have again. Personality-matched small groups, real cafés, no stage and no swiping. Just enough structure to make the first ten minutes easy, and nothing standing between you and the version of "let's just gather" we lost.`,
+    "ourStory.p7": `We're building this from Istanbul, one gathering at a time — currently in beta, working directly with café partners who believe a great neighborhood spot is also a great place to meet people who might matter to you. It's early, and it's being built deliberately, because the whole point is to get this right, not to get it big fast.`,
+    "ourStory.p8": `If you've ever had a version of that weekly table — and lost it — this is for you.`,
+    "ourStory.signature": "— Farzin, Founder, Gathering",
 
     // Partnership page
     "partner.eyebrow": "For cafes & restaurants",
