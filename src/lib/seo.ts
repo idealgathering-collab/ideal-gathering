@@ -101,6 +101,23 @@ export const PAGE_SEO: Record<string, Record<SeoLang, Copy>> = {
         "Ideal Gathering چگونه داده‌های شما را جمع‌آوری، استفاده و محافظت می‌کند. اطلاعیهٔ سازگار با KVKK برای کاربران ترکیه.",
     },
   },
+  "/our-story": {
+    en: {
+      title: "Our Story — Ideal Gathering",
+      description:
+        "How Ideal Gathering started: a weekly table of friends, scattered by life, rebuilt into something anyone can have again.",
+    },
+    tr: {
+      title: "Our Story — Ideal Gathering",
+      description:
+        "How Ideal Gathering started: a weekly table of friends, scattered by life, rebuilt into something anyone can have again.",
+    },
+    fa: {
+      title: "Our Story — Ideal Gathering",
+      description:
+        "How Ideal Gathering started: a weekly table of friends, scattered by life, rebuilt into something anyone can have again.",
+    },
+  },
   "/auth": {
     en: {
       title: "Sign In or Join — Ideal Gathering",
@@ -359,6 +376,7 @@ export const PUBLIC_ROUTES = [
   "/waitlist",
   "/terms",
   "/privacy",
+  "/our-story",
 ] as const;
 
 const GATHERING_FALLBACK: Record<

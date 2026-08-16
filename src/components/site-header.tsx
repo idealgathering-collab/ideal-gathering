@@ -108,6 +108,9 @@ export function SiteHeader() {
           ) : (
             <>
               <Button asChild variant="ghost" size="sm" className="hidden sm:inline-flex">
+                <Link to="/our-story">{t("nav.ourStory")}</Link>
+              </Button>
+              <Button asChild variant="ghost" size="sm" className="hidden sm:inline-flex">
                 <Link to="/partnership">{t("nav.partnership")}</Link>
               </Button>
               <Button asChild size="sm" className="rounded-full">

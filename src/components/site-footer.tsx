@@ -31,6 +31,7 @@ export function SiteFooter() {
             { label: t("footer.explore.tables"), href: "/#tables" },
             { label: t("footer.explore.partners"), href: "/#partners" },
             { label: t("footer.explore.vibe"), href: "/#vibe" },
+            { label: t("nav.ourStory"), href: "/our-story", route: true },
           ]}
         />
         <FooterCol

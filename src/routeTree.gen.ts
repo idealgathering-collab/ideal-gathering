@@ -15,6 +15,7 @@ import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as PartnershipRouteImport } from './routes/partnership'
+import { Route as OurStoryRouteImport } from './routes/our-story'
 import { Route as McpRouteImport } from './routes/mcp'
 import { Route as ExploreRouteImport } from './routes/explore'
 import { Route as AuthRouteImport } from './routes/auth'
@@ -63,6 +64,11 @@ const PrivacyRoute = PrivacyRouteImport.update({
 const PartnershipRoute = PartnershipRouteImport.update({
   id: '/partnership',
   path: '/partnership',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OurStoryRoute = OurStoryRouteImport.update({
+  id: '/our-story',
+  path: '/our-story',
   getParentRoute: () => rootRouteImport,
 } as any)
 const McpRoute = McpRouteImport.update({
@@ -171,6 +177,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/explore': typeof ExploreRoute
   '/mcp': typeof McpRoute
+  '/our-story': typeof OurStoryRoute
   '/partnership': typeof PartnershipRoute
   '/privacy': typeof PrivacyRoute
   '/reset-password': typeof ResetPasswordRoute
@@ -197,6 +204,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/explore': typeof ExploreRoute
   '/mcp': typeof McpRoute
+  '/our-story': typeof OurStoryRoute
   '/partnership': typeof PartnershipRoute
   '/privacy': typeof PrivacyRoute
   '/reset-password': typeof ResetPasswordRoute
@@ -225,6 +233,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/explore': typeof ExploreRoute
   '/mcp': typeof McpRoute
+  '/our-story': typeof OurStoryRoute
   '/partnership': typeof PartnershipRoute
   '/privacy': typeof PrivacyRoute
   '/reset-password': typeof ResetPasswordRoute
@@ -253,6 +262,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/explore'
     | '/mcp'
+    | '/our-story'
     | '/partnership'
     | '/privacy'
     | '/reset-password'
@@ -279,6 +289,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/explore'
     | '/mcp'
+    | '/our-story'
     | '/partnership'
     | '/privacy'
     | '/reset-password'
@@ -306,6 +317,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/explore'
     | '/mcp'
+    | '/our-story'
     | '/partnership'
     | '/privacy'
     | '/reset-password'
@@ -334,6 +346,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   ExploreRoute: typeof ExploreRoute
   McpRoute: typeof McpRoute
+  OurStoryRoute: typeof OurStoryRoute
   PartnershipRoute: typeof PartnershipRoute
   PrivacyRoute: typeof PrivacyRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
@@ -391,6 +404,13 @@ declare module '@tanstack/react-router' {
       path: '/partnership'
       fullPath: '/partnership'
       preLoaderRoute: typeof PartnershipRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/our-story': {
+      id: '/our-story'
+      path: '/our-story'
+      fullPath: '/our-story'
+      preLoaderRoute: typeof OurStoryRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/mcp': {
@@ -558,6 +578,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   ExploreRoute: ExploreRoute,
   McpRoute: McpRoute,
+  OurStoryRoute: OurStoryRoute,
   PartnershipRoute: PartnershipRoute,
   PrivacyRoute: PrivacyRoute,
   ResetPasswordRoute: ResetPasswordRoute,
