@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { SiteHeader } from "@/components/site-header";
+import { PublicHeader } from "@/components/landing/public-header";
 import { SiteFooter } from "@/components/site-footer";
 import { useT } from "@/i18n";
 import { localizedHead, type SeoLang } from "@/lib/seo";
@@ -15,8 +15,8 @@ function OurStoryPage() {
   const t = useT();
   return (
     <div className="min-h-screen bg-background">
-      <SiteHeader />
-      <main className="mx-auto max-w-2xl px-4 py-16 sm:py-20">
+      <PublicHeader anchors={[]} solid />
+      <main className="mx-auto max-w-2xl px-4 pb-16 pt-28 sm:pb-20 sm:pt-32">
         <h1 className="font-display text-4xl sm:text-5xl text-dark-heading">{t("ourStory.title")}</h1>
 
         <div className="mt-10 space-y-6 text-lg leading-8 text-foreground/85">

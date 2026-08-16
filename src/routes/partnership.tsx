@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, Check } from "lucide-react";
-import { SiteHeader } from "@/components/site-header";
+import { PublicHeader } from "@/components/landing/public-header";
 import { SiteFooter } from "@/components/site-footer";
 import { VenueDashboardPreview } from "@/components/venue-dashboard-preview";
 import { Button } from "@/components/ui/button";
@@ -21,9 +21,9 @@ function Partnership() {
 
   return (
     <div className="min-h-screen bg-background">
-      <SiteHeader />
+      <PublicHeader anchors={[]} solid />
 
-      <section className="mx-auto max-w-6xl px-4 py-20 sm:py-28">
+      <section className="mx-auto max-w-6xl px-4 pb-20 pt-28 sm:pb-28 sm:pt-36">
         <div className="grid gap-12 lg:grid-cols-[1fr_1.05fr] lg:items-center">
           <div>
             <div className="inline-flex items-center gap-2 rounded-full bg-tangerine/20 px-3 py-1 text-xs font-medium uppercase tracking-wide text-tangerine-foreground">
