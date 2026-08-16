@@ -19,10 +19,10 @@ const PILL_MOBILE =
 
 export function PublicHeader({
   anchors = DEFAULT_ANCHORS,
-  solid = false,
+  fillOnScroll = true,
 }: {
   anchors?: { href: string; key: string }[];
-  solid?: boolean;
+  fillOnScroll?: boolean;
 }) {
   const t = useT();
   const navigate = useNavigate();
@@ -33,13 +33,14 @@ export function PublicHeader({
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
+    if (!fillOnScroll) return;
     const onScroll = () => setScrolled(window.scrollY > 24);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  }, [fillOnScroll]);
 
-  const filled = solid || scrolled;
+  const filled = fillOnScroll && scrolled;
 
   return (
     <header
@@ -50,6 +51,7 @@ export function PublicHeader({
           : "border-b border-transparent bg-transparent")
       }
     >
+
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-3 px-4">
         <div className="flex items-center gap-1.5">
           {showBack && (

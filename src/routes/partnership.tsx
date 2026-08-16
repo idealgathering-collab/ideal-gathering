@@ -21,7 +21,7 @@ function Partnership() {
 
   return (
     <div className="min-h-screen bg-background">
-      <PublicHeader anchors={[]} solid />
+      <PublicHeader anchors={[]} fillOnScroll={false} />
 
       <section className="mx-auto max-w-6xl px-4 pb-20 pt-28 sm:pb-28 sm:pt-36">
         <div className="grid gap-12 lg:grid-cols-[1fr_1.05fr] lg:items-center">
