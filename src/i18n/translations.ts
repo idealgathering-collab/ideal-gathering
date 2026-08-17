@@ -44,8 +44,8 @@ export const translations: Record<Lang, Dict> = {
     "ourStory.ch7.body": `So I started over. Not with a new team, not with funding — with my brother. Just the two of us, rebuilding from the studs. Everything you can use in Gathering today was built after that collapse, not before it.`,
     "ourStory.ch8.eyebrow": "Chapter eight — today",
     "ourStory.ch8.body": `Gathering exists because a group of friends once had something so simple it didn't need a name, and I refused to accept that it was just gone. Today it's small groups, matched by who you actually are, meeting at real cafés with just enough structure to make the first ten minutes easy. No stage, no swiping, no performance.`,
-    "ourStory.closing": `If you've ever had a table like that — and lost it — this is us, trying to give it back to you.`,
-    "ourStory.signature": "— [Founder name placeholder], Founder, Gathering",
+    "ourStory.closing": "\n",
+    "ourStory.signature": "Farzin Salman, Founder of Ideal Gathering",
     "ourStory.cta": "Join the table",
 
     // Partnership page
