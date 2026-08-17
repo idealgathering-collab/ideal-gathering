@@ -38,8 +38,7 @@ function OurStoryPage() {
         <div className="relative">
           {/* Connecting vertical line */}
           <div
-            className="absolute top-2 bottom-2 w-px bg-white/10"
-            style={{ left: "19px" }}
+            className="absolute top-2 bottom-2 left-[19px] w-px bg-white/10 sm:left-[23px]"
             aria-hidden="true"
           />
 
