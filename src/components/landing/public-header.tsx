@@ -34,7 +34,8 @@ export function PublicHeader({
 
   useEffect(() => {
     if (!fillOnScroll) return;
-    const onScroll = () => setScrolled(window.scrollY > 24);
+    const onScroll = () =>
+      setScrolled((window.scrollY || document.documentElement.scrollTop || 0) > 24);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
@@ -47,7 +48,7 @@ export function PublicHeader({
       className={
         "fixed inset-x-0 top-0 z-50 transition-colors duration-300 " +
         (filled
-          ? "border-b border-white/10 bg-[rgba(12,7,26,0.82)] backdrop-blur-xl"
+          ? "border-b border-white/10 bg-[rgba(12,7,26,0.96)] backdrop-blur-xl"
           : "border-b border-transparent bg-transparent")
       }
     >

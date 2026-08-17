@@ -20,7 +20,7 @@ function OurStoryPage() {
 
   return (
     <div className="landing-dark cosmic-scene relative z-0 min-h-screen overflow-hidden bg-background">
-      <PublicHeader anchors={[]} fillOnScroll={false} />
+      <PublicHeader anchors={[]} />
       <CosmicBackdrop />
 
       <main className="relative z-10 mx-auto max-w-2xl px-4 pb-24 pt-28 sm:pb-28 sm:pt-32">
