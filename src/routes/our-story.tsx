@@ -1,4 +1,5 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { Coffee } from "lucide-react";
 import { PublicHeader } from "@/components/landing/public-header";
 import { CosmicBackdrop } from "@/components/cosmic-backdrop";
 import { SiteFooter } from "@/components/site-footer";
@@ -12,31 +13,131 @@ export const Route = createFileRoute("/our-story")({
   component: OurStoryPage,
 });
 
+const CHAPTER_COUNT = 8;
+
 function OurStoryPage() {
   const t = useT();
+
   return (
     <div className="landing-dark cosmic-scene relative z-0 min-h-screen overflow-hidden bg-background">
       <PublicHeader anchors={[]} fillOnScroll={false} />
       <CosmicBackdrop />
-      <main className="relative z-10 mx-auto max-w-2xl px-4 pb-16 pt-28 sm:pb-20 sm:pt-32">
-        <h1 className="font-display text-4xl sm:text-5xl text-dark-heading">{t("ourStory.title")}</h1>
 
-        <div className="mt-10 space-y-6 text-lg leading-8 text-foreground/85">
-          <p>{t("ourStory.p1")}</p>
-          <p>{t("ourStory.p2")}</p>
-          <p>{t("ourStory.p3")}</p>
-          <p>{t("ourStory.p4")}</p>
-          <p>{t("ourStory.p5")}</p>
-          <p>{t("ourStory.p6")}</p>
-          <p>{t("ourStory.p7")}</p>
-          <p>{t("ourStory.p8")}</p>
+      <main className="relative z-10 mx-auto max-w-2xl px-4 pb-24 pt-28 sm:pb-28 sm:pt-32">
+        {/* Page header */}
+        <header className="mb-16 sm:mb-20">
+          <p className="mb-4 text-sm font-semibold uppercase tracking-[0.12em] text-tangerine">
+            {t("ourStory.eyebrow")}
+          </p>
+          <h1 className="font-serif-warm text-4xl leading-[1.1] text-white sm:text-5xl">
+            {t("ourStory.headline")}
+          </h1>
+        </header>
+
+        {/* Chapter timeline */}
+        <div className="relative">
+          {/* Connecting vertical line */}
+          <div
+            className="absolute top-2 bottom-2 w-px bg-white/10"
+            style={{ left: "19px" }}
+            aria-hidden="true"
+          />
+
+          <Chapter number={1} />
+
+          {/* Pull quote */}
+          <blockquote className="relative my-12 rounded-2xl border border-white/10 bg-white/[0.03] px-6 py-8 sm:my-16 sm:px-10 sm:py-10">
+            <div
+              className="absolute top-0 bottom-0 w-px bg-tangerine/30"
+              style={{ left: "19px" }}
+              aria-hidden="true"
+            />
+            <p className="relative z-10 font-serif-warm text-xl italic leading-relaxed text-white sm:text-2xl sm:leading-relaxed">
+              “{t("ourStory.pullQuote")}”
+            </p>
+          </blockquote>
+
+          <Chapter number={2} />
+          <Chapter number={3} />
+
+          {/* Image placeholder 1 */}
+          <ImagePlaceholder />
+
+          <Chapter number={4} />
+          <Chapter number={5} />
+          <Chapter number={6} />
+
+          {/* Image placeholder 2 */}
+          <ImagePlaceholder />
+
+          <Chapter number={7} />
+          <Chapter number={8} />
         </div>
 
-        <p className="mt-10 text-base font-medium text-foreground/70">
-          {t("ourStory.signature")}
-        </p>
+        {/* Closing */}
+        <section className="mt-16 sm:mt-20">
+          <p className="text-lg leading-8 text-foreground/90 sm:text-xl sm:leading-9">
+            {t("ourStory.closing")}
+          </p>
+          <p className="mt-8 text-base font-medium text-foreground/70">
+            {t("ourStory.signature")}
+          </p>
+          <div className="mt-10">
+            <Link
+              to="/auth"
+              search={{ mode: "signup" }}
+              className="cosmic-cta inline-flex items-center justify-center rounded-full px-7 py-3.5 text-sm font-semibold text-white"
+            >
+              {t("ourStory.cta")}
+            </Link>
+          </div>
+        </section>
       </main>
-      <div className="relative z-10"><SiteFooter /></div>
+
+      <div className="relative z-10">
+        <SiteFooter />
+      </div>
     </div>
+  );
+}
+
+function Chapter({ number }: { number: number }) {
+  const t = useT();
+  const body = t(`ourStory.ch${number}.body`);
+  const paragraphs = body.split("\n").filter(Boolean);
+
+  return (
+    <article className="relative mb-12 sm:mb-16">
+      {/* Circular badge */}
+      <div
+        className="absolute top-0 flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/[0.04] sm:h-12 sm:w-12"
+        style={{ left: 0 }}
+      >
+        <span className="text-sm font-bold text-white sm:text-base">{number}</span>
+      </div>
+
+      {/* Content */}
+      <div className="pl-14 sm:pl-20">
+        <p className="mb-3 text-xs font-semibold uppercase tracking-[0.12em] text-dark-secondary/80">
+          {t(`ourStory.ch${number}.eyebrow`)}
+        </p>
+        <div className="space-y-4 text-base leading-7 text-foreground/85 sm:text-lg sm:leading-8">
+          {paragraphs.map((paragraph, index) => (
+            <p key={index}>{paragraph}</p>
+          ))}
+        </div>
+      </div>
+    </article>
+  );
+}
+
+function ImagePlaceholder() {
+  return (
+    <figure className="relative my-12 flex h-40 items-center justify-center overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] sm:my-16 sm:h-44">
+      <div className="flex flex-col items-center gap-2 text-foreground/40">
+        <Coffee className="h-8 w-8" />
+        <span className="text-xs font-medium uppercase tracking-wider">Café photo</span>
+      </div>
+    </figure>
   );
 }
