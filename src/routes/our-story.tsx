@@ -1,10 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Coffee } from "lucide-react";
 import { PublicHeader } from "@/components/landing/public-header";
 import { CosmicBackdrop } from "@/components/cosmic-backdrop";
 import { SiteFooter } from "@/components/site-footer";
 import { useT } from "@/i18n";
 import { localizedHead, type SeoLang } from "@/lib/seo";
+import friendsAtCafeAsset from "@/assets/our-story-friends-at-cafe.png.asset.json";
+import emptyChairAsset from "@/assets/our-story-empty-chair.png.asset.json";
 
 export const Route = createFileRoute("/our-story")({
   validateSearch: (search: Record<string, unknown>): { lang?: SeoLang } =>
