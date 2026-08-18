@@ -1,10 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Coffee } from "lucide-react";
 import { PublicHeader } from "@/components/landing/public-header";
 import { CosmicBackdrop } from "@/components/cosmic-backdrop";
 import { SiteFooter } from "@/components/site-footer";
 import { useT } from "@/i18n";
 import { localizedHead, type SeoLang } from "@/lib/seo";
+import friendsAtCafeAsset from "@/assets/our-story-friends-at-cafe.png.asset.json";
+import emptyChairAsset from "@/assets/our-story-empty-chair.png.asset.json";
 
 export const Route = createFileRoute("/our-story")({
   validateSearch: (search: Record<string, unknown>): { lang?: SeoLang } =>
@@ -58,15 +59,21 @@ function OurStoryPage() {
           <Chapter number={2} />
           <Chapter number={3} />
 
-          {/* Image placeholder 1 */}
-          <ImagePlaceholder />
+          {/* Image 1: friends at a café table */}
+          <StoryImage
+            src={friendsAtCafeAsset.url}
+            alt="A small group of friends talking around a candlelit café table"
+          />
 
           <Chapter number={4} />
           <Chapter number={5} />
           <Chapter number={6} />
 
-          {/* Image placeholder 2 */}
-          <ImagePlaceholder />
+          {/* Image 2: empty chair pulled out */}
+          <StoryImage
+            src={emptyChairAsset.url}
+            alt="A single empty chair pulled out from a warm café table"
+          />
 
           <Chapter number={7} />
           <Chapter number={8} />
@@ -128,13 +135,15 @@ function Chapter({ number }: { number: number }) {
   );
 }
 
-function ImagePlaceholder() {
+function StoryImage({ src, alt }: { src: string; alt: string }) {
   return (
-    <figure className="relative my-12 flex h-40 items-center justify-center overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] sm:my-16 sm:h-44">
-      <div className="flex flex-col items-center gap-2 text-foreground/40">
-        <Coffee className="h-8 w-8" />
-        <span className="text-xs font-medium uppercase tracking-wider">Café photo</span>
-      </div>
+    <figure className="relative my-12 overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] sm:my-16">
+      <img
+        src={src}
+        alt={alt}
+        loading="lazy"
+        className="h-40 w-full object-cover sm:h-44"
+      />
     </figure>
   );
 }
