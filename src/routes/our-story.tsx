@@ -59,15 +59,21 @@ function OurStoryPage() {
           <Chapter number={2} />
           <Chapter number={3} />
 
-          {/* Image placeholder 1 */}
-          <ImagePlaceholder />
+          {/* Image 1: friends at a café table */}
+          <StoryImage
+            src={friendsAtCafeAsset.url}
+            alt="A small group of friends talking around a candlelit café table"
+          />
 
           <Chapter number={4} />
           <Chapter number={5} />
           <Chapter number={6} />
 
-          {/* Image placeholder 2 */}
-          <ImagePlaceholder />
+          {/* Image 2: empty chair pulled out */}
+          <StoryImage
+            src={emptyChairAsset.url}
+            alt="A single empty chair pulled out from a warm café table"
+          />
 
           <Chapter number={7} />
           <Chapter number={8} />
