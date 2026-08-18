@@ -43,7 +43,7 @@ function OurStoryPage() {
             aria-hidden="true"
           />
 
-          <Chapter number={1} />
+          <Chapter number={1} contentKey={1} />
 
           {/* Pull quote */}
           <blockquote className="relative my-12 rounded-2xl border border-white/10 bg-white/[0.03] px-6 py-8 sm:my-16 sm:px-10 sm:py-10">
@@ -56,8 +56,8 @@ function OurStoryPage() {
             </p>
           </blockquote>
 
-          <Chapter number={2} />
-          <Chapter number={3} />
+          <Chapter number={2} contentKey={2} />
+          <Chapter number={3} contentKey={3} />
 
           {/* Image 1: friends at a café table */}
           <StoryImage
@@ -65,9 +65,9 @@ function OurStoryPage() {
             alt="A small group of friends talking around a candlelit café table"
           />
 
-          <Chapter number={4} />
-          <Chapter number={5} />
-          <Chapter number={6} />
+          <Chapter number={4} contentKey={5} />
+          <Chapter number={5} contentKey={6} />
+          <Chapter number={6} contentKey={7} />
 
           {/* Image 2: empty chair pulled out */}
           <StoryImage
@@ -75,8 +75,7 @@ function OurStoryPage() {
             alt="A single empty chair pulled out from a warm café table"
           />
 
-          <Chapter number={7} />
-          <Chapter number={8} />
+          <Chapter number={7} contentKey={8} />
         </div>
 
         {/* Closing */}
