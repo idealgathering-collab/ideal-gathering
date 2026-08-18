@@ -135,13 +135,15 @@ function Chapter({ number }: { number: number }) {
   );
 }
 
-function ImagePlaceholder() {
+function StoryImage({ src, alt }: { src: string; alt: string }) {
   return (
-    <figure className="relative my-12 flex h-40 items-center justify-center overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] sm:my-16 sm:h-44">
-      <div className="flex flex-col items-center gap-2 text-foreground/40">
-        <Coffee className="h-8 w-8" />
-        <span className="text-xs font-medium uppercase tracking-wider">Café photo</span>
-      </div>
+    <figure className="relative my-12 overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] sm:my-16">
+      <img
+        src={src}
+        alt={alt}
+        loading="lazy"
+        className="h-40 w-full object-cover sm:h-44"
+      />
     </figure>
   );
 }
