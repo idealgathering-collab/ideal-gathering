@@ -105,9 +105,9 @@ function OurStoryPage() {
   );
 }
 
-function Chapter({ number }: { number: number }) {
+function Chapter({ number, contentKey }: { number: number; contentKey: number }) {
   const t = useT();
-  const body = t(`ourStory.ch${number}.body`);
+  const body = t(`ourStory.ch${contentKey}.body`);
   const paragraphs = body.split("\n").filter(Boolean);
 
   return (
@@ -122,7 +122,7 @@ function Chapter({ number }: { number: number }) {
       {/* Content */}
       <div className="pl-14 sm:pl-20">
         <p className="mb-3 text-xs font-semibold uppercase tracking-[0.12em] text-dark-secondary/80">
-          {t(`ourStory.ch${number}.eyebrow`)}
+          {t(`ourStory.ch${contentKey}.eyebrow`)}
         </p>
         <div className="space-y-4 text-base leading-7 text-foreground/85 sm:text-lg sm:leading-8">
           {paragraphs.map((paragraph, index) => (
