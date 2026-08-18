@@ -43,7 +43,7 @@ function OurStoryPage() {
             aria-hidden="true"
           />
 
-          <Chapter number={1} />
+          <Chapter number={1} contentKey={1} />
 
           {/* Pull quote */}
           <blockquote className="relative my-12 rounded-2xl border border-white/10 bg-white/[0.03] px-6 py-8 sm:my-16 sm:px-10 sm:py-10">
@@ -56,8 +56,8 @@ function OurStoryPage() {
             </p>
           </blockquote>
 
-          <Chapter number={2} />
-          <Chapter number={3} />
+          <Chapter number={2} contentKey={2} />
+          <Chapter number={3} contentKey={3} />
 
           {/* Image 1: friends at a café table */}
           <StoryImage
@@ -65,9 +65,9 @@ function OurStoryPage() {
             alt="A small group of friends talking around a candlelit café table"
           />
 
-          <Chapter number={4} />
-          <Chapter number={5} />
-          <Chapter number={6} />
+          <Chapter number={4} contentKey={5} />
+          <Chapter number={5} contentKey={6} />
+          <Chapter number={6} contentKey={7} />
 
           {/* Image 2: empty chair pulled out */}
           <StoryImage
@@ -75,8 +75,7 @@ function OurStoryPage() {
             alt="A single empty chair pulled out from a warm café table"
           />
 
-          <Chapter number={7} />
-          <Chapter number={8} />
+          <Chapter number={7} contentKey={8} />
         </div>
 
         {/* Closing */}
@@ -106,9 +105,9 @@ function OurStoryPage() {
   );
 }
 
-function Chapter({ number }: { number: number }) {
+function Chapter({ number, contentKey }: { number: number; contentKey: number }) {
   const t = useT();
-  const body = t(`ourStory.ch${number}.body`);
+  const body = t(`ourStory.ch${contentKey}.body`);
   const paragraphs = body.split("\n").filter(Boolean);
 
   return (
@@ -123,7 +122,7 @@ function Chapter({ number }: { number: number }) {
       {/* Content */}
       <div className="pl-14 sm:pl-20">
         <p className="mb-3 text-xs font-semibold uppercase tracking-[0.12em] text-dark-secondary/80">
-          {t(`ourStory.ch${number}.eyebrow`)}
+          {t(`ourStory.ch${contentKey}.eyebrow`)}
         </p>
         <div className="space-y-4 text-base leading-7 text-foreground/85 sm:text-lg sm:leading-8">
           {paragraphs.map((paragraph, index) => (
