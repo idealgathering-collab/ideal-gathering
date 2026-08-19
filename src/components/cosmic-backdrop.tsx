@@ -17,10 +17,10 @@ function usePrefersReducedMotion() {
 }
 
 /** The complete landing backdrop, shared by every public marketing page. */
-export function CosmicBackdrop({ light = false }: { light?: boolean }) {
+export function CosmicBackdrop() {
   const isMobile = useIsMobile();
   const reducedMotion = usePrefersReducedMotion();
-  const starCount = reducedMotion || isMobile ? 0 : light ? 35 : 70;
+  const starCount = reducedMotion || isMobile ? 0 : 70;
 
   const stars = Array.from({ length: starCount }, (_, i) => {
     const seed = i * 9301 + 49297;
@@ -44,9 +44,8 @@ export function CosmicBackdrop({ light = false }: { light?: boolean }) {
         aria-hidden
         className="pointer-events-none fixed inset-0 z-[5]"
         style={{
-          background: light
-            ? "radial-gradient(ellipse at 50% 30%, rgba(10,6,22,0.12) 0%, rgba(10,6,22,0.45) 60%, rgba(10,6,22,0.72) 100%)"
-            : "radial-gradient(ellipse at 50% 30%, rgba(10,6,22,0.35) 0%, rgba(10,6,22,0.82) 60%, rgba(10,6,22,0.96) 100%)",
+          background:
+            "radial-gradient(ellipse at 50% 30%, rgba(10,6,22,0.35) 0%, rgba(10,6,22,0.82) 60%, rgba(10,6,22,0.96) 100%)",
         }}
       />
       <div aria-hidden className="pointer-events-none fixed inset-0 z-[8] overflow-hidden">
