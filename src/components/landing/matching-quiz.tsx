@@ -79,7 +79,7 @@ function MatchBar({
   const t = useT();
   return (
     <div className="mt-2">
-      <div className="h-2 w-full overflow-hidden rounded-full bg-white/10">
+      <div className="h-2 w-full overflow-hidden rounded-full bg-[rgba(124,58,237,0.12)]">
         <div
           className={`h-full rounded-full ${animate ? "transition-all duration-700" : ""}`}
           style={{
@@ -89,11 +89,11 @@ function MatchBar({
                 ? "linear-gradient(90deg, #A78BFA 0%, #7C3AED 100%)"
                 : level === "good"
                   ? "linear-gradient(90deg, #F5D08A 0%, #F59E0B 100%)"
-                  : "linear-gradient(90deg, rgba(196,181,253,0.6) 0%, rgba(139,124,196,0.8) 100%)",
+                  : "linear-gradient(90deg, rgba(124,58,237,0.45) 0%, rgba(91,33,182,0.65) 100%)",
           }}
         />
       </div>
-      <p className="mt-1 text-[11px] font-medium uppercase tracking-wider text-[rgba(196,181,253,0.7)]">
+      <p className="mt-1 text-[11px] font-medium uppercase tracking-wider text-[rgba(91,33,182,0.65)]">
         {t(`landing.v3.matching.match.level.${level}`)}
       </p>
     </div>
@@ -151,25 +151,35 @@ export function MatchingQuiz() {
 
   const showResult = done;
 
+  const optionBase =
+    "flex w-full items-center gap-3 rounded-2xl border p-3.5 text-start transition-colors ";
+  const optionIdle =
+    "border-[rgba(124,58,237,0.15)] bg-white text-[rgba(30,16,56,0.85)] hover:border-[rgba(124,58,237,0.35)] hover:bg-[rgba(124,58,237,0.05)] hover:text-[#1E1038]";
+  const optionSelected =
+    "border-[rgba(124,58,237,0.45)] bg-[rgba(124,58,237,0.1)] text-[#1E1038]";
+  const iconBase = "inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl ";
+  const iconIdle = "bg-[rgba(124,58,237,0.08)] text-[rgba(91,33,182,0.7)]";
+  const iconSelected = "bg-[rgba(124,58,237,0.18)] text-[#5B21B6]";
+
   return (
     <>
       <div className="mt-12 grid gap-6 md:grid-cols-2">
         {/* Quiz card */}
-        <div className="cosmic-panel h-full p-6 sm:p-8">
+        <div className="cosmic-panel-light h-full p-6 sm:p-8">
           {!started || done ? (
             <>
-              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-sunshine">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#B45309]">
                 {done
                   ? t("landing.v3.matching.quiz.doneLabel")
                   : t("landing.v3.matching.quiz.label")}
               </p>
-              <h3 className="font-serif-warm mt-3 text-xl font-semibold text-white sm:text-2xl">
+              <h3 className="font-serif-warm mt-3 text-xl font-semibold text-[#1E1038] sm:text-2xl">
                 {done
                   ? t("landing.v3.matching.quiz.doneTitle")
                   : t("landing.v3.matching.q4.q")}
               </h3>
               {done && (
-                <p className="mt-3 text-sm leading-relaxed text-[rgba(221,214,254,0.78)]">
+                <p className="mt-3 text-sm leading-relaxed text-[rgba(30,16,56,0.78)]">
                   {t("landing.v3.matching.quiz.doneBody")}
                 </p>
               )}
@@ -182,22 +192,15 @@ export function MatchingQuiz() {
                     return (
                       <div
                         key={opt.k}
-                        className={`flex items-center gap-3 rounded-2xl border p-3.5 ${
-                          selected
-                            ? "border-[rgba(167,139,250,0.55)] bg-[rgba(124,58,237,0.22)] text-white"
-                            : "border-white/10 bg-white/[0.035] text-[rgba(196,181,253,0.85)]"
-                        }`}
+                        className={
+                          "flex items-center gap-3 rounded-2xl border p-3.5 " +
+                          (selected ? optionSelected : optionIdle)
+                        }
                       >
-                        <span
-                          className={`inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl ${
-                            selected
-                              ? "bg-[rgba(167,139,250,0.25)] text-[#EDE9FE]"
-                              : "bg-white/5 text-[rgba(196,181,253,0.7)]"
-                          }`}
-                        >
+                        <span className={iconBase + (selected ? iconSelected : iconIdle)}>
                           <Icon className="h-4 w-4" />
                         </span>
-                        <span className="text-sm font-medium leading-snug">
+                        <span className="text-sm font-medium leading-snug text-[#1E1038]">
                           {t(`landing.v3.matching.q4.${opt.k}`)}
                         </span>
                       </div>
@@ -226,7 +229,7 @@ export function MatchingQuiz() {
                     <ArrowRight className="h-4 w-4 rtl:rotate-180" />
                   )}
                 </button>
-                <span className="text-xs text-[rgba(196,181,253,0.6)]">
+                <span className="text-xs text-[rgba(30,16,56,0.55)]">
                   {t("landing.v3.matching.quiz.optional")}
                 </span>
               </div>
@@ -234,7 +237,7 @@ export function MatchingQuiz() {
           ) : (
             <>
               <div className="flex items-center justify-between gap-3">
-                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-sunshine">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#B45309]">
                   {t("landing.v3.matching.quiz.progress")
                     .replace("{n}", String(index + 1))
                     .replace("{total}", String(QUIZ.length))}
@@ -242,13 +245,13 @@ export function MatchingQuiz() {
                 <button
                   type="button"
                   onClick={reset}
-                  className="text-[11px] uppercase tracking-wider text-[rgba(196,181,253,0.6)] transition-colors hover:text-white"
+                  className="text-[11px] uppercase tracking-wider text-[rgba(91,33,182,0.6)] transition-colors hover:text-[#4C1D95]"
                 >
                   {t("landing.v3.matching.quiz.startOver")}
                 </button>
               </div>
 
-              <div className="mt-3 h-1 w-full overflow-hidden rounded-full bg-white/10">
+              <div className="mt-3 h-1 w-full overflow-hidden rounded-full bg-[rgba(124,58,237,0.12)]">
                 <div
                   className={`h-full rounded-full bg-gradient-to-r from-[#A78BFA] to-[#7C3AED] ${
                     reduced ? "" : "transition-all duration-500"
@@ -259,7 +262,7 @@ export function MatchingQuiz() {
 
               <h3
                 key={question.k}
-                className={`font-serif-warm mt-5 text-xl font-semibold text-white sm:text-2xl ${
+                className={`font-serif-warm mt-5 text-xl font-semibold text-[#1E1038] sm:text-2xl ${
                   reduced ? "" : "animate-in fade-in duration-300"
                 }`}
               >
@@ -275,22 +278,12 @@ export function MatchingQuiz() {
                       key={opt.k}
                       type="button"
                       onClick={() => advance({ ...answers, [question.k]: i })}
-                      className={`flex w-full items-center gap-3 rounded-2xl border p-3.5 text-start transition-colors ${
-                        selected
-                          ? "border-[rgba(167,139,250,0.55)] bg-[rgba(124,58,237,0.22)] text-white"
-                          : "border-white/10 bg-white/[0.035] text-[rgba(196,181,253,0.85)] hover:border-[rgba(167,139,250,0.4)] hover:bg-white/[0.07] hover:text-white"
-                      }`}
+                      className={optionBase + (selected ? optionSelected : optionIdle)}
                     >
-                      <span
-                        className={`inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl ${
-                          selected
-                            ? "bg-[rgba(167,139,250,0.25)] text-[#EDE9FE]"
-                            : "bg-white/5 text-[rgba(196,181,253,0.7)]"
-                        }`}
-                      >
+                      <span className={iconBase + (selected ? iconSelected : iconIdle)}>
                         <Icon className="h-4 w-4" />
                       </span>
-                      <span className="text-sm font-medium leading-snug">
+                      <span className="text-sm font-medium leading-snug text-[#1E1038]">
                         {t(`landing.v3.matching.${question.k}.${opt.k}`)}
                       </span>
                     </button>
@@ -303,7 +296,7 @@ export function MatchingQuiz() {
                   type="button"
                   disabled={index === 0}
                   onClick={() => setIndex(Math.max(0, index - 1))}
-                  className="inline-flex items-center gap-1.5 text-sm text-[rgba(196,181,253,0.75)] transition-colors hover:text-white disabled:opacity-30"
+                  className="inline-flex items-center gap-1.5 text-sm text-[rgba(91,33,182,0.75)] transition-colors hover:text-[#4C1D95] disabled:opacity-30"
                 >
                   <ArrowLeft className="h-4 w-4 rtl:rotate-180" />
                   {t("landing.v3.matching.quiz.back")}
@@ -311,7 +304,7 @@ export function MatchingQuiz() {
                 <button
                   type="button"
                   onClick={() => advance({ ...answers, [question.k]: null })}
-                  className="text-sm text-[rgba(196,181,253,0.6)] transition-colors hover:text-white"
+                  className="text-sm text-[rgba(30,16,56,0.55)] transition-colors hover:text-[#4C1D95]"
                 >
                   {t("landing.v3.matching.quiz.skip")}
                 </button>
@@ -321,8 +314,8 @@ export function MatchingQuiz() {
         </div>
 
         {/* Result card */}
-        <div className="cosmic-panel h-full p-6 sm:p-8">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-sunshine">
+        <div className="cosmic-panel-light h-full p-6 sm:p-8">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#B45309]">
             {showResult
               ? t("landing.v3.matching.match.yourLabel")
               : t("landing.v3.matching.match.label")}
@@ -330,10 +323,10 @@ export function MatchingQuiz() {
 
           {showResult && (
             <>
-              <h3 className="font-serif-warm mt-3 text-xl font-semibold text-white sm:text-2xl">
+              <h3 className="font-serif-warm mt-3 text-xl font-semibold text-[#1E1038] sm:text-2xl">
                 {t(`landing.v3.matching.persona.${result.persona}.title`)}
               </h3>
-              <p className="mt-2 text-sm leading-relaxed text-[rgba(221,214,254,0.78)]">
+              <p className="mt-2 text-sm leading-relaxed text-[rgba(30,16,56,0.78)]">
                 {t(`landing.v3.matching.persona.${result.persona}.body`)}
               </p>
             </>
@@ -348,7 +341,7 @@ export function MatchingQuiz() {
                 {initials}
               </span>
             ))}
-            <span className="inline-flex h-10 w-10 items-center justify-center rounded-full border-2 border-dashed border-[rgba(196,181,253,0.45)] text-xs font-medium text-[rgba(196,181,253,0.7)]">
+            <span className="inline-flex h-10 w-10 items-center justify-center rounded-full border-2 border-dashed border-[rgba(124,58,237,0.35)] text-xs font-medium text-[rgba(91,33,182,0.7)]">
               +
             </span>
           </div>
@@ -359,11 +352,11 @@ export function MatchingQuiz() {
               return (
                 <div key={trait}>
                   <div className="flex items-center justify-between">
-                    <span className="text-sm font-medium text-white">
+                    <span className="text-sm font-medium text-[#1E1038]">
                       {t(`landing.v3.matching.trait.${trait}`)}
                     </span>
                     {showResult && (
-                      <span className="text-xs font-semibold text-[rgba(196,181,253,0.7)]">
+                      <span className="text-xs font-semibold text-[rgba(91,33,182,0.7)]">
                         {value}%
                       </span>
                     )}
@@ -377,7 +370,7 @@ export function MatchingQuiz() {
           {showResult ? (
             <div className="mt-6">
               {result.answered < result.total && (
-                <p className="mb-3 text-xs text-[rgba(196,181,253,0.6)]">
+                <p className="mb-3 text-xs text-[rgba(30,16,56,0.55)]">
                   {t("landing.v3.matching.match.partial")
                     .replace("{n}", String(result.answered))
                     .replace("{total}", String(result.total))}
@@ -391,12 +384,12 @@ export function MatchingQuiz() {
                 {t("landing.v3.matching.match.cta")}
                 <ArrowRight className="h-4 w-4 rtl:rotate-180" />
               </Link>
-              <p className="mt-3 text-xs text-[rgba(196,181,253,0.6)]">
+              <p className="mt-3 text-xs text-[rgba(30,16,56,0.55)]">
                 {t("landing.v3.matching.match.saved")}
               </p>
             </div>
           ) : (
-            <p className="mt-6 text-xs text-[rgba(196,181,253,0.55)]">
+            <p className="mt-6 text-xs text-[rgba(30,16,56,0.55)]">
               {t("landing.v3.matching.match.example")}
             </p>
           )}

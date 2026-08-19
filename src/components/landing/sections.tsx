@@ -22,21 +22,86 @@ import { Reveal } from "@/components/landing/reveal";
 import { TableDemo } from "@/components/landing/table-demo";
 import { MatchingQuiz } from "@/components/landing/matching-quiz";
 
+type SectionVariant = "dark" | "light" | "warm";
 
-function Eyebrow({ children }: { children: React.ReactNode }) {
+function sectionClasses(variant: SectionVariant) {
+  switch (variant) {
+    case "light":
+      return "landing-section-light";
+    case "warm":
+      return "landing-section-warm";
+    default:
+      return "landing-section-dark";
+  }
+}
+
+function isLight(variant: SectionVariant) {
+  return variant === "light" || variant === "warm";
+}
+
+function Eyebrow({
+  children,
+  variant = "dark",
+}: {
+  children: React.ReactNode;
+  variant?: SectionVariant;
+}) {
   return (
-    <div className="inline-flex items-center gap-2 rounded-full border border-white/12 bg-white/5 px-3 py-1 text-[11px] font-medium uppercase tracking-[0.18em] text-[rgba(196,181,253,0.8)]">
+    <div
+      className={
+        "inline-flex items-center gap-2 rounded-full border px-3 py-1 text-[11px] font-medium uppercase tracking-[0.18em] " +
+        (isLight(variant)
+          ? "border-[rgba(124,58,237,0.22)] bg-[rgba(124,58,237,0.08)] text-[#5B21B6]"
+          : "border-white/12 bg-white/5 text-[rgba(196,181,253,0.8)]")
+      }
+    >
       <Sparkles className="h-3 w-3 text-sunshine" />
       {children}
     </div>
   );
 }
 
-function SectionTitle({ children }: { children: React.ReactNode }) {
+function SectionTitle({
+  children,
+  variant = "dark",
+}: {
+  children: React.ReactNode;
+  variant?: SectionVariant;
+}) {
   return (
-    <h2 className="font-serif-warm mt-4 text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl">
+    <h2
+      className={
+        "font-serif-warm mt-4 text-3xl font-bold leading-tight tracking-tight sm:text-4xl " +
+        (isLight(variant) ? "text-[#1E1038]" : "text-white")
+      }
+    >
       {children}
     </h2>
+  );
+}
+
+function SectionBody({
+  children,
+  variant = "dark",
+  className = "",
+}: {
+  children: React.ReactNode;
+  variant?: SectionVariant;
+  className?: string;
+}) {
+  return (
+    <p
+      className={
+        "leading-relaxed " +
+        (isLight(variant)
+          ? "text-[rgba(30,16,56,0.72)]"
+          : "text-[rgba(221,214,254,0.75)]") +
+        " " +
+        className
+      }
+    >
+      {children}
+    </p>
   );
 }
 
@@ -44,21 +109,25 @@ function SectionTitle({ children }: { children: React.ReactNode }) {
 
 export function DemoSection() {
   const t = useT();
+  const variant: SectionVariant = "light";
   return (
-    <section id="demo" className="relative z-20 px-4 py-20 sm:py-28">
+    <section
+      id="demo"
+      className={`relative z-20 px-4 py-20 sm:py-28 ${sectionClasses(variant)}`}
+    >
       <div className="mx-auto max-w-6xl">
         <Reveal className="max-w-2xl">
-          <Eyebrow>{t("landing.v3.demo.eyebrow")}</Eyebrow>
-          <SectionTitle>{t("landing.v3.demo.title")}</SectionTitle>
-          <p className="mt-4 text-base leading-relaxed text-[rgba(221,214,254,0.75)]">
+          <Eyebrow variant={variant}>{t("landing.v3.demo.eyebrow")}</Eyebrow>
+          <SectionTitle variant={variant}>{t("landing.v3.demo.title")}</SectionTitle>
+          <SectionBody variant={variant} className="mt-4 text-base">
             {t("landing.v3.demo.body")}
-          </p>
+          </SectionBody>
         </Reveal>
         <Reveal delay={80} className="mt-10">
           <TableDemo />
         </Reveal>
         <Reveal delay={140}>
-          <p className="mt-6 text-xs text-[rgba(196,181,253,0.55)]">
+          <p className="mt-6 text-xs text-[rgba(91,33,182,0.55)]">
             {t("landing.v3.demo.footnote")}
           </p>
         </Reveal>
@@ -77,30 +146,34 @@ const STEPS: { icon: ComponentType<{ className?: string }>; k: string }[] = [
 
 export function HowSection() {
   const t = useT();
+  const variant: SectionVariant = "warm";
   return (
-    <section id="how" className="relative z-20 scroll-mt-20 px-4 py-20 sm:py-28">
+    <section
+      id="how"
+      className={`relative z-20 scroll-mt-20 px-4 py-20 sm:py-28 ${sectionClasses(variant)}`}
+    >
       <div className="mx-auto max-w-6xl">
         <Reveal className="max-w-2xl">
-          <Eyebrow>{t("landing.v3.how.eyebrow")}</Eyebrow>
-          <SectionTitle>{t("landing.v3.how.title")}</SectionTitle>
+          <Eyebrow variant={variant}>{t("landing.v3.how.eyebrow")}</Eyebrow>
+          <SectionTitle variant={variant}>{t("landing.v3.how.title")}</SectionTitle>
         </Reveal>
 
         <div className="mt-12 grid gap-6 md:grid-cols-3">
           {STEPS.map((s, i) => (
             <Reveal key={s.k} delay={i * 90}>
-              <div className="cosmic-panel h-full p-6 text-start sm:p-8">
+              <div className="warm-card h-full p-6 text-start sm:p-8">
                 <div className="flex items-center gap-3">
-                  <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-[rgba(124,58,237,0.22)] text-[#C4B5FD]">
+                  <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-[rgba(124,58,237,0.12)] text-[#5B21B6]">
                     <s.icon className="h-5 w-5" />
                   </span>
-                  <span className="font-serif-warm text-3xl font-bold text-white/15">
+                  <span className="font-serif-warm text-3xl font-bold text-[rgba(124,58,237,0.35)]">
                     0{i + 1}
                   </span>
                 </div>
-                <h3 className="font-serif-warm mt-5 text-xl font-semibold text-white">
+                <h3 className="font-serif-warm mt-5 text-xl font-semibold text-[#1E1038]">
                   {t(`landing.v3.how.${s.k}.title`)}
                 </h3>
-                <p className="mt-2.5 text-sm leading-relaxed text-[rgba(196,181,253,0.75)]">
+                <p className="mt-2.5 text-sm leading-relaxed text-[rgba(30,16,56,0.75)]">
                   {t(`landing.v3.how.${s.k}.body`)}
                 </p>
               </div>
@@ -122,15 +195,19 @@ const CHIPS: { icon: ComponentType<{ className?: string }>; k: string }[] = [
 
 export function MatchingSection() {
   const t = useT();
+  const variant: SectionVariant = "light";
   return (
-    <section id="matching" className="relative z-20 scroll-mt-20 px-4 py-20 sm:py-28">
+    <section
+      id="matching"
+      className={`relative z-20 scroll-mt-20 px-4 py-20 sm:py-28 ${sectionClasses(variant)}`}
+    >
       <div className="mx-auto max-w-6xl">
         <Reveal className="max-w-2xl text-center sm:text-start">
-          <Eyebrow>{t("landing.v3.matching.eyebrow")}</Eyebrow>
-          <SectionTitle>{t("landing.v3.matching.title")}</SectionTitle>
-          <p className="mt-4 text-base leading-relaxed text-[rgba(221,214,254,0.75)]">
+          <Eyebrow variant={variant}>{t("landing.v3.matching.eyebrow")}</Eyebrow>
+          <SectionTitle variant={variant}>{t("landing.v3.matching.title")}</SectionTitle>
+          <SectionBody variant={variant} className="mt-4 text-base">
             {t("landing.v3.matching.subtitle")}
-          </p>
+          </SectionBody>
         </Reveal>
 
         <Reveal delay={70}>
@@ -142,9 +219,9 @@ export function MatchingSection() {
             {CHIPS.map((chip) => (
               <div
                 key={chip.k}
-                className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.035] px-4 py-2 text-sm text-[rgba(221,214,254,0.85)]"
+                className="inline-flex items-center gap-2 rounded-full border border-[rgba(124,58,237,0.18)] bg-[rgba(124,58,237,0.06)] px-4 py-2 text-sm text-[#4A4468]"
               >
-                <chip.icon className="h-4 w-4 text-sunshine" />
+                <chip.icon className="h-4 w-4 text-[#7C3AED]" />
                 {t(`landing.v3.matching.${chip.k}`)}
               </div>
             ))}
@@ -155,16 +232,16 @@ export function MatchingSection() {
   );
 }
 
-
 /* ---------------- Problem ---------------- */
 
 export function ProblemSection() {
   const t = useT();
+  const variant: SectionVariant = "dark";
   return (
-    <section className="relative z-20 px-4 py-20 sm:py-28">
+    <section className={`relative z-20 px-4 py-20 sm:py-28 ${sectionClasses(variant)}`}>
       <div className="mx-auto max-w-4xl text-center">
         <Reveal>
-          <Eyebrow>{t("landing.v3.problem.eyebrow")}</Eyebrow>
+          <Eyebrow variant={variant}>{t("landing.v3.problem.eyebrow")}</Eyebrow>
           <h2 className="font-serif-warm animate-headline-glow mt-5 text-3xl font-extrabold leading-tight tracking-tight text-white sm:text-5xl">
             {t("landing.v3.problem.title")}
           </h2>
@@ -198,24 +275,25 @@ const FEATURES: { icon: ComponentType<{ className?: string }>; k: string }[] = [
 
 export function FeaturesSection() {
   const t = useT();
+  const variant: SectionVariant = "light";
   return (
-    <section className="relative z-20 px-4 py-20 sm:py-28">
+    <section className={`relative z-20 px-4 py-20 sm:py-28 ${sectionClasses(variant)}`}>
       <div className="mx-auto max-w-6xl">
         <Reveal className="max-w-2xl">
-          <SectionTitle>{t("landing.v3.features.title")}</SectionTitle>
+          <SectionTitle variant={variant}>{t("landing.v3.features.title")}</SectionTitle>
         </Reveal>
         <div className="mt-10 grid gap-5 sm:grid-cols-2">
           {FEATURES.map((f, i) => (
             <Reveal key={f.k} delay={i * 70}>
-              <div className="flex h-full items-start gap-4 rounded-3xl border border-white/10 bg-white/[0.035] p-6">
-                <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[rgba(245,208,138,0.15)] text-sunshine">
+              <div className="flex h-full items-start gap-4 rounded-3xl border border-[rgba(124,58,237,0.12)] bg-white p-6 shadow-sm">
+                <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[rgba(245,208,138,0.22)] text-[#B45309]">
                   <f.icon className="h-5 w-5" />
                 </span>
                 <div>
-                  <h3 className="font-serif-warm text-lg font-semibold text-white">
+                  <h3 className="font-serif-warm text-lg font-semibold text-[#1E1038]">
                     {t(`landing.v3.features.${f.k}.title`)}
                   </h3>
-                  <p className="mt-1.5 text-sm leading-relaxed text-[rgba(196,181,253,0.72)]">
+                  <p className="mt-1.5 text-sm leading-relaxed text-[rgba(30,16,56,0.7)]">
                     {t(`landing.v3.features.${f.k}.body`)}
                   </p>
                 </div>
@@ -232,25 +310,29 @@ export function FeaturesSection() {
 
 export function VenuesSection() {
   const t = useT();
+  const variant: SectionVariant = "warm";
   return (
-    <section id="venues" className="relative z-20 scroll-mt-20 px-4 py-16 sm:py-20">
+    <section
+      id="venues"
+      className={`relative z-20 scroll-mt-20 px-4 py-16 sm:py-20 ${sectionClasses(variant)}`}
+    >
       <div className="mx-auto max-w-6xl">
         <Reveal>
-          <div className="rounded-[2rem] border border-white/10 bg-white/[0.03] p-7 sm:p-10">
+          <div className="rounded-[2rem] border border-[rgba(124,58,237,0.12)] bg-white p-7 shadow-sm sm:p-10">
             <div className="grid gap-8 md:grid-cols-[1.1fr_0.9fr] md:items-center">
               <div>
-                <Eyebrow>{t("landing.v3.venues.eyebrow")}</Eyebrow>
-                <h2 className="font-serif-warm mt-4 text-2xl font-semibold text-white sm:text-3xl">
+                <Eyebrow variant={variant}>{t("landing.v3.venues.eyebrow")}</Eyebrow>
+                <h2 className="font-serif-warm mt-4 text-2xl font-semibold text-[#1E1038] sm:text-3xl">
                   {t("landing.v3.venues.title")}
                 </h2>
-                <p className="mt-3 text-sm leading-relaxed text-[rgba(196,181,253,0.75)]">
+                <p className="mt-3 text-sm leading-relaxed text-[rgba(30,16,56,0.72)]">
                   {t("landing.v3.venues.body")}
                 </p>
                 <div className="mt-5 flex flex-wrap gap-2">
                   {["b1", "b2", "b3"].map((b) => (
                     <span
                       key={b}
-                      className="rounded-full border border-white/12 bg-white/5 px-3 py-1.5 text-xs text-[rgba(221,214,254,0.8)]"
+                      className="rounded-full border border-[rgba(124,58,237,0.18)] bg-[rgba(124,58,237,0.06)] px-3 py-1.5 text-xs text-[#5B21B6]"
                     >
                       {t(`landing.v3.venues.${b}`)}
                     </span>
@@ -260,14 +342,14 @@ export function VenuesSection() {
               <div className="flex flex-col gap-3 md:items-end">
                 <Link
                   to="/partnership"
-                  className="cosmic-outline-btn inline-flex items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-medium"
+                  className="inline-flex items-center justify-center gap-2 rounded-full border border-[rgba(124,58,237,0.35)] bg-[rgba(124,58,237,0.1)] px-5 py-3 text-sm font-medium text-[#5B21B6] transition-colors hover:bg-[rgba(124,58,237,0.18)] hover:text-[#4C1D95]"
                 >
                   {t("landing.v3.venues.cta")}
                   <ArrowRight className="h-4 w-4 rtl:rotate-180" />
                 </Link>
                 <Link
                   to="/venue/auth"
-                  className="text-sm text-[rgba(196,181,253,0.7)] underline-offset-4 transition-colors hover:text-white hover:underline"
+                  className="text-sm text-[rgba(91,33,182,0.7)] underline-offset-4 transition-colors hover:text-[#4C1D95] hover:underline"
                 >
                   {t("landing.v3.venues.cta2")}
                 </Link>
@@ -293,24 +375,25 @@ const TRACTION: { icon: ComponentType<{ className?: string }>; k: string }[] = [
 
 export function TractionSection() {
   const t = useT();
+  const variant: SectionVariant = "light";
   return (
-    <section className="relative z-20 px-4 py-20 sm:py-28">
+    <section className={`relative z-20 px-4 py-20 sm:py-28 ${sectionClasses(variant)}`}>
       <div className="mx-auto max-w-6xl">
         <Reveal className="max-w-2xl">
-          <SectionTitle>{t("landing.v3.traction.title")}</SectionTitle>
-          <p className="mt-3 text-sm text-[rgba(196,181,253,0.7)]">
+          <SectionTitle variant={variant}>{t("landing.v3.traction.title")}</SectionTitle>
+          <SectionBody variant={variant} className="mt-3 text-sm">
             {t("landing.v3.traction.sub")}
-          </p>
+          </SectionBody>
         </Reveal>
-        <div className="mt-10 grid gap-px overflow-hidden rounded-3xl border border-white/10 bg-white/10 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-10 grid gap-px overflow-hidden rounded-3xl border border-[rgba(124,58,237,0.12)] bg-[rgba(124,58,237,0.08)] sm:grid-cols-2 lg:grid-cols-3">
           {TRACTION.map((item, i) => (
             <Reveal key={item.k} delay={i * 55}>
-              <div className="h-full bg-[rgba(12,7,26,0.75)] p-6">
-                <item.icon className="h-5 w-5 text-sunshine" />
-                <h3 className="font-serif-warm mt-4 text-base font-semibold text-white">
+              <div className="h-full bg-white p-6">
+                <item.icon className="h-5 w-5 text-[#7C3AED]" />
+                <h3 className="font-serif-warm mt-4 text-base font-semibold text-[#1E1038]">
                   {t(`landing.v3.traction.${item.k}.title`)}
                 </h3>
-                <p className="mt-1.5 text-sm leading-relaxed text-[rgba(196,181,253,0.7)]">
+                <p className="mt-1.5 text-sm leading-relaxed text-[rgba(30,16,56,0.7)]">
                   {t(`landing.v3.traction.${item.k}.body`)}
                 </p>
               </div>
@@ -326,12 +409,16 @@ export function TractionSection() {
 
 export function VisionSection() {
   const t = useT();
+  const variant: SectionVariant = "dark";
   return (
-    <section id="vision" className="relative z-20 scroll-mt-20 px-4 py-20 sm:py-28">
+    <section
+      id="vision"
+      className={`relative z-20 scroll-mt-20 px-4 py-20 sm:py-28 ${sectionClasses(variant)}`}
+    >
       <div className="mx-auto max-w-3xl text-center">
         <Reveal>
-          <Eyebrow>{t("landing.v3.vision.eyebrow")}</Eyebrow>
-          <SectionTitle>{t("landing.v3.vision.title")}</SectionTitle>
+          <Eyebrow variant={variant}>{t("landing.v3.vision.eyebrow")}</Eyebrow>
+          <SectionTitle variant={variant}>{t("landing.v3.vision.title")}</SectionTitle>
           <p className="mt-6 text-base leading-relaxed text-[rgba(221,214,254,0.8)]">
             {t("landing.v3.vision.body")}
           </p>
@@ -348,15 +435,16 @@ export function VisionSection() {
 
 export function FinalCtaSection() {
   const t = useT();
+  const variant: SectionVariant = "light";
   return (
-    <section className="relative z-20 px-4 pb-24 pt-10 sm:pb-32">
+    <section className={`relative z-20 px-4 pb-24 pt-10 sm:pb-32 ${sectionClasses(variant)}`}>
       <div className="mx-auto max-w-4xl">
         <Reveal>
-          <div className="cosmic-panel px-6 py-14 text-center sm:px-12">
-            <h2 className="font-serif-warm text-3xl font-extrabold leading-tight text-white sm:text-4xl">
+          <div className="rounded-[2rem] border border-[rgba(124,58,237,0.18)] bg-white p-6 px-6 py-14 text-center shadow-lg shadow-[rgba(124,58,237,0.08)] sm:px-12">
+            <h2 className="font-serif-warm text-3xl font-extrabold leading-tight text-[#1E1038] sm:text-4xl">
               {t("landing.v3.final.title")}
             </h2>
-            <p className="mx-auto mt-4 max-w-md text-base text-[rgba(221,214,254,0.78)]">
+            <p className="mx-auto mt-4 max-w-md text-base text-[rgba(30,16,56,0.72)]">
               {t("landing.v3.final.body")}
             </p>
             <Link
@@ -367,11 +455,11 @@ export function FinalCtaSection() {
               {t("landing.v3.final.cta")}
               <ArrowRight className="h-4 w-4 rtl:rotate-180" />
             </Link>
-            <div className="mt-6 flex flex-col items-center gap-2 text-sm text-[rgba(196,181,253,0.65)]">
-              <Link to="/auth" className="transition-colors hover:text-white">
+            <div className="mt-6 flex flex-col items-center gap-2 text-sm text-[rgba(91,33,182,0.7)]">
+              <Link to="/auth" className="transition-colors hover:text-[#4C1D95]">
                 {t("landing.v3.final.login")}
               </Link>
-              <Link to="/partnership" className="transition-colors hover:text-white">
+              <Link to="/partnership" className="transition-colors hover:text-[#4C1D95]">
                 {t("landing.v3.final.venue")}
               </Link>
             </div>

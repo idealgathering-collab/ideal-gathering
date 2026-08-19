@@ -12,17 +12,14 @@ const DEFAULT_ANCHORS = [
   { href: "#vision", key: "landing.v3.nav.vision" },
 ];
 
-const PILL =
-  "rounded-full px-3 py-2 text-sm text-[rgba(221,214,254,0.78)] transition-colors hover:bg-white/5 hover:text-white";
-const PILL_MOBILE =
-  "rounded-xl px-3 py-2.5 text-sm text-[rgba(221,214,254,0.85)] hover:bg-white/5 hover:text-white";
-
 export function PublicHeader({
   anchors = DEFAULT_ANCHORS,
   fillOnScroll = true,
+  light = false,
 }: {
   anchors?: { href: string; key: string }[];
   fillOnScroll?: boolean;
+  light?: boolean;
 }) {
   const t = useT();
   const navigate = useNavigate();
@@ -43,16 +40,53 @@ export function PublicHeader({
 
   const filled = fillOnScroll && scrolled;
 
+  const textColor = light ? "text-[#4A4468]" : "text-[rgba(221,214,254,0.78)]";
+  const textHover = light
+    ? "hover:bg-[rgba(124,58,237,0.08)] hover:text-[#1E1038]"
+    : "hover:bg-white/5 hover:text-white";
+  const filledBg = light
+    ? "border-b border-[rgba(124,58,237,0.12)] bg-[rgba(250,248,245,0.96)] backdrop-blur-xl"
+    : "border-b border-white/10 bg-[rgba(12,7,26,0.96)] backdrop-blur-xl";
+  const mobileBg = light
+    ? "border-t border-[rgba(124,58,237,0.12)] bg-[rgba(250,248,245,0.98)] backdrop-blur-xl"
+    : "border-t border-white/10 bg-[rgba(12,7,26,0.95)] backdrop-blur-xl";
+  const menuBtnBorder = light ? "border-[rgba(124,58,237,0.25)]" : "border-white/15";
+
+  const Pill = ({ href, children, onClick }: { href: string; children: React.ReactNode; onClick?: () => void }) => (
+    <a
+      href={href}
+      onClick={onClick}
+      className={`rounded-full px-3 py-2 text-sm ${textColor} transition-colors ${textHover}`}
+    >
+      {children}
+    </a>
+  );
+
+  const PillLink = ({
+    to,
+    children,
+    onClick,
+  }: {
+    to: string;
+    children: React.ReactNode;
+    onClick?: () => void;
+  }) => (
+    <Link
+      to={to}
+      onClick={onClick}
+      className={`rounded-full px-3 py-2 text-sm ${textColor} transition-colors ${textHover}`}
+    >
+      {children}
+    </Link>
+  );
+
   return (
     <header
       className={
         "fixed inset-x-0 top-0 z-50 transition-colors duration-300 " +
-        (filled
-          ? "border-b border-white/10 bg-[rgba(12,7,26,0.96)] backdrop-blur-xl"
-          : "border-b border-transparent bg-transparent")
+        (filled ? filledBg : "border-b border-transparent bg-transparent")
       }
     >
-
       <div className="relative mx-auto flex h-16 max-w-6xl items-center justify-between gap-3 px-4">
         <div className="flex items-center gap-1.5">
           {showBack && (
@@ -63,7 +97,7 @@ export function PublicHeader({
                 if (typeof window !== "undefined" && window.history.length > 1) window.history.back();
                 else navigate({ to: "/" });
               }}
-              className="inline-flex h-9 w-9 items-center justify-center rounded-full text-[rgba(221,214,254,0.78)] transition-colors hover:bg-white/5 hover:text-white md:absolute md:-left-10"
+              className={`inline-flex h-9 w-9 items-center justify-center rounded-full ${textColor} transition-colors hover:bg-white/5 hover:text-white md:absolute md:-left-10`}
             >
               <ArrowLeft className="h-4 w-4 rtl:rotate-180" />
             </button>
@@ -76,7 +110,12 @@ export function PublicHeader({
               height={36}
               className="h-9 w-9 rounded-full object-contain"
             />
-            <span className="font-serif-warm text-lg font-semibold tracking-tight text-white">
+            <span
+              className={
+                "font-serif-warm text-lg font-semibold tracking-tight " +
+                (light && filled ? "text-[#1E1038]" : "text-white")
+              }
+            >
               Ideal Gathering
             </span>
           </Link>
@@ -84,16 +123,12 @@ export function PublicHeader({
 
         <nav className="hidden items-center gap-1 md:flex">
           {anchors.map((a) => (
-            <a key={a.href} href={a.href} className={PILL}>
+            <Pill key={a.href} href={a.href}>
               {t(a.key)}
-            </a>
+            </Pill>
           ))}
-          <Link to="/our-story" className={PILL}>
-            {t("nav.ourStory")}
-          </Link>
-          <Link to="/partnership" className={PILL}>
-            {t("nav.partnership")}
-          </Link>
+          <PillLink to="/our-story">{t("nav.ourStory")}</PillLink>
+          <PillLink to="/partnership">{t("nav.partnership")}</PillLink>
         </nav>
 
         <div className="flex items-center gap-2">
@@ -109,7 +144,7 @@ export function PublicHeader({
             <>
               <Link
                 to="/auth"
-                className="hidden rounded-full px-3 py-2 text-sm text-[rgba(221,214,254,0.78)] transition-colors hover:text-white sm:inline-flex"
+                className={`hidden rounded-full px-3 py-2 text-sm ${textColor} transition-colors hover:text-white sm:inline-flex`}
               >
                 {t("landing.v3.nav.login")}
               </Link>
@@ -127,7 +162,12 @@ export function PublicHeader({
             aria-label={t("nav.menu")}
             aria-expanded={open}
             onClick={() => setOpen((v) => !v)}
-            className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/15 text-white md:hidden"
+            className={
+              "inline-flex h-9 w-9 items-center justify-center rounded-full border md:hidden " +
+              menuBtnBorder +
+              " " +
+              (light && filled ? "text-[#1E1038]" : "text-white")
+            }
           >
             {open ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
           </button>
@@ -135,19 +175,19 @@ export function PublicHeader({
       </div>
 
       {open && (
-        <div className="border-t border-white/10 bg-[rgba(12,7,26,0.95)] px-4 pb-5 pt-3 backdrop-blur-xl md:hidden">
+        <div className={`px-4 pb-5 pt-3 md:hidden ${mobileBg}`}>
           <div className="flex flex-col gap-1">
             {anchors.map((a) => (
-              <a key={a.href} href={a.href} onClick={() => setOpen(false)} className={PILL_MOBILE}>
+              <Pill key={a.href} href={a.href} onClick={() => setOpen(false)}>
                 {t(a.key)}
-              </a>
+              </Pill>
             ))}
-            <Link to="/our-story" onClick={() => setOpen(false)} className={PILL_MOBILE}>
+            <PillLink to="/our-story" onClick={() => setOpen(false)}>
               {t("nav.ourStory")}
-            </Link>
-            <Link to="/partnership" onClick={() => setOpen(false)} className={PILL_MOBILE}>
+            </PillLink>
+            <PillLink to="/partnership" onClick={() => setOpen(false)}>
               {t("nav.partnership")}
-            </Link>
+            </PillLink>
             {user ? (
               <Link
                 to="/dashboard"
@@ -158,9 +198,9 @@ export function PublicHeader({
               </Link>
             ) : (
               <>
-                <Link to="/auth" onClick={() => setOpen(false)} className={PILL_MOBILE}>
+                <PillLink to="/auth" onClick={() => setOpen(false)}>
                   {t("landing.v3.nav.login")}
-                </Link>
+                </PillLink>
                 <Link
                   to="/auth"
                   search={{ mode: "signup" }}
