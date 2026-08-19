@@ -172,10 +172,10 @@ function Home() {
   }
 
   return (
-    <div className="landing-dark cosmic-scene relative z-0 overflow-hidden">
-      <PublicHeader />
+    <div className="landing-light cosmic-scene relative z-0 overflow-hidden">
+      <PublicHeader light />
 
-      <CosmicBackdrop />
+      <CosmicBackdrop light />
 
       <main>
         <HeroSection />
