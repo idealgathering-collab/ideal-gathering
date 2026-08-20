@@ -1006,7 +1006,34 @@ export const translations: Record<Lang, Dict> = {
 
 
   tr: {
+    // Our Story
+    "nav.ourStory": "Hikâyemiz",
+    "ourStory.title": "Hikâyemiz",
+    "ourStory.eyebrow": "Hikâyemiz",
+    "ourStory.headline": "Davet gerektirmeyen bir masa",
+    "ourStory.pullQuote": "Hiç “haftaya görüşürüz” dememize gerek olmadı. O masa hep oradaydı.",
+    "ourStory.ch1.eyebrow": "Birinci bölüm — masa",
+    "ourStory.ch1.body": `Altı kişiydik, haftada bir gece. Ne grup sohbeti ne de “geliyor musun?” — sadece salı. Bazı haftalar sabahın ikisine kadar iskambil; bazı haftalar konuşurken soğuyan yemekler. Altı kişi ona, on kişi on beşe çıktı. Kimse yönetmiyordu. Gerek de yoktu.`,
+    "ourStory.ch2.eyebrow": "İkinci bölüm — dağılma",
+    "ourStory.ch2.body": `Sonra sessizce dağıldı. Başka bir şehirde bir iş. Başka bir ülkede bir vize. Kimse iptal etmedi — iptal edilecek bir şey yoktu. Bir hafta masa orada değildi. Veda yok. Sadece artık salı değildi.`,
+    "ourStory.ch3.eyebrow": "Üçüncü bölüm — arayış",
+    "ourStory.ch3.body": `Sahip olduğumuz şeyi aramaya çıktım. Yapacak çok şey buldum — hiçbiri o değildi. Yanlış kalabalık, fazla program, bir kahve ve yürüyüş yerine bir gece dışarısı fiyatı. Kimse “sadece gel”i satmıyordu. Ben de kurmaya karar verdim.`,
+    "ourStory.ch4.eyebrow": "Dördüncü bölüm — isim",
+    "ourStory.ch4.body": `Gathering.com gitmişti. Olsun — inatla idealgathering.com'u aldım, daha ne kuracağıma dair tek bir fikrim bile yokken. Hayatımda tek satır kod yazmamıştım.`,
+    "ourStory.ch5.eyebrow": "Dördüncü bölüm — yine de kurmak",
+    "ourStory.ch5.body": `Kod yazmayı işe yarayacak kadar hızlı öğrenemezdim, ben de şeridimi seçtim: işi ben yürütecektim, ürünü başkası kuracaktı. İşe yaradı — yaramayana kadar. Bir yılda üç internet kesintisi. İki savaş dönemi. Her seferinde yeni kırılanın etrafında yeniden kurduk.`,
+    "ourStory.ch6.eyebrow": "Beşinci bölüm — çöküş",
+    "ourStory.ch6.body": `Son kesinti neredeyse iki ay sürdü. Bizi yavaşlatmadı — bitirdi. Ekip kendi hayatını kurtarmaya gitti. Elimde bir alan adından başka bir şey kalmadı.`,
+    "ourStory.ch7.eyebrow": "Altıncı bölüm — yeniden başlamak",
+    "ourStory.ch7.body": `Sıfırdan başladım. Ekip yok, yatırım yok. Sadece ben ve kardeşim, hiçten yeniden kurduk. Gathering'de bugün olan her şey o çöküşten sonra yapıldı — öncesinden hiçbir şey kalmadı.`,
+    "ourStory.ch8.eyebrow": "Yedinci bölüm — bugün",
+    "ourStory.ch8.body": `Bir grup arkadaşın bir zamanlar adı bile olmayacak kadar basit bir şeyi vardı. Onun öylece yok olmasına izin vermedim. Bugün bu; gerçekten kim olduğuna göre eşleşen küçük gruplar, gerçek kafelerde, ilk on dakikayı kolaylaştıracak kadar az bir kurguyla. Sahne yok. Kaydırma yok. Gösteri yok.`,
+    "ourStory.closing": "\n",
+    "ourStory.signature": "Farzin Salman, Ideal Gathering'in kurucusu",
+    "ourStory.cta": "Masaya katıl",
+
     // Nav
+
     "nav.dashboard": "Panel",
     "nav.host": "Ev sahibi ol",
     "nav.signOut": "Çıkış yap",
@@ -1968,7 +1995,34 @@ export const translations: Record<Lang, Dict> = {
     "landing.v3.final.venue": "Kafe ya da restoran mı işletiyorsun? Bizimle ortak ol",
   },
   fa: {
+    // Our Story
+    "nav.ourStory": "داستان ما",
+    "ourStory.title": "داستان ما",
+    "ourStory.eyebrow": "داستان ما",
+    "ourStory.headline": "میزی که هیچ‌وقت به دعوت‌نامه نیاز نداشت",
+    "ourStory.pullQuote": "هیچ‌وقت لازم نبود بگوییم «هفته‌ی بعد می‌بینمت». فقط بود.",
+    "ourStory.ch1.eyebrow": "فصل یک — آن میز",
+    "ourStory.ch1.body": `شش نفر بودیم، یک شب در هفته. نه گروه چتی، نه «میای؟» — فقط سه‌شنبه. بعضی هفته‌ها تا دو بامداد ورق بازی می‌کردیم؛ بعضی هفته‌ها غذا سرد می‌شد و ما هنوز حرف می‌زدیم. شش نفر شد ده، ده شد پانزده. کسی آن را اداره نمی‌کرد. لازم هم نبود.`,
+    "ourStory.ch2.eyebrow": "فصل دو — پراکنده شدن",
+    "ourStory.ch2.body": `بعد، بی‌صدا، از هم پاشید. کاری در شهری دیگر. ویزایی برای کشوری دیگر. کسی لغوش نکرد — چیزی برای لغو کردن نبود. یک هفته میز دیگر آنجا نبود. بدون خداحافظی. فقط دیگر سه‌شنبه نبود.`,
+    "ourStory.ch3.eyebrow": "فصل سه — جست‌وجو",
+    "ourStory.ch3.body": `رفتم دنبال همان چیزی که داشتیم. کلی کار برای انجام دادن پیدا کردم — هیچ‌کدام آن نبود. جمع اشتباه، برنامه‌ی زیادی، و قیمتی مثل یک شب بیرون رفتن نه یک قهوه و قدم زدن. کسی «فقط بیا» را نمی‌فروخت. پس تصمیم گرفتم خودم بسازمش.`,
+    "ourStory.ch4.eyebrow": "فصل چهار — نام",
+    "ourStory.ch4.body": `دامنه‌ی Gathering.com رفته بود. باشد — از سر لجاجت idealgathering.com را خریدم، پیش از آنکه حتی یک ایده داشته باشم چه می‌سازم. در تمام عمرم یک خط کد ننوشته بودم.`,
+    "ourStory.ch5.eyebrow": "فصل چهار — ساختن، به هر قیمتی",
+    "ourStory.ch5.body": `نمی‌توانستم آن‌قدر سریع برنامه‌نویسی یاد بگیرم که به درد بخورد، پس مسیرم را انتخاب کردم: من کسب‌وکار را می‌چرخانم، کس دیگری محصول را می‌سازد. جواب داد — تا وقتی که نداد. سه بار قطعی اینترنت در یک سال. دو دوره جنگ. هر بار دور هر چیزی که تازه شکسته بود، دوباره ساختیم.`,
+    "ourStory.ch6.eyebrow": "فصل پنج — فروپاشی",
+    "ourStory.ch6.body": `آخرین قطعی نزدیک دو ماه طول کشید. ما را کند نکرد — تمام‌مان کرد. تیم رفت تا زندگی خودش را نجات دهد. من ماندم با یک نام دامنه و هیچ چیز دیگر.`,
+    "ourStory.ch7.eyebrow": "فصل شش — شروع دوباره",
+    "ourStory.ch7.body": `پس از صفر شروع کردم. بدون تیم، بدون سرمایه. فقط من و برادرم، ساختن از هیچ. هر چیزی که امروز در Gathering هست بعد از آن فروپاشی ساخته شده — نه پیش از آن.`,
+    "ourStory.ch8.eyebrow": "فصل هفت — امروز",
+    "ourStory.ch8.body": `گروهی از دوستان زمانی چیزی داشتند آن‌قدر ساده که حتی اسم نداشت. نگذاشتم همان‌طور از دست برود. امروز یعنی گروه‌های کوچک، متناسب با همان کسی که واقعاً هستی، در کافه‌های واقعی، با همان‌قدر ساختار که ده دقیقه‌ی اول را آسان کند. نه صحنه‌ای. نه سوایپی. نه نمایشی.`,
+    "ourStory.closing": "\n",
+    "ourStory.signature": "فرزین سلمان، بنیان‌گذار Ideal Gathering",
+    "ourStory.cta": "به میز بپیوند",
+
     // Nav
+
     "nav.dashboard": "داشبورد",
     "nav.host": "میزبانی",
     "nav.signOut": "خروج",
