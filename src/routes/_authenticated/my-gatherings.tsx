@@ -6,8 +6,10 @@ import { GatheringCard } from "@/components/gathering-card";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useSession } from "@/hooks/use-session";
-import type { GatheringCard as GCard } from "@/lib/gatherings";
-import { useT } from "@/i18n";
+import { formatDateTime, type GatheringCard as GCard } from "@/lib/gatherings";
+import { listHostAttendanceSummary } from "@/lib/attendance.functions";
+import { useServerFn } from "@tanstack/react-start";
+import { useI18n, useT } from "@/i18n";
 
 export const Route = createFileRoute("/_authenticated/my-gatherings")({
   component: MyGatherings,
