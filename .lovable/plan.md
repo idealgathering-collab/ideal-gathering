@@ -1,122 +1,108 @@
-# Block + Report v1
+# Check-in / attendance v1
 
-Scope: a `user_blocks` table, a `reports` table, block/report actions where users actually see each other, an admin report queue, and a block-aware `getTableFit`. No chat redesign, no friends system, no auto-seating.
+Scope: record who actually showed up, host-marked, manual roster. No ratings, no reviews, no scoring loop.
 
-## What's visible today (verified)
+## Verified current state
 
-- `src/routes/gatherings.$id.tsx` shows attendees only as a **count** (`{attendees.length} / {g.seats}`) — no names, no avatars.
-- `src/components/gathering-room.tsx` (chat) is the **only** place one user sees another's identity: each message renders `display_name` + sender id, resolved via `getPublicProfiles`.
-- So v1 surfaces block/report on the **chat message author**, plus a report action on the **gathering detail page** (report the gathering/host).
+- `gathering_attendees(gathering_id, user_id, joined_at)` — join record only, nothing about attendance.
+- RLS today: SELECT is `user_id = auth.uid()` OR the caller is the gathering host OR the owner of the linked business; UPDATE exists only for admins; INSERT is self-join on approved gatherings; DELETE is self-leave or admin.
+- `src/routes/gatherings.$id.tsx` renders attendees as a bare count; identities are only visible in the chat room (`gathering-room.tsx`).
 
-## 1. `user_blocks`
+## 1. Schema
 
-```sql
-create table public.user_blocks (
-  blocker_id uuid not null references auth.users(id) on delete cascade,
-  blocked_id uuid not null references auth.users(id) on delete cascade,
-  created_at timestamptz not null default now(),
-  primary key (blocker_id, blocked_id),
-  constraint no_self_block check (blocker_id <> blocked_id)
-);
-grant select, insert, delete on public.user_blocks to authenticated;
-grant all on public.user_blocks to service_role;
-alter table public.user_blocks enable row level security;
-```
-
-Policies (all `to authenticated`, all keyed on `blocker_id = auth.uid()`):
-- select / insert (with check) / delete — own rows only. No update policy.
-
-This is the critical privacy property: a blocked user can run any query they like and never learn a block row exists. Enforcement that needs *both* directions runs server-side with the admin client, never in the browser.
-
-Helper for server use:
+Column on the existing table, not a new one. The relationship is 1:1 with a seat, the row already exists at join time, and a separate table would duplicate the composite key for one nullable timestamp.
 
 ```sql
-create or replace function private.is_blocked_pair(_a uuid, _b uuid)
-returns boolean language sql stable security definer set search_path = public as $$
-  select exists (select 1 from public.user_blocks
-    where (blocker_id = _a and blocked_id = _b) or (blocker_id = _b and blocked_id = _a))
-$$;
+alter table public.gathering_attendees
+  add column checked_in_at timestamptz,
+  add column checked_in_by uuid references auth.users(id) on delete set null;
 ```
 
-### What blocking does in v1
+`checked_in_at` timestamptz (not boolean): free, and later tells Phase 2 *when* someone arrived, not just whether. `NULL` = not checked in. `checked_in_by` records which host/admin marked it — cheap audit, and it distinguishes a host mark from any future self-check-in without a schema change.
 
-- **Mutual hiding in chat is in scope.** Filtering only one direction produces a broken conversation (the blocker's messages still land on the blocked user and get replies nobody sees). Both sides stop seeing each other's messages going forward and historically in the rendered list.
-- Implementation: chat message filtering moves behind a server function `listGatheringMessages` (admin client + `requireSupabaseAuth`) that drops messages whose sender is in a block pair with the caller. The realtime `INSERT` subscription stays, but new messages are dropped client-side against a `blockedIds` set fetched once per room (own blocks) and a server-provided `hiddenSenderIds` set for reverse blocks.
-- Not in scope for v1: preventing a blocked user from *joining* the same gathering, or unseating anyone. Blocking hides, it does not evict. Called out so it isn't mistaken for enforcement.
-- Unblock: from Profile → a small "Blocked people" list (own blocks only, names via `getPublicProfiles`).
+Index: `create index on public.gathering_attendees (user_id) where checked_in_at is not null;` — the shape any future per-user reliability aggregate will read.
 
-## 2. `reports`
+## 2. Who can write it, and the RLS
 
-Existing approval queues (`businesses.status`, `saved_locations.status` + `reject_reason`) are single-table status columns reviewed in `admin.tsx`. Reports follow the same shape rather than inventing a new pattern.
+Host-only in v1, plus admin (already covered by the existing admin UPDATE policy).
 
-On polymorphism: keep `target_type` + `target_id` **and** a separate nullable `target_user_id`. Reason: for a gathering report the person accountable is the host, and the admin queue and any future block/suspend action needs a user handle without re-resolving the gathering. A pure polymorphic `target_id` would force the queue to join two different tables to answer "who is this about".
+On venue owners: they already have SELECT on attendees of gatherings at their business, so extending write is technically clean — but a venue owner is not reliably at the table, and for `origin='user_created'` gatherings at saved locations there is no venue owner at all. Marking attendance is a claim about who was physically present; giving it to a party who may not be present makes the signal weaker for Phase 2. Host-only.
+
+New policy:
 
 ```sql
-create type public.report_target as enum ('user','gathering');
-create type public.report_status as enum ('open','resolved','dismissed');
-
-create table public.reports (
-  id uuid primary key default gen_random_uuid(),
-  reporter_id uuid not null references auth.users(id) on delete cascade,
-  target_type report_target not null,
-  target_id uuid not null,
-  target_user_id uuid references auth.users(id) on delete set null,
-  gathering_id uuid references public.gatherings(id) on delete set null,
-  reason text not null,          -- enum-ish slug: harassment | spam | unsafe | noshow | other
-  details text,
-  status report_status not null default 'open',
-  admin_note text,
-  resolved_at timestamptz,
-  resolved_by uuid references auth.users(id) on delete set null,
-  created_at timestamptz not null default now(),
-  constraint no_self_report check (reporter_id <> target_user_id)
-);
-grant select, insert on public.reports to authenticated;
-grant all on public.reports to service_role;
-alter table public.reports enable row level security;
+create policy "Hosts mark attendance"
+on public.gathering_attendees for update to authenticated
+using (exists (select 1 from public.gatherings g
+  where g.id = gathering_attendees.gathering_id and g.host_id = auth.uid()))
+with check (exists (select 1 from public.gatherings g
+  where g.id = gathering_attendees.gathering_id and g.host_id = auth.uid()));
 ```
 
-Policies:
-- `select`: `reporter_id = auth.uid()` OR `private.has_role(auth.uid(),'admin')`. The reported person has no policy path to their own reports — they cannot see they were reported.
-- `insert` (with check): `reporter_id = auth.uid()` and status forced to `'open'` (a BEFORE INSERT trigger clamps `status`, `admin_note`, `resolved_*` so a reporter can't self-resolve).
-- `update`: admin only.
-- no delete policy.
-- Trigger `prevent_report_status_change_non_admin`, mirroring the existing `prevent_gathering_status_change_non_admin`.
-- Index `(status, created_at desc)` for the queue; partial unique index on `(reporter_id, target_type, target_id) where status = 'open'` to stop duplicate spam.
+UPDATE alone can't restrict *which* columns change, so a BEFORE UPDATE trigger pins everything else — a host must not be able to rewrite `user_id`/`gathering_id`/`joined_at`, and must not check in for a gathering that is cancelled or rejected:
 
-**No notification is ever created for the reported or blocked user** — the existing `notifications` writes are all explicit in app code, so this just means not adding one.
-
-## 3. `getTableFit` change (in scope now)
-
-In `src/lib/matching.functions.ts`, after resolving `otherIds`, load the caller's block pairs with the admin client:
-
+```sql
+create or replace function public.guard_attendance_update() returns trigger
+language plpgsql security definer set search_path = public, private as $$
+declare _status gathering_status; _starts timestamptz;
+begin
+  if private.has_role(auth.uid(), 'admin') then return new; end if;
+  if new.user_id is distinct from old.user_id
+     or new.gathering_id is distinct from old.gathering_id
+     or new.joined_at is distinct from old.joined_at then
+    raise exception 'ATTENDANCE_IMMUTABLE_FIELDS';
+  end if;
+  select status, starts_at into _status, _starts
+    from public.gatherings where id = new.gathering_id;
+  if _status in ('cancelled','rejected') then raise exception 'GATHERING_CLOSED'; end if;
+  if new.checked_in_at is not null and now() < _starts - interval '30 minutes' then
+    raise exception 'CHECKIN_TOO_EARLY';
+  end if;
+  if now() > coalesce((select ends_at from public.gatherings where id = new.gathering_id),
+                      _starts + interval '2 hours') + interval '24 hours' then
+    raise exception 'CHECKIN_WINDOW_CLOSED';
+  end if;
+  new.checked_in_by := case when new.checked_in_at is null then null else auth.uid() end;
+  return new;
+end $$;
 ```
-select blocker_id, blocked_id from user_blocks
-where blocker_id = userId or blocked_id = userId
-```
 
-Build a `blockedWith: Set<string>`, then:
-- exclude those ids from the trait average for every gathering, and
-- if any member of a gathering is in `blockedWith`, return `fit: null` for that gathering entirely (with a new `hasBlocked: true` flag) so the card shows no compatibility number rather than a silently skewed one.
+Server-set `checked_in_by` so the client can't spoof it. Follows the existing `prevent_*_change` trigger pattern already in this schema.
 
-`src/components/table-fit.tsx` renders nothing (or a neutral dash) when `fit === null`.
+## 3. Time gating — decision
 
-## 4. UI surfaces
+Gated, but loosely: opens 30 minutes before `starts_at`, closes 24 hours after the gathering ends.
 
-- **`src/components/gathering-room.tsx`**: each non-own message gets an overflow menu (`DropdownMenu`, kebab on hover/focus) with "Block" and "Report". Block opens a confirm dialog; Report opens a shared `ReportDialog`.
-- **`src/routes/gatherings.$id.tsx`**: a quiet "Report this gathering" link in the footer of the detail card, prefilled `target_type: 'gathering'`, `target_user_id = host_id`.
-- **`src/components/report-dialog.tsx`** (new): reason radio group + optional details textarea, 500-char cap. On success a neutral toast ("Thanks — our team will review this"), no state visible to anyone else.
-- **`src/routes/_authenticated/profile.tsx`**: "Blocked people" section, list + Unblock.
-- **`src/routes/_authenticated/admin.tsx`**: new `ReportsPanel` tab following `SavedLocationsPanel` exactly — `Tabs` for open / resolved / dismissed, each row showing reporter, target (linked to the gathering or the reported profile), reason, details, timestamp, and Resolve / Dismiss buttons with an optional `admin_note`.
+Tradeoff: an ungated column is simpler and never blocks a legitimate host, but it lets attendance be marked weeks early or retro-edited long after, which makes the record useless as evidence for Phase 2. A window that opens slightly early covers hosts who mark people as they arrive, and a 24-hour tail covers the host who forgets until the next morning. The cost is a host who remembers two days later can no longer fix it — acceptable at this stage, and admins can still edit through the existing admin policy.
+
+## 4. UI
+
+New `src/components/attendance-roster.tsx`, rendered on `src/routes/gatherings.$id.tsx` for the host only, inside the existing member area near the chat/checklist section, and only once the check-in window is open (`now >= starts_at - 30m`). Before that the card is absent; after the window closes it renders read-only.
+
+- Loads the roster via a new `listAttendance` server function in `src/lib/attendance.functions.ts` (auth middleware, host-or-admin check, joins display names through the existing `getPublicProfiles` path).
+- One row per attendee: avatar, display name, and a tap target that toggles checked / not checked. Optimistic toggle, `toast.error` + revert on failure, mapping the trigger exceptions to localized messages the way `classifyJoinError` already does for joins.
+- Header line: "3 of 6 checked in".
+- No QR, no self check-in, no geofence.
+
+Also:
+- `src/routes/_authenticated/my-gatherings.tsx`: for past gatherings the host hosted, a quiet "X of Y attended" line. Purely informational.
+- `src/routes/_authenticated/admin.tsx`: the same attended count on the gathering rows the admin panel already lists, so moderation has the context.
+
+Nothing is shown to the attendee about their own check-in state in v1 — no notification, no badge. It's a host/admin record until Phase 2 decides what it means.
+
+## 5. What it powers
+
+Nothing automated. Purely a record plus a count. The schema is Phase-2-ready: timestamps per attendee per gathering, so a later reliability pass can compute attended/joined ratios and no-show recency without a migration.
 
 ## Files touched
 
-- migration: two enums, `user_blocks`, `reports`, grants, RLS, trigger, `private.is_blocked_pair`, indexes.
-- new: `src/lib/moderation.functions.ts` (block, unblock, listBlocks, submitReport, listGatheringMessages), `src/components/report-dialog.tsx`, `src/components/blocked-users-section.tsx`.
-- edit: `gathering-room.tsx`, `gatherings.$id.tsx`, `matching.functions.ts`, `table-fit.tsx`, `_authenticated/admin.tsx`, `_authenticated/profile.tsx`, `src/i18n/translations.ts` (EN/TR/FA).
+- migration: two columns, index, `guard_attendance_update` trigger + function, host UPDATE policy.
+- new: `src/lib/attendance.functions.ts`, `src/components/attendance-roster.tsx`.
+- edit: `src/routes/gatherings.$id.tsx`, `src/routes/_authenticated/my-gatherings.tsx`, `src/routes/_authenticated/admin.tsx`, `src/i18n/translations.ts` (EN/TR/FA).
 
 ## Flagged decisions
 
-1. Mutual chat hiding is included in v1 — one-directional hiding leaves a visibly broken conversation.
-2. Blocking does not prevent joining the same gathering or evict anyone in v1.
-3. `target_user_id` is stored alongside `target_type`/`target_id` deliberately, so the admin queue always has a person to act on.
+1. Column on `gathering_attendees`, not a new table.
+2. Host-only writes; venue owners excluded despite having read access.
+3. Check-in window: −30 min to +24 h after end; admins can override.
+4. Attendees see nothing about their own attendance record in v1.
