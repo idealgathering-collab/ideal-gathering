@@ -56,6 +56,12 @@ export function GatheringCard({ g, fit }: { g: G; fit?: TableFit }) {
         {g.description ? (
           <p className="line-clamp-2 text-sm text-muted-foreground">{g.description}</p>
         ) : null}
+        {fit ? (
+          <div>
+            <TableFitChip fit={fit} />
+          </div>
+        ) : null}
+
         <div className="mt-auto flex flex-wrap items-center gap-x-4 gap-y-1.5 pt-2 text-xs text-muted-foreground">
           <span className="inline-flex items-center gap-1.5">
             <CalendarClock className="h-3.5 w-3.5 text-primary" />
