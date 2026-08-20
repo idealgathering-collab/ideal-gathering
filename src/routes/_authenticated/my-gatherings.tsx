@@ -6,8 +6,10 @@ import { GatheringCard } from "@/components/gathering-card";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useSession } from "@/hooks/use-session";
-import type { GatheringCard as GCard } from "@/lib/gatherings";
-import { useT } from "@/i18n";
+import { formatDateTime, type GatheringCard as GCard } from "@/lib/gatherings";
+import { listHostAttendanceSummary } from "@/lib/attendance.functions";
+import { useServerFn } from "@tanstack/react-start";
+import { useI18n, useT } from "@/i18n";
 
 export const Route = createFileRoute("/_authenticated/my-gatherings")({
   component: MyGatherings,
@@ -118,8 +120,41 @@ function MyGatherings() {
 
         <Section title={t("myg.attending")} empty={t("myg.noAttending")} loading={isLoading} items={data?.attending} />
         <Section title={t("myg.hosting")} empty={t("myg.noHosting")} loading={isLoading} items={data?.hosted} />
+        <PastHosted />
       </main>
     </div>
+  );
+}
+
+function PastHosted() {
+  const t = useT();
+  const { lang } = useI18n();
+  const { user } = useSession();
+  const runSummary = useServerFn(listHostAttendanceSummary);
+  const { data } = useQuery({
+    queryKey: ["host-attendance-summary", user?.id],
+    enabled: !!user,
+    queryFn: () => runSummary(),
+  });
+
+  if (!data || data.length === 0) return null;
+
+  return (
+    <section className="mt-10">
+      <h2 className="font-display text-2xl">{t("att.past.title")}</h2>
+      <ul className="mt-4 grid gap-2">
+        {data.map((s) => (
+          <li key={s.gathering_id} className="rounded-2xl border border-border bg-card px-4 py-3">
+            <Link to="/gatherings/$id" params={{ id: s.gathering_id }} className="font-medium hover:underline">
+              {s.subject}
+            </Link>
+            <div className="text-xs text-muted-foreground">
+              {formatDateTime(s.starts_at, lang)} · {t("att.attendedOf", { done: s.attended, total: s.joined })}
+            </div>
+          </li>
+        ))}
+      </ul>
+    </section>
   );
 }
 

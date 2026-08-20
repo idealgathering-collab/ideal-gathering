@@ -18,6 +18,8 @@ import { getPublicGathering } from "@/lib/public-data.functions";
 import { getTableFit } from "@/lib/matching.functions";
 import { TableFitChip, TakeQuizNudge } from "@/components/table-fit";
 import { ReportDialog, type ReportTarget } from "@/components/report-dialog";
+import { AttendanceRoster } from "@/components/attendance-roster";
+import { checkinWindow } from "@/lib/attendance.functions";
 import { useState } from "react";
 
 
@@ -136,6 +138,7 @@ function GatheringDetail() {
   const seatsLeft = Math.max(0, g.seats - attendees.length);
   const isHost = user?.id === g.host_id;
   const isMember = isHost || isAttending;
+  const checkinOpen = Date.now() >= checkinWindow(g.starts_at).opensAt;
 
   return (
     <div className="min-h-screen bg-background">
@@ -301,6 +304,7 @@ function GatheringDetail() {
               <TabsList>
                 <TabsTrigger value="chat">{t("room.tab.chat")}</TabsTrigger>
                 <TabsTrigger value="checklist">{t("room.tab.checklist")}</TabsTrigger>
+                {isHost && checkinOpen && <TabsTrigger value="attendance">{t("att.tab")}</TabsTrigger>}
               </TabsList>
               <TabsContent value="chat" className="mt-4">
                 {isMember ? (
@@ -316,6 +320,11 @@ function GatheringDetail() {
                   <LockedPanel t={t} />
                 )}
               </TabsContent>
+              {isHost && checkinOpen && (
+                <TabsContent value="attendance" className="mt-4">
+                  <AttendanceRoster gatheringId={g.id} />
+                </TabsContent>
+              )}
             </Tabs>
           </div>
         )}

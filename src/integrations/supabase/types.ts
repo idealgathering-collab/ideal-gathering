@@ -73,16 +73,22 @@ export type Database = {
       }
       gathering_attendees: {
         Row: {
+          checked_in_at: string | null
+          checked_in_by: string | null
           gathering_id: string
           joined_at: string
           user_id: string
         }
         Insert: {
+          checked_in_at?: string | null
+          checked_in_by?: string | null
           gathering_id: string
           joined_at?: string
           user_id: string
         }
         Update: {
+          checked_in_at?: string | null
+          checked_in_by?: string | null
           gathering_id?: string
           joined_at?: string
           user_id?: string
