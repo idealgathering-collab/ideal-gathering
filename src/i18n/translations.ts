@@ -107,6 +107,12 @@ export const translations: Record<Lang, Dict> = {
     // Gathering card
     "card.table": "Table",
     "card.full": "Full",
+    "match.fit": "Your fit with this table: {n}%",
+    "match.beFirst": "Be the first at this table to take the quiz",
+    "match.takeQuiz": "Take the 2-minute quiz to see how you fit with each table. Totally optional — you can join anything without it.",
+    "match.takeQuizCta": "Take the quiz",
+    "match.savedToProfile": "Saved to your profile",
+
     "card.seatLeft": "{n} seat left",
     "card.seatsLeft": "{n} seats left",
 
