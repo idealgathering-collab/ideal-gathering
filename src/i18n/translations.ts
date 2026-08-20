@@ -2111,6 +2111,12 @@ export const translations: Record<Lang, Dict> = {
     // Gathering card
     "card.table": "میز",
     "card.full": "پر شد",
+    "match.fit": "هماهنگی شما با این میز: {n}٪",
+    "match.beFirst": "اولین نفری باشید که در این میز آزمون را انجام می‌دهد",
+    "match.takeQuiz": "آزمون دو دقیقه‌ای را انجام دهید تا هماهنگی خود با هر میز را ببینید. کاملاً اختیاری است — بدون آن هم می‌توانید بپیوندید.",
+    "match.takeQuizCta": "انجام آزمون",
+    "match.savedToProfile": "در پروفایل شما ذخیره شد",
+
     "card.seatLeft": "{n} صندلی مانده",
     "card.seatsLeft": "{n} صندلی مانده",
 
