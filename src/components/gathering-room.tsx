@@ -108,6 +108,7 @@ export function GatheringChat({
         },
         async (payload) => {
           const m = payload.new as Msg;
+          if (hidden.has(m.sender_id)) return;
           setMessages((prev) => (prev.some((x) => x.id === m.id) ? prev : [...prev, m]));
           if (!profiles[m.sender_id]) {
             const more = await loadProfiles([m.sender_id]);
