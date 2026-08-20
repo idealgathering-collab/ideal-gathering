@@ -121,7 +121,19 @@ export function GatheringChat({
       supabase.removeChannel(channel);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [gatheringId]);
+  }, [gatheringId, hidden]);
+
+  async function confirmBlock() {
+    if (!blockTarget) return;
+    try {
+      await blockUser({ data: { userId: blockTarget.id } });
+      setBlockTarget(null);
+      toast.success(t("mod.blockedOk"));
+      await loadMessages();
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : t("auth.generic"));
+    }
+  }
 
   useEffect(() => {
     if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
