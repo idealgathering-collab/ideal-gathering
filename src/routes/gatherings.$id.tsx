@@ -15,6 +15,9 @@ import { fetchGathering, formatDateTime } from "@/lib/gatherings";
 import { useI18n, useT } from "@/i18n";
 import { gatheringHead, type SeoLang } from "@/lib/seo";
 import { getPublicGathering } from "@/lib/public-data.functions";
+import { getTableFit } from "@/lib/matching.functions";
+import { TableFitChip, TakeQuizNudge } from "@/components/table-fit";
+
 
 export const Route = createFileRoute("/gatherings/$id")({
   component: GatheringDetail,
