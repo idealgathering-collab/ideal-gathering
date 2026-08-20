@@ -455,12 +455,18 @@ function VenueDetail({
 
 function GatheringRow({ g, children }: { g: VenueGathering; children?: React.ReactNode }) {
   const { lang } = useI18n();
+  const t = useT();
+  const rows = g.gathering_attendees ?? [];
+  const isPast = new Date(g.starts_at).getTime() < Date.now();
   return (
     <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-border bg-card p-4">
       <div className="min-w-0 flex-1">
         <div className="font-display text-base">{g.subject}</div>
         <div className="mt-1 text-xs text-muted-foreground">
           {formatDateTime(g.starts_at, lang)} · {g.seats} seats
+          {isPast && rows.length > 0
+            ? ` · ${t("att.attendedOf", { done: rows.filter((r) => r.checked_in_at).length, total: rows.length })}`
+            : ""}
         </div>
       </div>
       <div className="flex gap-2">{children}</div>
