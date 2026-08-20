@@ -1,7 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { CalendarClock, MapPin, Users, ArrowLeft, Coffee, Lock, CalendarPlus, Share2 } from "lucide-react";
+import { CalendarClock, MapPin, Users, ArrowLeft, Coffee, Lock, CalendarPlus, Share2, Flag } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { MenuSection } from "@/components/menu-section";
 import { GatheringChat, GatheringChecklist } from "@/components/gathering-room";
@@ -17,6 +17,8 @@ import { gatheringHead, type SeoLang } from "@/lib/seo";
 import { getPublicGathering } from "@/lib/public-data.functions";
 import { getTableFit } from "@/lib/matching.functions";
 import { TableFitChip, TakeQuizNudge } from "@/components/table-fit";
+import { ReportDialog, type ReportTarget } from "@/components/report-dialog";
+import { useState } from "react";
 
 
 export const Route = createFileRoute("/gatherings/$id")({
@@ -41,6 +43,7 @@ function GatheringDetail() {
   const qc = useQueryClient();
   const t = useT();
   const { lang } = useI18n();
+  const [reportTarget, setReportTarget] = useState<ReportTarget | null>(null);
 
   const { data: g, isLoading } = useQuery({
     queryKey: ["gathering", id],
@@ -254,6 +257,25 @@ function GatheringDetail() {
             <Share2 className="me-1.5 h-4 w-4" />
             {t("gd.share")}
           </Button>
+          {user && !isHost && (
+            <Button
+              variant="ghost"
+              className="rounded-full text-muted-foreground"
+              onClick={() =>
+                setReportTarget({
+                  targetType: "gathering",
+                  targetId: g.id,
+                  targetUserId: g.host_id,
+                  gatheringId: g.id,
+                  label: g.subject,
+                })
+              }
+            >
+              <Flag className="me-1.5 h-4 w-4" />
+              {t("mod.reportGathering")}
+            </Button>
+          )}
+          <ReportDialog target={reportTarget} onOpenChange={(o) => !o && setReportTarget(null)} />
           {g.status !== "approved" && (isHost || isOwner) && (
             <div className="rounded-full bg-sunshine px-4 py-2 text-sm text-sunshine-foreground">
               {g.status === "proposed"

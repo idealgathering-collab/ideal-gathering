@@ -23,6 +23,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { useT } from "@/i18n";
+import { BlockedUsersSection } from "@/components/blocked-users-section";
 import { SavedLocationsSection } from "@/components/saved-locations-section";
 import { useQueryClient } from "@tanstack/react-query";
 
@@ -466,6 +467,8 @@ function ProfilePage() {
         </div>
 
         <SavedLocationsSection countryCode={country || null} />
+
+        <BlockedUsersSection />
 
         {/* Account actions */}
         <section className="mt-8 rounded-3xl border border-border bg-card p-6">
