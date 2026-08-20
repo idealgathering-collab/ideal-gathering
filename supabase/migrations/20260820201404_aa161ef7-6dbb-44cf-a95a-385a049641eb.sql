@@ -1,0 +1,1 @@
+REVOKE ALL ON FUNCTION public.enforce_gathering_capacity() FROM PUBLIC, anon, authenticated;

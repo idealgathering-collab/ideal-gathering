@@ -18,7 +18,15 @@ export default defineTool({
     const { error } = await supabase
       .from("gathering_attendees")
       .insert({ gathering_id, user_id: userId });
-    if (error) return errorResult(error.message);
+    if (error) {
+      if (error.code === "23505") return errorResult("You have already joined this gathering.");
+      if (error.message?.includes("GATHERING_FULL"))
+        return errorResult("This gathering is full — no seats left.");
+      if (error.message?.includes("GATHERING_CLOSED"))
+        return errorResult("This gathering is no longer open to join.");
+      return errorResult(error.message);
+    }
+
     return {
       content: [{ type: "text", text: `Joined gathering ${gathering_id}.` }],
       structuredContent: { ok: true, gathering_id },
