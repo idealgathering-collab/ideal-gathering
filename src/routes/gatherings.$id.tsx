@@ -179,6 +179,19 @@ function GatheringDetail() {
           </div>
         </div>
 
+        {fit && (
+          <div className="mt-6">
+            <TableFitChip fit={fit} />
+          </div>
+        )}
+        {showQuizNudge && (
+          <div className="mt-6">
+            <TakeQuizNudge />
+          </div>
+        )}
+
+
+
         {user && !user.email_confirmed_at && g.status === "approved" && !isHost && !isOwner && !isAttending && (
           <div className="mt-6">
             <VerifyEmailBanner email={user.email} />
