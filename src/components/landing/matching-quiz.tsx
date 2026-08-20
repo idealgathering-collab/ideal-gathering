@@ -170,7 +170,9 @@ export function MatchingQuiz() {
     setDone(false);
     setIndex(0);
     setStarted(false);
+    setSavedToProfile(false);
   }
+
 
   const showResult = done;
 
