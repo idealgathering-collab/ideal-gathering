@@ -1,9 +1,27 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
-import { CheckCircle2, Circle, Plus, Send, Trash2 } from "lucide-react";
+import { CheckCircle2, Circle, Flag, MoreVertical, Plus, Send, ShieldOff, Trash2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { ReportDialog, type ReportTarget } from "@/components/report-dialog";
+import { blockUser, listGatheringMessages } from "@/lib/moderation.functions";
 import { useI18n, useT } from "@/i18n";
 
 type Msg = {
@@ -45,28 +63,36 @@ export function GatheringChat({
   const { lang } = useI18n();
   const [messages, setMessages] = useState<Msg[]>([]);
   const [profiles, setProfiles] = useState<Record<string, Profile>>({});
+  const [hidden, setHidden] = useState<Set<string>>(new Set());
+  const [blockTarget, setBlockTarget] = useState<{ id: string; name: string } | null>(null);
+  const [reportTarget, setReportTarget] = useState<ReportTarget | null>(null);
   const [body, setBody] = useState("");
   const [sending, setSending] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
+  async function loadMessages(): Promise<Msg[] | null> {
+    try {
+      const res = await listGatheringMessages({ data: { gatheringId } });
+      setHidden(new Set(res.hiddenUserIds));
+      setMessages(res.messages);
+      return res.messages;
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : t("auth.generic"));
+      return null;
+    }
+  }
+
   useEffect(() => {
     let alive = true;
     (async () => {
-      const { data, error } = await supabase
-        .from("gathering_messages")
-        .select("id, gathering_id, sender_id, body, created_at")
-        .eq("gathering_id", gatheringId)
-        .order("created_at", { ascending: true })
-        .limit(500);
-      if (error) return toast.error(error.message);
-      if (!alive) return;
-      const msgs = (data as Msg[]) ?? [];
-      setMessages(msgs);
+      const msgs = await loadMessages();
+      if (!alive || !msgs) return;
       setProfiles(await loadProfiles(Array.from(new Set(msgs.map((m) => m.sender_id)))));
     })();
     return () => {
       alive = false;
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gatheringId]);
 
   useEffect(() => {
