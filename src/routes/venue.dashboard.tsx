@@ -451,7 +451,7 @@ function TablesSection({ business }: { business: BizRow }) {
                 <div className="font-display text-xl">{t("biz.tableLabel")} {tbl.label}</div>
                 <div className="text-xs text-muted-foreground">{tbl.capacity} {t("biz.tableSeats")}</div>
               </div>
-              <Button size="icon" variant="ghost" onClick={() => remove(tbl.id)} aria-label={t("biz.removeTable")}>
+              <Button size="icon" variant="ghost" onClick={() => remove(tbl.id, tbl.label)} aria-label={t("biz.removeTable")}>
                 <Trash2 className="h-4 w-4" />
               </Button>
             </div>
