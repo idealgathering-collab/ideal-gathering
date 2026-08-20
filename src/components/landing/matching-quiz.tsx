@@ -105,12 +105,14 @@ function MatchBar({
 export function MatchingQuiz() {
   const t = useT();
   const reduced = useReducedMotion();
+  const { user } = useSession();
 
   const [started, setStarted] = useState(false);
   const [done, setDone] = useState(false);
   const [index, setIndex] = useState(0);
   const [answers, setAnswers] = useState<Answers>({});
   const [hydrated, setHydrated] = useState(false);
+  const [savedToProfile, setSavedToProfile] = useState(false);
 
   useEffect(() => {
     const stored = loadQuiz();
@@ -132,6 +134,25 @@ export function MatchingQuiz() {
   }, [answers, done, started, hydrated]);
 
   const result = useMemo(() => scoreQuiz(answers), [answers]);
+
+  // Signed-in visitors get their result stored on their profile (retake overwrites).
+  useEffect(() => {
+    if (!hydrated || !done || !user) return;
+    let cancelled = false;
+    saveMyTraits(user.id, result.scores)
+      .then(() => {
+        if (!cancelled) setSavedToProfile(true);
+      })
+      .catch(() => {
+        /* non-blocking: the quiz still works without the profile write */
+      });
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hydrated, done, user?.id, result.scores.spark, result.scores.curiosity, result.scores.warmth, result.scores.depth]);
+
+
   const question = QUIZ[index];
 
   function advance(nextAnswers: Answers) {
