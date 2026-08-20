@@ -312,7 +312,7 @@ function VenueDetail({
   useEffect(() => {
     supabase
       .from("gatherings")
-      .select("id, subject, starts_at, seats, status, host_id")
+      .select("id, subject, starts_at, seats, status, host_id, gathering_attendees(user_id, checked_in_at)")
       .eq("business_id", venue.id)
       .order("starts_at", { ascending: true })
       .then(({ data }) => setGatherings((data as VenueGathering[]) ?? []));
