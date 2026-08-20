@@ -1,0 +1,1 @@
+REVOKE EXECUTE ON FUNCTION public.prevent_locked_table_change() FROM PUBLIC, anon, authenticated;
