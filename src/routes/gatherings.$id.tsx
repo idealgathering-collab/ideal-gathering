@@ -75,9 +75,25 @@ function GatheringDetail() {
       return;
     }
     const { error } = await supabase.from("gathering_attendees").insert({ gathering_id: id, user_id: user.id });
-    if (error) return toast.error(error.message);
+    if (error) {
+      const { classifyJoinError } = await import("@/lib/gatherings");
+      const reason = classifyJoinError(error);
+      if (reason === "full") {
+        toast.error(t("gd.joinFull"));
+        qc.invalidateQueries({ queryKey: ["gathering", id] });
+        return;
+      }
+      if (reason === "closed") return toast.error(t("gd.joinClosed"));
+      if (reason === "already_joined") {
+        toast.error(t("gd.joinAlready"));
+        qc.invalidateQueries({ queryKey: ["gathering", id] });
+        return;
+      }
+      return toast.error(error.message);
+    }
     toast.success(t("gd.joinedOk"));
     qc.invalidateQueries({ queryKey: ["gathering", id] });
+
   }
 
   async function leave() {
