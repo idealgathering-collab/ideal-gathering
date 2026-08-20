@@ -1,64 +1,47 @@
-# Enforce gathering seat capacity at the database level
+# Scope Explore to the viewer's city
 
-Today a join is a bare insert into `gathering_attendees`. Nothing checks the gathering's `seats` against the current attendee count, so a full table can keep taking people, and two people tapping "Join" on the last seat both succeed.
+Goal: stop mixing every market into one feed. Explore shows one city at a time, with a visible, changeable "Browsing: <city>" control. Browsing/filtering only — join/leave and seat-capacity logic stay untouched.
 
-## Point 4 first — double-join is already covered
+## 1. Where city lives today (verified)
 
-Confirmed against the live database: `gathering_attendees` has `PRIMARY KEY (gathering_id, user_id)`. A user cannot be inserted twice for the same gathering — the second insert fails with Postgres error `23505`. No new constraint needed. The only gap is that the current UI surfaces the raw Postgres message for that case, so it will get a friendly message as part of this work.
+- `gatherings` already has its own `city` column (plus `address`, `lat`, `lng`).
+- Saved-location gatherings: the create form copies `city` from the chosen `saved_locations` row into `gatherings.city`. `saved_locations.city` is nullable, so it can be blank.
+- Venue-linked gatherings: the create form sets `business_id`, `venue_name`, and `neighborhood` (from the business city) but **leaves `gatherings.city` NULL** — city is only reachable through the `businesses` join.
+- So there is a real gap for one type: venue gatherings have no own-row city. Today the `gatherings` table has 0 rows, so a backfill costs nothing.
 
-## 1. The database guard
+## 2. Fix the source of truth: one canonical city per gathering
 
-A `CHECK` constraint can't do this (it can't count rows in another table) and switching transactions to `SERIALIZABLE` would need every caller to retry. The correct tool is a `BEFORE INSERT` trigger on `gathering_attendees` that takes a row lock on the parent gathering:
+Rather than filtering through a join (which forces PostgREST to use `businesses!inner(...)`, breaks nicely on nullable joins, and can't be indexed well), make `gatherings.city` authoritative for every gathering type:
 
-```sql
-CREATE OR REPLACE FUNCTION public.enforce_gathering_capacity()
-RETURNS trigger LANGUAGE plpgsql SECURITY DEFINER SET search_path = public AS $$
-DECLARE _seats int; _status gathering_status; _taken int;
-BEGIN
-  -- locks the gathering row: concurrent joins to the same gathering serialize here
-  SELECT seats, status INTO _seats, _status
-  FROM public.gatherings WHERE id = NEW.gathering_id FOR UPDATE;
+- New DB trigger `set_gathering_city` (BEFORE INSERT OR UPDATE on `gatherings`): if `business_id` is set, copy `businesses.city` into `NEW.city`; otherwise keep the city supplied by the client (saved location). This keeps the column correct even if a client forgets to send it.
+- One-time backfill `UPDATE gatherings SET city = b.city ... WHERE business_id IS NOT NULL` (currently a no-op, but correct going forward).
+- Index: `CREATE INDEX ON gatherings (city, starts_at) WHERE status = 'approved'` for the Explore query.
+- Create form: also send `city: p.bizCity` on the venue branch, so the value is right before the trigger even fires.
 
-  IF NOT FOUND THEN RAISE EXCEPTION 'GATHERING_MISSING'; END IF;
-  IF _status IN ('cancelled','rejected') THEN RAISE EXCEPTION 'GATHERING_CLOSED'; END IF;
+Tradeoff: a denormalized column can drift if a venue later edits its city — the trigger only fires on gathering writes. Accepted for now; the venue city rarely changes, and a follow-up trigger on `businesses` could propagate it if that ever matters.
 
-  SELECT count(*) INTO _taken
-  FROM public.gathering_attendees WHERE gathering_id = NEW.gathering_id;
+## 3. Filtering behaviour
 
-  IF _taken >= _seats THEN
-    RAISE EXCEPTION 'GATHERING_FULL: % of % seats taken', _taken, _seats;
-  END IF;
-  RETURN NEW;
-END; $$;
-```
+- **Signed in with a profile city:** default to that city. Header of the list shows `Browsing: İstanbul · Change`, opening a dropdown of cities that actually have upcoming approved gatherings, plus "All cities".
+- **Signed in without a profile city / signed out:** default to **All cities**, with the same control inviting a choice. No forced modal, no silent hiding.
+- Chosen city is reflected in the URL (`/explore?city=Tehran`) so it is shareable and survives reloads; `city=all` for the unscoped view. URL wins over profile default when present.
+- Empty state per city: "No tables in <city> yet" with a link to create one and a "browse all cities" escape hatch.
 
-Why `SELECT ... FOR UPDATE` on the parent row: the second concurrent transaction blocks until the first commits, then re-reads the count and correctly sees the seat gone. A plain count without the lock lets both transactions read "7 of 8" and both insert. This mirrors the locking style already used by the existing `venue_tables` / double-booking triggers in this project, so it stays consistent.
+## 4. Query changes
 
-The trigger fires only on INSERT — leaves and deletes are unaffected.
+- `fetchApprovedGatherings(city?: string | null)` — same query, plus `.eq("city", city)` when a city is given, `.ilike` not needed since cities come from the shared catalogue/dropdown. Query key becomes `["gatherings", "approved", city]`.
+- New `fetchGatheringCities()` — distinct non-null `city` values from approved, upcoming gatherings, used to populate the switcher.
+- `fetchGathering()` — no filtering change; it just also selects `city` so the detail page can show it and link back to that city's Explore.
 
-## 2. Surfacing a clear error
+## Components touched
 
-The trigger raises sentinel-prefixed messages (`GATHERING_FULL:`, `GATHERING_CLOSED:`), the same pattern already used by `TABLE_LOCKED` / `TABLE_CAPACITY_LOCKED` in the venue dashboard. Call sites match on the prefix and show a translated toast instead of the raw message:
+- `src/lib/gatherings.ts` — optional city param, city list fetcher, `city` in the card type.
+- `src/routes/explore.tsx` — `city` search param, resolved default from profile, `CityFilter` control, per-city empty state.
+- `src/components/city-filter.tsx` (new) — the "Browsing: X · Change" pill + dropdown.
+- `src/components/gathering-card.tsx` — show city when browsing All cities.
+- `src/routes/_authenticated/create-gathering.tsx` — send `city` on the venue branch.
+- `src/i18n/translations.ts` — EN/TR/FA keys for browsing/change/all cities/empty-in-city.
 
-- `src/routes/gatherings.$id.tsx` — `join()` currently does `toast.error(error.message)`. Maps `GATHERING_FULL` → "This table just filled up", `GATHERING_CLOSED` → "This gathering is no longer open", and `23505` → "You've already joined this gathering". On a full-table error it also invalidates the gathering query so the seat count refreshes immediately.
-- `src/lib/gatherings.ts` — `joinGathering()` gets a small error classifier (e.g. throws a typed `JoinError` with `reason: 'full' | 'closed' | 'already_joined' | 'other'`) so any future caller gets the same mapping for free. `leaveGathering()` is unchanged.
-- `src/lib/mcp/tools/join-gathering.ts` — returns the same friendly text instead of the raw Postgres string (its description already promises "Fails if the gathering is full or already joined").
+## Migration needed
 
-New i18n keys in `src/i18n/translations.ts` for EN, TR and FA: `gd.joinFull`, `gd.joinClosed`, `gd.joinAlready`.
-
-## 3. Leaving and cancelled gatherings
-
-Nothing extra is required for seats to free up: capacity is computed live as `count(*)` at insert time, so a delete from `gathering_attendees` immediately reopens the seat for the next joiner. There is no denormalised counter to drift out of sync — that is deliberate, and the reason for counting rather than caching.
-
-Cancelled/rejected gatherings are handled inside the same trigger (the `GATHERING_CLOSED` branch), which closes a related hole: today someone can still join a cancelled gathering.
-
-## Out of scope
-
-No changes to the leave flow, waitlists, RLS policies, or the join button's visibility logic. The client-side "full" display stays as-is; the trigger is the authority.
-
-## Technical summary
-
-- One migration: `enforce_gathering_capacity()` function + `BEFORE INSERT` trigger on `public.gathering_attendees`. No schema/column changes, no new grants (no new table).
-- Concurrency safety comes from `SELECT ... FOR UPDATE` on the parent `gatherings` row, not from a check constraint or isolation-level change.
-- Double-join already blocked by the existing composite primary key; only its error message changes.
-- Files touched: `src/lib/gatherings.ts`, `src/routes/gatherings.$id.tsx`, `src/lib/mcp/tools/join-gathering.ts`, `src/i18n/translations.ts`.
+Yes, one small migration: the `set_gathering_city` trigger + function, the backfill update, and the partial index. No new tables, no RLS changes.
