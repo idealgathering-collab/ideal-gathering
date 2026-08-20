@@ -107,6 +107,12 @@ export const translations: Record<Lang, Dict> = {
     // Gathering card
     "card.table": "Table",
     "card.full": "Full",
+    "match.fit": "Your fit with this table: {n}%",
+    "match.beFirst": "Be the first at this table to take the quiz",
+    "match.takeQuiz": "Take the 2-minute quiz to see how you fit with each table. Totally optional — you can join anything without it.",
+    "match.takeQuizCta": "Take the quiz",
+    "match.savedToProfile": "Saved to your profile",
+
     "card.seatLeft": "{n} seat left",
     "card.seatsLeft": "{n} seats left",
 
@@ -1107,6 +1113,12 @@ export const translations: Record<Lang, Dict> = {
     // Gathering card
     "card.table": "Masa",
     "card.full": "Dolu",
+    "match.fit": "Bu masayla uyumun: %{n}",
+    "match.beFirst": "Bu masada testi ilk çözen sen ol",
+    "match.takeQuiz": "2 dakikalık testi çözerek her masayla uyumunu gör. Tamamen isteğe bağlı — testsiz de katılabilirsin.",
+    "match.takeQuizCta": "Testi çöz",
+    "match.savedToProfile": "Profiline kaydedildi",
+
     "card.seatLeft": "{n} koltuk kaldı",
     "card.seatsLeft": "{n} koltuk kaldı",
 
@@ -2099,6 +2111,12 @@ export const translations: Record<Lang, Dict> = {
     // Gathering card
     "card.table": "میز",
     "card.full": "پر شد",
+    "match.fit": "هماهنگی شما با این میز: {n}٪",
+    "match.beFirst": "اولین نفری باشید که در این میز آزمون را انجام می‌دهد",
+    "match.takeQuiz": "آزمون دو دقیقه‌ای را انجام دهید تا هماهنگی خود با هر میز را ببینید. کاملاً اختیاری است — بدون آن هم می‌توانید بپیوندید.",
+    "match.takeQuizCta": "انجام آزمون",
+    "match.savedToProfile": "در پروفایل شما ذخیره شد",
+
     "card.seatLeft": "{n} صندلی مانده",
     "card.seatsLeft": "{n} صندلی مانده",
 

@@ -19,6 +19,8 @@ import {
   Users,
 } from "lucide-react";
 import { useT } from "@/i18n";
+import { useSession } from "@/hooks/use-session";
+import { saveMyTraits } from "@/lib/profile-traits";
 import {
   QUIZ,
   TRAITS,
@@ -27,10 +29,10 @@ import {
   loadQuiz,
   saveQuiz,
   scoreQuiz,
-  tableMates,
   type Answers,
   type MatchLevel,
 } from "@/lib/matching";
+
 
 const ICONS: Record<string, ComponentType<{ className?: string }>> = {
   flame: Flame,
@@ -103,12 +105,14 @@ function MatchBar({
 export function MatchingQuiz() {
   const t = useT();
   const reduced = useReducedMotion();
+  const { user } = useSession();
 
   const [started, setStarted] = useState(false);
   const [done, setDone] = useState(false);
   const [index, setIndex] = useState(0);
   const [answers, setAnswers] = useState<Answers>({});
   const [hydrated, setHydrated] = useState(false);
+  const [savedToProfile, setSavedToProfile] = useState(false);
 
   useEffect(() => {
     const stored = loadQuiz();
@@ -130,6 +134,25 @@ export function MatchingQuiz() {
   }, [answers, done, started, hydrated]);
 
   const result = useMemo(() => scoreQuiz(answers), [answers]);
+
+  // Signed-in visitors get their result stored on their profile (retake overwrites).
+  useEffect(() => {
+    if (!hydrated || !done || !user) return;
+    let cancelled = false;
+    saveMyTraits(user.id, result.scores)
+      .then(() => {
+        if (!cancelled) setSavedToProfile(true);
+      })
+      .catch(() => {
+        /* non-blocking: the quiz still works without the profile write */
+      });
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hydrated, done, user?.id, result.scores.spark, result.scores.curiosity, result.scores.warmth, result.scores.depth]);
+
+
   const question = QUIZ[index];
 
   function advance(nextAnswers: Answers) {
@@ -147,7 +170,9 @@ export function MatchingQuiz() {
     setDone(false);
     setIndex(0);
     setStarted(false);
+    setSavedToProfile(false);
   }
+
 
   const showResult = done;
 
@@ -339,19 +364,13 @@ export function MatchingQuiz() {
             </>
           )}
 
-          <div className="mt-5 flex items-center gap-2">
-            {(showResult ? tableMates(result.top) : ["EM", "RT", "AL"]).map((initials) => (
-              <span
-                key={initials}
-                className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-[#A78BFA] to-[#7C3AED] text-xs font-bold text-white shadow-lg"
-              >
-                {initials}
-              </span>
-            ))}
-            <span className="inline-flex h-10 w-10 items-center justify-center rounded-full border-2 border-dashed border-[rgba(196,181,253,0.45)] text-xs font-medium text-[rgba(196,181,253,0.7)]">
-              +
-            </span>
-          </div>
+          {savedToProfile && (
+            <p className="mt-4 inline-flex items-center gap-1.5 rounded-full border border-[rgba(167,139,250,0.35)] bg-[rgba(124,58,237,0.18)] px-3 py-1.5 text-xs font-medium text-[#EDE9FE]">
+              <Sparkles className="h-3.5 w-3.5" />
+              {t("match.savedToProfile")}
+            </p>
+          )}
+
 
           <div className="mt-6 flex flex-col gap-4">
             {TRAITS.map((trait) => {

@@ -173,16 +173,59 @@ export function levelFor(score: number): MatchLevel {
   return "steady";
 }
 
-/** Illustrative table-mates whose blend complements the visitor's top trait. */
-export function tableMates(top: Trait): string[] {
-  const byTrait: Record<Trait, string[]> = {
-    spark: ["EM", "RT", "AL"],
-    curiosity: ["NK", "SA", "DV"],
-    warmth: ["LY", "MO", "BJ"],
-    depth: ["AY", "TC", "IR"],
+/** Row shape holding trait columns as stored on `profiles`. */
+export type TraitRow = {
+  trait_spark: number | null;
+  trait_curiosity: number | null;
+  trait_warmth: number | null;
+  trait_depth: number | null;
+};
+
+/** Returns trait scores from a profile row, or null when the quiz wasn't taken. */
+export function traitsFromRow(row: TraitRow | null | undefined): TraitScores | null {
+  if (!row) return null;
+  const { trait_spark, trait_curiosity, trait_warmth, trait_depth } = row;
+  if (
+    trait_spark === null ||
+    trait_curiosity === null ||
+    trait_warmth === null ||
+    trait_depth === null ||
+    trait_spark === undefined ||
+    trait_curiosity === undefined ||
+    trait_warmth === undefined ||
+    trait_depth === undefined
+  ) {
+    return null;
+  }
+  return {
+    spark: trait_spark,
+    curiosity: trait_curiosity,
+    warmth: trait_warmth,
+    depth: trait_depth,
   };
-  return byTrait[top];
 }
+
+/** Average of several trait score sets. Returns null for an empty list. */
+export function averageTraits(list: TraitScores[]): TraitScores | null {
+  if (list.length === 0) return null;
+  const sum: TraitScores = { spark: 0, curiosity: 0, warmth: 0, depth: 0 };
+  for (const s of list) for (const t of TRAITS) sum[t] += s[t];
+  const avg = {} as TraitScores;
+  for (const t of TRAITS) avg[t] = sum[t] / list.length;
+  return avg;
+}
+
+/**
+ * Pure pairwise compatibility: 100 minus the mean absolute per-trait distance,
+ * clamped to 0–100. Shared by the UI today and by batch seating later.
+ */
+export function fitScore(a: TraitScores, b: TraitScores): number {
+  let total = 0;
+  for (const t of TRAITS) total += Math.abs(a[t] - b[t]);
+  const distance = total / TRAITS.length;
+  return Math.round(Math.max(0, Math.min(100, 100 - distance)));
+}
+
 
 export const QUIZ_STORAGE_KEY = "ig.matching.quiz.v1";
 

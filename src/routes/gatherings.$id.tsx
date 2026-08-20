@@ -15,6 +15,9 @@ import { fetchGathering, formatDateTime } from "@/lib/gatherings";
 import { useI18n, useT } from "@/i18n";
 import { gatheringHead, type SeoLang } from "@/lib/seo";
 import { getPublicGathering } from "@/lib/public-data.functions";
+import { getTableFit } from "@/lib/matching.functions";
+import { TableFitChip, TakeQuizNudge } from "@/components/table-fit";
+
 
 export const Route = createFileRoute("/gatherings/$id")({
   component: GatheringDetail,
@@ -52,6 +55,14 @@ function GatheringDetail() {
       return await isBusinessOwner({ data: { id: g!.business!.id } });
     },
   });
+
+  const { data: fitData } = useQuery({
+    queryKey: ["table-fit", user?.id, [id]],
+    enabled: !!user,
+    queryFn: () => getTableFit({ data: { gatheringIds: [id] } }),
+  });
+  const fit = fitData?.fits.find((f) => f.gatheringId === id);
+  const showQuizNudge = !!user && fitData?.viewerHasTraits === false;
 
 
   async function join() {
@@ -167,6 +178,19 @@ function GatheringDetail() {
             </div>
           </div>
         </div>
+
+        {fit && (
+          <div className="mt-6">
+            <TableFitChip fit={fit} />
+          </div>
+        )}
+        {showQuizNudge && (
+          <div className="mt-6">
+            <TakeQuizNudge />
+          </div>
+        )}
+
+
 
         {user && !user.email_confirmed_at && g.status === "approved" && !isHost && !isOwner && !isAttending && (
           <div className="mt-6">

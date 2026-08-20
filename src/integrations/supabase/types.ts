@@ -358,6 +358,11 @@ export type Database = {
           interests: Json
           neighborhood: string | null
           social_links: Json
+          trait_curiosity: number | null
+          trait_depth: number | null
+          trait_spark: number | null
+          trait_warmth: number | null
+          traits_updated_at: string | null
         }
         Insert: {
           avatar_url?: string | null
@@ -371,6 +376,11 @@ export type Database = {
           interests?: Json
           neighborhood?: string | null
           social_links?: Json
+          trait_curiosity?: number | null
+          trait_depth?: number | null
+          trait_spark?: number | null
+          trait_warmth?: number | null
+          traits_updated_at?: string | null
         }
         Update: {
           avatar_url?: string | null
@@ -384,6 +394,11 @@ export type Database = {
           interests?: Json
           neighborhood?: string | null
           social_links?: Json
+          trait_curiosity?: number | null
+          trait_depth?: number | null
+          trait_spark?: number | null
+          trait_warmth?: number | null
+          traits_updated_at?: string | null
         }
         Relationships: []
       }

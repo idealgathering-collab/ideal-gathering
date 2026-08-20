@@ -4,8 +4,11 @@ import { Sparkles, ArrowRight } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { GatheringCard } from "@/components/gathering-card";
+import { TakeQuizNudge } from "@/components/table-fit";
 import { Button } from "@/components/ui/button";
 import { fetchApprovedGatherings } from "@/lib/gatherings";
+import { getTableFit } from "@/lib/matching.functions";
+import { useSession } from "@/hooks/use-session";
 import { useI18n, useT } from "@/i18n";
 import { localizedHead, jsonLdGatheringList, type SeoLang } from "@/lib/seo";
 import { JsonLd } from "@/components/json-ld";
@@ -20,12 +23,23 @@ export const Route = createFileRoute("/explore")({
 function Explore() {
   const t = useT();
   const { lang } = useI18n();
+  const { user } = useSession();
   const { data: gatherings, isLoading } = useQuery({
     queryKey: ["gatherings", "approved"],
     queryFn: fetchApprovedGatherings,
   });
 
+  const ids = (gatherings ?? []).map((g) => g.id);
+  const { data: fitData } = useQuery({
+    queryKey: ["table-fit", user?.id, ids],
+    enabled: !!user && ids.length > 0,
+    queryFn: () => getTableFit({ data: { gatheringIds: ids } }),
+  });
+  const fitById = new Map((fitData?.fits ?? []).map((f) => [f.gatheringId, f]));
+  const showQuizNudge = !!user && fitData?.viewerHasTraits === false;
+
   const empty = !isLoading && (!gatherings || gatherings.length === 0);
+
 
   return (
     <div className="min-h-screen bg-background">
@@ -48,6 +62,11 @@ function Explore() {
       </section>
 
       <main className="mx-auto max-w-6xl px-4 py-14">
+        {showQuizNudge && (
+          <div className="mb-8">
+            <TakeQuizNudge />
+          </div>
+        )}
         {isLoading ? (
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {Array.from({ length: 6 }).map((_, i) => (
@@ -67,11 +86,12 @@ function Explore() {
         ) : (
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {gatherings!.map((g) => (
-              <GatheringCard key={g.id} g={g} />
+              <GatheringCard key={g.id} g={g} fit={fitById.get(g.id)} />
             ))}
           </div>
         )}
       </main>
+
 
       <SiteFooter />
     </div>
