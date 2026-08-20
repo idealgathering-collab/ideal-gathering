@@ -8,6 +8,8 @@ export type TableFit = {
   fit: number | null;
   /** How many other attendees have trait scores. */
   ratedCount: number;
+  /** True when the viewer and someone at this table have blocked each other; no score is computed. */
+  hasBlocked?: boolean;
 };
 
 export type TableFitResponse = {
