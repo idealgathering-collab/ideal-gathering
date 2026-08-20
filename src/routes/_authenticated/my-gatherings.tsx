@@ -20,7 +20,7 @@ export const Route = createFileRoute("/_authenticated/my-gatherings")({
 });
 
 const SELECT =
-  "id, subject, description, starts_at, seats, status, host_id, venue_name, neighborhood, business:businesses(id,name,city,cover_url), table:venue_tables(id,label), gathering_attendees(user_id)";
+  "id, subject, description, starts_at, seats, status, host_id, venue_name, neighborhood, city, business:businesses(id,name,city,cover_url), table:venue_tables(id,label), gathering_attendees(user_id)";
 
 type Row = {
   id: string;
@@ -32,6 +32,7 @@ type Row = {
   host_id: string;
   venue_name: string | null;
   neighborhood: string | null;
+  city: string | null;
   business: GCard["business"];
   table: GCard["table"];
   gathering_attendees: Array<{ user_id: string }> | null;
@@ -46,6 +47,7 @@ function toCard(r: Row): GCard {
     seats: r.seats,
     venue_name: r.venue_name ?? "",
     neighborhood: r.neighborhood ?? "",
+    city: r.city ?? null,
     business: r.business,
     table: r.table,
     attendee_count: r.gathering_attendees?.length ?? 0,
