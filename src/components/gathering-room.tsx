@@ -167,7 +167,7 @@ export function GatheringChat({
           const mine = m.sender_id === currentUserId;
           const name = p?.display_name ?? t("room.chat.someone");
           return (
-            <div key={m.id} className={`flex ${mine ? "justify-end" : "justify-start"}`}>
+            <div key={m.id} className={`group flex items-center gap-1 ${mine ? "justify-end" : "justify-start"}`}>
               <div className={`max-w-[75%] rounded-2xl px-3 py-2 text-sm ${mine ? "bg-primary text-primary-foreground" : "bg-muted"}`}>
                 {!mine && <div className="mb-0.5 text-xs font-medium opacity-70">{name}</div>}
                 <div className="whitespace-pre-wrap break-words">{m.body}</div>
@@ -175,6 +175,39 @@ export function GatheringChat({
                   {new Date(m.created_at).toLocaleTimeString(lang, { hour: "numeric", minute: "2-digit" })}
                 </div>
               </div>
+              {!mine && (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <button
+                      type="button"
+                      aria-label={t("mod.actions")}
+                      className="rounded-full p-1 text-muted-foreground opacity-0 transition-opacity hover:bg-muted focus:opacity-100 group-hover:opacity-100"
+                    >
+                      <MoreVertical className="h-4 w-4" />
+                    </button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="start">
+                    <DropdownMenuItem onSelect={() => setBlockTarget({ id: m.sender_id, name })}>
+                      <ShieldOff className="me-2 h-4 w-4" />
+                      {t("mod.block")}
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onSelect={() =>
+                        setReportTarget({
+                          targetType: "user",
+                          targetId: m.sender_id,
+                          targetUserId: m.sender_id,
+                          gatheringId,
+                          label: name,
+                        })
+                      }
+                    >
+                      <Flag className="me-2 h-4 w-4" />
+                      {t("mod.report")}
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              )}
             </div>
           );
         })}
@@ -197,6 +230,30 @@ export function GatheringChat({
           <Send className="h-4 w-4" />
         </Button>
       </form>
+
+      <AlertDialog open={!!blockTarget} onOpenChange={(o) => !o && setBlockTarget(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{t("mod.block.confirmTitle")}</AlertDialogTitle>
+            <AlertDialogDescription>
+              {t("mod.block.confirmBody", { name: blockTarget?.name ?? "" })}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>{t("common.cancel")}</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={(e) => {
+                e.preventDefault();
+                confirmBlock();
+              }}
+            >
+              {t("mod.block")}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <ReportDialog target={reportTarget} onOpenChange={(o) => !o && setReportTarget(null)} />
     </div>
   );
 }
