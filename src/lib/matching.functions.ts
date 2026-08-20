@@ -62,6 +62,18 @@ export const getTableFit = createServerFn({ method: "POST" })
       for (const id of set) if (id !== userId) otherIds.add(id);
     }
 
+    // Never compute or show a compatibility number with someone the viewer has
+    // blocked, or who has blocked the viewer.
+    const { data: blocks } = await supabaseAdmin
+      .from("user_blocks")
+      .select("blocker_id, blocked_id")
+      .or(`blocker_id.eq.${userId},blocked_id.eq.${userId}`);
+    const blockedWith = new Set<string>();
+    for (const row of blocks ?? []) {
+      blockedWith.add(row.blocker_id === userId ? row.blocked_id : row.blocker_id);
+    }
+    for (const id of blockedWith) otherIds.delete(id);
+
     const traitsByUser = new Map<string, TraitScores>();
     if (otherIds.size > 0) {
       const { data: profiles } = await supabaseAdmin
@@ -76,17 +88,26 @@ export const getTableFit = createServerFn({ method: "POST" })
 
     const fits: TableFit[] = data.gatheringIds.map((gatheringId) => {
       const members = byGathering.get(gatheringId) ?? new Set<string>();
+      let hasBlocked = false;
       const rated: TraitScores[] = [];
       for (const id of members) {
         if (id === userId) continue;
+        if (blockedWith.has(id)) {
+          hasBlocked = true;
+          continue;
+        }
         const scores = traitsByUser.get(id);
         if (scores) rated.push(scores);
+      }
+      if (hasBlocked) {
+        return { gatheringId, fit: null, ratedCount: 0, hasBlocked: true };
       }
       const avg = averageTraits(rated);
       return {
         gatheringId,
         fit: avg ? fitScore(myTraits, avg) : null,
         ratedCount: rated.length,
+        hasBlocked: false,
       };
     });
 
