@@ -138,6 +138,7 @@ function GatheringDetail() {
   const seatsLeft = Math.max(0, g.seats - attendees.length);
   const isHost = user?.id === g.host_id;
   const isMember = isHost || isAttending;
+  const checkinOpen = Date.now() >= checkinWindow(g.starts_at).opensAt;
 
   return (
     <div className="min-h-screen bg-background">
