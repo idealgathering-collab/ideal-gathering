@@ -6,7 +6,16 @@ import { TableFitChip } from "@/components/table-fit";
 import type { TableFit } from "@/lib/matching.functions";
 import { useI18n, useT } from "@/i18n";
 
-export function GatheringCard({ g, fit }: { g: G; fit?: TableFit }) {
+export function GatheringCard({
+  g,
+  fit,
+  showCity,
+}: {
+  g: G;
+  fit?: TableFit;
+  /** Show the city on the card — useful when the feed spans multiple cities. */
+  showCity?: boolean;
+}) {
   const t = useT();
   const { lang } = useI18n();
   const seatsLeft = Math.max(0, g.seats - g.attendee_count);
@@ -15,9 +24,14 @@ export function GatheringCard({ g, fit }: { g: G; fit?: TableFit }) {
   const chipLabel = g.table?.label
     ? `${t("card.table")} ${g.table.label}`
     : g.neighborhood || t("card.gathering");
-  const venueLine = g.business
+  const cityName = g.city ?? g.business?.city ?? null;
+  const baseVenueLine = g.business
     ? `${g.business.name}${g.business.city ? `, ${g.business.city}` : ""}`
     : `${g.venue_name}${g.neighborhood ? ` · ${g.neighborhood}` : ""}`;
+  const venueLine =
+    showCity && cityName && !baseVenueLine.includes(cityName)
+      ? `${baseVenueLine} · ${cityName}`
+      : baseVenueLine;
   return (
     <Link
       to="/gatherings/$id"
