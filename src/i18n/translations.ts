@@ -215,6 +215,11 @@ export const translations: Record<Lang, Dict> = {
     "explore.empty.title": "No gatherings yet",
     "explore.empty.body": "Be the first to propose one — pick a cafe, pick a subject.",
     "explore.empty.cta": "Propose a gathering",
+    "explore.city.browsing": "Browsing:",
+    "explore.city.change": "change",
+    "explore.city.all": "All cities",
+    "explore.emptyCity.title": "No tables in {city} yet",
+    "explore.emptyCity.browseAll": "Browse all cities",
 
     // Card fallback
     "card.gathering": "Gathering",
@@ -1225,6 +1230,11 @@ export const translations: Record<Lang, Dict> = {
     "explore.empty.title": "Henüz buluşma yok",
     "explore.empty.body": "İlk buluşmayı sen öner — bir kafe seç, bir konu belirle.",
     "explore.empty.cta": "Buluşma öner",
+    "explore.city.browsing": "Görüntülenen:",
+    "explore.city.change": "değiştir",
+    "explore.city.all": "Tüm şehirler",
+    "explore.emptyCity.title": "{city} şehrinde henüz masa yok",
+    "explore.emptyCity.browseAll": "Tüm şehirlere göz at",
 
     // Card fallback
     "card.gathering": "Buluşma",
@@ -2227,6 +2237,11 @@ export const translations: Record<Lang, Dict> = {
     "explore.empty.title": "هنوز گردهمایی‌ای نیست",
     "explore.empty.body": "اولین نفر باشید — یک کافه انتخاب کنید و یک موضوع بردارید.",
     "explore.empty.cta": "پیشنهاد گردهمایی",
+    "explore.city.browsing": "در حال مرور:",
+    "explore.city.change": "تغییر",
+    "explore.city.all": "همه شهرها",
+    "explore.emptyCity.title": "هنوز میزی در {city} نیست",
+    "explore.emptyCity.browseAll": "مرور همه شهرها",
 
     // Card fallback
     "card.gathering": "گردهمایی",
