@@ -403,20 +403,37 @@ function TablesSection({ business }: { business: BizRow }) {
 
   async function add(e: React.FormEvent) {
     e.preventDefault();
-    if (!label.trim()) return;
+    const next = label.trim().slice(0, 20);
+    if (!next) return;
+    const dup = (business.venue_tables ?? []).some(
+      (tbl) => tbl.label.trim().toLowerCase() === next.toLowerCase(),
+    );
+    if (dup) return toast.error(t("biz.duplicateLabel"));
+
     const { error } = await supabase.from("venue_tables").insert({
       business_id: business.id,
-      label: label.trim().slice(0, 20),
+      label: next,
       capacity: Math.max(1, Math.min(30, cap)),
     });
-    if (error) return toast.error(error.message);
+    if (error) {
+      const isDup =
+        (error as { code?: string }).code === "23505" ||
+        error.message.includes("venue_tables_business_label_ci_uidx");
+      return toast.error(isDup ? t("biz.duplicateLabel") : error.message);
+    }
     setLabel("");
     toast.success(t("biz.tableAdded"));
     qc.invalidateQueries({ queryKey: ["venue-biz"] });
   }
-  async function remove(id: string) {
+  async function remove(id: string, tableLabel: string) {
     const { error } = await supabase.from("venue_tables").delete().eq("id", id);
-    if (error) return toast.error(error.message);
+    if (error) {
+      const locked = /TABLE_LOCKED:\s*(.*)$/s.exec(error.message);
+      if (locked) {
+        return toast.error(`${t("biz.tableLocked")} ${tableLabel} — ${locked[1]?.trim()}`);
+      }
+      return toast.error(error.message);
+    }
     toast.success(t("biz.tableRemoved"));
     qc.invalidateQueries({ queryKey: ["venue-biz"] });
   }
@@ -434,7 +451,7 @@ function TablesSection({ business }: { business: BizRow }) {
                 <div className="font-display text-xl">{t("biz.tableLabel")} {tbl.label}</div>
                 <div className="text-xs text-muted-foreground">{tbl.capacity} {t("biz.tableSeats")}</div>
               </div>
-              <Button size="icon" variant="ghost" onClick={() => remove(tbl.id)} aria-label={t("biz.removeTable")}>
+              <Button size="icon" variant="ghost" onClick={() => remove(tbl.id, tbl.label)} aria-label={t("biz.removeTable")}>
                 <Trash2 className="h-4 w-4" />
               </Button>
             </div>
