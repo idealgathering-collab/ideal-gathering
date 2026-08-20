@@ -304,6 +304,10 @@ export const translations: Record<Lang, Dict> = {
     "gd.full": "Full",
     "gd.verifyToJoin": "Verify your email to join gatherings",
     "gd.joinedOk": "You're in. Save the date.",
+    "gd.joinFull": "This table just filled up — no seats left.",
+    "gd.joinClosed": "This gathering is no longer open to join.",
+    "gd.joinAlready": "You've already joined this gathering.",
+
     "gd.leftOk": "Left the gathering",
     "gd.notFound.title": "Not found",
     "gd.notFound.body": "This gathering doesn't exist or isn't public.",
@@ -1310,6 +1314,10 @@ export const translations: Record<Lang, Dict> = {
     "gd.full": "Dolu",
     "gd.verifyToJoin": "Buluşmalara katılmak için e-postanı doğrula",
     "gd.joinedOk": "İçerisin. Tarihi not al.",
+    "gd.joinFull": "Bu masa az önce doldu — boş yer kalmadı.",
+    "gd.joinClosed": "Bu buluşma artık katılıma açık değil.",
+    "gd.joinAlready": "Bu buluşmaya zaten katıldın.",
+
     "gd.leftOk": "Buluşmadan ayrıldın",
     "gd.notFound.title": "Bulunamadı",
     "gd.notFound.body": "Bu buluşma mevcut değil ya da herkese açık değil.",
@@ -2308,6 +2316,10 @@ export const translations: Record<Lang, Dict> = {
     "gd.full": "پر شد",
     "gd.verifyToJoin": "برای پیوستن به گردهمایی، ایمیل را تأیید کنید",
     "gd.joinedOk": "پیوستید. تاریخ را در تقویم بگذارید.",
+    "gd.joinFull": "این میز همین حالا پر شد — صندلی خالی نمانده است.",
+    "gd.joinClosed": "این گردهمایی دیگر برای پیوستن باز نیست.",
+    "gd.joinAlready": "شما پیش‌تر به این گردهمایی پیوسته‌اید.",
+
     "gd.leftOk": "از گردهمایی خارج شدید",
     "gd.notFound.title": "یافت نشد",
     "gd.notFound.body": "این گردهمایی وجود ندارد یا عمومی نیست.",
