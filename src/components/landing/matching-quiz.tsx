@@ -19,6 +19,8 @@ import {
   Users,
 } from "lucide-react";
 import { useT } from "@/i18n";
+import { useSession } from "@/hooks/use-session";
+import { saveMyTraits } from "@/lib/profile-traits";
 import {
   QUIZ,
   TRAITS,
@@ -27,10 +29,10 @@ import {
   loadQuiz,
   saveQuiz,
   scoreQuiz,
-  tableMates,
   type Answers,
   type MatchLevel,
 } from "@/lib/matching";
+
 
 const ICONS: Record<string, ComponentType<{ className?: string }>> = {
   flame: Flame,
