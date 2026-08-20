@@ -301,6 +301,7 @@ function GatheringDetail() {
               <TabsList>
                 <TabsTrigger value="chat">{t("room.tab.chat")}</TabsTrigger>
                 <TabsTrigger value="checklist">{t("room.tab.checklist")}</TabsTrigger>
+                {isHost && checkinOpen && <TabsTrigger value="attendance">{t("att.tab")}</TabsTrigger>}
               </TabsList>
               <TabsContent value="chat" className="mt-4">
                 {isMember ? (
