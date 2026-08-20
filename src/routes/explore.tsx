@@ -1,22 +1,28 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { Sparkles, ArrowRight } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { GatheringCard } from "@/components/gathering-card";
+import { CityFilter } from "@/components/city-filter";
 import { TakeQuizNudge } from "@/components/table-fit";
 import { Button } from "@/components/ui/button";
-import { fetchApprovedGatherings } from "@/lib/gatherings";
+import { fetchApprovedGatherings, fetchGatheringCities } from "@/lib/gatherings";
 import { getTableFit } from "@/lib/matching.functions";
+import { supabase } from "@/integrations/supabase/client";
 import { useSession } from "@/hooks/use-session";
 import { useI18n, useT } from "@/i18n";
 import { localizedHead, jsonLdGatheringList, type SeoLang } from "@/lib/seo";
 import { JsonLd } from "@/components/json-ld";
 
+type ExploreSearch = { lang?: SeoLang; city?: string };
+
 export const Route = createFileRoute("/explore")({
   component: Explore,
-  validateSearch: (search: Record<string, unknown>): { lang?: SeoLang } =>
-    search.lang === "tr" || search.lang === "fa" ? { lang: search.lang } : {},
+  validateSearch: (search: Record<string, unknown>): ExploreSearch => ({
+    ...(search.lang === "tr" || search.lang === "fa" ? { lang: search.lang } : {}),
+    ...(typeof search.city === "string" && search.city.trim() ? { city: search.city.trim() } : {}),
+  }),
   head: ({ match }) => localizedHead("/explore", match.search.lang),
 });
 
@@ -24,10 +30,47 @@ function Explore() {
   const t = useT();
   const { lang } = useI18n();
   const { user } = useSession();
-  const { data: gatherings, isLoading } = useQuery({
-    queryKey: ["gatherings", "approved"],
-    queryFn: fetchApprovedGatherings,
+  const navigate = useNavigate();
+  const search = Route.useSearch();
+
+  // Profile city is the default scope for signed-in users who haven't picked one in the URL.
+  const { data: profileCity, isLoading: profileLoading } = useQuery({
+    queryKey: ["profile-city", user?.id],
+    enabled: !!user,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("city")
+        .eq("id", user!.id)
+        .maybeSingle();
+      if (error) throw error;
+      return (data?.city ?? "").trim() || null;
+    },
   });
+
+  const explicitCity = search.city === "all" ? null : search.city ?? null;
+  const hasExplicitChoice = !!search.city;
+  const waitingForProfile = !!user && !hasExplicitChoice && profileLoading;
+  const activeCity = hasExplicitChoice ? explicitCity : profileCity ?? null;
+
+  const { data: cities } = useQuery({
+    queryKey: ["gathering-cities"],
+    queryFn: fetchGatheringCities,
+  });
+
+  const { data: gatherings, isLoading } = useQuery({
+    queryKey: ["gatherings", "approved", activeCity ?? "all"],
+    enabled: !waitingForProfile,
+    queryFn: () => fetchApprovedGatherings(activeCity),
+  });
+
+  function setCity(city: string | null) {
+    navigate({
+      to: "/explore",
+      search: (prev: ExploreSearch) => ({ ...prev, city: city ?? "all" }),
+      replace: true,
+    });
+  }
 
   const ids = (gatherings ?? []).map((g) => g.id);
   const { data: fitData } = useQuery({
@@ -38,8 +81,8 @@ function Explore() {
   const fitById = new Map((fitData?.fits ?? []).map((f) => [f.gatheringId, f]));
   const showQuizNudge = !!user && fitData?.viewerHasTraits === false;
 
-  const empty = !isLoading && (!gatherings || gatherings.length === 0);
-
+  const busy = isLoading || waitingForProfile;
+  const empty = !busy && (!gatherings || gatherings.length === 0);
 
   return (
     <div className="min-h-screen bg-background">
@@ -62,12 +105,15 @@ function Explore() {
       </section>
 
       <main className="mx-auto max-w-6xl px-4 py-14">
+        <div className="mb-8">
+          <CityFilter city={activeCity} cities={cities ?? []} onChange={setCity} />
+        </div>
         {showQuizNudge && (
           <div className="mb-8">
             <TakeQuizNudge />
           </div>
         )}
-        {isLoading ? (
+        {busy ? (
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {Array.from({ length: 6 }).map((_, i) => (
               <div key={i} className="h-72 animate-pulse rounded-3xl bg-card" />
@@ -75,23 +121,31 @@ function Explore() {
           </div>
         ) : empty ? (
           <div className="mx-auto max-w-md rounded-3xl border border-border bg-card p-10 text-center shadow-soft">
-            <h2 className="font-display text-2xl">{t("explore.empty.title")}</h2>
+            <h2 className="font-display text-2xl">
+              {activeCity ? t("explore.emptyCity.title", { city: activeCity }) : t("explore.empty.title")}
+            </h2>
             <p className="mt-2 text-sm text-muted-foreground">{t("explore.empty.body")}</p>
-            <Button asChild className="mt-6 rounded-full">
-              <Link to="/create-gathering">
-                {t("explore.empty.cta")} <ArrowRight className="ms-1 h-4 w-4 rtl:rotate-180" />
-              </Link>
-            </Button>
+            <div className="mt-6 flex flex-wrap justify-center gap-3">
+              <Button asChild className="rounded-full">
+                <Link to="/create-gathering">
+                  {t("explore.empty.cta")} <ArrowRight className="ms-1 h-4 w-4 rtl:rotate-180" />
+                </Link>
+              </Button>
+              {activeCity && (
+                <Button variant="outline" className="rounded-full" onClick={() => setCity(null)}>
+                  {t("explore.emptyCity.browseAll")}
+                </Button>
+              )}
+            </div>
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {gatherings!.map((g) => (
-              <GatheringCard key={g.id} g={g} fit={fitById.get(g.id)} />
+              <GatheringCard key={g.id} g={g} fit={fitById.get(g.id)} showCity={!activeCity} />
             ))}
           </div>
         )}
       </main>
-
 
       <SiteFooter />
     </div>
