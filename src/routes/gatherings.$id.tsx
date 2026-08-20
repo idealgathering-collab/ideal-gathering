@@ -317,6 +317,11 @@ function GatheringDetail() {
                   <LockedPanel t={t} />
                 )}
               </TabsContent>
+              {isHost && checkinOpen && (
+                <TabsContent value="attendance" className="mt-4">
+                  <AttendanceRoster gatheringId={g.id} />
+                </TabsContent>
+              )}
             </Tabs>
           </div>
         )}
