@@ -339,19 +339,13 @@ export function MatchingQuiz() {
             </>
           )}
 
-          <div className="mt-5 flex items-center gap-2">
-            {(showResult ? tableMates(result.top) : ["EM", "RT", "AL"]).map((initials) => (
-              <span
-                key={initials}
-                className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-[#A78BFA] to-[#7C3AED] text-xs font-bold text-white shadow-lg"
-              >
-                {initials}
-              </span>
-            ))}
-            <span className="inline-flex h-10 w-10 items-center justify-center rounded-full border-2 border-dashed border-[rgba(196,181,253,0.45)] text-xs font-medium text-[rgba(196,181,253,0.7)]">
-              +
-            </span>
-          </div>
+          {savedToProfile && (
+            <p className="mt-4 inline-flex items-center gap-1.5 rounded-full border border-[rgba(167,139,250,0.35)] bg-[rgba(124,58,237,0.18)] px-3 py-1.5 text-xs font-medium text-[#EDE9FE]">
+              <Sparkles className="h-3.5 w-3.5" />
+              {t("match.savedToProfile")}
+            </p>
+          )}
+
 
           <div className="mt-6 flex flex-col gap-4">
             {TRAITS.map((trait) => {
