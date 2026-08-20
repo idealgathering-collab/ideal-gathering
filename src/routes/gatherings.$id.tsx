@@ -56,6 +56,14 @@ function GatheringDetail() {
     },
   });
 
+  const { data: fitData } = useQuery({
+    queryKey: ["table-fit", user?.id, [id]],
+    enabled: !!user,
+    queryFn: () => getTableFit({ data: { gatheringIds: [id] } }),
+  });
+  const fit = fitData?.fits.find((f) => f.gatheringId === id);
+  const showQuizNudge = !!user && fitData?.viewerHasTraits === false;
+
 
   async function join() {
     if (!user) {
