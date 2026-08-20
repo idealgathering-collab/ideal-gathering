@@ -18,6 +18,8 @@ import { getPublicGathering } from "@/lib/public-data.functions";
 import { getTableFit } from "@/lib/matching.functions";
 import { TableFitChip, TakeQuizNudge } from "@/components/table-fit";
 import { ReportDialog, type ReportTarget } from "@/components/report-dialog";
+import { AttendanceRoster } from "@/components/attendance-roster";
+import { checkinWindow } from "@/lib/attendance.functions";
 import { useState } from "react";
 
 
