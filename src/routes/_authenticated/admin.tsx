@@ -42,6 +42,7 @@ type VenueGathering = {
   seats: number;
   status: string;
   host_id: string;
+  gathering_attendees?: Array<{ user_id: string; checked_in_at: string | null }>;
 };
 
 type VenueTable = { id: string; label: string; capacity: number };
