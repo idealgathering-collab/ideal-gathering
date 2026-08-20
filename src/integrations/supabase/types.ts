@@ -402,6 +402,62 @@ export type Database = {
         }
         Relationships: []
       }
+      reports: {
+        Row: {
+          admin_note: string | null
+          created_at: string
+          details: string | null
+          gathering_id: string | null
+          id: string
+          reason: string
+          reporter_id: string
+          resolved_at: string | null
+          resolved_by: string | null
+          status: Database["public"]["Enums"]["report_status"]
+          target_id: string
+          target_type: Database["public"]["Enums"]["report_target"]
+          target_user_id: string | null
+        }
+        Insert: {
+          admin_note?: string | null
+          created_at?: string
+          details?: string | null
+          gathering_id?: string | null
+          id?: string
+          reason: string
+          reporter_id: string
+          resolved_at?: string | null
+          resolved_by?: string | null
+          status?: Database["public"]["Enums"]["report_status"]
+          target_id: string
+          target_type: Database["public"]["Enums"]["report_target"]
+          target_user_id?: string | null
+        }
+        Update: {
+          admin_note?: string | null
+          created_at?: string
+          details?: string | null
+          gathering_id?: string | null
+          id?: string
+          reason?: string
+          reporter_id?: string
+          resolved_at?: string | null
+          resolved_by?: string | null
+          status?: Database["public"]["Enums"]["report_status"]
+          target_id?: string
+          target_type?: Database["public"]["Enums"]["report_target"]
+          target_user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reports_gathering_id_fkey"
+            columns: ["gathering_id"]
+            isOneToOne: false
+            referencedRelation: "gatherings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       saved_locations: {
         Row: {
           address: string
@@ -450,6 +506,24 @@ export type Database = {
           street_number?: string
           updated_at?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      user_blocks: {
+        Row: {
+          blocked_id: string
+          blocker_id: string
+          created_at: string
+        }
+        Insert: {
+          blocked_id: string
+          blocker_id: string
+          created_at?: string
+        }
+        Update: {
+          blocked_id?: string
+          blocker_id?: string
+          created_at?: string
         }
         Relationships: []
       }
@@ -541,6 +615,8 @@ export type Database = {
       app_role: "admin" | "business_owner" | "user" | "venue"
       business_status: "pending" | "approved" | "rejected"
       gathering_status: "proposed" | "approved" | "cancelled" | "rejected"
+      report_status: "open" | "resolved" | "dismissed"
+      report_target: "user" | "gathering"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -671,6 +747,8 @@ export const Constants = {
       app_role: ["admin", "business_owner", "user", "venue"],
       business_status: ["pending", "approved", "rejected"],
       gathering_status: ["proposed", "approved", "cancelled", "rejected"],
+      report_status: ["open", "resolved", "dismissed"],
+      report_target: ["user", "gathering"],
     },
   },
 } as const
