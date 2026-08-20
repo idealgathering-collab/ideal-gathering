@@ -62,6 +62,11 @@ function Explore() {
       </section>
 
       <main className="mx-auto max-w-6xl px-4 py-14">
+        {showQuizNudge && (
+          <div className="mb-8">
+            <TakeQuizNudge />
+          </div>
+        )}
         {isLoading ? (
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {Array.from({ length: 6 }).map((_, i) => (
@@ -81,11 +86,12 @@ function Explore() {
         ) : (
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {gatherings!.map((g) => (
-              <GatheringCard key={g.id} g={g} />
+              <GatheringCard key={g.id} g={g} fit={fitById.get(g.id)} />
             ))}
           </div>
         )}
       </main>
+
 
       <SiteFooter />
     </div>
