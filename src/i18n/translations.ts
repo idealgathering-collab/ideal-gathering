@@ -1113,6 +1113,12 @@ export const translations: Record<Lang, Dict> = {
     // Gathering card
     "card.table": "Masa",
     "card.full": "Dolu",
+    "match.fit": "Bu masayla uyumun: %{n}",
+    "match.beFirst": "Bu masada testi ilk çözen sen ol",
+    "match.takeQuiz": "2 dakikalık testi çözerek her masayla uyumunu gör. Tamamen isteğe bağlı — testsiz de katılabilirsin.",
+    "match.takeQuizCta": "Testi çöz",
+    "match.savedToProfile": "Profiline kaydedildi",
+
     "card.seatLeft": "{n} koltuk kaldı",
     "card.seatsLeft": "{n} koltuk kaldı",
 
