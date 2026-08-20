@@ -167,6 +167,7 @@ function CreateGathering() {
           table_id: tableId,
           venue_name: p.bizName,
           neighborhood: p.bizCity ?? "",
+          city: p.bizCity,
         };
       } else if (v.location.startsWith("saved:")) {
         const id = v.location.slice("saved:".length);
