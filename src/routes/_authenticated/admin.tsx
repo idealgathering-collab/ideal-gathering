@@ -7,6 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useSession } from "@/hooks/use-session";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { listReports, setReportStatus, type AdminReportRow } from "@/lib/moderation.functions";
 import { useI18n, useT } from "@/i18n";
 import { formatDateTime } from "@/lib/gatherings";
 import { listAdminUsers, getAdminUser, updateAdminUser, listPendingGatherings, setGatheringStatus, type AdminUserRow, type AdminUserDetail, type PendingGatheringRow } from "@/lib/admin.functions";
@@ -99,6 +100,7 @@ function AdminPage() {
             <TabsTrigger value="gatherings">{t("admin.section.gatherings")}</TabsTrigger>
             <TabsTrigger value="locations">{t("admin.section.savedLocations")}</TabsTrigger>
             <TabsTrigger value="users">{t("admin.section.users")}</TabsTrigger>
+            <TabsTrigger value="reports">{t("admin.section.reports")}</TabsTrigger>
           </TabsList>
           <TabsContent value="venues" className="mt-6">
             <VenuesSection />
@@ -111,6 +113,9 @@ function AdminPage() {
           </TabsContent>
           <TabsContent value="users" className="mt-6">
             <UsersSection />
+          </TabsContent>
+          <TabsContent value="reports" className="mt-6">
+            <ReportsSection />
           </TabsContent>
         </Tabs>
       </main>
@@ -1132,6 +1137,123 @@ function SavedLocationsAdminSection() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+    </div>
+  );
+}
+
+// ------------------------------ Reports ------------------------------
+
+function ReportsSection() {
+  const t = useT();
+  const [tab, setTab] = useState<"open" | "resolved" | "dismissed">("open");
+  const [rows, setRows] = useState<AdminReportRow[] | null>(null);
+  const [busy, setBusy] = useState<string | null>(null);
+  const [notes, setNotes] = useState<Record<string, string>>({});
+
+  async function load() {
+    setRows(null);
+    try {
+      setRows(await listReports({ data: { status: tab } }));
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Error");
+      setRows([]);
+    }
+  }
+
+  useEffect(() => {
+    load();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tab]);
+
+  async function decide(row: AdminReportRow, status: "resolved" | "dismissed") {
+    try {
+      setBusy(row.id);
+      await setReportStatus({ data: { id: row.id, status, note: notes[row.id] ?? null } });
+      toast.success(status === "resolved" ? t("admin.reports.resolved") : t("admin.reports.dismissed"));
+      await load();
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Error");
+    } finally {
+      setBusy(null);
+    }
+  }
+
+  return (
+    <div>
+      <Tabs value={tab} onValueChange={(v) => setTab(v as typeof tab)}>
+        <TabsList>
+          <TabsTrigger value="open">{t("admin.reports.tab.open")}</TabsTrigger>
+          <TabsTrigger value="resolved">{t("admin.reports.tab.resolved")}</TabsTrigger>
+          <TabsTrigger value="dismissed">{t("admin.reports.tab.dismissed")}</TabsTrigger>
+        </TabsList>
+        <TabsContent value={tab} className="mt-4">
+          {rows === null ? (
+            <p className="text-sm text-muted-foreground">…</p>
+          ) : rows.length === 0 ? (
+            <p className="rounded-2xl border border-dashed border-border p-6 text-center text-sm text-muted-foreground">
+              {t("admin.reports.empty")}
+            </p>
+          ) : (
+            <div className="grid gap-3">
+              {rows.map((r) => (
+                <div key={r.id} className="rounded-2xl border border-border p-4">
+                  <div className="flex flex-wrap items-start justify-between gap-3">
+                    <div className="min-w-0">
+                      <p className="font-medium">
+                        {t(`mod.reason.${r.reason}` as never)} ·{" "}
+                        <span className="text-muted-foreground">
+                          {r.target_type === "gathering"
+                            ? t("admin.reports.targetGathering")
+                            : t("admin.reports.targetUser")}
+                        </span>
+                      </p>
+                      <p className="mt-1 text-sm">
+                        {r.target_type === "gathering" ? (
+                          <Link to="/gatherings/$id" params={{ id: r.target_id }} className="underline">
+                            {r.gathering_subject ?? r.target_id.slice(0, 8)}
+                          </Link>
+                        ) : (
+                          (r.target_name ?? r.target_id.slice(0, 8))
+                        )}
+                      </p>
+                      {r.details && <p className="mt-1 text-sm text-muted-foreground">{r.details}</p>}
+                      <p className="mt-1 text-xs text-muted-foreground">
+                        {t("admin.reports.reporter")}: {r.reporter_name ?? r.reporter_id.slice(0, 8)} ·{" "}
+                        {formatDateTime(r.created_at)}
+                      </p>
+                      {r.admin_note && <p className="mt-1 text-xs text-primary">{r.admin_note}</p>}
+                    </div>
+                    {r.status === "open" && (
+                      <div className="flex flex-col items-end gap-2">
+                        <Input
+                          value={notes[r.id] ?? ""}
+                          placeholder={t("admin.reports.notePlaceholder")}
+                          onChange={(e) => setNotes((prev) => ({ ...prev, [r.id]: e.target.value }))}
+                          className="w-56"
+                        />
+                        <div className="flex items-center gap-2">
+                          <Button size="sm" disabled={busy === r.id} className="rounded-full" onClick={() => decide(r, "resolved")}>
+                            {t("admin.reports.resolve")}
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            disabled={busy === r.id}
+                            className="rounded-full"
+                            onClick={() => decide(r, "dismissed")}
+                          >
+                            {t("admin.reports.dismiss")}
+                          </Button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }
