@@ -18,7 +18,9 @@ export function SiteHeader() {
   const qc = useQueryClient();
   const t = useT();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
-  const showBack = pathname !== "/";
+  const topLevelNavPaths = ["/", "/dashboard", "/explore", "/my-gatherings", "/chat", "/profile"];
+  const showBack = !topLevelNavPaths.includes(pathname);
+
   const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
