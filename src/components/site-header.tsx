@@ -1,5 +1,5 @@
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
-import { ArrowLeft, LogOut, Shield } from "lucide-react";
+import { ArrowLeft, LogOut, Settings, Shield } from "lucide-react";
 import { NotificationsBell } from "@/components/notifications-bell";
 import { useEffect, useState } from "react";
 import logoAsset from "@/assets/ideal-gathering-logo.png.asset.json";
@@ -90,6 +90,17 @@ export function SiteHeader() {
                   {t("nav.admin")}
                 </NavLink>
               )}
+              <Button
+                asChild
+                variant="ghost"
+                size="icon"
+                aria-label={t("nav.settings")}
+                className="rounded-full hidden sm:inline-flex text-dark-secondary hover:text-dark-heading hover:bg-white/5"
+              >
+                <Link to="/settings">
+                  <Settings className="h-4 w-4" />
+                </Link>
+              </Button>
               <NotificationsBell />
               <Button asChild size="sm" className="glow-button rounded-full hidden sm:inline-flex">
                 <Link to="/create-gathering">{t("nav.host")}</Link>
