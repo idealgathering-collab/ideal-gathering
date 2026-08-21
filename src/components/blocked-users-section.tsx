@@ -36,7 +36,7 @@ export function BlockedUsersSection({ className }: { className?: string } = {}) 
   }
 
   return (
-    <section className="mt-8 rounded-3xl border border-border bg-card p-6">
+    <section className={className ?? "mt-8 rounded-3xl border border-border bg-card p-6"}>
       <h2 className="flex items-center gap-2 font-display text-xl">
         <ShieldOff className="h-5 w-5 text-muted-foreground" />
         {t("mod.blocked.title")}
