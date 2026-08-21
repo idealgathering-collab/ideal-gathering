@@ -1,0 +1,1 @@
+REVOKE EXECUTE ON FUNCTION public.enforce_profile_min_age() FROM PUBLIC, anon, authenticated;

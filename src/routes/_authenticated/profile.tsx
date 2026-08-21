@@ -11,6 +11,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { COUNTRIES, citiesFor, neighborhoodsFor } from "@/lib/locations";
+import { ALL_COUNTRIES } from "@/lib/countries";
 import { useT } from "@/i18n";
 import { SavedLocationsSection } from "@/components/saved-locations-section";
 import { ProfileHeader } from "@/components/profile-header";
@@ -36,6 +37,25 @@ async function signedUrl(path: string | null | undefined) {
 
 const cardClass = "rounded-3xl border border-border/60 bg-card p-4 sm:p-6";
 
+const NATIONALITY_NONE = "__none__";
+
+function maxDobString() {
+  const d = new Date();
+  d.setFullYear(d.getFullYear() - 18);
+  return d.toISOString().slice(0, 10);
+}
+
+function ageFromDob(dob: string): number | null {
+  if (!dob) return null;
+  const b = new Date(dob);
+  if (Number.isNaN(b.getTime())) return null;
+  const now = new Date();
+  let age = now.getFullYear() - b.getFullYear();
+  const m = now.getMonth() - b.getMonth();
+  if (m < 0 || (m === 0 && now.getDate() < b.getDate())) age -= 1;
+  return age;
+}
+
 function GroupHeading({ label, hint }: { label: string; hint?: string }) {
   return (
     <div className="mb-4 px-1">
@@ -53,6 +73,8 @@ function ProfilePage() {
 
   const [displayName, setDisplayName] = useState("");
   const [bio, setBio] = useState("");
+  const [dob, setDob] = useState("");
+  const [nationality, setNationality] = useState("");
   const [city, setCity] = useState("");
   const [neighborhood, setNeighborhood] = useState("");
   const [country, setCountry] = useState<string>("");
@@ -92,13 +114,17 @@ function ProfilePage() {
     if (!user) return;
     supabase
       .from("profiles")
-      .select("display_name, avatar_url, bio, city, neighborhood, country, interests, social_links")
+      .select(
+        "display_name, avatar_url, bio, city, neighborhood, country, interests, social_links, date_of_birth, nationality",
+      )
       .eq("id", user.id)
       .maybeSingle()
       .then(async ({ data }) => {
         if (!data) return;
         setDisplayName(data.display_name ?? "");
         setBio(data.bio ?? "");
+        setDob(((data as { date_of_birth?: string | null }).date_of_birth ?? "") as string);
+        setNationality(((data as { nationality?: string | null }).nationality ?? "") as string);
         setCity(data.city ?? "");
         setNeighborhood(((data as { neighborhood?: string | null }).neighborhood ?? "") as string);
         setCountry(((data as { country?: string | null }).country ?? "") as string);
@@ -134,6 +160,13 @@ function ProfilePage() {
       toast.error(t("profile.bio.max"));
       return;
     }
+    if (dob) {
+      const age = ageFromDob(dob);
+      if (age === null || age < 18) {
+        toast.error(t("profile.minAge"));
+        return;
+      }
+    }
     try {
       setSaving(true);
       const { error } = await supabase
@@ -141,6 +174,8 @@ function ProfilePage() {
         .update({
           display_name: displayName.trim(),
           bio: bio.trim() || null,
+          date_of_birth: dob || null,
+          nationality: nationality || null,
           city: city.trim() || null,
           neighborhood: neighborhood.trim() || null,
           country: country || null,
@@ -227,6 +262,44 @@ function ProfilePage() {
                   <Label htmlFor="dn">{t("profile.displayName")}</Label>
                   <Input id="dn" value={displayName} maxLength={80} onChange={(e) => setDisplayName(e.target.value)} />
                 </div>
+
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <div className="grid gap-2">
+                    <Label htmlFor="dob">{t("profile.dob")}</Label>
+                    <Input
+                      id="dob"
+                      type="date"
+                      value={dob}
+                      max={maxDobString()}
+                      onChange={(e) => setDob(e.target.value)}
+                    />
+                    <p className="text-xs text-muted-foreground">
+                      {dob && ageFromDob(dob) !== null
+                        ? `${t("profile.age")} ${ageFromDob(dob)}`
+                        : t("profile.dobHint")}
+                    </p>
+                  </div>
+                  <div className="grid gap-2">
+                    <Label>{t("profile.nationality")}</Label>
+                    <Select
+                      value={nationality || NATIONALITY_NONE}
+                      onValueChange={(v) => setNationality(v === NATIONALITY_NONE ? "" : v)}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder={t("profile.selectNationality")} />
+                      </SelectTrigger>
+                      <SelectContent className="max-h-72">
+                        <SelectItem value={NATIONALITY_NONE}>{t("profile.nationalityNone")}</SelectItem>
+                        {ALL_COUNTRIES.map((c) => (
+                          <SelectItem key={c.code} value={c.code}>
+                            {c.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+
                 <div className="grid gap-2">
                   <Label htmlFor="bio">{t("profile.bio")}</Label>
                   <Textarea
