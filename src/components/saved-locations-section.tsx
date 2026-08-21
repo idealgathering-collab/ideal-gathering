@@ -82,7 +82,7 @@ export function SavedLocationsSection({
   }
 
   return (
-    <section className="mt-6 rounded-3xl border border-border bg-card p-6">
+    <section className={className ?? "mt-6 rounded-3xl border border-border bg-card p-6"}>
       <div className="flex items-start justify-between gap-4">
         <div>
           <h2 className="font-display text-xl">{t("savedLoc.list.title")}</h2>
