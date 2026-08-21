@@ -361,6 +361,7 @@ export type Database = {
           created_at: string
           date_of_birth: string | null
           display_name: string | null
+          gender: string | null
           id: string
           interests: Json
           nationality: string | null
@@ -382,6 +383,7 @@ export type Database = {
           created_at?: string
           date_of_birth?: string | null
           display_name?: string | null
+          gender?: string | null
           id: string
           interests?: Json
           nationality?: string | null
@@ -403,6 +405,7 @@ export type Database = {
           created_at?: string
           date_of_birth?: string | null
           display_name?: string | null
+          gender?: string | null
           id?: string
           interests?: Json
           nationality?: string | null
