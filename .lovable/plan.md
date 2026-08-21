@@ -1,61 +1,56 @@
-# Device geolocation: "Use my location", smarter map center, nearby gatherings
+# Self check-in/out with location verification + post-gathering loop
 
-Three related additions, all opt-in and all degrading to today's behavior when location is unavailable or denied.
+Two features, built in order. Feature 1 supplies the checkout signal that Feature 2's rating prompt depends on.
 
-## 1. "Use my location" button on address entry
+## Feature 1 — Self-service check-in / check-out
 
-New shared hook `useDeviceLocation()` (in `src/lib/geolocation.ts`) wrapping `navigator.geolocation.getCurrentPosition` with:
-- support detection (`"geolocation" in navigator`), a 10s timeout, `enableHighAccuracy: true`
-- returned state: `idle | locating | ready | denied | unavailable`
-- a one-time in-memory cache of the last fix so repeat uses don't re-prompt
+### Data
+Migration on `gathering_attendees`:
+- `checked_out_at timestamptz`, `checked_out_by uuid` (mirrors the existing check-in pair)
+- `checkin_lat`, `checkin_lng`, `checkout_lat`, `checkout_lng` (numeric, nullable)
 
-UI: a compact icon+label button (`Crosshair` icon, `variant="outline"`, rounded, same height as the input) sitting directly to the right of the location autocomplete input, wrapping below it on narrow screens. Label: "Use my location" (EN/TR/FA). While locating it shows a spinner and is disabled.
+### Access rules
+- Keep the existing host/admin UPDATE policy untouched (manual override stays).
+- Add a second UPDATE policy: an attendee may update **their own row** (`user_id = auth.uid()`).
+- Rewrite `guard_attendance_update()` to branch:
+  - admin → unchanged full override
+  - host → current behaviour, extended to also allow setting `checked_out_at`
+  - self (attendee) → may only touch `checked_in_at`/`checked_out_at` and the four coord columns; all other columns immutable; same window rules (opens 30 min before `starts_at`, closes 24 h after `ends_at`/+2 h default); cannot check out without being checked in; cannot un-set a timestamp once set.
+  - `checked_in_by` / `checked_out_by` are always stamped by the trigger to `auth.uid()`, never from the client.
 
-On success it calls the **existing** `reverseGeocode` from `src/lib/nominatim.ts` (already shared, already rate-limited), then fills exactly the same fields the autocomplete fills — `display_name`, `address`, `city`, `lat`, `lng` — and moves the map marker.
+### Server-side proximity check
+Inside the trigger, when a self check-in/out sets a timestamp:
+- resolve the gathering's coordinates with the same fallback as `gatheringCoords()`: `gatherings.lat/lng`, else the linked `businesses.lat/lng`.
+- if coordinates exist, require submitted lat/lng to be present and within **100 m** (haversine in plpgsql), else `RAISE EXCEPTION 'CHECKIN_TOO_FAR: <metres>'`.
+- if the gathering has no coordinates at all, skip the distance test (nothing to verify against) but still record the submitted point.
+- host/admin marking is exempt from proximity entirely.
 
-Where it appears:
-- `src/components/location-map-picker.tsx` — next to its `LocationAutocomplete` (this is the picker used by the saved-location dialog, which is the create-gathering saved-location flow).
-- Venue registration: it uses the same map picker component, so it inherits the button with no extra work (verified during build; if it uses a bare autocomplete instead, the same button is added there).
+### Client
+- `src/lib/attendance.functions.ts`: add `selfCheck` server fn (`gatheringId`, `action: 'in' | 'out'`, `lat`, `lng`) writing through `context.supabase` so RLS + trigger stay the boundary; extend `classifyAttendanceError` with `too_far`, `not_checked_in`, `already`. Also return the caller's own `checked_in_at`/`checked_out_at` from a small `myAttendance` fn.
+- New `src/components/self-checkin.tsx`: renders on `/gatherings/$id` for confirmed attendees only, when the window is open. Buttons "Check in" → then "Check out". Reads position with the existing one-shot `getCurrentPositionOnce` pattern used by `UseMyLocationButton` (explicit tap only, no ambient prompt), shows spinner, maps trigger errors to localized toasts (too far / too early / window closed / location required).
+- Host Attendance tab and `AttendanceRoster` stay exactly as they are; roster gains a read-only "checked out" indicator only.
 
-Failure handling: permission denied or timeout → a single non-blocking toast ("Couldn't get your location — you can still search or drop a pin") and the button reverts to idle. Nothing is cleared, no error UI persists.
+## Feature 2 — Post-gathering loop
 
-## 2. Map picker default center
+### Data
+New `public.gathering_ratings`:
+- `id`, `rater_id`, `gathering_id`, `ratee_id` (nullable → null means the gathering itself), `score smallint 1..5`, `comment text null`, `created_at`
+- unique index on `(gathering_id, rater_id, coalesce(ratee_id, '00000000-...'::uuid))`
+- GRANTs: `SELECT, INSERT` to `authenticated`, `ALL` to `service_role`; no anon.
+- RLS: INSERT only when the rater has a `gathering_attendees` row for that gathering with `checked_in_at IS NOT NULL` (and the ratee, if given, is also an attendee of that gathering, and is not the rater). SELECT limited to own rows + admin. No UPDATE/DELETE.
 
-`DEFAULT_CENTER` (Istanbul) stops being the first choice. New fallback order when there is no existing value:
+### Prompt trigger
+A gathering is "pending feedback" for a user when they checked in, have not rated it yet, and either `checked_out_at` is set, or `now() > closesAt` (the same 24 h-after-end anchor as `checkinWindow`). New server fn `listPendingFeedback` in a new `src/lib/feedback.functions.ts` returns at most the 3 most recent such gatherings with co-attendee profiles.
 
-1. **Device location** — only if `navigator.permissions.query({name:"geolocation"})` reports `granted` (a silent read that never prompts). If granted, we fetch the position without any prompt.
-2. **Profile city** — read `profiles.city` (already loaded elsewhere) and forward-geocode it once via Nominatim, cached per session.
-3. **Istanbul** — last resort, unchanged.
+### UI
+- Dashboard: a "How was it?" card at the top when something is pending.
+- `/my-gatherings`: same data surfaced as a modal on first visit per gathering (dismiss = skip, no DB write; it reappears until rated or the row ages out after 14 days).
+- Rating sheet: 1–5 stars for the gathering, optional comment, plus an optional per-person star row for co-attendees. Submits one row per rating.
+- On submit, immediately show 1–2 re-match suggestions: call `getTableFit` over upcoming approved gatherings in the user's city and render the top-fit ones as compact gathering cards with the existing `TableFitChip`.
 
-Prompt timing: no prompt on page load, ever. The picker only mounts inside the saved-location dialog, and even there we do not prompt — the permission prompt happens **only** when the user presses "Use my location". If permission state is `prompt` or `denied`, step 1 is skipped silently.
+### i18n
+New keys under `att.*` (self check-in/out, too-far, locating) and `fb.*` (prompt, stars, comment, thanks, re-match) in `src/i18n/translations.ts` for en / tr / fa.
 
-The map still renders immediately at the best-known center; if a better center resolves a moment later (profile-city geocode), the map pans once, before the user interacts.
-
-## 3. Nearby gathering suggestions
-
-Recommendation: **both, but driven by one opt-in control** — a "Near me" toggle in the Explore filter row next to `CityFilter`, plus a distance label on each gathering card.
-
-- Pressing "Near me" is the action that triggers the permission prompt (nothing ambient).
-- Once a fix exists, each card gets a small distance chip ("2.4 km away") in the card's meta row, and the Explore grid switches sort from `starts_at` to ascending distance. Gatherings with no coordinates keep their normal position at the end of the list and show no chip.
-- Dashboard: the existing "soonest gathering" highlight also picks up the distance chip when a fix exists. No new dashboard section.
-
-Distance computation is fully client-side haversine — no geocoding per gathering:
-- `gatherings.lat/lng` are already populated for saved-location gatherings.
-- Venue-hosted gatherings currently store no lat/lng, but `businesses.lat/lng` are readable (verified: `anon`/`authenticated` hold SELECT on those columns), so the Explore query's existing `business:businesses(...)` join adds `lat,lng` and the card falls back to venue coordinates.
-
-Degradation: if permission is denied/unavailable, the toggle stays off (with a one-time toast), no chips render, and the feed is exactly today's city-filtered, time-sorted view. The toggle itself is hidden entirely when `navigator.geolocation` is absent.
-
-## Technical notes
-
-- New: `src/lib/geolocation.ts` (`useDeviceLocation` hook, `haversineKm`, `formatDistance`, permission-state probe), `src/components/use-my-location-button.tsx`, `src/components/distance-chip.tsx`.
-- Edited: `location-map-picker.tsx` (button + center order), `explore.tsx` (Near-me toggle, distance sort), `gathering-card.tsx` (optional `distanceKm` prop → chip), `lib/gatherings.ts` (select `lat,lng` on gatherings and on the business join; add them to `GatheringCard`), `dashboard.tsx` (chip on the highlighted gathering), i18n keys for EN/TR/FA.
-- No database migration, no schema change, no change to city filtering, join rules, or gathering creation logic.
-- `Permissions-Policy: geolocation=(self)` is already set in `src/server.ts`, so the browser API is allowed on our own origin.
-
-## Graceful-failure confirmation
-
-| Feature | No permission / no support |
-| --- | --- |
-| Use my location button | Toast once, button back to idle; typing and pin-dropping unchanged |
-| Map default center | Silently falls through to profile city, then Istanbul |
-| Nearby gatherings | Toggle hidden (no support) or stays off (denied); Explore renders today's city view with no chips |
+## Notes
+- No push/email — in-app surfaces only.
+- All distance enforcement lives in the database trigger; the client check is a UX nicety, not the boundary.
