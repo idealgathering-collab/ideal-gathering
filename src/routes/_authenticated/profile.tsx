@@ -39,6 +39,8 @@ const cardClass = "rounded-3xl border border-border/60 bg-card p-4 sm:p-6";
 
 const NATIONALITY_NONE = "__none__";
 
+const GENDER_OPTIONS = ["female", "male", "non_binary", "other", "prefer_not_to_say"] as const;
+
 function maxDobString() {
   const d = new Date();
   d.setFullYear(d.getFullYear() - 18);
@@ -75,6 +77,7 @@ function ProfilePage() {
   const [bio, setBio] = useState("");
   const [dob, setDob] = useState("");
   const [nationality, setNationality] = useState("");
+  const [gender, setGender] = useState("");
   const [city, setCity] = useState("");
   const [neighborhood, setNeighborhood] = useState("");
   const [country, setCountry] = useState<string>("");
@@ -115,7 +118,7 @@ function ProfilePage() {
     supabase
       .from("profiles")
       .select(
-        "display_name, avatar_url, bio, city, neighborhood, country, interests, social_links, date_of_birth, nationality",
+        "display_name, avatar_url, bio, city, neighborhood, country, interests, social_links, date_of_birth, nationality, gender",
       )
       .eq("id", user.id)
       .maybeSingle()
@@ -125,6 +128,7 @@ function ProfilePage() {
         setBio(data.bio ?? "");
         setDob(((data as { date_of_birth?: string | null }).date_of_birth ?? "") as string);
         setNationality(((data as { nationality?: string | null }).nationality ?? "") as string);
+        setGender(((data as { gender?: string | null }).gender ?? "") as string);
         setCity(data.city ?? "");
         setNeighborhood(((data as { neighborhood?: string | null }).neighborhood ?? "") as string);
         setCountry(((data as { country?: string | null }).country ?? "") as string);
@@ -176,6 +180,7 @@ function ProfilePage() {
           bio: bio.trim() || null,
           date_of_birth: dob || null,
           nationality: nationality || null,
+          gender: gender || null,
           city: city.trim() || null,
           neighborhood: neighborhood.trim() || null,
           country: country || null,
@@ -298,7 +303,23 @@ function ProfilePage() {
                       </SelectContent>
                     </Select>
                   </div>
+                  <div className="grid gap-2">
+                    <Label>{t("profile.gender")}</Label>
+                    <Select value={gender || undefined} onValueChange={setGender}>
+                      <SelectTrigger>
+                        <SelectValue placeholder={t("profile.selectGender")} />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {GENDER_OPTIONS.map((g) => (
+                          <SelectItem key={g} value={g}>
+                            {t(`profile.gender.${g}`)}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
                 </div>
+
 
                 <div className="grid gap-2">
                   <Label htmlFor="bio">{t("profile.bio")}</Label>
