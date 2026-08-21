@@ -13,6 +13,9 @@ import { TakeQuizNudge } from "@/components/table-fit";
 import { traitsFromRow } from "@/lib/matching";
 import { gatheringCoords } from "@/lib/gatherings";
 import { getCachedFix, haversineKm } from "@/lib/geolocation";
+import { FeedbackCard, FeedbackDialog, usePendingFeedback } from "@/components/feedback-prompt";
+import { useState } from "react";
+import type { PendingFeedback } from "@/lib/feedback.functions";
 
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
@@ -139,6 +142,9 @@ function Dashboard() {
     },
   });
 
+  const pending = usePendingFeedback(!!user);
+  const [fbItem, setFbItem] = useState<PendingFeedback | null>(null);
+
   const next = data?.next;
   const fix = getCachedFix();
   const nextCoords = next ? gatheringCoords(next) : null;
@@ -159,6 +165,20 @@ function Dashboard() {
             </Link>
           </Button>
         </div>
+
+        {(pending.data ?? []).length > 0 && (
+          <div className="mt-8 grid gap-3">
+            {(pending.data ?? []).map((item) => (
+              <FeedbackCard key={item.gathering_id} item={item} onOpen={() => setFbItem(item)} />
+            ))}
+          </div>
+        )}
+        <FeedbackDialog
+          item={fbItem}
+          open={!!fbItem}
+          onOpenChange={(o) => !o && setFbItem(null)}
+          onDone={() => pending.refetch()}
+        />
 
         {!traits && (
           <div className="mt-8">
