@@ -39,6 +39,8 @@ const cardClass = "rounded-3xl border border-border/60 bg-card p-4 sm:p-6";
 
 const NATIONALITY_NONE = "__none__";
 
+const GENDER_OPTIONS = ["female", "male", "non_binary", "other", "prefer_not_to_say"] as const;
+
 function maxDobString() {
   const d = new Date();
   d.setFullYear(d.getFullYear() - 18);
@@ -75,6 +77,7 @@ function ProfilePage() {
   const [bio, setBio] = useState("");
   const [dob, setDob] = useState("");
   const [nationality, setNationality] = useState("");
+  const [gender, setGender] = useState("");
   const [city, setCity] = useState("");
   const [neighborhood, setNeighborhood] = useState("");
   const [country, setCountry] = useState<string>("");
