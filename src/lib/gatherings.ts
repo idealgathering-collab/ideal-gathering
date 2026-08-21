@@ -9,8 +9,8 @@ export type GatheringCard = {
   venue_name: string;
   neighborhood: string;
   city: string | null;
-  lat: number | null;
-  lng: number | null;
+  lat?: number | null;
+  lng?: number | null;
   business: {
     id: string;
     name: string;
@@ -45,7 +45,7 @@ export async function fetchApprovedGatherings(city?: string | null): Promise<Gat
   let query = supabase
     .from("gatherings")
     .select(
-      "id, subject, description, starts_at, seats, venue_name, neighborhood, city, business:businesses(id,name,city,cover_url), table:venue_tables(id,label), gathering_attendees(user_id)"
+      "id, subject, description, starts_at, seats, venue_name, neighborhood, city, lat, lng, business:businesses(id,name,city,cover_url,lat,lng), table:venue_tables(id,label), gathering_attendees(user_id)"
     )
     .eq("status", "approved")
     .gte("starts_at", upcomingCutoff());
@@ -61,6 +61,8 @@ export async function fetchApprovedGatherings(city?: string | null): Promise<Gat
     venue_name: row.venue_name ?? "",
     neighborhood: row.neighborhood ?? "",
     city: row.city ?? null,
+    lat: (row as { lat?: number | null }).lat ?? null,
+    lng: (row as { lng?: number | null }).lng ?? null,
     business: row.business as GatheringCard["business"],
     table: row.table as GatheringCard["table"],
     attendee_count: (row.gathering_attendees as Array<unknown> | null)?.length ?? 0,
