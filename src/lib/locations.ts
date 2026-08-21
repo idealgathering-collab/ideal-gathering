@@ -2,6 +2,7 @@
 // TR + IR are our primary markets; a few global cities help early expat/international users.
 
 export const COUNTRIES: { code: string; name: string }[] = [
+  { code: "AM", name: "Armenia" },
   { code: "TR", name: "Türkiye" },
   { code: "IR", name: "Iran" },
   { code: "US", name: "United States" },
@@ -14,6 +15,24 @@ export const COUNTRIES: { code: string; name: string }[] = [
 ];
 
 export const CITIES_BY_COUNTRY: Record<string, string[]> = {
+  AM: [
+    "Yerevan",
+    "Gyumri",
+    "Vanadzor",
+    "Vagharshapat (Etchmiadzin)",
+    "Hrazdan",
+    "Abovyan",
+    "Kapan",
+    "Armavir",
+    "Gavar",
+    "Artashat",
+    "Ijevan",
+    "Charentsavan",
+    "Sevan",
+    "Dilijan",
+    "Goris",
+    "Alaverdi",
+  ],
   TR: [
     "İstanbul",
     "Ankara",
@@ -60,6 +79,22 @@ export const CITIES_BY_COUNTRY: Record<string, string[]> = {
 // Recognizable districts/neighborhoods per city. Any city not listed here
 // falls back to a free-text input in the profile UI.
 export const NEIGHBORHOODS_BY_CITY: Record<string, string[]> = {
+  "Yerevan": [
+    "Kentron",
+    "Arabkir",
+    "Ajapnyak",
+    "Avan",
+    "Davtashen",
+    "Erebuni",
+    "Kanaker-Zeytun",
+    "Malatia-Sebastia",
+    "Nor Nork",
+    "Nork-Marash",
+    "Nubarashen",
+    "Shengavit",
+    "Cascade",
+    "Kond",
+  ],
   "İstanbul": [
     "Kadıköy",
     "Beşiktaş",

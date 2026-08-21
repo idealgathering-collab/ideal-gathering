@@ -359,9 +359,11 @@ export type Database = {
           country: string | null
           cover_url: string | null
           created_at: string
+          date_of_birth: string | null
           display_name: string | null
           id: string
           interests: Json
+          nationality: string | null
           neighborhood: string | null
           onboarded_at: string | null
           social_links: Json
@@ -378,9 +380,11 @@ export type Database = {
           country?: string | null
           cover_url?: string | null
           created_at?: string
+          date_of_birth?: string | null
           display_name?: string | null
           id: string
           interests?: Json
+          nationality?: string | null
           neighborhood?: string | null
           onboarded_at?: string | null
           social_links?: Json
@@ -397,9 +401,11 @@ export type Database = {
           country?: string | null
           cover_url?: string | null
           created_at?: string
+          date_of_birth?: string | null
           display_name?: string | null
           id?: string
           interests?: Json
+          nationality?: string | null
           neighborhood?: string | null
           onboarded_at?: string | null
           social_links?: Json
