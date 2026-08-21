@@ -10,6 +10,9 @@ import { formatDateTime, type GatheringCard as GCard } from "@/lib/gatherings";
 import { listHostAttendanceSummary } from "@/lib/attendance.functions";
 import { useServerFn } from "@tanstack/react-start";
 import { useI18n, useT } from "@/i18n";
+import { useEffect, useState } from "react";
+import { FeedbackDialog, usePendingFeedback } from "@/components/feedback-prompt";
+import type { PendingFeedback } from "@/lib/feedback.functions";
 
 export const Route = createFileRoute("/_authenticated/my-gatherings")({
   component: MyGatherings,
@@ -60,6 +63,15 @@ function MyGatherings() {
   const { user } = useSession();
   const t = useT();
   const nowIso = new Date(Date.now() - 3 * 60 * 60 * 1000).toISOString();
+  const pending = usePendingFeedback(!!user);
+  const [fbItem, setFbItem] = useState<PendingFeedback | null>(null);
+  const [dismissed, setDismissed] = useState<string[]>([]);
+
+  // Surface the rating prompt on arrival; dismissing only skips it for this visit.
+  useEffect(() => {
+    const first = (pending.data ?? []).find((p) => !dismissed.includes(p.gathering_id));
+    if (first && !fbItem) setFbItem(first);
+  }, [pending.data, dismissed, fbItem]);
 
   const { data, isLoading } = useQuery({
     queryKey: ["my-gatherings", user?.id],
@@ -121,6 +133,17 @@ function MyGatherings() {
         <Section title={t("myg.attending")} empty={t("myg.noAttending")} loading={isLoading} items={data?.attending} />
         <Section title={t("myg.hosting")} empty={t("myg.noHosting")} loading={isLoading} items={data?.hosted} />
         <PastHosted />
+        <FeedbackDialog
+          item={fbItem}
+          open={!!fbItem}
+          onOpenChange={(o) => {
+            if (!o && fbItem) {
+              setDismissed((cur) => [...cur, fbItem.gathering_id]);
+              setFbItem(null);
+            }
+          }}
+          onDone={() => pending.refetch()}
+        />
       </main>
     </div>
   );

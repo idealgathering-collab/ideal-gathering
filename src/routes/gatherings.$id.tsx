@@ -19,6 +19,7 @@ import { getTableFit } from "@/lib/matching.functions";
 import { TableFitChip, TakeQuizNudge } from "@/components/table-fit";
 import { ReportDialog, type ReportTarget } from "@/components/report-dialog";
 import { AttendanceRoster } from "@/components/attendance-roster";
+import { SelfCheckin } from "@/components/self-checkin";
 import { checkinWindow } from "@/lib/attendance.functions";
 import { useState } from "react";
 
@@ -209,6 +210,12 @@ function GatheringDetail() {
         {showQuizNudge && (
           <div className="mt-6">
             <TakeQuizNudge />
+          </div>
+        )}
+
+        {g.status === "approved" && isAttending && (
+          <div className="mt-6">
+            <SelfCheckin gatheringId={g.id} />
           </div>
         )}
 
