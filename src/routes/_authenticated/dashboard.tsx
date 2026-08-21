@@ -11,6 +11,8 @@ import type { GatheringCard as GCard } from "@/lib/gatherings";
 import { useT } from "@/i18n";
 import { TakeQuizNudge } from "@/components/table-fit";
 import { traitsFromRow } from "@/lib/matching";
+import { gatheringCoords } from "@/lib/gatherings";
+import { getCachedFix, haversineKm } from "@/lib/geolocation";
 
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
@@ -42,7 +44,7 @@ export const Route = createFileRoute("/_authenticated/dashboard")({
 });
 
 const SELECT =
-  "id, subject, description, starts_at, seats, status, host_id, venue_name, neighborhood, city, business:businesses(id,name,city,cover_url), table:venue_tables(id,label), gathering_attendees(user_id)";
+  "id, subject, description, starts_at, seats, status, host_id, venue_name, neighborhood, city, lat, lng, business:businesses(id,name,city,cover_url,lat,lng), table:venue_tables(id,label), gathering_attendees(user_id)";
 
 type Row = {
   id: string;
@@ -55,6 +57,8 @@ type Row = {
   venue_name: string | null;
   neighborhood: string | null;
   city: string | null;
+  lat: number | null;
+  lng: number | null;
   business: GCard["business"];
   table: GCard["table"];
   gathering_attendees: Array<{ user_id: string }> | null;
@@ -70,6 +74,8 @@ function toCard(r: Row): GCard {
     venue_name: r.venue_name ?? "",
     neighborhood: r.neighborhood ?? "",
     city: r.city ?? null,
+    lat: r.lat ?? null,
+    lng: r.lng ?? null,
     business: r.business,
     table: r.table,
     attendee_count: r.gathering_attendees?.length ?? 0,
@@ -134,6 +140,9 @@ function Dashboard() {
   });
 
   const next = data?.next;
+  const fix = getCachedFix();
+  const nextCoords = next ? gatheringCoords(next) : null;
+  const nextDistance = fix && nextCoords ? haversineKm(fix, nextCoords) : null;
 
   return (
     <div className="min-h-screen bg-background">
@@ -163,7 +172,7 @@ function Dashboard() {
             <div className="mt-4 h-64 animate-pulse rounded-3xl bg-card" />
           ) : next ? (
             <div className="mt-4">
-              <GatheringCard g={next} />
+              <GatheringCard g={next} distanceKm={nextDistance} />
             </div>
           ) : (
             <div className="mt-4 flex flex-col items-start gap-4 rounded-2xl border border-dashed border-border bg-card p-8">

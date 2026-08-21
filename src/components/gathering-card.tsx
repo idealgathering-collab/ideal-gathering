@@ -3,6 +3,7 @@ import { Users, MapPin, CalendarClock } from "lucide-react";
 import type { GatheringCard as G } from "@/lib/gatherings";
 import { formatDateTime } from "@/lib/gatherings";
 import { TableFitChip } from "@/components/table-fit";
+import { DistanceChip } from "@/components/distance-chip";
 import type { TableFit } from "@/lib/matching.functions";
 import { useI18n, useT } from "@/i18n";
 
@@ -10,16 +11,20 @@ export function GatheringCard({
   g,
   fit,
   showCity,
+  distanceKm,
 }: {
   g: G;
   fit?: TableFit;
   /** Show the city on the card — useful when the feed spans multiple cities. */
   showCity?: boolean;
+  /** Distance from the viewer's device location, in km. */
+  distanceKm?: number | null;
 }) {
   const t = useT();
   const { lang } = useI18n();
   const seatsLeft = Math.max(0, g.seats - g.attendee_count);
   const full = seatsLeft === 0;
+
 
   const chipLabel = g.table?.label
     ? `${t("card.table")} ${g.table.label}`
@@ -89,6 +94,7 @@ export function GatheringCard({
             <Users className="h-3.5 w-3.5 text-primary" />
             {g.attendee_count}/{g.seats}
           </span>
+          {typeof distanceKm === "number" ? <DistanceChip km={distanceKm} /> : null}
         </div>
       </div>
     </Link>

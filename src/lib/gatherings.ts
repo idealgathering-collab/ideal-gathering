@@ -9,10 +9,28 @@ export type GatheringCard = {
   venue_name: string;
   neighborhood: string;
   city: string | null;
-  business: { id: string; name: string; city: string | null; cover_url: string | null } | null;
+  lat?: number | null;
+  lng?: number | null;
+  business: {
+    id: string;
+    name: string;
+    city: string | null;
+    cover_url: string | null;
+    lat?: number | null;
+    lng?: number | null;
+  } | null;
   table: { id: string; label: string } | null;
   attendee_count: number;
 };
+
+/** Best-known coordinates for a gathering: its own pin, else its venue. */
+export function gatheringCoords(g: GatheringCard): { lat: number; lng: number } | null {
+  if (typeof g.lat === "number" && typeof g.lng === "number") return { lat: g.lat, lng: g.lng };
+  const b = g.business;
+  if (b && typeof b.lat === "number" && typeof b.lng === "number") return { lat: b.lat, lng: b.lng };
+  return null;
+}
+
 
 /** Gatherings that start now or later (with a small grace window for in-progress ones). */
 function upcomingCutoff() {
@@ -27,7 +45,7 @@ export async function fetchApprovedGatherings(city?: string | null): Promise<Gat
   let query = supabase
     .from("gatherings")
     .select(
-      "id, subject, description, starts_at, seats, venue_name, neighborhood, city, business:businesses(id,name,city,cover_url), table:venue_tables(id,label), gathering_attendees(user_id)"
+      "id, subject, description, starts_at, seats, venue_name, neighborhood, city, lat, lng, business:businesses(id,name,city,cover_url,lat,lng), table:venue_tables(id,label), gathering_attendees(user_id)"
     )
     .eq("status", "approved")
     .gte("starts_at", upcomingCutoff());
@@ -43,6 +61,8 @@ export async function fetchApprovedGatherings(city?: string | null): Promise<Gat
     venue_name: row.venue_name ?? "",
     neighborhood: row.neighborhood ?? "",
     city: row.city ?? null,
+    lat: (row as { lat?: number | null }).lat ?? null,
+    lng: (row as { lng?: number | null }).lng ?? null,
     business: row.business as GatheringCard["business"],
     table: row.table as GatheringCard["table"],
     attendee_count: (row.gathering_attendees as Array<unknown> | null)?.length ?? 0,

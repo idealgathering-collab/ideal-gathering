@@ -55,3 +55,28 @@ export function extractCity(a: ReverseResult["address"] | undefined): string {
     a.city || a.town || a.village || a.municipality || a.suburb || a.neighbourhood || a.county || ""
   );
 }
+
+/** Forward-geocode a free-text place (e.g. a city) to coordinates. Cached per session. */
+const forwardCache = new Map<string, { lat: number; lng: number } | null>();
+
+export async function geocodePlace(
+  query: string,
+  signal?: AbortSignal,
+): Promise<{ lat: number; lng: number } | null> {
+  const key = query.trim().toLowerCase();
+  if (!key) return null;
+  if (forwardCache.has(key)) return forwardCache.get(key) ?? null;
+  await nominatimRateLimit();
+  const params = new URLSearchParams({ format: "jsonv2", q: query, limit: "1" });
+  try {
+    const res = await fetch(`https://nominatim.openstreetmap.org/search?${params}`, { signal });
+    if (!res.ok) return null;
+    const json = (await res.json()) as Array<{ lat: string; lon: string }>;
+    const first = json?.[0];
+    const out = first ? { lat: Number(first.lat), lng: Number(first.lon) } : null;
+    forwardCache.set(key, out);
+    return out;
+  } catch {
+    return null;
+  }
+}
