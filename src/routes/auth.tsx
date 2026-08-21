@@ -145,6 +145,15 @@ function AuthPage() {
           <p className="mt-1 text-sm text-muted-foreground">
             {isForgot ? t("auth.forgot.subtitle") : isSignup ? t("auth.subtitle.signup") : t("auth.subtitle.signin")}
           </p>
+          {isSignup && (
+            <p className="mt-1 text-sm text-muted-foreground">
+              {t("auth.waitlistHint")}{" "}
+              <Link to="/waitlist" className="text-primary hover:underline">
+                {t("auth.waitlistLink")}
+              </Link>
+              .
+            </p>
+          )}
 
           {!isForgot && (
             <>

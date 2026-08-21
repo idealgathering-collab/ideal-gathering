@@ -164,11 +164,13 @@ export const translations: Record<Lang, Dict> = {
     "verify.failed": "Couldn't send email",
 
     // Auth
-    "auth.title.signup": "Set the table.",
+    "auth.title.signup": "Pull up a chair.",
     "auth.title.signin": "Welcome back.",
     "auth.subtitle.signup":
-      "Create a venue account to register your cafe or restaurant and host gatherings. Guests, join the waitlist instead.",
-    "auth.subtitle.signin": "Sign in to manage your venue and gatherings.",
+      "Create your account to join gatherings, meet new people and save your seat.",
+    "auth.subtitle.signin": "Sign in to see your gatherings and find your next table.",
+    "auth.waitlistHint": "Not ready to sign up? Join the",
+    "auth.waitlistLink": "waitlist",
     "auth.google": "Continue with Google",
     "auth.quizSaved": "Your quiz result is saved — {persona}. We'll use it to seat you at the right table.",
 
@@ -662,9 +664,9 @@ export const translations: Record<Lang, Dict> = {
     "privacy.rights.title": "Your rights",
     "privacy.rights.body": "You can access, correct, or delete your data. Contact us with any request and we'll respond within a reasonable time.",
     "privacy.kvkk.title": "KVKK notice (Türkiye)",
-    "privacy.kvkk.body": "If you're in Türkiye, the Personal Data Protection Law (KVKK, No. 6698) grants you rights over your personal data, including access, correction, deletion, and objection. You can exercise these rights by writing to hello@idealgathering.co.",
+    "privacy.kvkk.body": "If you're in Türkiye, the Personal Data Protection Law (KVKK, No. 6698) grants you rights over your personal data, including access, correction, deletion, and objection. You can exercise these rights by writing to hello@idealgathering.com.",
     "privacy.contact.title": "Contact",
-    "privacy.contact.body": "Questions? Reach us at hello@idealgathering.co.",
+    "privacy.contact.body": "Questions? Reach us at hello@idealgathering.com.",
 
     // Terms
     "terms.title": "Terms of Service",
@@ -686,7 +688,7 @@ export const translations: Record<Lang, Dict> = {
     "terms.law.title": "Governing law",
     "terms.law.body": "These terms are governed by the laws of the Republic of Türkiye, without regard to conflict of law rules.",
     "terms.contact.title": "Contact",
-    "terms.contact.body": "Questions about these terms? hello@idealgathering.co.",
+    "terms.contact.body": "Questions about these terms? hello@idealgathering.com.",
 
     // Venue portal (EN)
     "auth.venueHint": "Registering your cafe or restaurant?",
@@ -901,6 +903,7 @@ export const translations: Record<Lang, Dict> = {
     "landing.v3.hero.cta": "Join a gathering",
     "landing.v3.hero.secondary": "See how it works",
     "landing.v3.hero.note": "Free to join · Verified members · Approved venues",
+    "landing.v3.hero.waitlist": "Or join the waitlist",
     "landing.v3.hero.caption": "Every table leaves one chair open. That chair is the whole point.",
 
     "landing.v3.demo.eyebrow": "See it before you sign up",
@@ -1231,11 +1234,13 @@ export const translations: Record<Lang, Dict> = {
     "verify.failed": "E-posta gönderilemedi",
 
     // Auth
-    "auth.title.signup": "Masayı kur.",
+    "auth.title.signup": "Sandalyeni çek.",
     "auth.title.signin": "Tekrar hoş geldin.",
     "auth.subtitle.signup":
-      "Kafeni veya restoranını kaydetmek ve buluşmalara ev sahipliği yapmak için bir mekân hesabı oluştur. Misafirler bekleme listesine katılabilir.",
-    "auth.subtitle.signin": "Mekânını ve buluşmalarını yönetmek için giriş yap.",
+      "Buluşmalara katılmak, yeni insanlarla tanışmak ve yerini ayırtmak için hesabını oluştur.",
+    "auth.subtitle.signin": "Buluşmalarını görmek ve sıradaki masanı bulmak için giriş yap.",
+    "auth.waitlistHint": "Henüz kaydolmaya hazır değil misin?",
+    "auth.waitlistLink": "Bekleme listesine katıl",
     "auth.google": "Google ile devam et",
     "auth.quizSaved": "Test sonucun kaydedildi — {persona}. Doğru masaya oturtmak için kullanacağız.",
 
@@ -1729,9 +1734,9 @@ export const translations: Record<Lang, Dict> = {
     "privacy.rights.title": "Haklarınız",
     "privacy.rights.body": "Verine erişebilir, düzeltebilir veya silebilirsin. Herhangi bir talep için bize yaz, makul bir sürede yanıt verelim.",
     "privacy.kvkk.title": "KVKK bildirimi (Türkiye)",
-    "privacy.kvkk.body": "Türkiye'deysen, 6698 sayılı Kişisel Verilerin Korunması Kanunu (KVKK) sana kişisel verilerin üzerinde erişim, düzeltme, silme ve itiraz gibi haklar tanır. Bu hakları hello@idealgathering.co adresine yazarak kullanabilirsin.",
+    "privacy.kvkk.body": "Türkiye'deysen, 6698 sayılı Kişisel Verilerin Korunması Kanunu (KVKK) sana kişisel verilerin üzerinde erişim, düzeltme, silme ve itiraz gibi haklar tanır. Bu hakları hello@idealgathering.com adresine yazarak kullanabilirsin.",
     "privacy.contact.title": "İletişim",
-    "privacy.contact.body": "Soruların mı var? hello@idealgathering.co.",
+    "privacy.contact.body": "Soruların mı var? hello@idealgathering.com.",
 
     // Terms
     "terms.title": "Kullanım Şartları",
@@ -1753,7 +1758,7 @@ export const translations: Record<Lang, Dict> = {
     "terms.law.title": "Uygulanacak hukuk",
     "terms.law.body": "Bu şartlar, kanunlar ihtilafı kuralları dikkate alınmaksızın Türkiye Cumhuriyeti hukukuna tabidir.",
     "terms.contact.title": "İletişim",
-    "terms.contact.body": "Bu şartlarla ilgili sorular? hello@idealgathering.co.",
+    "terms.contact.body": "Bu şartlarla ilgili sorular? hello@idealgathering.com.",
 
     // Venue portal (TR)
     "auth.venueHint": "Kafenizi veya restoranınızı mı kaydediyorsunuz?",
@@ -1962,6 +1967,7 @@ export const translations: Record<Lang, Dict> = {
     "landing.v3.hero.cta": "Bir buluşmaya katıl",
     "landing.v3.hero.secondary": "Nasıl çalıştığını gör",
     "landing.v3.hero.note": "Katılım ücretsiz · Doğrulanmış üyeler · Onaylı mekânlar",
+    "landing.v3.hero.waitlist": "Ya da bekleme listesine katıl",
     "landing.v3.hero.caption": "Her masada bir sandalye boş kalır. Bütün mesele o sandalye.",
 
     "landing.v3.demo.eyebrow": "Kaydolmadan önce gör",
@@ -2290,11 +2296,13 @@ export const translations: Record<Lang, Dict> = {
     "verify.failed": "ارسال ایمیل ممکن نشد",
 
     // Auth
-    "auth.title.signup": "میز را بچینید.",
+    "auth.title.signup": "صندلی‌تان را بکشید.",
     "auth.title.signin": "خوش برگشتید.",
     "auth.subtitle.signup":
-      "برای ثبت کافه یا رستوران و میزبانی گردهمایی، یک حساب مکان بسازید. مهمانان به‌جای آن به فهرست انتظار می‌پیوندند.",
-    "auth.subtitle.signin": "برای مدیریت مکان و گردهمایی‌های‌تان وارد شوید.",
+      "برای پیوستن به گردهمایی‌ها، آشنایی با آدم‌های تازه و رزرو صندلی‌تان حساب بسازید.",
+    "auth.subtitle.signin": "برای دیدن گردهمایی‌های‌تان و یافتن میز بعدی وارد شوید.",
+    "auth.waitlistHint": "هنوز آمادهٔ ثبت‌نام نیستید؟",
+    "auth.waitlistLink": "به فهرست انتظار بپیوندید",
     "auth.google": "ادامه با گوگل",
     "auth.quizSaved": "نتیجهٔ آزمون‌تان ذخیره شده — {persona}. از آن برای نشاندن‌تان سر میز درست استفاده می‌کنیم.",
 
@@ -2788,9 +2796,9 @@ export const translations: Record<Lang, Dict> = {
     "privacy.rights.title": "حقوق شما",
     "privacy.rights.body": "می‌توانید به دادهٔ خود دسترسی داشته باشید، آن را اصلاح یا حذف کنید. با ما تماس بگیرید و در زمانی معقول پاسخ می‌دهیم.",
     "privacy.kvkk.title": "اطلاعیهٔ KVKK (ترکیه)",
-    "privacy.kvkk.body": "اگر در ترکیه هستید، قانون حفاظت از داده‌های شخصی (KVKK، شمارهٔ ۶۶۹۸) حقوقی مانند دسترسی، اصلاح، حذف و اعتراض بر داده‌های شخصی به شما می‌دهد. برای اعمال این حقوق به hello@idealgathering.co بنویسید.",
+    "privacy.kvkk.body": "اگر در ترکیه هستید، قانون حفاظت از داده‌های شخصی (KVKK، شمارهٔ ۶۶۹۸) حقوقی مانند دسترسی، اصلاح، حذف و اعتراض بر داده‌های شخصی به شما می‌دهد. برای اعمال این حقوق به hello@idealgathering.com بنویسید.",
     "privacy.contact.title": "تماس",
-    "privacy.contact.body": "سؤالی دارید؟ hello@idealgathering.co.",
+    "privacy.contact.body": "سؤالی دارید؟ hello@idealgathering.com.",
 
     // Terms
     "terms.title": "شرایط استفاده",
@@ -2812,7 +2820,7 @@ export const translations: Record<Lang, Dict> = {
     "terms.law.title": "قانون حاکم",
     "terms.law.body": "این شرایط تابع قوانین جمهوری ترکیه است، بدون توجه به قواعد تعارض قوانین.",
     "terms.contact.title": "تماس",
-    "terms.contact.body": "سؤالی دربارهٔ این شرایط دارید؟ hello@idealgathering.co.",
+    "terms.contact.body": "سؤالی دربارهٔ این شرایط دارید؟ hello@idealgathering.com.",
 
     // Venue portal (FA)
     "auth.venueHint": "کافه یا رستوران‌تان را ثبت می‌کنید؟",
@@ -3021,6 +3029,7 @@ export const translations: Record<Lang, Dict> = {
     "landing.v3.hero.cta": "به یک گردهمایی بپیوندید",
     "landing.v3.hero.secondary": "ببینید چطور کار می‌کند",
     "landing.v3.hero.note": "پیوستن رایگان · اعضای تأییدشده · مکان‌های بررسی‌شده",
+    "landing.v3.hero.waitlist": "یا به فهرست انتظار بپیوندید",
     "landing.v3.hero.caption": "سر هر میز یک صندلی خالی می‌ماند. تمام ماجرا همان صندلی است.",
 
     "landing.v3.demo.eyebrow": "پیش از ثبت‌نام ببینید",

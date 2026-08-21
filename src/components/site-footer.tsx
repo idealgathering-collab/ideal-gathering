@@ -39,7 +39,7 @@ export function SiteFooter() {
           links={[
             { label: t("footer.biz.partnership"), href: "/partnership", route: true },
             { label: t("footer.biz.sub"), href: "/venue/auth", route: true },
-            { label: t("footer.biz.support"), href: "mailto:hello@idealgathering.co" },
+            { label: t("footer.biz.support"), href: "mailto:hello@idealgathering.com" },
           ]}
         />
         <div>
@@ -49,7 +49,7 @@ export function SiteFooter() {
           <ul className="mt-4 space-y-2 text-sm">
             <li><Link to="/terms" className="hover:text-sunshine">{t("footer.legal.tos")}</Link></li>
             <li><Link to="/privacy" className="hover:text-sunshine">{t("footer.legal.privacy")}</Link></li>
-            <li><a href="mailto:hello@idealgathering.co" className="hover:text-sunshine">{t("footer.legal.contact")}</a></li>
+            <li><a href="mailto:hello@idealgathering.com" className="hover:text-sunshine">{t("footer.legal.contact")}</a></li>
           </ul>
           <div className="mt-5 flex items-center gap-2">
             <a href="https://instagram.com" target="_blank" rel="noreferrer" aria-label="Instagram"

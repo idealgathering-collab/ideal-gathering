@@ -249,7 +249,7 @@ function BusinessForm({
       const path = `${userId}/business-${Date.now()}.${ext}`;
       const { error: upErr } = await supabase.storage.from("avatars").upload(path, file, { upsert: true });
       if (upErr) throw upErr;
-      const { data: signed } = await supabase.storage.from("avatars").createSignedUrl(path, 60 * 60 * 24 * 365 * 5);
+      const { data: signed } = await supabase.storage.from("avatars").createSignedUrl(path, 3600);
       if (!signed?.signedUrl) throw new Error("signed url failed");
       setForm((f) => ({ ...f, cover_url: signed.signedUrl }));
       toast.success(t("venueDash.imageUploaded"));
