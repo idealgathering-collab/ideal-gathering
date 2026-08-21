@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useT } from "@/i18n";
 import { listMyBlocks, unblockUser, type BlockedPerson } from "@/lib/moderation.functions";
 
-export function BlockedUsersSection() {
+export function BlockedUsersSection({ className }: { className?: string } = {}) {
   const t = useT();
   const [rows, setRows] = useState<BlockedPerson[] | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
