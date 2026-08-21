@@ -1,5 +1,5 @@
 import type { ElementType } from "react";
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { Compass, Plus, Users, MessageCircle, Calendar, ArrowRight } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
@@ -9,10 +9,36 @@ import { supabase } from "@/integrations/supabase/client";
 import { useSession } from "@/hooks/use-session";
 import type { GatheringCard as GCard } from "@/lib/gatherings";
 import { useT } from "@/i18n";
+import { TakeQuizNudge } from "@/components/table-fit";
+import { traitsFromRow } from "@/lib/matching";
 
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
+  beforeLoad: async ({ context, location }) => {
+    const userId = context.user.id;
+    const { data: profile, error } = await supabase
+      .from("profiles")
+      .select("onboarded_at")
+      .eq("id", userId)
+      .maybeSingle();
+    if (error) throw error;
+    if (!profile?.onboarded_at) {
+      throw redirect({ to: "/onboarding", search: { step: "welcome" }, replace: true });
+    }
+    const fromOnboarding = location.searchStr.includes("onboarded=1");
+    return { onboarded: true, fromOnboarding };
+  },
+  loader: async ({ context }) => {
+    const { data, error } = await supabase
+      .from("profiles")
+      .select("trait_spark, trait_curiosity, trait_warmth, trait_depth")
+      .eq("id", context.user.id)
+      .maybeSingle();
+    if (error) throw error;
+    return { traits: traitsFromRow(data) };
+  },
   component: Dashboard,
+  errorComponent: () => <div className="p-8 text-center text-muted-foreground">Failed to load your dashboard.</div>,
 });
 
 const SELECT =
@@ -53,6 +79,7 @@ function toCard(r: Row): GCard {
 function Dashboard() {
   const { user } = useSession();
   const t = useT();
+  const { traits } = Route.useLoaderData();
   const nowIso = new Date(Date.now() - 3 * 60 * 60 * 1000).toISOString();
 
 
@@ -123,6 +150,12 @@ function Dashboard() {
             </Link>
           </Button>
         </div>
+
+        {!traits && (
+          <div className="mt-8">
+            <TakeQuizNudge />
+          </div>
+        )}
 
         <section className="mt-10">
           <h2 className="font-display text-2xl">{t("dash.next.title")}</h2>

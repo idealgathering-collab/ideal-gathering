@@ -363,6 +363,7 @@ export type Database = {
           id: string
           interests: Json
           neighborhood: string | null
+          onboarded_at: string | null
           social_links: Json
           trait_curiosity: number | null
           trait_depth: number | null
@@ -381,6 +382,7 @@ export type Database = {
           id: string
           interests?: Json
           neighborhood?: string | null
+          onboarded_at?: string | null
           social_links?: Json
           trait_curiosity?: number | null
           trait_depth?: number | null
@@ -399,6 +401,7 @@ export type Database = {
           id?: string
           interests?: Json
           neighborhood?: string | null
+          onboarded_at?: string | null
           social_links?: Json
           trait_curiosity?: number | null
           trait_depth?: number | null

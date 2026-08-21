@@ -33,8 +33,8 @@ export function TakeQuizNudge() {
       <Sparkles className="h-4 w-4 shrink-0 text-primary" />
       <p className="flex-1 text-muted-foreground">{t("match.takeQuiz")}</p>
       <Link
-        to="/"
-        hash="matching"
+        to="/onboarding"
+        search={{ step: "quiz" }}
         className="rounded-full bg-primary px-4 py-1.5 text-xs font-semibold text-primary-foreground"
       >
         {t("match.takeQuizCta")}
