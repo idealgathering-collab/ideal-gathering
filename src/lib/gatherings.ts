@@ -9,10 +9,28 @@ export type GatheringCard = {
   venue_name: string;
   neighborhood: string;
   city: string | null;
-  business: { id: string; name: string; city: string | null; cover_url: string | null } | null;
+  lat: number | null;
+  lng: number | null;
+  business: {
+    id: string;
+    name: string;
+    city: string | null;
+    cover_url: string | null;
+    lat?: number | null;
+    lng?: number | null;
+  } | null;
   table: { id: string; label: string } | null;
   attendee_count: number;
 };
+
+/** Best-known coordinates for a gathering: its own pin, else its venue. */
+export function gatheringCoords(g: GatheringCard): { lat: number; lng: number } | null {
+  if (typeof g.lat === "number" && typeof g.lng === "number") return { lat: g.lat, lng: g.lng };
+  const b = g.business;
+  if (b && typeof b.lat === "number" && typeof b.lng === "number") return { lat: b.lat, lng: b.lng };
+  return null;
+}
+
 
 /** Gatherings that start now or later (with a small grace window for in-progress ones). */
 function upcomingCutoff() {
