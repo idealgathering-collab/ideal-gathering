@@ -164,11 +164,13 @@ export const translations: Record<Lang, Dict> = {
     "verify.failed": "Couldn't send email",
 
     // Auth
-    "auth.title.signup": "Set the table.",
+    "auth.title.signup": "Pull up a chair.",
     "auth.title.signin": "Welcome back.",
     "auth.subtitle.signup":
-      "Create a venue account to register your cafe or restaurant and host gatherings. Guests, join the waitlist instead.",
-    "auth.subtitle.signin": "Sign in to manage your venue and gatherings.",
+      "Create your account to join gatherings, meet new people and save your seat.",
+    "auth.subtitle.signin": "Sign in to see your gatherings and find your next table.",
+    "auth.waitlistHint": "Not ready to sign up? Join the",
+    "auth.waitlistLink": "waitlist",
     "auth.google": "Continue with Google",
     "auth.quizSaved": "Your quiz result is saved — {persona}. We'll use it to seat you at the right table.",
 
@@ -1231,11 +1233,13 @@ export const translations: Record<Lang, Dict> = {
     "verify.failed": "E-posta gönderilemedi",
 
     // Auth
-    "auth.title.signup": "Masayı kur.",
+    "auth.title.signup": "Sandalyeni çek.",
     "auth.title.signin": "Tekrar hoş geldin.",
     "auth.subtitle.signup":
-      "Kafeni veya restoranını kaydetmek ve buluşmalara ev sahipliği yapmak için bir mekân hesabı oluştur. Misafirler bekleme listesine katılabilir.",
-    "auth.subtitle.signin": "Mekânını ve buluşmalarını yönetmek için giriş yap.",
+      "Buluşmalara katılmak, yeni insanlarla tanışmak ve yerini ayırtmak için hesabını oluştur.",
+    "auth.subtitle.signin": "Buluşmalarını görmek ve sıradaki masanı bulmak için giriş yap.",
+    "auth.waitlistHint": "Henüz kaydolmaya hazır değil misin?",
+    "auth.waitlistLink": "Bekleme listesine katıl",
     "auth.google": "Google ile devam et",
     "auth.quizSaved": "Test sonucun kaydedildi — {persona}. Doğru masaya oturtmak için kullanacağız.",
 
@@ -2290,11 +2294,13 @@ export const translations: Record<Lang, Dict> = {
     "verify.failed": "ارسال ایمیل ممکن نشد",
 
     // Auth
-    "auth.title.signup": "میز را بچینید.",
+    "auth.title.signup": "صندلی‌تان را بکشید.",
     "auth.title.signin": "خوش برگشتید.",
     "auth.subtitle.signup":
-      "برای ثبت کافه یا رستوران و میزبانی گردهمایی، یک حساب مکان بسازید. مهمانان به‌جای آن به فهرست انتظار می‌پیوندند.",
-    "auth.subtitle.signin": "برای مدیریت مکان و گردهمایی‌های‌تان وارد شوید.",
+      "برای پیوستن به گردهمایی‌ها، آشنایی با آدم‌های تازه و رزرو صندلی‌تان حساب بسازید.",
+    "auth.subtitle.signin": "برای دیدن گردهمایی‌های‌تان و یافتن میز بعدی وارد شوید.",
+    "auth.waitlistHint": "هنوز آمادهٔ ثبت‌نام نیستید؟",
+    "auth.waitlistLink": "به فهرست انتظار بپیوندید",
     "auth.google": "ادامه با گوگل",
     "auth.quizSaved": "نتیجهٔ آزمون‌تان ذخیره شده — {persona}. از آن برای نشاندن‌تان سر میز درست استفاده می‌کنیم.",
 
