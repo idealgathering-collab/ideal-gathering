@@ -26,6 +26,7 @@ import { Route as VenueAuthRouteImport } from './routes/venue.auth'
 import { Route as GatheringsIdRouteImport } from './routes/gatherings.$id'
 import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
 import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
+import { Route as AuthenticatedOnboardingRouteImport } from './routes/_authenticated/onboarding'
 import { Route as AuthenticatedMyGatheringsRouteImport } from './routes/_authenticated/my-gatherings'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedCreateGatheringRouteImport } from './routes/_authenticated/create-gathering'
@@ -121,6 +122,11 @@ const AuthenticatedProfileRoute = AuthenticatedProfileRouteImport.update({
   path: '/profile',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedOnboardingRoute = AuthenticatedOnboardingRouteImport.update({
+  id: '/onboarding',
+  path: '/onboarding',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedMyGatheringsRoute =
   AuthenticatedMyGatheringsRouteImport.update({
     id: '/my-gatherings',
@@ -197,6 +203,7 @@ export interface FileRoutesByFullPath {
   '/create-gathering': typeof AuthenticatedCreateGatheringRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/my-gatherings': typeof AuthenticatedMyGatheringsRoute
+  '/onboarding': typeof AuthenticatedOnboardingRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/settings': typeof AuthenticatedSettingsRoute
   '/gatherings/$id': typeof GatheringsIdRoute
@@ -225,6 +232,7 @@ export interface FileRoutesByTo {
   '/create-gathering': typeof AuthenticatedCreateGatheringRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/my-gatherings': typeof AuthenticatedMyGatheringsRoute
+  '/onboarding': typeof AuthenticatedOnboardingRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/settings': typeof AuthenticatedSettingsRoute
   '/gatherings/$id': typeof GatheringsIdRoute
@@ -255,6 +263,7 @@ export interface FileRoutesById {
   '/_authenticated/create-gathering': typeof AuthenticatedCreateGatheringRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/my-gatherings': typeof AuthenticatedMyGatheringsRoute
+  '/_authenticated/onboarding': typeof AuthenticatedOnboardingRoute
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
   '/_authenticated/settings': typeof AuthenticatedSettingsRoute
   '/gatherings/$id': typeof GatheringsIdRoute
@@ -285,6 +294,7 @@ export interface FileRouteTypes {
     | '/create-gathering'
     | '/dashboard'
     | '/my-gatherings'
+    | '/onboarding'
     | '/profile'
     | '/settings'
     | '/gatherings/$id'
@@ -313,6 +323,7 @@ export interface FileRouteTypes {
     | '/create-gathering'
     | '/dashboard'
     | '/my-gatherings'
+    | '/onboarding'
     | '/profile'
     | '/settings'
     | '/gatherings/$id'
@@ -342,6 +353,7 @@ export interface FileRouteTypes {
     | '/_authenticated/create-gathering'
     | '/_authenticated/dashboard'
     | '/_authenticated/my-gatherings'
+    | '/_authenticated/onboarding'
     | '/_authenticated/profile'
     | '/_authenticated/settings'
     | '/gatherings/$id'
@@ -495,6 +507,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedProfileRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/onboarding': {
+      id: '/_authenticated/onboarding'
+      path: '/onboarding'
+      fullPath: '/onboarding'
+      preLoaderRoute: typeof AuthenticatedOnboardingRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/my-gatherings': {
       id: '/_authenticated/my-gatherings'
       path: '/my-gatherings'
@@ -574,6 +593,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedCreateGatheringRoute: typeof AuthenticatedCreateGatheringRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedMyGatheringsRoute: typeof AuthenticatedMyGatheringsRoute
+  AuthenticatedOnboardingRoute: typeof AuthenticatedOnboardingRoute
   AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
   AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute
   AuthenticatedBusinessesIdRoute: typeof AuthenticatedBusinessesIdRoute
@@ -585,6 +605,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedCreateGatheringRoute: AuthenticatedCreateGatheringRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedMyGatheringsRoute: AuthenticatedMyGatheringsRoute,
+  AuthenticatedOnboardingRoute: AuthenticatedOnboardingRoute,
   AuthenticatedProfileRoute: AuthenticatedProfileRoute,
   AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
   AuthenticatedBusinessesIdRoute: AuthenticatedBusinessesIdRoute,
