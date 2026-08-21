@@ -1,66 +1,96 @@
-# First-login onboarding flow
+# Armenia locations + age & nationality on profile
 
-A short, one-time welcome shown the first time a user signs in after signup, ending in the personality quiz. No changes to the quiz's own questions, scoring, or persistence.
+Two scoped additions: static location data for Armenia, and two new optional profile fields (date of birth, nationality).
 
-## Where "seen onboarding" is tracked
+## 1. Armenia in location dropdowns
 
-One new column on `profiles`: `onboarded_at timestamptz` (null = never onboarded). It is set when the user finishes the flow, whether they take the quiz or skip it — so onboarding never reappears.
+Static-data-only edit to `src/lib/locations.ts`, no UI changes — the existing country/city/neighborhood dropdowns pick it up automatically.
 
-Whether they actually took the quiz is already knowable: `profiles.traits_updated_at` / `trait_*` are null until `saveMyTraits` runs. So:
+- `COUNTRIES`: add `{ code: "AM", name: "Armenia" }` placed first (launch market), before Türkiye.
+- `CITIES_BY_COUNTRY.AM`: Yerevan, Gyumri, Vanadzor, Vagharshapat (Etchmiadzin), Hrazdan, Abovyan, Kapan, Armavir, Gavar, Artashat, Ijevan, Charentsavan, Sevan, Dilijan, Goris, Alaverdi.
+- `NEIGHBORHOODS_BY_CITY.Yerevan`: the 12 administrative districts — Kentron, Arabkir, Ajapnyak, Avan, Davtashen, Erebuni, Kanaker-Zeytun, Malatia-Sebastia, Nor Nork, Nork-Marash, Nubarashen, Shengavit — plus the widely used sub-areas Cascade and Kond.
 
-- onboarding shown ⇔ `onboarded_at is null`
-- dashboard quiz prompt shown ⇔ `onboarded_at is not null` AND `traits_updated_at is null`
+Cities not listed keep the existing free-text fallback.
 
-No second "skipped" flag needed, and if they later take the quiz from the dashboard the prompt disappears by itself.
+## 2. Age (date of birth) and nationality on profile
 
-## Post-signup entry point
+### Migration
 
-`/auth` currently navigates to `redirect ?? "/dashboard"` after sign-in, email confirm, and Google. That stays. Instead of special-casing signup, a new authenticated route `/onboarding` is the destination whenever onboarding is pending:
+```sql
+ALTER TABLE public.profiles
+  ADD COLUMN date_of_birth date,
+  ADD COLUMN nationality text;
 
-- The dashboard route checks the profile on load; if `onboarded_at` is null it redirects to `/onboarding`. This catches every path in (email signup, confirm link, Google, existing accounts that predate the column) without touching auth logic.
-- Venue accounts are unaffected — they are already redirected to the venue portal by the authenticated layout before this runs.
-- Existing users: the migration backfills `onboarded_at = now()` for all current profiles, so only genuinely new accounts see it.
+ALTER TABLE public.profiles
+  ADD CONSTRAINT profiles_dob_min_age_18
+  CHECK (
+    date_of_birth IS NULL
+    OR date_of_birth <= (CURRENT_DATE - INTERVAL '18 years')::date
+  );
 
-## The flow (`/onboarding`)
+ALTER TABLE public.profiles
+  ADD CONSTRAINT profiles_dob_sane
+  CHECK (date_of_birth IS NULL OR date_of_birth >= DATE '1900-01-01');
 
-Full-screen, no site header, progress dots at the top, three steps:
+ALTER TABLE public.profiles
+  ADD CONSTRAINT profiles_nationality_len
+  CHECK (nationality IS NULL OR char_length(nationality) BETWEEN 2 AND 2);
+```
 
-1. **Welcome** — "Welcome to Ideal Gathering, {name}" + one line on the idea: small tables, real conversation, a seat kept for you. Continue.
-2. **How it works** — three compact rows: find a table near you / claim a seat / show up and talk. Continue.
-3. **Quiz intro** — "Let's find your kind of table": one short paragraph on what the four traits do (better seat matching), then two actions: **Take the quiz** (~2 minutes) and a quiet **Skip for now**.
+Note on the 18+ check: `CURRENT_DATE` is not immutable-safe for some constraint contexts, so the age rule is enforced by a `BEFORE INSERT OR UPDATE` trigger instead of a CHECK, matching the project convention of using triggers for time-dependent rules:
 
-Then, if they chose to take it, the quiz itself runs inline as step 4, followed by the result card with a single "Take me in" button to `/dashboard`.
+```sql
+CREATE OR REPLACE FUNCTION public.enforce_profile_min_age()
+RETURNS trigger LANGUAGE plpgsql SECURITY DEFINER SET search_path = public AS $$
+BEGIN
+  IF NEW.date_of_birth IS NOT NULL
+     AND NEW.date_of_birth > (CURRENT_DATE - INTERVAL '18 years')::date THEN
+    RAISE EXCEPTION 'MIN_AGE_18';
+  END IF;
+  RETURN NEW;
+END $$;
 
-Back is available on steps 2 and 3. Closing the tab mid-flow just means onboarding shows again next visit (nothing written until the end).
+CREATE TRIGGER profiles_min_age
+BEFORE INSERT OR UPDATE ON public.profiles
+FOR EACH ROW EXECUTE FUNCTION public.enforce_profile_min_age();
+```
 
-## Skip vs complete
+So the migration keeps only the sane-range and nationality-length CHECKs, and the trigger handles 18+.
 
-- **Complete**: `saveMyTraits` writes the trait scores (existing code path), then `onboarded_at` is stamped, then → `/dashboard`. No quiz prompt anywhere afterwards.
-- **Skip for now** (from the quiz intro, or the quiz's own skip-out link mid-questions): `onboarded_at` is stamped with no trait write, then → `/dashboard`. Traits stay null, so the dashboard prompt appears.
+No new grants needed: `profiles` already grants SELECT/INSERT/UPDATE to `authenticated` and ALL to `service_role`, and grants are table-level.
 
-Skipping is never blocked and never re-asked as a modal.
+### Visibility / RLS
 
-## Dashboard prompt for skippers
+Confirmed by inspecting current policies: `profiles` has exactly three policies — "Users manage own profile" (`auth.uid() = id`, ALL), "Admins read all profiles", "Admins update any profile". These are row-level, so new columns inherit the same owner+admin-only visibility with no policy change required. There is no public profiles view or public read function exposing raw profile columns, so date of birth and nationality are not leaked anywhere. Nothing to adjust.
 
-The existing `TakeQuizNudge` (already used on explore and gathering detail) is reused on the dashboard, placed under the header/greeting above the gatherings list, rendered only when traits are null. One change to it: it currently links to `/` with hash `matching`, which sends a signed-in user back to the marketing page. It should point at `/onboarding?step=quiz` (quiz-only mode, no welcome screens) instead — that also fixes the same odd jump on explore and gathering detail.
+### Nationality country list — decision
 
-## Quiz reuse vs new
+Two options:
+- Reuse `COUNTRIES` from `locations.ts` (10 entries after Armenia). Zero new code, but it is a residence-market list; a user from Georgia, India, or Russia would have no correct option.
+- Add a separate full ISO-3166 country list.
 
-Reused as-is, unchanged:
+**Recommendation: add a separate full ISO list** in a new `src/lib/countries.ts` (~195 entries, code + English name, no dependency), and keep `COUNTRIES` as the residence/market list. Nationality is genuinely global and a 10-item list would force wrong answers. The nationality select renders that list, sorted alphabetically, storing the ISO alpha-2 code (hence the 2-char CHECK). A small `nationalityName(code)` helper mirrors the existing `countryName()` helper.
 
-- `src/lib/matching.ts` — `QUIZ`, `scoreQuiz`, `levelFor`, persistence helpers.
-- `src/lib/profile-traits.ts` — `saveMyTraits`.
-- `src/components/table-fit.tsx` — `TakeQuizNudge` (link target only).
+### Where the fields land in `profile.tsx`
 
-New:
+Inside the existing "About" card (`section` with `t("profile.about")`), in the `grid gap-4` right after the Display name field and before Bio:
 
-- Migration: add `profiles.onboarded_at`, backfill existing rows.
-- `src/routes/_authenticated/onboarding.tsx` — the step machine, welcome screens, and the finish/skip writes.
-- `src/components/onboarding/quiz-steps.tsx` — the question-and-answer UI in app (not landing/cosmic) styling, driven by the same `QUIZ` data and `scoreQuiz`. The landing widget's markup is cosmic-themed and tangled with its own preview/CTA states, so onboarding renders the same data rather than importing that component; `src/components/landing/matching-quiz.tsx` is not modified.
-- i18n keys under `onboarding.*` for the welcome copy and buttons, in EN, TR and FA (quiz question copy already exists and is reused).
+```text
+About
+├── Display name        (existing)
+├── [NEW] Date of birth | Nationality   ← 2-col grid on sm+, stacked on mobile
+├── Bio                 (existing)
+└── Location box        (existing)
+```
 
-## Technical notes
+- **Date of birth**: native `<Input type="date">` (consistent with existing shadcn inputs, no new dependency), `max` attribute set to today-minus-18-years so the browser blocks under-18 picks. Below it, a muted line showing the derived age (`Age 31`) when a valid date is set. Client-side guard in `saveProfile` shows a localized error if under 18 or invalid, before hitting the DB.
+- **Nationality**: shadcn `Select` over the full ISO list, with a "Prefer not to say" clear option (sets `null`).
+- Both are optional, editable like bio, saved by the same existing Save button — no onboarding gating, no required-field behavior.
 
-- Profile read/write goes through the browser Supabase client with the existing owner RLS policy on `profiles`; no new policy or grant is needed.
-- The redirect check lives in the dashboard route's existing profile-aware data path, so it costs no extra round trip on later visits.
-- Route is under `_authenticated/`, so the managed auth gate handles sign-in state.
+### Other touchpoints
+
+- Load the two columns in the existing profile `select` and include them in the existing `update` payload.
+- New i18n keys in `src/i18n/translations.ts` for EN, TR, FA: `profile.dob`, `profile.dobHint`, `profile.age`, `profile.minAge` (error), `profile.nationality`, `profile.selectNationality`, `profile.nationalityNone`.
+- `src/integrations/supabase/types.ts` regenerates from the migration.
+
+Out of scope: showing age/nationality on the profile header, in gathering rosters, or anywhere public.
