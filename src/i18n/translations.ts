@@ -903,6 +903,7 @@ export const translations: Record<Lang, Dict> = {
     "landing.v3.hero.cta": "Join a gathering",
     "landing.v3.hero.secondary": "See how it works",
     "landing.v3.hero.note": "Free to join · Verified members · Approved venues",
+    "landing.v3.hero.waitlist": "Or join the waitlist",
     "landing.v3.hero.caption": "Every table leaves one chair open. That chair is the whole point.",
 
     "landing.v3.demo.eyebrow": "See it before you sign up",
@@ -1966,6 +1967,7 @@ export const translations: Record<Lang, Dict> = {
     "landing.v3.hero.cta": "Bir buluşmaya katıl",
     "landing.v3.hero.secondary": "Nasıl çalıştığını gör",
     "landing.v3.hero.note": "Katılım ücretsiz · Doğrulanmış üyeler · Onaylı mekânlar",
+    "landing.v3.hero.waitlist": "Ya da bekleme listesine katıl",
     "landing.v3.hero.caption": "Her masada bir sandalye boş kalır. Bütün mesele o sandalye.",
 
     "landing.v3.demo.eyebrow": "Kaydolmadan önce gör",
@@ -3027,6 +3029,7 @@ export const translations: Record<Lang, Dict> = {
     "landing.v3.hero.cta": "به یک گردهمایی بپیوندید",
     "landing.v3.hero.secondary": "ببینید چطور کار می‌کند",
     "landing.v3.hero.note": "پیوستن رایگان · اعضای تأییدشده · مکان‌های بررسی‌شده",
+    "landing.v3.hero.waitlist": "یا به فهرست انتظار بپیوندید",
     "landing.v3.hero.caption": "سر هر میز یک صندلی خالی می‌ماند. تمام ماجرا همان صندلی است.",
 
     "landing.v3.demo.eyebrow": "پیش از ثبت‌نام ببینید",
