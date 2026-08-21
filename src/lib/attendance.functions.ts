@@ -8,6 +8,7 @@ export type AttendanceRow = {
   avatar_url: string | null;
   joined_at: string;
   checked_in_at: string | null;
+  checked_out_at: string | null;
 };
 
 export type AttendanceRoster = {
