@@ -24,6 +24,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as VenueDashboardRouteImport } from './routes/venue.dashboard'
 import { Route as VenueAuthRouteImport } from './routes/venue.auth'
 import { Route as GatheringsIdRouteImport } from './routes/gatherings.$id'
+import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
 import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
 import { Route as AuthenticatedMyGatheringsRouteImport } from './routes/_authenticated/my-gatherings'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
@@ -110,6 +111,11 @@ const GatheringsIdRoute = GatheringsIdRouteImport.update({
   path: '/gatherings/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedSettingsRoute = AuthenticatedSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedProfileRoute = AuthenticatedProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
@@ -192,6 +198,7 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/my-gatherings': typeof AuthenticatedMyGatheringsRoute
   '/profile': typeof AuthenticatedProfileRoute
+  '/settings': typeof AuthenticatedSettingsRoute
   '/gatherings/$id': typeof GatheringsIdRoute
   '/venue/auth': typeof VenueAuthRoute
   '/venue/dashboard': typeof VenueDashboardRoute
@@ -219,6 +226,7 @@ export interface FileRoutesByTo {
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/my-gatherings': typeof AuthenticatedMyGatheringsRoute
   '/profile': typeof AuthenticatedProfileRoute
+  '/settings': typeof AuthenticatedSettingsRoute
   '/gatherings/$id': typeof GatheringsIdRoute
   '/venue/auth': typeof VenueAuthRoute
   '/venue/dashboard': typeof VenueDashboardRoute
@@ -248,6 +256,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/my-gatherings': typeof AuthenticatedMyGatheringsRoute
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
+  '/_authenticated/settings': typeof AuthenticatedSettingsRoute
   '/gatherings/$id': typeof GatheringsIdRoute
   '/venue/auth': typeof VenueAuthRoute
   '/venue/dashboard': typeof VenueDashboardRoute
@@ -277,6 +286,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/my-gatherings'
     | '/profile'
+    | '/settings'
     | '/gatherings/$id'
     | '/venue/auth'
     | '/venue/dashboard'
@@ -304,6 +314,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/my-gatherings'
     | '/profile'
+    | '/settings'
     | '/gatherings/$id'
     | '/venue/auth'
     | '/venue/dashboard'
@@ -332,6 +343,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard'
     | '/_authenticated/my-gatherings'
     | '/_authenticated/profile'
+    | '/_authenticated/settings'
     | '/gatherings/$id'
     | '/venue/auth'
     | '/venue/dashboard'
@@ -469,6 +481,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GatheringsIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/settings': {
+      id: '/_authenticated/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof AuthenticatedSettingsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/profile': {
       id: '/_authenticated/profile'
       path: '/profile'
@@ -556,6 +575,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedMyGatheringsRoute: typeof AuthenticatedMyGatheringsRoute
   AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
+  AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute
   AuthenticatedBusinessesIdRoute: typeof AuthenticatedBusinessesIdRoute
 }
 
@@ -566,6 +586,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedMyGatheringsRoute: AuthenticatedMyGatheringsRoute,
   AuthenticatedProfileRoute: AuthenticatedProfileRoute,
+  AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
   AuthenticatedBusinessesIdRoute: AuthenticatedBusinessesIdRoute,
 }
 
