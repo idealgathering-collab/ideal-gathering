@@ -1,96 +1,61 @@
-# Armenia locations + age & nationality on profile
+# Device geolocation: "Use my location", smarter map center, nearby gatherings
 
-Two scoped additions: static location data for Armenia, and two new optional profile fields (date of birth, nationality).
+Three related additions, all opt-in and all degrading to today's behavior when location is unavailable or denied.
 
-## 1. Armenia in location dropdowns
+## 1. "Use my location" button on address entry
 
-Static-data-only edit to `src/lib/locations.ts`, no UI changes — the existing country/city/neighborhood dropdowns pick it up automatically.
+New shared hook `useDeviceLocation()` (in `src/lib/geolocation.ts`) wrapping `navigator.geolocation.getCurrentPosition` with:
+- support detection (`"geolocation" in navigator`), a 10s timeout, `enableHighAccuracy: true`
+- returned state: `idle | locating | ready | denied | unavailable`
+- a one-time in-memory cache of the last fix so repeat uses don't re-prompt
 
-- `COUNTRIES`: add `{ code: "AM", name: "Armenia" }` placed first (launch market), before Türkiye.
-- `CITIES_BY_COUNTRY.AM`: Yerevan, Gyumri, Vanadzor, Vagharshapat (Etchmiadzin), Hrazdan, Abovyan, Kapan, Armavir, Gavar, Artashat, Ijevan, Charentsavan, Sevan, Dilijan, Goris, Alaverdi.
-- `NEIGHBORHOODS_BY_CITY.Yerevan`: the 12 administrative districts — Kentron, Arabkir, Ajapnyak, Avan, Davtashen, Erebuni, Kanaker-Zeytun, Malatia-Sebastia, Nor Nork, Nork-Marash, Nubarashen, Shengavit — plus the widely used sub-areas Cascade and Kond.
+UI: a compact icon+label button (`Crosshair` icon, `variant="outline"`, rounded, same height as the input) sitting directly to the right of the location autocomplete input, wrapping below it on narrow screens. Label: "Use my location" (EN/TR/FA). While locating it shows a spinner and is disabled.
 
-Cities not listed keep the existing free-text fallback.
+On success it calls the **existing** `reverseGeocode` from `src/lib/nominatim.ts` (already shared, already rate-limited), then fills exactly the same fields the autocomplete fills — `display_name`, `address`, `city`, `lat`, `lng` — and moves the map marker.
 
-## 2. Age (date of birth) and nationality on profile
+Where it appears:
+- `src/components/location-map-picker.tsx` — next to its `LocationAutocomplete` (this is the picker used by the saved-location dialog, which is the create-gathering saved-location flow).
+- Venue registration: it uses the same map picker component, so it inherits the button with no extra work (verified during build; if it uses a bare autocomplete instead, the same button is added there).
 
-### Migration
+Failure handling: permission denied or timeout → a single non-blocking toast ("Couldn't get your location — you can still search or drop a pin") and the button reverts to idle. Nothing is cleared, no error UI persists.
 
-```sql
-ALTER TABLE public.profiles
-  ADD COLUMN date_of_birth date,
-  ADD COLUMN nationality text;
+## 2. Map picker default center
 
-ALTER TABLE public.profiles
-  ADD CONSTRAINT profiles_dob_min_age_18
-  CHECK (
-    date_of_birth IS NULL
-    OR date_of_birth <= (CURRENT_DATE - INTERVAL '18 years')::date
-  );
+`DEFAULT_CENTER` (Istanbul) stops being the first choice. New fallback order when there is no existing value:
 
-ALTER TABLE public.profiles
-  ADD CONSTRAINT profiles_dob_sane
-  CHECK (date_of_birth IS NULL OR date_of_birth >= DATE '1900-01-01');
+1. **Device location** — only if `navigator.permissions.query({name:"geolocation"})` reports `granted` (a silent read that never prompts). If granted, we fetch the position without any prompt.
+2. **Profile city** — read `profiles.city` (already loaded elsewhere) and forward-geocode it once via Nominatim, cached per session.
+3. **Istanbul** — last resort, unchanged.
 
-ALTER TABLE public.profiles
-  ADD CONSTRAINT profiles_nationality_len
-  CHECK (nationality IS NULL OR char_length(nationality) BETWEEN 2 AND 2);
-```
+Prompt timing: no prompt on page load, ever. The picker only mounts inside the saved-location dialog, and even there we do not prompt — the permission prompt happens **only** when the user presses "Use my location". If permission state is `prompt` or `denied`, step 1 is skipped silently.
 
-Note on the 18+ check: `CURRENT_DATE` is not immutable-safe for some constraint contexts, so the age rule is enforced by a `BEFORE INSERT OR UPDATE` trigger instead of a CHECK, matching the project convention of using triggers for time-dependent rules:
+The map still renders immediately at the best-known center; if a better center resolves a moment later (profile-city geocode), the map pans once, before the user interacts.
 
-```sql
-CREATE OR REPLACE FUNCTION public.enforce_profile_min_age()
-RETURNS trigger LANGUAGE plpgsql SECURITY DEFINER SET search_path = public AS $$
-BEGIN
-  IF NEW.date_of_birth IS NOT NULL
-     AND NEW.date_of_birth > (CURRENT_DATE - INTERVAL '18 years')::date THEN
-    RAISE EXCEPTION 'MIN_AGE_18';
-  END IF;
-  RETURN NEW;
-END $$;
+## 3. Nearby gathering suggestions
 
-CREATE TRIGGER profiles_min_age
-BEFORE INSERT OR UPDATE ON public.profiles
-FOR EACH ROW EXECUTE FUNCTION public.enforce_profile_min_age();
-```
+Recommendation: **both, but driven by one opt-in control** — a "Near me" toggle in the Explore filter row next to `CityFilter`, plus a distance label on each gathering card.
 
-So the migration keeps only the sane-range and nationality-length CHECKs, and the trigger handles 18+.
+- Pressing "Near me" is the action that triggers the permission prompt (nothing ambient).
+- Once a fix exists, each card gets a small distance chip ("2.4 km away") in the card's meta row, and the Explore grid switches sort from `starts_at` to ascending distance. Gatherings with no coordinates keep their normal position at the end of the list and show no chip.
+- Dashboard: the existing "soonest gathering" highlight also picks up the distance chip when a fix exists. No new dashboard section.
 
-No new grants needed: `profiles` already grants SELECT/INSERT/UPDATE to `authenticated` and ALL to `service_role`, and grants are table-level.
+Distance computation is fully client-side haversine — no geocoding per gathering:
+- `gatherings.lat/lng` are already populated for saved-location gatherings.
+- Venue-hosted gatherings currently store no lat/lng, but `businesses.lat/lng` are readable (verified: `anon`/`authenticated` hold SELECT on those columns), so the Explore query's existing `business:businesses(...)` join adds `lat,lng` and the card falls back to venue coordinates.
 
-### Visibility / RLS
+Degradation: if permission is denied/unavailable, the toggle stays off (with a one-time toast), no chips render, and the feed is exactly today's city-filtered, time-sorted view. The toggle itself is hidden entirely when `navigator.geolocation` is absent.
 
-Confirmed by inspecting current policies: `profiles` has exactly three policies — "Users manage own profile" (`auth.uid() = id`, ALL), "Admins read all profiles", "Admins update any profile". These are row-level, so new columns inherit the same owner+admin-only visibility with no policy change required. There is no public profiles view or public read function exposing raw profile columns, so date of birth and nationality are not leaked anywhere. Nothing to adjust.
+## Technical notes
 
-### Nationality country list — decision
+- New: `src/lib/geolocation.ts` (`useDeviceLocation` hook, `haversineKm`, `formatDistance`, permission-state probe), `src/components/use-my-location-button.tsx`, `src/components/distance-chip.tsx`.
+- Edited: `location-map-picker.tsx` (button + center order), `explore.tsx` (Near-me toggle, distance sort), `gathering-card.tsx` (optional `distanceKm` prop → chip), `lib/gatherings.ts` (select `lat,lng` on gatherings and on the business join; add them to `GatheringCard`), `dashboard.tsx` (chip on the highlighted gathering), i18n keys for EN/TR/FA.
+- No database migration, no schema change, no change to city filtering, join rules, or gathering creation logic.
+- `Permissions-Policy: geolocation=(self)` is already set in `src/server.ts`, so the browser API is allowed on our own origin.
 
-Two options:
-- Reuse `COUNTRIES` from `locations.ts` (10 entries after Armenia). Zero new code, but it is a residence-market list; a user from Georgia, India, or Russia would have no correct option.
-- Add a separate full ISO-3166 country list.
+## Graceful-failure confirmation
 
-**Recommendation: add a separate full ISO list** in a new `src/lib/countries.ts` (~195 entries, code + English name, no dependency), and keep `COUNTRIES` as the residence/market list. Nationality is genuinely global and a 10-item list would force wrong answers. The nationality select renders that list, sorted alphabetically, storing the ISO alpha-2 code (hence the 2-char CHECK). A small `nationalityName(code)` helper mirrors the existing `countryName()` helper.
-
-### Where the fields land in `profile.tsx`
-
-Inside the existing "About" card (`section` with `t("profile.about")`), in the `grid gap-4` right after the Display name field and before Bio:
-
-```text
-About
-├── Display name        (existing)
-├── [NEW] Date of birth | Nationality   ← 2-col grid on sm+, stacked on mobile
-├── Bio                 (existing)
-└── Location box        (existing)
-```
-
-- **Date of birth**: native `<Input type="date">` (consistent with existing shadcn inputs, no new dependency), `max` attribute set to today-minus-18-years so the browser blocks under-18 picks. Below it, a muted line showing the derived age (`Age 31`) when a valid date is set. Client-side guard in `saveProfile` shows a localized error if under 18 or invalid, before hitting the DB.
-- **Nationality**: shadcn `Select` over the full ISO list, with a "Prefer not to say" clear option (sets `null`).
-- Both are optional, editable like bio, saved by the same existing Save button — no onboarding gating, no required-field behavior.
-
-### Other touchpoints
-
-- Load the two columns in the existing profile `select` and include them in the existing `update` payload.
-- New i18n keys in `src/i18n/translations.ts` for EN, TR, FA: `profile.dob`, `profile.dobHint`, `profile.age`, `profile.minAge` (error), `profile.nationality`, `profile.selectNationality`, `profile.nationalityNone`.
-- `src/integrations/supabase/types.ts` regenerates from the migration.
-
-Out of scope: showing age/nationality on the profile header, in gathering rosters, or anywhere public.
+| Feature | No permission / no support |
+| --- | --- |
+| Use my location button | Toast once, button back to idle; typing and pin-dropping unchanged |
+| Map default center | Silently falls through to profile city, then Istanbul |
+| Nearby gatherings | Toggle hidden (no support) or stays off (denied); Explore renders today's city view with no chips |
