@@ -102,6 +102,12 @@ function HeroSection() {
               >
                 {t("landing.v3.hero.secondary")}
               </a>
+              <Link
+                to="/waitlist"
+                className="cosmic-outline-btn inline-flex items-center justify-center rounded-full px-7 py-4 text-base font-medium"
+              >
+                {t("landing.v3.hero.waitlist")}
+              </Link>
             </div>
           </Reveal>
 
