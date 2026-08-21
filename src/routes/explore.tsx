@@ -1,13 +1,16 @@
+import { useState } from "react";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { Sparkles, ArrowRight } from "lucide-react";
+import { Sparkles, ArrowRight, Crosshair, Loader2 } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { GatheringCard } from "@/components/gathering-card";
 import { CityFilter } from "@/components/city-filter";
 import { TakeQuizNudge } from "@/components/table-fit";
 import { Button } from "@/components/ui/button";
-import { fetchApprovedGatherings, fetchGatheringCities } from "@/lib/gatherings";
+import { fetchApprovedGatherings, fetchGatheringCities, gatheringCoords } from "@/lib/gatherings";
+import { useDeviceLocation, haversineKm } from "@/lib/geolocation";
+import { toast } from "sonner";
 import { getTableFit } from "@/lib/matching.functions";
 import { supabase } from "@/integrations/supabase/client";
 import { useSession } from "@/hooks/use-session";
@@ -72,6 +75,36 @@ function Explore() {
     });
   }
 
+  const geo = useDeviceLocation();
+  const [nearMe, setNearMe] = useState(false);
+
+  async function toggleNearMe() {
+    if (nearMe) {
+      setNearMe(false);
+      return;
+    }
+    const fix = await geo.request();
+    if (!fix) {
+      toast.error(t("geo.failed"));
+      return;
+    }
+    setNearMe(true);
+  }
+
+  const withDistance = (gatherings ?? []).map((g) => {
+    const coords = gatheringCoords(g);
+    const distanceKm =
+      nearMe && geo.fix && coords ? haversineKm(geo.fix, coords) : null;
+    return { g, distanceKm };
+  });
+  if (nearMe && geo.fix) {
+    withDistance.sort((a, b) => {
+      if (a.distanceKm === null) return b.distanceKm === null ? 0 : 1;
+      if (b.distanceKm === null) return -1;
+      return a.distanceKm - b.distanceKm;
+    });
+  }
+
   const ids = (gatherings ?? []).map((g) => g.id);
   const { data: fitData } = useQuery({
     queryKey: ["table-fit", user?.id, ids],
@@ -105,8 +138,24 @@ function Explore() {
       </section>
 
       <main className="mx-auto max-w-6xl px-4 py-14">
-        <div className="mb-8">
+        <div className="mb-8 flex flex-wrap items-center gap-3">
           <CityFilter city={activeCity} cities={cities ?? []} onChange={setCity} />
+          {geo.supported && (
+            <Button
+              type="button"
+              variant={nearMe ? "default" : "outline"}
+              className="h-9 rounded-full"
+              disabled={geo.status === "locating"}
+              onClick={toggleNearMe}
+            >
+              {geo.status === "locating" ? (
+                <Loader2 className="me-1.5 h-4 w-4 animate-spin" />
+              ) : (
+                <Crosshair className="me-1.5 h-4 w-4" />
+              )}
+              {t("geo.nearMe")}
+            </Button>
+          )}
         </div>
         {showQuizNudge && (
           <div className="mb-8">
@@ -140,8 +189,14 @@ function Explore() {
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {gatherings!.map((g) => (
-              <GatheringCard key={g.id} g={g} fit={fitById.get(g.id)} showCity={!activeCity} />
+            {withDistance.map(({ g, distanceKm }) => (
+              <GatheringCard
+                key={g.id}
+                g={g}
+                fit={fitById.get(g.id)}
+                showCity={!activeCity}
+                distanceKm={distanceKm}
+              />
             ))}
           </div>
         )}

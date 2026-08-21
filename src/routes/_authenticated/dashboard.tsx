@@ -11,6 +11,8 @@ import type { GatheringCard as GCard } from "@/lib/gatherings";
 import { useT } from "@/i18n";
 import { TakeQuizNudge } from "@/components/table-fit";
 import { traitsFromRow } from "@/lib/matching";
+import { gatheringCoords } from "@/lib/gatherings";
+import { getCachedFix, haversineKm } from "@/lib/geolocation";
 
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
@@ -138,6 +140,9 @@ function Dashboard() {
   });
 
   const next = data?.next;
+  const fix = getCachedFix();
+  const nextCoords = next ? gatheringCoords(next) : null;
+  const nextDistance = fix && nextCoords ? haversineKm(fix, nextCoords) : null;
 
   return (
     <div className="min-h-screen bg-background">
@@ -167,7 +172,7 @@ function Dashboard() {
             <div className="mt-4 h-64 animate-pulse rounded-3xl bg-card" />
           ) : next ? (
             <div className="mt-4">
-              <GatheringCard g={next} />
+              <GatheringCard g={next} distanceKm={nextDistance} />
             </div>
           ) : (
             <div className="mt-4 flex flex-col items-start gap-4 rounded-2xl border border-dashed border-border bg-card p-8">
