@@ -75,6 +75,12 @@ export type Database = {
         Row: {
           checked_in_at: string | null
           checked_in_by: string | null
+          checked_out_at: string | null
+          checked_out_by: string | null
+          checkin_lat: number | null
+          checkin_lng: number | null
+          checkout_lat: number | null
+          checkout_lng: number | null
           gathering_id: string
           joined_at: string
           user_id: string
@@ -82,6 +88,12 @@ export type Database = {
         Insert: {
           checked_in_at?: string | null
           checked_in_by?: string | null
+          checked_out_at?: string | null
+          checked_out_by?: string | null
+          checkin_lat?: number | null
+          checkin_lng?: number | null
+          checkout_lat?: number | null
+          checkout_lng?: number | null
           gathering_id: string
           joined_at?: string
           user_id: string
@@ -89,6 +101,12 @@ export type Database = {
         Update: {
           checked_in_at?: string | null
           checked_in_by?: string | null
+          checked_out_at?: string | null
+          checked_out_by?: string | null
+          checkin_lat?: number | null
+          checkin_lng?: number | null
+          checkout_lat?: number | null
+          checkout_lng?: number | null
           gathering_id?: string
           joined_at?: string
           user_id?: string
@@ -186,6 +204,44 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "gathering_messages_gathering_id_fkey"
+            columns: ["gathering_id"]
+            isOneToOne: false
+            referencedRelation: "gatherings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      gathering_ratings: {
+        Row: {
+          comment: string | null
+          created_at: string
+          gathering_id: string
+          id: string
+          ratee_id: string | null
+          rater_id: string
+          score: number
+        }
+        Insert: {
+          comment?: string | null
+          created_at?: string
+          gathering_id: string
+          id?: string
+          ratee_id?: string | null
+          rater_id: string
+          score: number
+        }
+        Update: {
+          comment?: string | null
+          created_at?: string
+          gathering_id?: string
+          id?: string
+          ratee_id?: string | null
+          rater_id?: string
+          score?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gathering_ratings_gathering_id_fkey"
             columns: ["gathering_id"]
             isOneToOne: false
             referencedRelation: "gatherings"
