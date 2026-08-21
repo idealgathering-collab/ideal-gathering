@@ -29,7 +29,14 @@ type Row = {
   reject_reason: string | null;
 };
 
-export function SavedLocationsSection({ countryCode }: { countryCode?: string | null }) {
+export function SavedLocationsSection({
+  countryCode,
+  className,
+}: {
+  countryCode?: string | null;
+  /** Override the default card shell (used when nested inside a grouped band). */
+  className?: string;
+}) {
   const t = useT();
   const { user } = useSession();
   const [rows, setRows] = useState<Row[] | null>(null);
@@ -75,7 +82,7 @@ export function SavedLocationsSection({ countryCode }: { countryCode?: string | 
   }
 
   return (
-    <section className="mt-6 rounded-3xl border border-border bg-card p-6">
+    <section className={className ?? "mt-6 rounded-3xl border border-border bg-card p-6"}>
       <div className="flex items-start justify-between gap-4">
         <div>
           <h2 className="font-display text-xl">{t("savedLoc.list.title")}</h2>

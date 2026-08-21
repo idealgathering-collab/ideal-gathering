@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useT } from "@/i18n";
 import { listMyBlocks, unblockUser, type BlockedPerson } from "@/lib/moderation.functions";
 
-export function BlockedUsersSection() {
+export function BlockedUsersSection({ className }: { className?: string } = {}) {
   const t = useT();
   const [rows, setRows] = useState<BlockedPerson[] | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
@@ -36,7 +36,7 @@ export function BlockedUsersSection() {
   }
 
   return (
-    <section className="mt-8 rounded-3xl border border-border bg-card p-6">
+    <section className={className ?? "mt-8 rounded-3xl border border-border bg-card p-6"}>
       <h2 className="flex items-center gap-2 font-display text-xl">
         <ShieldOff className="h-5 w-5 text-muted-foreground" />
         {t("mod.blocked.title")}
