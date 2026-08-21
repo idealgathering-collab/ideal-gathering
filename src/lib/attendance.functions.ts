@@ -45,11 +45,19 @@ export function classifyAttendanceError(message: string):
   | "too_early"
   | "window_closed"
   | "closed"
+  | "too_far"
+  | "not_checked_in"
+  | "already"
+  | "location_required"
   | "forbidden"
   | "unknown" {
   if (message.includes("CHECKIN_TOO_EARLY")) return "too_early";
   if (message.includes("CHECKIN_WINDOW_CLOSED")) return "window_closed";
   if (message.includes("GATHERING_CLOSED")) return "closed";
+  if (message.includes("CHECKIN_TOO_FAR")) return "too_far";
+  if (message.includes("NOT_CHECKED_IN")) return "not_checked_in";
+  if (message.includes("ATTENDANCE_ALREADY_SET")) return "already";
+  if (message.includes("LOCATION_REQUIRED")) return "location_required";
   if (/forbidden|permission|row-level/i.test(message)) return "forbidden";
   return "unknown";
 }
@@ -80,7 +88,7 @@ export const listAttendance = createServerFn({ method: "POST" })
 
     const { data: rows, error } = await supabaseAdmin
       .from("gathering_attendees")
-      .select("user_id, joined_at, checked_in_at")
+      .select("user_id, joined_at, checked_in_at, checked_out_at")
       .eq("gathering_id", data.gatheringId)
       .order("joined_at", { ascending: true });
     if (error) throw new Error(error.message);
@@ -114,6 +122,7 @@ export const listAttendance = createServerFn({ method: "POST" })
         avatar_url: nameById.get(r.user_id)?.avatar_url ?? null,
         joined_at: r.joined_at,
         checked_in_at: r.checked_in_at,
+        checked_out_at: r.checked_out_at,
       })),
     };
   });
@@ -168,4 +177,78 @@ export const listHostAttendanceSummary = createServerFn({ method: "GET" })
         attended: rows.filter((r) => r.checked_in_at).length,
       };
     });
+  });
+
+export type MyAttendance = {
+  isAttendee: boolean;
+  windowOpen: boolean;
+  windowClosed: boolean;
+  checked_in_at: string | null;
+  checked_out_at: string | null;
+};
+
+/** The caller's own attendance state for one gathering. */
+export const myAttendance = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) => z.object({ gatheringId: z.string().uuid() }).parse(d))
+  .handler(async ({ data, context }): Promise<MyAttendance> => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: g } = await supabaseAdmin
+      .from("gatherings")
+      .select("starts_at, ends_at, status")
+      .eq("id", data.gatheringId)
+      .maybeSingle();
+    const { data: row } = await context.supabase
+      .from("gathering_attendees")
+      .select("checked_in_at, checked_out_at")
+      .eq("gathering_id", data.gatheringId)
+      .eq("user_id", context.userId)
+      .maybeSingle();
+
+    const now = Date.now();
+    const w = g ? checkinWindow(g.starts_at, g.ends_at) : { opensAt: now + 1, closesAt: now - 1 };
+    return {
+      isAttendee: !!row,
+      windowOpen:
+        now >= w.opensAt && now <= w.closesAt && g?.status !== "cancelled" && g?.status !== "rejected",
+      windowClosed: now > w.closesAt,
+      checked_in_at: row?.checked_in_at ?? null,
+      checked_out_at: row?.checked_out_at ?? null,
+    };
+  });
+
+/**
+ * Self-service check-in / check-out. RLS plus the guard_attendance_update trigger
+ * are the real boundary: the trigger re-verifies the window and the 100 m proximity
+ * against the gathering's own coordinates, so spoofed client distances gain nothing.
+ */
+export const selfCheck = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) =>
+    z
+      .object({
+        gatheringId: z.string().uuid(),
+        action: z.enum(["in", "out"]),
+        lat: z.number().min(-90).max(90),
+        lng: z.number().min(-180).max(180),
+      })
+      .parse(d),
+  )
+  .handler(async ({ data, context }): Promise<{ checked_in_at: string | null; checked_out_at: string | null }> => {
+    const now = new Date().toISOString();
+    const patch =
+      data.action === "in"
+        ? { checked_in_at: now, checkin_lat: data.lat, checkin_lng: data.lng }
+        : { checked_out_at: now, checkout_lat: data.lat, checkout_lng: data.lng };
+
+    const { data: row, error } = await context.supabase
+      .from("gathering_attendees")
+      .update(patch)
+      .eq("gathering_id", data.gatheringId)
+      .eq("user_id", context.userId)
+      .select("checked_in_at, checked_out_at")
+      .maybeSingle();
+    if (error) throw new Error(error.message);
+    if (!row) throw new Error("Forbidden");
+    return { checked_in_at: row.checked_in_at, checked_out_at: row.checked_out_at };
   });
