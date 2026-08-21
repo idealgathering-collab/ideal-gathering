@@ -29,7 +29,14 @@ type Row = {
   reject_reason: string | null;
 };
 
-export function SavedLocationsSection({ countryCode }: { countryCode?: string | null }) {
+export function SavedLocationsSection({
+  countryCode,
+  className,
+}: {
+  countryCode?: string | null;
+  /** Override the default card shell (used when nested inside a grouped band). */
+  className?: string;
+}) {
   const t = useT();
   const { user } = useSession();
   const [rows, setRows] = useState<Row[] | null>(null);
