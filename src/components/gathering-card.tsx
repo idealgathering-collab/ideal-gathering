@@ -10,16 +10,20 @@ export function GatheringCard({
   g,
   fit,
   showCity,
+  distanceKm,
 }: {
   g: G;
   fit?: TableFit;
   /** Show the city on the card — useful when the feed spans multiple cities. */
   showCity?: boolean;
+  /** Distance from the viewer's device location, in km. */
+  distanceKm?: number | null;
 }) {
   const t = useT();
   const { lang } = useI18n();
   const seatsLeft = Math.max(0, g.seats - g.attendee_count);
   const full = seatsLeft === 0;
+
 
   const chipLabel = g.table?.label
     ? `${t("card.table")} ${g.table.label}`
