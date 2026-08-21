@@ -1,69 +1,66 @@
-# Profile page redesign (layout + visuals only)
+# First-login onboarding flow
 
-No field, save logic, upload, or delete behavior changes. Every existing section stays, with the same inputs and handlers — only how they are framed, grouped, and ordered on screen changes.
+A short, one-time welcome shown the first time a user signs in after signup, ending in the personality quiz. No changes to the quiz's own questions, scoring, or persistence.
 
-## The problem today
+## Where "seen onboarding" is tracked
 
-`profile.tsx` renders a plain `max-w-3xl` column of eight visually identical `rounded-3xl border bg-card p-6` blocks. The avatar upload widget is one of them, so the page never establishes "this is you" — it reads as a settings dump where a destructive delete card carries the same weight as a bio field.
+One new column on `profiles`: `onboarded_at timestamptz` (null = never onboarded). It is set when the user finishes the flow, whether they take the quiz or skip it — so onboarding never reappears.
 
-## Proposed structure
+Whether they actually took the quiz is already knowable: `profiles.traits_updated_at` / `trait_*` are null until `saveMyTraits` runs. So:
 
-```text
-┌──────────────────────────────────────────────┐
-│  IDENTITY HEADER  (gradient/plum banner)     │
-│  ⬤ avatar   Display name                     │
-│   +upload   Neighborhood · City · Country    │
-│             [interest] [tags] [+3]   email   │
-└──────────────────────────────────────────────┘
+- onboarding shown ⇔ `onboarded_at is null`
+- dashboard quiz prompt shown ⇔ `onboarded_at is not null` AND `traits_updated_at is null`
 
-  YOUR PUBLIC INFO            ← group eyebrow
-  ┌ About (name, bio, location) ┐
-  ┌ Interests                   ┐   plain cards,
-  ┌ Social links                ┐   subtle borders
-  [ Save changes ]  ← sticky on mobile
+No second "skipped" flag needed, and if they later take the quiz from the dashboard the prompt disappears by itself.
 
-  YOUR ACCOUNT                ← group eyebrow, muted band
-  ┌ Saved locations ┐
-  ┌ Blocked people  ┐
-  ┌ Account (admin views, sign out) ┐
-  ┌ Danger zone (destructive) ┐
-```
+## Post-signup entry point
 
-### 1. Identity header
+`/auth` currently navigates to `redirect ?? "/dashboard"` after sign-in, email confirm, and Google. That stays. Instead of special-casing signup, a new authenticated route `/onboarding` is the destination whenever onboarding is pending:
 
-Replaces the standalone avatar card. A full-width banner at the top of `main`:
-- Background uses the app's existing `bg-gradient-hero` / `shadow-plum` language (same tokens the landing and gathering cards use), rounded `rounded-3xl`, with the content on `bg-card` below it or overlapping it slightly.
-- Avatar grows to ~96–112px, sits on the banner edge, with the "Change photo" control as a small circular overlay button on the avatar itself plus the existing hint text beside it. Same `avatarRef` input, same `onAvatarChange`.
-- Beside it: display name in `font-display text-3xl` (falls back to email prefix when empty), a `MapPin` line with neighborhood · city · country, the email as muted small text, and up to ~5 interest chips reusing the existing `bg-primary/10 text-primary rounded-full` chip style (read-only here; editing stays in the Interests card).
-- All values are read from the state already in the component — purely derived, no new queries.
+- The dashboard route checks the profile on load; if `onboarded_at` is null it redirects to `/onboarding`. This catches every path in (email signup, confirm link, Google, existing accounts that predate the column) without touching auth logic.
+- Venue accounts are unaffected — they are already redirected to the venue portal by the authenticated layout before this runs.
+- Existing users: the migration backfills `onboarded_at = now()` for all current profiles, so only genuinely new accounts see it.
 
-### 2. Two grouped bands, no tabs
+## The flow (`/onboarding`)
 
-Tabs are the wrong tool here: the account group contains a destructive action and admin shortcuts that should not be hidden behind a tab, and profile editing is a "scan, fix one field, save" task where hiding half the page adds a click. Grouped sections with a clear visual break give the hierarchy without the cost.
+Full-screen, no site header, progress dots at the top, three steps:
 
-Grouping treatment:
-- Each group starts with a small uppercase eyebrow (`text-xs tracking-wide uppercase text-muted-foreground`) plus a one-line description — the same eyebrow pattern already used on landing sections and gathering card chips.
-- **Your public info** (About, Interests, Social) — cards keep `bg-card` but drop to a lighter `border-border/60` and slightly tighter padding so they read as siblings of one form, ending in the existing Save button.
-- **Your account** (Saved locations, Blocked people, Account actions, Danger zone) — wrapped in a `bg-muted/30` band with `rounded-3xl` and inner cards on `bg-card`, so the whole group visually recedes from the editable profile above it. Danger zone keeps its `border-destructive/40` and stays last.
-- Within About, the location trio (country / city / neighborhood) gets its own subtle inner block with a small heading so the three selects don't read as loose fields.
+1. **Welcome** — "Welcome to Ideal Gathering, {name}" + one line on the idea: small tables, real conversation, a seat kept for you. Continue.
+2. **How it works** — three compact rows: find a table near you / claim a seat / show up and talk. Continue.
+3. **Quiz intro** — "Let's find your kind of table": one short paragraph on what the four traits do (better seat matching), then two actions: **Take the quiz** (~2 minutes) and a quiet **Skip for now**.
 
-### 3. Mobile
+Then, if they chose to take it, the quiz itself runs inline as step 4, followed by the result card with a single "Take me in" button to `/dashboard`.
 
-Current narrow rendering is a fine-but-flat stack; the redesign keeps that as the base and only adds density on wider screens.
-- Header stacks: avatar centered above name/meta under `sm`, side-by-side from `sm` up.
-- Public-info cards remain single-column on mobile; on `lg` the Interests + Social cards can sit side by side in a 2-col grid while About stays full width.
-- Save button becomes a full-width button on mobile (it is currently a right-aligned pill that is easy to miss at the bottom of a long form).
-- Padding steps down (`p-4` mobile → `p-6` sm+), and the account band's outer padding collapses to keep inner cards from double-inseting.
-- Verify against the existing fixed mobile tab bar: bottom padding on `main` so the danger-zone card isn't obscured.
+Back is available on steps 2 and 3. Closing the tab mid-flow just means onboarding shows again next visit (nothing written until the end).
 
-### 4. Reuse vs. new
+## Skip vs complete
 
-Reused as-is: `rounded-3xl`, `border-border`, `bg-card`, `shadow-soft` / `shadow-plum`, `bg-gradient-hero`, `font-display`, `text-muted-foreground`, `border-destructive/40`, existing `rounded-full` Button variants, existing interest chip styling, `SiteHeader`, lucide icons already imported.
+- **Complete**: `saveMyTraits` writes the trait scores (existing code path), then `onboarded_at` is stamped, then → `/dashboard`. No quiz prompt anywhere afterwards.
+- **Skip for now** (from the quiz intro, or the quiz's own skip-out link mid-questions): `onboarded_at` is stamped with no trait write, then → `/dashboard`. Traits stay null, so the dashboard prompt appears.
 
-New: no new tokens, no new colors, no new dependencies. One small presentational component `ProfileHeader` (in `src/components/profile-header.tsx`) taking already-loaded props, plus optionally a tiny `SectionGroup` wrapper for the eyebrow + band. Consider adding `SiteFooter` for consistency with explore only if it's already used on other authenticated pages.
+Skipping is never blocked and never re-asked as a modal.
+
+## Dashboard prompt for skippers
+
+The existing `TakeQuizNudge` (already used on explore and gathering detail) is reused on the dashboard, placed under the header/greeting above the gatherings list, rendered only when traits are null. One change to it: it currently links to `/` with hash `matching`, which sends a signed-in user back to the marketing page. It should point at `/onboarding?step=quiz` (quiz-only mode, no welcome screens) instead — that also fixes the same odd jump on explore and gathering detail.
+
+## Quiz reuse vs new
+
+Reused as-is, unchanged:
+
+- `src/lib/matching.ts` — `QUIZ`, `scoreQuiz`, `levelFor`, persistence helpers.
+- `src/lib/profile-traits.ts` — `saveMyTraits`.
+- `src/components/table-fit.tsx` — `TakeQuizNudge` (link target only).
+
+New:
+
+- Migration: add `profiles.onboarded_at`, backfill existing rows.
+- `src/routes/_authenticated/onboarding.tsx` — the step machine, welcome screens, and the finish/skip writes.
+- `src/components/onboarding/quiz-steps.tsx` — the question-and-answer UI in app (not landing/cosmic) styling, driven by the same `QUIZ` data and `scoreQuiz`. The landing widget's markup is cosmic-themed and tangled with its own preview/CTA states, so onboarding renders the same data rather than importing that component; `src/components/landing/matching-quiz.tsx` is not modified.
+- i18n keys under `onboarding.*` for the welcome copy and buttons, in EN, TR and FA (quiz question copy already exists and is reused).
 
 ## Technical notes
 
-- `SavedLocationsSection` and `BlockedUsersSection` each hard-code their own `mt-6/mt-8 rounded-3xl border bg-card p-6` wrapper. To place them inside the account band without double borders, add an optional `className`/`bare` prop to those two components (presentation only — their logic, queries, and dialogs are untouched).
-- Existing i18n keys are reused. Two or three new keys may be needed for the group eyebrows (e.g. `profile.group.public`, `profile.group.account`) — added for en/tr/fa.
-- After implementing, screenshot the page at 390px and 1280px via the headless browser to confirm the header, the band, and the mobile tab-bar clearance.
+- Profile read/write goes through the browser Supabase client with the existing owner RLS policy on `profiles`; no new policy or grant is needed.
+- The redirect check lives in the dashboard route's existing profile-aware data path, so it costs no extra round trip on later visits.
+- Route is under `_authenticated/`, so the managed auth gate handles sign-in state.
