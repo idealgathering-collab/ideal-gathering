@@ -5,7 +5,6 @@ Disallow: /dashboard
 Disallow: /chat
 Disallow: /my-gatherings
 Disallow: /profile
-Disallow: /businesses
 Disallow: /create-gathering
 Disallow: /venue/dashboard
 Disallow: /reset-password
