@@ -3,6 +3,7 @@ import { Users, MapPin, CalendarClock } from "lucide-react";
 import type { GatheringCard as G } from "@/lib/gatherings";
 import { formatDateTime } from "@/lib/gatherings";
 import { TableFitChip } from "@/components/table-fit";
+import { DistanceChip } from "@/components/distance-chip";
 import type { TableFit } from "@/lib/matching.functions";
 import { useI18n, useT } from "@/i18n";
 
@@ -93,6 +94,7 @@ export function GatheringCard({
             <Users className="h-3.5 w-3.5 text-primary" />
             {g.attendee_count}/{g.seats}
           </span>
+          {typeof distanceKm === "number" ? <DistanceChip km={distanceKm} /> : null}
         </div>
       </div>
     </Link>
