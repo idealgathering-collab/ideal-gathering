@@ -5,7 +5,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { LocationAutocomplete, type LocationValue } from "@/components/location-autocomplete";
-import { reverseGeocode, extractCity } from "@/lib/nominatim";
+import { reverseGeocode, extractCity, geocodePlace } from "@/lib/nominatim";
+import { UseMyLocationButton } from "@/components/use-my-location-button";
+import { getPositionIfGranted } from "@/lib/geolocation";
+import { supabase } from "@/integrations/supabase/client";
+import { useSession } from "@/hooks/use-session";
 import { useT } from "@/i18n";
 
 export type MapLocationValue = LocationValue & {
@@ -23,8 +27,25 @@ type Props = {
 
 const DEFAULT_CENTER = { lat: 41.0082, lng: 28.9784 };
 
+
+/** Device location (only when already granted), then profile city, then Istanbul. */
+async function bestDefaultCenter(userId?: string) {
+  const fix = await getPositionIfGranted();
+  if (fix) return fix;
+  if (!userId) return null;
+  try {
+    const { data } = await supabase.from("profiles").select("city").eq("id", userId).maybeSingle();
+    const city = (data?.city ?? "").trim();
+    if (!city) return null;
+    return await geocodePlace(city);
+  } catch {
+    return null;
+  }
+}
+
 export function LocationMapPicker({ value, onChange, countryCode, defaultCenter }: Props) {
   const t = useT();
+  const { user } = useSession();
   const containerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<LeafletMap | null>(null);
   const markerRef = useRef<LeafletMarker | null>(null);
@@ -57,7 +78,7 @@ export function LocationMapPicker({ value, onChange, countryCode, defaultCenter 
 
       const center = value
         ? { lat: value.lat, lng: value.lng }
-        : defaultCenter ?? DEFAULT_CENTER;
+        : defaultCenter ?? (await bestDefaultCenter(user?.id)) ?? DEFAULT_CENTER;
       const map = L.map(containerRef.current, {
         center: [center.lat, center.lng],
         zoom: value ? 16 : 12,
@@ -190,13 +211,26 @@ export function LocationMapPicker({ value, onChange, countryCode, defaultCenter 
 
   return (
     <div className="grid gap-3">
-      <LocationAutocomplete
-        value={searchText}
-        onChange={setSearchText}
-        onSelect={onAutocompletePick}
-        countryCodes={(countryCode ?? "tr").toLowerCase()}
-        placeholder={t("savedLoc.addressPh")}
-      />
+      <div className="flex flex-wrap items-start gap-2">
+        <div className="min-w-[12rem] flex-1">
+          <LocationAutocomplete
+            value={searchText}
+            onChange={setSearchText}
+            onSelect={onAutocompletePick}
+            countryCodes={(countryCode ?? "tr").toLowerCase()}
+            placeholder={t("savedLoc.addressPh")}
+          />
+        </div>
+        <UseMyLocationButton
+          onFix={(fix) => {
+            if (mapRef.current && markerRef.current) {
+              markerRef.current.setLatLng([fix.lat, fix.lng]);
+              mapRef.current.setView([fix.lat, fix.lng], 17, { animate: false });
+            }
+            handlePin(fix.lat, fix.lng);
+          }}
+        />
+      </div>
 
       <div className="relative overflow-hidden rounded-2xl border border-border">
         <div ref={containerRef} className="h-72 w-full" />
