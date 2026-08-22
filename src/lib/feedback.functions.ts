@@ -1,7 +1,8 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
-import { checkinWindow } from "@/lib/attendance.functions";
+import { FEEDBACK_TTL_DAYS, isFeedbackPending } from "@/lib/feedback-rules";
+
 
 export type FeedbackPerson = {
   user_id: string;
