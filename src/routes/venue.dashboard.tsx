@@ -249,7 +249,10 @@ function BusinessForm({
       const path = `${userId}/business-${Date.now()}.${ext}`;
       const { error: upErr } = await supabase.storage.from("avatars").upload(path, file, { upsert: true });
       if (upErr) throw upErr;
-      const { data: signed } = await supabase.storage.from("avatars").createSignedUrl(path, 3600);
+      // Cover images are public content stored in a private bucket and the URL is
+      // persisted on the business row (also used as og:image), so it must be long-lived.
+      const TEN_YEARS = 60 * 60 * 24 * 365 * 10;
+      const { data: signed } = await supabase.storage.from("avatars").createSignedUrl(path, TEN_YEARS);
       if (!signed?.signedUrl) throw new Error("signed url failed");
       setForm((f) => ({ ...f, cover_url: signed.signedUrl }));
       toast.success(t("venueDash.imageUploaded"));
