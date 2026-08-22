@@ -80,30 +80,15 @@ export const getTableFit = createServerFn({ method: "POST" })
       }
     }
 
-    const fits: TableFit[] = data.gatheringIds.map((gatheringId) => {
-      const members = byGathering.get(gatheringId) ?? new Set<string>();
-      let hasBlocked = false;
-      const rated: TraitScores[] = [];
-      for (const id of members) {
-        if (id === userId) continue;
-        if (blockedWith.has(id)) {
-          hasBlocked = true;
-          continue;
-        }
-        const scores = traitsByUser.get(id);
-        if (scores) rated.push(scores);
-      }
-      if (hasBlocked) {
-        return { gatheringId, fit: null, ratedCount: 0, hasBlocked: true };
-      }
-      const avg = averageTraits(rated);
-      return {
-        gatheringId,
-        fit: avg ? fitScore(myTraits, avg) : null,
-        ratedCount: rated.length,
-        hasBlocked: false,
-      };
+    const fits = scoreTables({
+      viewerId: userId,
+      myTraits,
+      gatheringIds: data.gatheringIds,
+      membersByGathering: byGathering,
+      traitsByUser,
+      blockedWith,
     });
+
 
     return { viewerHasTraits: true, fits };
   });
