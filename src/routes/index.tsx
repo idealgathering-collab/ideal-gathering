@@ -185,9 +185,13 @@ function Home() {
 
       <main>
         <HeroSection />
-        <DemoSection />
         <HowSection />
+        <CategoriesSection />
+        <UpcomingSection />
+        <DiffSection />
         <MatchingSection />
+        <DemoSection />
+        <SafetySection />
         <ProblemSection />
         <FeaturesSection />
         <VenuesSection />
@@ -195,6 +199,7 @@ function Home() {
         <VisionSection />
         <FinalCtaSection />
       </main>
+
 
       <div className="relative z-20">
         <SiteFooter />
