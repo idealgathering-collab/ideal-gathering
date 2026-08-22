@@ -259,14 +259,7 @@ export function SafetySection() {
   );
 }
 
-              </div>
-            </Reveal>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
+
 
 /* ---------------- Matching ---------------- */
 
