@@ -76,7 +76,7 @@ export function DemoSection() {
 const STEPS: { icon: ComponentType<{ className?: string }>; k: string }[] = [
   { icon: Compass, k: "s1" },
   { icon: Users, k: "s2" },
-  { icon: Armchair, k: "s3" },
+  { icon: DoorOpen, k: "s3" },
 ];
 
 export function HowSection() {
@@ -85,8 +85,8 @@ export function HowSection() {
     <section id="how" className="relative z-20 scroll-mt-20 px-4 py-20 sm:py-28">
       <div className="mx-auto max-w-6xl">
         <Reveal className="max-w-2xl">
-          <Eyebrow>{t("landing.v3.how.eyebrow")}</Eyebrow>
-          <SectionTitle>{t("landing.v3.how.title")}</SectionTitle>
+          <Eyebrow>{t("landing.v4.how.eyebrow")}</Eyebrow>
+          <SectionTitle>{t("landing.v4.how.title")}</SectionTitle>
         </Reveal>
 
         <div className="mt-12 grid gap-6 md:grid-cols-3">
@@ -101,12 +101,164 @@ export function HowSection() {
                     0{i + 1}
                   </span>
                 </div>
-                <h3 className="font-serif-warm mt-5 text-xl font-semibold text-white">
-                  {t(`landing.v3.how.${s.k}.title`)}
+                <h3 className="font-serif-warm mt-5 text-2xl font-bold tracking-tight text-white">
+                  {t(`landing.v4.how.${s.k}.title`)}
                 </h3>
                 <p className="mt-2.5 text-sm leading-relaxed text-[rgba(196,181,253,0.75)]">
-                  {t(`landing.v3.how.${s.k}.body`)}
+                  {t(`landing.v4.how.${s.k}.body`)}
                 </p>
+              </div>
+            </Reveal>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ---------------- Categories ---------------- */
+
+const CATEGORIES: { icon: ComponentType<{ className?: string }>; k: string }[] = [
+  { icon: Coffee, k: "c1" },
+  { icon: Mountain, k: "c2" },
+  { icon: Gamepad2, k: "c3" },
+  { icon: Plus, k: "c4" },
+];
+
+export function CategoriesSection() {
+  const t = useT();
+  return (
+    <section id="categories" className="relative z-20 scroll-mt-20 px-4 py-20 sm:py-28">
+      <div className="mx-auto max-w-6xl">
+        <Reveal className="max-w-2xl">
+          <Eyebrow>{t("landing.v4.categories.eyebrow")}</Eyebrow>
+          <SectionTitle>{t("landing.v4.categories.title")}</SectionTitle>
+        </Reveal>
+
+        <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          {CATEGORIES.map((c, i) => (
+            <Reveal key={c.k} delay={i * 70}>
+              <div className="cosmic-panel h-full p-6 text-start">
+                <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-[rgba(245,208,138,0.15)] text-sunshine">
+                  <c.icon className="h-5 w-5" />
+                </span>
+                <h3 className="font-serif-warm mt-5 text-xl font-bold tracking-tight text-white">
+                  {t(`landing.v4.categories.${c.k}.title`)}
+                </h3>
+                <p className="mt-2 text-sm leading-relaxed text-[rgba(196,181,253,0.75)]">
+                  {t(`landing.v4.categories.${c.k}.body`)}
+                </p>
+              </div>
+            </Reveal>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ---------------- Upcoming (sample) ---------------- */
+
+const UPCOMING = ["g1", "g2", "g3", "g4", "g5"] as const;
+const UPCOMING_SEATS: Record<string, number> = { g1: 4, g2: 6, g3: 5, g4: 6, g5: 4 };
+
+export function UpcomingSection() {
+  const t = useT();
+  return (
+    <section id="gatherings" className="relative z-20 scroll-mt-20 py-20 sm:py-28">
+      <div className="mx-auto max-w-6xl px-4">
+        <Reveal className="max-w-2xl">
+          <SectionTitle>{t("landing.v4.upcoming.title")}</SectionTitle>
+          <p className="mt-3 text-base text-[rgba(221,214,254,0.75)]">
+            {t("landing.v4.upcoming.subtitle")}
+          </p>
+        </Reveal>
+      </div>
+
+      <Reveal delay={80}>
+        <div className="mt-10 flex snap-x snap-mandatory gap-5 overflow-x-auto px-4 pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:px-[max(1rem,calc((100%-72rem)/2))]">
+          {UPCOMING.map((k) => (
+            <article
+              key={k}
+              className="cosmic-panel w-[260px] shrink-0 snap-start p-5 text-start sm:w-[300px]"
+            >
+              <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-[rgba(196,181,253,0.72)]">
+                <span className="inline-flex items-center gap-1.5">
+                  <MapPin className="h-3.5 w-3.5" /> {t(`landing.v4.upcoming.${k}.city`)}
+                </span>
+                <span className="inline-flex items-center gap-1.5">
+                  <Clock className="h-3.5 w-3.5" /> {t(`landing.v4.upcoming.${k}.when`)}
+                </span>
+              </div>
+              <h3 className="font-serif-warm mt-4 text-lg font-semibold leading-snug text-white">
+                {t(`landing.v4.upcoming.${k}.activity`)}
+              </h3>
+              <div className="mt-5 inline-flex items-center gap-1.5 rounded-full border border-white/12 bg-white/5 px-3 py-1 text-[11px] font-medium text-sunshine">
+                <Users className="h-3.5 w-3.5" />
+                {t("landing.v4.upcoming.seats", { n: UPCOMING_SEATS[k] })}
+              </div>
+            </article>
+          ))}
+        </div>
+      </Reveal>
+
+      <div className="mx-auto max-w-6xl px-4">
+        <p className="mt-4 text-xs text-[rgba(196,181,253,0.55)]">
+          {t("landing.v4.upcoming.footnote")}
+        </p>
+      </div>
+    </section>
+  );
+}
+
+/* ---------------- Differentiation ---------------- */
+
+export function DiffSection() {
+  const t = useT();
+  return (
+    <section id="why" className="relative z-20 scroll-mt-20 px-4 py-20 sm:py-28">
+      <div className="mx-auto max-w-3xl text-center">
+        <Reveal>
+          <h2 className="font-serif-warm animate-headline-glow text-3xl font-extrabold leading-tight tracking-tight text-white sm:text-5xl">
+            {t("landing.v4.diff.title")}
+          </h2>
+          <p className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-[rgba(221,214,254,0.8)] sm:text-lg">
+            {t("landing.v4.diff.body")}
+          </p>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+/* ---------------- Safety ---------------- */
+
+export function SafetySection() {
+  const t = useT();
+  return (
+    <section className="relative z-20 px-4 py-16 sm:py-20">
+      <div className="mx-auto max-w-4xl">
+        <Reveal>
+          <div className="rounded-[2rem] border border-white/10 bg-white/[0.03] p-8 text-center sm:p-12">
+            <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-[rgba(124,58,237,0.22)] text-[#C4B5FD]">
+              <HeartHandshake className="h-5 w-5" />
+            </span>
+            <h2 className="font-serif-warm mt-5 text-2xl font-semibold leading-snug text-white sm:text-3xl">
+              {t("landing.v4.safety.title")}
+            </h2>
+            <p className="mx-auto mt-4 max-w-xl text-base leading-relaxed text-[rgba(221,214,254,0.8)]">
+              {t("landing.v4.safety.body1")}
+            </p>
+            <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-[rgba(196,181,253,0.7)]">
+              {t("landing.v4.safety.body2")}
+            </p>
+          </div>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
               </div>
             </Reveal>
           ))}
