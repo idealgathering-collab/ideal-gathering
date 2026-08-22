@@ -1,66 +1,115 @@
-# Automated testing setup
+# Homepage "Just Gather" copy + structure refresh
 
-Two layers: fast pure-logic unit tests that run offline, and a small, opt-in integration suite that exercises the database triggers and RLS rules. No CI yet — everything runs from a local script.
+Rework the public landing page to a short, confident, imperative "Just Gather" voice. Keep the existing violet/nebula design system, all routes, and all backend code untouched. Apply the new English copy first; TR and FA fall back to EN for any new keys until a later translation pass.
 
-## Layer 1 — Vitest unit tests (default, offline)
+## What changes
 
-Add `vitest` as a devDependency plus a minimal `vitest.config.ts` (node environment, `vite-tsconfig-paths` so `@/` resolves, `include: ["tests/unit/**/*.test.ts"]`). Add scripts: `test` (unit only), `test:watch`, and `test:db` (integration, described below).
+- Hero: new headline, subhead, and CTAs.
+- How-it-works: 3 steps with new labels and supporting lines.
+- New "What you can gather for" category cards (coffee, trail, game, open).
+- New "People are already gathering" horizontal teaser strip using sample data.
+- New "We don't host it. You do." differentiation band.
+- New warmer safety/reassurance section.
+- Footer CTA: "Just Gather." + waitlist button.
+- Public header anchors and footer links updated to point to the new sections.
+- Homepage SEO title/description updated for EN only.
 
-Files and what gets asserted:
+## What stays the same
 
-- `tests/unit/geolocation.test.ts` — `haversineKm` (zero distance, known city-pair distance within tolerance, antimeridian/negative longitudes), `formatDistance` (sub-1 km rounds to 10 m steps, 1–10 km keeps one decimal, >10 km rounds to integer, locale formatting for `tr`/`fa`).
-- `tests/unit/attendance.test.ts` — `checkinWindow` (opens 30 min before start; closes 24 h after `ends_at`; falls back to start + 2 h when `ends_at` is null) and `classifyAttendanceError` for every trigger message it maps, plus the `unknown` fallback.
-- `tests/unit/matching.test.ts` — `traitsFromRow` (null/partial rows return null), `averageTraits`, `fitScore` (identical traits score highest, opposite traits lowest, symmetry).
-- `tests/unit/join-errors.test.ts` — `classifyJoinError` for `23505`, `GATHERING_FULL`, `GATHERING_CLOSED`, and unknown.
+- All routes, auth flows, dashboard, admin, matching logic, and database schema.
+- `PublicHeader`, `SiteFooter`, `CosmicBackdrop`, `Reveal`, `SampleGatheringCard`, and the cosmic CSS utilities.
+- Existing TR/FA `landing.v3.*` translation keys are left in place; only new EN keys are added.
 
-One structural note: `classifyJoinError` lives in `src/lib/gatherings.ts`, which imports the Supabase browser client at module scope. To keep the unit test free of env/network setup, either stub `@/integrations/supabase/client` with `vi.mock` in that test file, or move the pure classifier + `JoinError` into a small `src/lib/join-errors.ts` that `gatherings.ts` re-exports. The extraction is cleaner and is my recommendation.
+## Section-by-section plan
 
-Server-function handlers (`getTableFit`, `listPendingFeedback`) are wrapped by `createServerFn`, so their handlers are not directly callable in a unit test. Rather than mocking the Supabase admin client, extract the decision logic into pure helpers and test those:
+### 1. Hero (`src/routes/index.tsx`)
 
-- `scoreTables({ myTraits, membersByGathering, traitsByUser, blockedWith })` → the fit array (covers: nobody else rated → `fit: null`, blocked member → `hasBlocked: true` with no score, self excluded, host counted as a member).
-- `isFeedbackPending({ now, startsAt, endsAt, status, checkedOutAt, joinedAt })` → boolean (covers: checked out early → pending; window still open and not checked out → not pending; window closed → pending; cancelled/rejected → never; older than the 14-day TTL → never).
+Update the existing `HeroSection` in place:
 
-The server functions then call these helpers, so behaviour is unchanged and the rules become testable.
+- Headline: "Just Gather."
+- Subhead directly underneath: "An open platform for small-group meetups — create one for anything, anywhere, and get matched with the right people."
+- Primary CTA: "Start a Gathering" → links to `/auth?mode=signup` (same as the current primary CTA).
+- Secondary CTA: "See How It Works" → anchors to `#how`.
+- Keep the nebula hero visual and caption; remove the third "waitlist" button from the hero row.
 
-## Layer 2 — Database trigger / RLS integration tests (opt-in)
+### 2. How it works (`src/components/landing/sections.tsx`)
 
-This is the real gap: `guard_attendance_update` (self vs host path, window bounds, the 100 m `private.meters_between` check), `enforce_gathering_capacity` (the `FOR UPDATE` seat check), `prevent_saved_location_status_change_by_owner`, `prevent_locked_table_change` (venue table edit/delete lock), and `set_gathering_city`.
+Keep the 3-step grid, replace icons and copy:
 
-There is only one hosted database — no local Postgres and no separate test project — so these tests must run against the real instance. They are therefore **not** part of `bun test`; they run only via `bun run test:db` and skip themselves automatically when the required env vars are absent.
+- Step 1 — icon `Compass`, label "Pick a plan.", body "Coffee, dinner, a hike, a game night — anything."
+- Step 2 — icon `Users`, label "Get matched.", body "We fit you with people who match your vibe."
+- Step 3 — icon `DoorOpen`, label "Just meet.", body "Show up at a real place, meet real people."
 
-Approach per test: create the whole fixture graph inside the test (business → venue table → gathering → attendee rows), act, assert, then delete everything in a `finally` block. Assertions target the raised exception codes (`GATHERING_FULL`, `CHECKIN_TOO_EARLY`, `CHECKIN_TOO_FAR`, `TABLE_LOCKED`, `ATTENDANCE_FORBIDDEN`, …), which is exactly the contract the client code classifies against.
+Section id stays `#how` so the header/footer anchors still work.
 
-Safeguards against damaging live data:
+### 3. What you can gather for (new section)
 
-- **Dedicated test users.** Two or three pre-created accounts (host, attendee, non-member) whose credentials come from env vars. Tests sign in with the anon client so RLS actually applies — that is the point of the exercise. A service-role client is used only for teardown, never for the assertion path.
-- **Tagged rows.** Every created row carries a recognisable prefix, e.g. `subject`/`label`/`name` starting with `[test-<runId>]` where `runId` is a per-run UUID. Nothing without that prefix is ever written or deleted.
-- **Teardown in `finally`,** deleting by the run tag, children before parents, with a `globalTeardown` sweep that removes any `[test-` rows older than an hour left behind by a crashed run.
-- **Guard rail at startup.** The suite refuses to run unless `TEST_DB_ENABLED=1` and the test-user env vars are present, and it asserts the test accounts exist before creating anything.
-- **No admin-role tests that mutate real records.** Admin-path coverage (host override on attendance, status changes) uses only test-owned rows.
-- **Serial execution** (`--no-file-parallelism`) so the capacity trigger's seat maths isn't confused by concurrent fixtures.
+Add a `CategoriesSection` after How. 4 cards in a responsive grid, using `cosmic-panel` styling:
 
-Concrete cases:
+- "Just grab coffee." — Casual meetups at partner cafés. (icon `Coffee`)
+- "Just hit the trail." — Group hikes and outdoor plans. (icon `Mountain`)
+- "Just play a game." — Game nights, board games, anything social. (icon `Gamepad2`)
+- "Just show up." — Or create a Gathering for anything else — you decide. (icon `Plus`)
 
-| Trigger | Cases |
-| --- | --- |
-| `enforce_gathering_capacity` | fill a 1-seat gathering, second join raises `GATHERING_FULL`; join on a cancelled gathering raises `GATHERING_CLOSED` |
-| `guard_attendance_update` | self check-in 2 h before start → `CHECKIN_TOO_EARLY`; in-window check-in 5 km away → `CHECKIN_TOO_FAR`; in-window check-in at the venue coords → succeeds; second check-in → `ATTENDANCE_ALREADY_SET`; check-out without check-in → `NOT_CHECKED_IN`; another attendee updating someone else's row → `ATTENDANCE_FORBIDDEN`; host marking an attendee ignores the proximity rule |
-| `prevent_saved_location_status_change_by_owner` | owner flipping `status` to `approved` raises; owner editing label/address succeeds |
-| `prevent_locked_table_change` | delete a table tied to a future non-cancelled gathering → `TABLE_LOCKED`; lower capacity below booked seats → `TABLE_CAPACITY_LOCKED`; both succeed once the gathering is cancelled |
-| `set_gathering_city` | insert with a `business_id` copies the business city; blank city normalises to null |
+Section id `#categories`.
 
-## Not worth automating yet
+### 4. Upcoming gatherings / social proof (new section)
 
-- Component/DOM tests (Testing Library) and end-to-end browser flows — the UI is still moving; the payoff is low relative to maintenance.
-- i18n key-coverage checks across EN/TR/FA.
-- Map picker, Nominatim geocoding, and anything depending on browser geolocation.
-- Auth/email flows (sign-up, verification, password reset) — managed by the platform.
-- SEO/meta snapshot tests; the existing `scripts/seo-check.mjs` already covers that ground.
-- CI. Once local tests are green and stable, a GitHub Actions job running only the unit layer would be a few lines — but not in this change.
+Add an `UpcomingSection` with id `#gatherings`.
 
-## Technical summary
+- Header: "People are already gathering."
+- Horizontal scrolling teaser strip of sample gatherings showing city, activity, and time.
+- No new backend: reuse/adapt `SampleGatheringCard` data and visuals, updating the sample topics to include the open categories (coffee, trail, game, etc.) so the strip reinforces that gatherings are not café-only.
 
-- devDependency: `vitest`. Config: `vitest.config.ts` with `vite-tsconfig-paths`, node environment, unit include path.
-- Scripts: `"test": "vitest run"`, `"test:watch": "vitest"`, `"test:db": "TEST_DB_ENABLED=1 vitest run --config vitest.db.config.ts --no-file-parallelism"`.
-- New pure modules for testability: `src/lib/join-errors.ts`, plus exported `scoreTables` and `isFeedbackPending` helpers extracted from `matching.functions.ts` and `feedback.functions.ts` (behaviour unchanged; the server functions call them).
-- Integration suite needs env vars for the test-account credentials and a service-role key for teardown; you would add these locally — they are not required for the default `test` script.
+### 5. Differentiation (new section)
+
+Add a short centered band, id `#why`:
+
+- Header: "We don't host it. You do."
+- Body: "Gathering is an open platform — anyone can create a gathering, for anything, anywhere. We just help you find the right people."
+
+### 6. Safety / reassurance (new section)
+
+Add a warmer, non-imperative section:
+
+- Header: "No pressure. Small groups. Go at your pace."
+- One to two lines reassuring first-timers/shy users that joining is low-stakes.
+
+### 7. Footer CTA (`FinalCtaSection` in `src/components/landing/sections.tsx`)
+
+Update the existing final CTA:
+
+- Headline: "Just Gather."
+- Button: "Join the waitlist" → links to `/waitlist`.
+- Drop the secondary auth/partner links to keep the close clean.
+
+## Navigation and footer links
+
+- `src/components/landing/public-header.tsx`: update `DEFAULT_ANCHORS` to `[#how, #categories, #why]` with new `landing.v4.nav.*` keys.
+- `src/components/site-footer.tsx`: update explore-column hrefs to the new section ids (`/#how`, `/#categories`, `/#gatherings`, `/#why`). Keep the partnership and legal columns as-is.
+
+## Translations
+
+Add new EN keys under a `landing.v4.*` namespace so existing `landing.v3.*` keys are untouched:
+
+- `landing.v4.nav.how`, `landing.v4.nav.categories`, `landing.v4.nav.why`
+- `landing.v4.hero.title`, `landing.v4.hero.sub`, `landing.v4.hero.cta`, `landing.v4.hero.secondary`
+- `landing.v4.how.s1.title`, `landing.v4.how.s1.body`, etc.
+- `landing.v4.categories.c1.title`, `landing.v4.categories.c1.body`, etc.
+- `landing.v4.upcoming.title`, `landing.v4.upcoming.subtitle`
+- `landing.v4.diff.title`, `landing.v4.diff.body`
+- `landing.v4.safety.title`, `landing.v4.safety.body`
+- `landing.v4.final.title`, `landing.v4.final.cta`
+- New footer explore labels as needed.
+
+TR and FA will show EN fallback for these keys until translated.
+
+## SEO
+
+- Update `PAGE_SEO["/"].en` in `src/lib/seo.ts` to a title/description matching the new voice, e.g. title "Just Gather — Ideal Gathering" and description about the open small-group meetup platform. Leave TR/FA as-is for this pass.
+
+## Verification
+
+- Run the dev build/typecheck.
+- Open the homepage preview, confirm all 7 sections render, anchors scroll correctly, and the header/footer links resolve.
+- Confirm no new backend errors or missing i18n keys in the console.
