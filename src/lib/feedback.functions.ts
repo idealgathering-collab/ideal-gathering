@@ -1,7 +1,8 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
-import { checkinWindow } from "@/lib/attendance.functions";
+import { FEEDBACK_TTL_DAYS, isFeedbackPending } from "@/lib/feedback-rules";
+
 
 export type FeedbackPerson = {
   user_id: string;
@@ -17,9 +18,6 @@ export type PendingFeedback = {
   venue: string | null;
   people: FeedbackPerson[];
 };
-
-/** How long a gathering keeps asking for feedback before it ages out. */
-const FEEDBACK_TTL_DAYS = 14;
 
 /**
  * Gatherings the caller checked into and hasn't rated yet. A gathering becomes
@@ -46,10 +44,16 @@ export const listPendingFeedback = createServerFn({ method: "POST" })
         ends_at: string | null;
         status: string;
       } | null;
-      if (!g || g.status === "cancelled" || g.status === "rejected") return false;
-      if (new Date(g.starts_at).getTime() < now - FEEDBACK_TTL_DAYS * 24 * 60 * 60 * 1000) return false;
-      return !!r.checked_out_at || now > checkinWindow(g.starts_at, g.ends_at).closesAt;
+      if (!g) return false;
+      return isFeedbackPending({
+        now,
+        startsAt: g.starts_at,
+        endsAt: g.ends_at,
+        status: g.status,
+        checkedOutAt: r.checked_out_at,
+      });
     });
+
     if (rows.length === 0) return [];
 
     const ids = rows.map((r) => r.gathering_id);

@@ -1,21 +1,15 @@
 import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
-import { averageTraits, fitScore, traitsFromRow, type TraitScores } from "@/lib/matching";
+import { traitsFromRow, type TraitScores } from "@/lib/matching";
+import { scoreTables, type TableFit } from "@/lib/table-fit";
 
-export type TableFit = {
-  gatheringId: string;
-  /** 0-100 compatibility with the other rated attendees, or null when nobody else has taken the quiz. */
-  fit: number | null;
-  /** How many other attendees have trait scores. */
-  ratedCount: number;
-  /** True when the viewer and someone at this table have blocked each other; no score is computed. */
-  hasBlocked?: boolean;
-};
+export type { TableFit } from "@/lib/table-fit";
 
 export type TableFitResponse = {
   viewerHasTraits: boolean;
   fits: TableFit[];
 };
+
 
 /**
  * Compatibility must be computed server-side: RLS hides other attendees' rows
@@ -86,30 +80,15 @@ export const getTableFit = createServerFn({ method: "POST" })
       }
     }
 
-    const fits: TableFit[] = data.gatheringIds.map((gatheringId) => {
-      const members = byGathering.get(gatheringId) ?? new Set<string>();
-      let hasBlocked = false;
-      const rated: TraitScores[] = [];
-      for (const id of members) {
-        if (id === userId) continue;
-        if (blockedWith.has(id)) {
-          hasBlocked = true;
-          continue;
-        }
-        const scores = traitsByUser.get(id);
-        if (scores) rated.push(scores);
-      }
-      if (hasBlocked) {
-        return { gatheringId, fit: null, ratedCount: 0, hasBlocked: true };
-      }
-      const avg = averageTraits(rated);
-      return {
-        gatheringId,
-        fit: avg ? fitScore(myTraits, avg) : null,
-        ratedCount: rated.length,
-        hasBlocked: false,
-      };
+    const fits = scoreTables({
+      viewerId: userId,
+      myTraits,
+      gatheringIds: data.gatheringIds,
+      membersByGathering: byGathering,
+      traitsByUser,
+      blockedWith,
     });
+
 
     return { viewerHasTraits: true, fits };
   });
