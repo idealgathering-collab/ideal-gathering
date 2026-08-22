@@ -13,16 +13,21 @@ import { useSession } from "@/hooks/use-session";
 import { PublicHeader } from "@/components/landing/public-header";
 import { CosmicBackdrop } from "@/components/cosmic-backdrop";
 import {
+  CategoriesSection,
   DemoSection,
+  DiffSection,
   FeaturesSection,
   FinalCtaSection,
   HowSection,
   MatchingSection,
   ProblemSection,
+  SafetySection,
   TractionSection,
+  UpcomingSection,
   VenuesSection,
   VisionSection,
 } from "@/components/landing/sections";
+
 import { Reveal } from "@/components/landing/reveal";
 import { SiteFooter } from "@/components/site-footer";
 import constellationAsset from "@/assets/constellation-people.png.asset.json";
