@@ -1,12 +1,12 @@
 import { defineConfig } from "vitest/config";
-import tsconfigPaths from "vite-tsconfig-paths";
+import { fileURLToPath } from "node:url";
 
 /**
  * Integration suite that talks to the real hosted database.
  * Opt-in only: run with `bun run test:db` and the TEST_* env vars set.
  */
 export default defineConfig({
-  plugins: [tsconfigPaths()],
+  resolve: { alias: { "@": fileURLToPath(new URL("./src", import.meta.url)) } },
   test: {
     environment: "node",
     include: ["tests/db/**/*.test.ts"],
