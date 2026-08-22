@@ -501,30 +501,19 @@ export function FinalCtaSection() {
     <section className="relative z-20 px-4 pb-24 pt-10 sm:pb-32">
       <div className="mx-auto max-w-4xl">
         <Reveal>
-          <div className="cosmic-panel px-6 py-14 text-center sm:px-12">
-            <h2 className="font-serif-warm text-3xl font-extrabold leading-tight text-white sm:text-4xl">
-              {t("landing.v3.final.title")}
+          <div className="cosmic-panel px-6 py-16 text-center sm:px-12">
+            <h2 className="font-serif-warm animate-headline-glow text-4xl font-extrabold leading-tight tracking-tight text-white sm:text-6xl">
+              {t("landing.v4.final.title")}
             </h2>
-            <p className="mx-auto mt-4 max-w-md text-base text-[rgba(221,214,254,0.78)]">
-              {t("landing.v3.final.body")}
-            </p>
             <Link
-              to="/auth"
-              search={{ mode: "signup" }}
+              to="/waitlist"
               className="cosmic-cta mt-8 inline-flex items-center justify-center gap-2 rounded-full px-9 py-4 text-base font-semibold text-white"
             >
-              {t("landing.v3.final.cta")}
+              {t("landing.v4.final.cta")}
               <ArrowRight className="h-4 w-4 rtl:rotate-180" />
             </Link>
-            <div className="mt-6 flex flex-col items-center gap-2 text-sm text-[rgba(196,181,253,0.65)]">
-              <Link to="/auth" className="transition-colors hover:text-white">
-                {t("landing.v3.final.login")}
-              </Link>
-              <Link to="/partnership" className="transition-colors hover:text-white">
-                {t("landing.v3.final.venue")}
-              </Link>
-            </div>
           </div>
+
         </Reveal>
       </div>
     </section>
