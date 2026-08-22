@@ -1,4 +1,6 @@
 import { supabase } from "@/integrations/supabase/client";
+import { JoinError, classifyJoinError } from "@/lib/join-errors";
+
 
 export type GatheringCard = {
   id: string;
