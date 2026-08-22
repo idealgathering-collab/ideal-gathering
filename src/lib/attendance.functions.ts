@@ -1,6 +1,8 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import { checkinWindow } from "@/lib/attendance-window";
+
 
 export type AttendanceRow = {
   user_id: string;
