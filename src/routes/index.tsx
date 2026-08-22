@@ -13,16 +13,21 @@ import { useSession } from "@/hooks/use-session";
 import { PublicHeader } from "@/components/landing/public-header";
 import { CosmicBackdrop } from "@/components/cosmic-backdrop";
 import {
+  CategoriesSection,
   DemoSection,
+  DiffSection,
   FeaturesSection,
   FinalCtaSection,
   HowSection,
   MatchingSection,
   ProblemSection,
+  SafetySection,
   TractionSection,
+  UpcomingSection,
   VenuesSection,
   VisionSection,
 } from "@/components/landing/sections";
+
 import { Reveal } from "@/components/landing/reveal";
 import { SiteFooter } from "@/components/site-footer";
 import constellationAsset from "@/assets/constellation-people.png.asset.json";
@@ -75,14 +80,14 @@ function HeroSection() {
           </Reveal>
 
           <Reveal delay={70}>
-            <h1 className="font-serif-warm animate-headline-glow mt-6 whitespace-pre-line text-[38px] font-extrabold leading-[1.04] tracking-[-0.03em] text-white sm:text-[56px] lg:text-[62px]">
-              {t("landing.v3.hero.title")}
+            <h1 className="font-serif-warm animate-headline-glow mt-6 text-[56px] font-extrabold leading-[1.02] tracking-[-0.04em] text-white sm:text-[88px] lg:text-[96px]">
+              {t("landing.v4.hero.title")}
             </h1>
           </Reveal>
 
           <Reveal delay={140}>
             <p className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-[rgba(221,214,254,0.82)] sm:text-lg lg:mx-0">
-              {t("landing.v3.hero.sub")}
+              {t("landing.v4.hero.sub")}
             </p>
           </Reveal>
 
@@ -93,21 +98,15 @@ function HeroSection() {
                 search={{ mode: "signup" }}
                 className="cosmic-cta inline-flex items-center justify-center gap-2 rounded-full px-8 py-4 text-base font-semibold text-white"
               >
-                {t("landing.v3.hero.cta")}
+                {t("landing.v4.hero.cta")}
                 <ArrowRight className="h-4 w-4 rtl:rotate-180" />
               </Link>
               <a
-                href="#demo"
+                href="#how"
                 className="cosmic-outline-btn inline-flex items-center justify-center rounded-full px-7 py-4 text-base font-medium"
               >
-                {t("landing.v3.hero.secondary")}
+                {t("landing.v4.hero.secondary")}
               </a>
-              <Link
-                to="/waitlist"
-                className="cosmic-outline-btn inline-flex items-center justify-center rounded-full px-7 py-4 text-base font-medium"
-              >
-                {t("landing.v3.hero.waitlist")}
-              </Link>
             </div>
           </Reveal>
 
@@ -117,6 +116,7 @@ function HeroSection() {
             </p>
           </Reveal>
         </div>
+
 
         <Reveal delay={160} className="relative">
           <div
@@ -185,9 +185,13 @@ function Home() {
 
       <main>
         <HeroSection />
-        <DemoSection />
         <HowSection />
+        <CategoriesSection />
+        <UpcomingSection />
+        <DiffSection />
         <MatchingSection />
+        <DemoSection />
+        <SafetySection />
         <ProblemSection />
         <FeaturesSection />
         <VenuesSection />
@@ -195,6 +199,7 @@ function Home() {
         <VisionSection />
         <FinalCtaSection />
       </main>
+
 
       <div className="relative z-20">
         <SiteFooter />

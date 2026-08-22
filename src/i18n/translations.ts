@@ -965,7 +965,76 @@ export const translations: Record<Lang, Dict> = {
     "landing.v2.how.guests.step3.title": "Join the table",
     "landing.v2.how.guests.step3.body": "Reserve your seat and show up ready to connect.",
 
+    // Landing v4 — "Just Gather" voice (EN first; TR/FA fall back to EN)
+    "landing.v4.nav.how": "How it works",
+    "landing.v4.nav.categories": "What you can gather for",
+    "landing.v4.nav.why": "Why us",
+
+    "landing.v4.hero.title": "Just Gather.",
+    "landing.v4.hero.sub":
+      "An open platform for small-group meetups — create one for anything, anywhere, and get matched with the right people.",
+    "landing.v4.hero.cta": "Start a Gathering",
+    "landing.v4.hero.secondary": "See How It Works",
+
+    "landing.v4.how.eyebrow": "Three steps",
+    "landing.v4.how.title": "How it works",
+    "landing.v4.how.s1.title": "Pick a plan.",
+    "landing.v4.how.s1.body": "Coffee, dinner, a hike, a game night — anything.",
+    "landing.v4.how.s2.title": "Get matched.",
+    "landing.v4.how.s2.body": "We fit you with people who match your vibe.",
+    "landing.v4.how.s3.title": "Just meet.",
+    "landing.v4.how.s3.body": "Show up at a real place, meet real people.",
+
+    "landing.v4.categories.eyebrow": "Anything, anywhere",
+    "landing.v4.categories.title": "What you can gather for",
+    "landing.v4.categories.c1.title": "Just grab coffee.",
+    "landing.v4.categories.c1.body": "Casual meetups at partner cafés.",
+    "landing.v4.categories.c2.title": "Just hit the trail.",
+    "landing.v4.categories.c2.body": "Group hikes and outdoor plans.",
+    "landing.v4.categories.c3.title": "Just play a game.",
+    "landing.v4.categories.c3.body": "Game nights, board games, anything social.",
+    "landing.v4.categories.c4.title": "Just show up.",
+    "landing.v4.categories.c4.body": "Or create a Gathering for anything else — you decide.",
+
+    "landing.v4.upcoming.title": "People are already gathering.",
+    "landing.v4.upcoming.subtitle": "A taste of what's being planned right now.",
+    "landing.v4.upcoming.footnote": "Sample gatherings shown for illustration.",
+    "landing.v4.upcoming.g1.activity": "Morning coffee & slow talk",
+    "landing.v4.upcoming.g1.city": "Kadıköy, İstanbul",
+    "landing.v4.upcoming.g1.when": "Thu · 09:30",
+    "landing.v4.upcoming.g2.activity": "Sunrise hike up the ridge",
+    "landing.v4.upcoming.g2.city": "Beykoz, İstanbul",
+    "landing.v4.upcoming.g2.when": "Sat · 06:45",
+    "landing.v4.upcoming.g3.activity": "Board game night",
+    "landing.v4.upcoming.g3.city": "Karaköy, İstanbul",
+    "landing.v4.upcoming.g3.when": "Fri · 20:00",
+    "landing.v4.upcoming.g4.activity": "Long dinner, no agenda",
+    "landing.v4.upcoming.g4.city": "Beşiktaş, İstanbul",
+    "landing.v4.upcoming.g4.when": "Sun · 19:30",
+    "landing.v4.upcoming.g5.activity": "Film club: something old",
+    "landing.v4.upcoming.g5.city": "Nişantaşı, İstanbul",
+    "landing.v4.upcoming.g5.when": "Wed · 21:00",
+    "landing.v4.upcoming.seats": "{n} seats",
+
+    "landing.v4.diff.title": "We don't host it. You do.",
+    "landing.v4.diff.body":
+      "Gathering is an open platform — anyone can create a gathering, for anything, anywhere. We just help you find the right people.",
+
+    "landing.v4.safety.title": "No pressure. Small groups. Go at your pace.",
+    "landing.v4.safety.body1":
+      "Everyone at the table was a first-timer once. Groups stay small on purpose, so you're never lost in a crowd.",
+    "landing.v4.safety.body2":
+      "Come for fifteen minutes if that's all you have, and leave whenever you like — no explanation needed.",
+
+    "landing.v4.final.title": "Just Gather.",
+    "landing.v4.final.cta": "Join the waitlist",
+
+    "landing.v4.footer.categories": "What you can gather for",
+    "landing.v4.footer.upcoming": "Upcoming gatherings",
+    "landing.v4.footer.why": "Why us",
+
     // Landing v3
+
     "landing.v3.nav.how": "How it works",
     "landing.v3.nav.venues": "For venues",
     "landing.v3.nav.vision": "Vision",

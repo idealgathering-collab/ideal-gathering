@@ -7,10 +7,11 @@ import { useSession } from "@/hooks/use-session";
 import { useT } from "@/i18n";
 
 const DEFAULT_ANCHORS = [
-  { href: "#how", key: "landing.v3.nav.how" },
-  { href: "#venues", key: "landing.v3.nav.venues" },
-  { href: "#vision", key: "landing.v3.nav.vision" },
+  { href: "#how", key: "landing.v4.nav.how" },
+  { href: "#categories", key: "landing.v4.nav.categories" },
+  { href: "#why", key: "landing.v4.nav.why" },
 ];
+
 
 const PILL =
   "rounded-full px-3 py-2 text-sm text-[rgba(221,214,254,0.78)] transition-colors hover:bg-white/5 hover:text-white";

@@ -28,12 +28,13 @@ export function SiteFooter() {
           title={t("footer.col.explore")}
           links={[
             { label: t("footer.explore.how"), href: "/#how" },
-            { label: t("footer.explore.tables"), href: "/#tables" },
-            { label: t("footer.explore.partners"), href: "/#partners" },
-            { label: t("footer.explore.vibe"), href: "/#vibe" },
+            { label: t("landing.v4.footer.categories"), href: "/#categories" },
+            { label: t("landing.v4.footer.upcoming"), href: "/#gatherings" },
+            { label: t("landing.v4.footer.why"), href: "/#why" },
             { label: t("nav.ourStory"), href: "/our-story", route: true },
           ]}
         />
+
         <FooterCol
           title={t("footer.col.business")}
           links={[

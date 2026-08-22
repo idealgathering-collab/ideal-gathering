@@ -18,10 +18,11 @@ type Copy = { title: string; description: string };
 export const PAGE_SEO: Record<string, Record<SeoLang, Copy>> = {
   "/": {
     en: {
-      title: "Ideal Gathering — No One Will Be Alone Anymore",
+      title: "Just Gather — Small-Group Meetups | Ideal Gathering",
       description:
-        "Real tables at real cafés. One subject, a few seats, and people worth meeting. Join a gathering or host your own.",
+        "An open platform for small-group meetups. Create a gathering for anything, anywhere — coffee, a hike, a game night — and get matched with the right people.",
     },
+
     tr: {
       title: "Ideal Gathering — Kimse Artık Yalnız Olmayacak",
       description:
