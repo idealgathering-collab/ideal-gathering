@@ -9,6 +9,7 @@ import {
   FAR_AWAY,
   isoIn,
   newFixture,
+  signInAdmin,
   signInAttendee,
   signInHost,
   tag,
@@ -26,12 +27,14 @@ d("database triggers and RLS", () => {
   let admin: SupabaseClient;
   let host: { client: SupabaseClient; userId: string };
   let attendee: { client: SupabaseClient; userId: string };
+  let adminUser: { client: SupabaseClient; userId: string };
   const fx: Fixture = newFixture();
 
   beforeAll(async () => {
     admin = adminClient();
     host = await signInHost();
     attendee = await signInAttendee();
+    adminUser = await signInAdmin(admin);
     await createBusiness(admin, host.userId, fx);
     await createTable(admin, fx.businessId!, fx, 4);
   });
@@ -42,6 +45,7 @@ d("database triggers and RLS", () => {
     } finally {
       await host?.client.auth.signOut();
       await attendee?.client.auth.signOut();
+      await adminUser?.client.auth.signOut();
     }
   });
 
@@ -204,8 +208,8 @@ d("database triggers and RLS", () => {
     it("locks a table that has a future gathering, and releases it on cancel", async () => {
       const fx2 = newFixture();
       try {
-        await createBusiness(admin, host.userId, fx2);
-        const tableId = await createTable(admin, fx2.businessId!, fx2, 4);
+        // Reuse the suite's business: only one business per owner is allowed.
+        const tableId = await createTable(admin, fx.businessId!, fx2, 4, "T-lock");
         const g = await createGathering(admin, fx2, {
           host_id: host.userId,
           business_id: fx2.businessId,
@@ -220,7 +224,7 @@ d("database triggers and RLS", () => {
         const shrink = await admin.from("venue_tables").update({ capacity: 2 }).eq("id", tableId);
         expect(shrink.error?.message).toContain("TABLE_CAPACITY_LOCKED");
 
-        const cancel = await admin.from("gatherings").update({ status: "cancelled" }).eq("id", g.id);
+        const cancel = await adminUser.client.from("gatherings").update({ status: "cancelled" }).eq("id", g.id);
         expect(cancel.error).toBeNull();
 
         const shrinkAgain = await admin.from("venue_tables").update({ capacity: 2 }).eq("id", tableId);

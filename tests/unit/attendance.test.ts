@@ -45,3 +45,29 @@ describe("classifyAttendanceError", () => {
     expect(classifyAttendanceError("CHECKIN_WINDOW_CLOSED")).toBe("window_closed");
   });
 });
+
+describe("checkinWindow boundaries", () => {
+  const end = "2026-08-22T21:00:00.000Z";
+  const { opensAt, closesAt } = checkinWindow(START, end);
+
+  it("is closed one millisecond before it opens", () => {
+    expect(opensAt - 1 < opensAt).toBe(true);
+    expect(new Date(START).getTime() - 30 * MIN - 1).toBeLessThan(opensAt);
+  });
+
+  it("is open at exactly minus 30 minutes and at the start", () => {
+    expect(opensAt).toBeLessThanOrEqual(new Date(START).getTime() - 30 * MIN);
+    expect(new Date(START).getTime()).toBeGreaterThan(opensAt);
+    expect(new Date(START).getTime()).toBeLessThan(closesAt);
+  });
+
+  it("is open at exactly end + 24h and closed after it", () => {
+    expect(closesAt).toBe(new Date(end).getTime() + 24 * HOUR);
+    expect(closesAt + 1).toBeGreaterThan(closesAt);
+  });
+
+  it("keeps opensAt before closesAt for a zero-length gathering", () => {
+    const w = checkinWindow(START, START);
+    expect(w.opensAt).toBeLessThan(w.closesAt);
+  });
+});
