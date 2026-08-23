@@ -90,7 +90,13 @@ export function newFixture(): Fixture {
 }
 
 /** Creates an approved business owned by the test host. */
-export async function createBusiness(admin: SupabaseClient, ownerId: string, fx: Fixture, city = "Istanbul") {
+export async function createBusiness(
+  admin: SupabaseClient,
+  ownerId: string,
+  fx: Fixture,
+  city = "Istanbul",
+  status: "pending" | "approved" | "rejected" = "approved",
+) {
   const { data, error } = await admin
     .from("businesses")
     .insert({
@@ -104,7 +110,7 @@ export async function createBusiness(admin: SupabaseClient, ownerId: string, fx:
       cover_url: "",
       phone: "",
       mobile: "",
-      status: "approved",
+      status,
       lat: VENUE.lat,
       lng: VENUE.lng,
     })

@@ -91,9 +91,9 @@ d("approval state machines", () => {
     it("blocks owner self-approval and allows admin approval", async () => {
       const fx2 = newFixture();
       try {
-        const bizId = await createBusiness(admin, venue.userId, fx2);
-        const toPending = await admin.from("businesses").update({ status: "pending" }).eq("id", bizId);
-        expect(toPending.error).toBeNull();
+        // Status transitions are admin-only at the trigger level (service role
+        // has no auth.uid()), so the row starts pending.
+        const bizId = await createBusiness(admin, venue.userId, fx2, "Istanbul", "pending");
 
         const selfApprove = await venue.client.from("businesses").update({ status: "approved" }).eq("id", bizId);
         expect(selfApprove.error?.message ?? "").toMatch(/Only admins can change business status/i);

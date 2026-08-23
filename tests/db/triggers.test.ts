@@ -220,7 +220,7 @@ d("database triggers and RLS", () => {
         const shrink = await admin.from("venue_tables").update({ capacity: 2 }).eq("id", tableId);
         expect(shrink.error?.message).toContain("TABLE_CAPACITY_LOCKED");
 
-        const cancel = await admin.from("gatherings").update({ status: "cancelled" }).eq("id", g.id);
+        const cancel = await adminUser.client.from("gatherings").update({ status: "cancelled" }).eq("id", g.id);
         expect(cancel.error).toBeNull();
 
         const shrinkAgain = await admin.from("venue_tables").update({ capacity: 2 }).eq("id", tableId);

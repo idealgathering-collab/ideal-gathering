@@ -7,6 +7,7 @@ import {
   FAR_AWAY,
   isoIn,
   newFixture,
+  signInAdmin,
   signInAttendee,
   signInHost,
   teardown,
@@ -24,12 +25,14 @@ d("check-in / check-out enforcement", () => {
   let admin: SupabaseClient;
   let host: { client: SupabaseClient; userId: string };
   let attendee: { client: SupabaseClient; userId: string };
+  let adminUser: { client: SupabaseClient; userId: string };
   const fx: Fixture = newFixture();
 
   beforeAll(async () => {
     admin = adminClient();
     host = await signInHost();
     attendee = await signInAttendee();
+    adminUser = await signInAdmin(admin);
   });
 
   afterAll(async () => {
@@ -38,6 +41,7 @@ d("check-in / check-out enforcement", () => {
     } finally {
       await host?.client.auth.signOut();
       await attendee?.client.auth.signOut();
+      await adminUser?.client.auth.signOut();
     }
   });
 
@@ -87,7 +91,8 @@ d("check-in / check-out enforcement", () => {
 
   it("blocks a check-in on a cancelled gathering", async () => {
     const id = await joined(10 * MIN);
-    await admin.from("gatherings").update({ status: "cancelled" }).eq("id", id);
+    const cancel = await adminUser.client.from("gatherings").update({ status: "cancelled" }).eq("id", id);
+    expect(cancel.error).toBeNull();
     const { error } = await mark(id, atVenue());
     expect(classifyAttendanceError(error?.message ?? "")).toBe("closed");
   });
