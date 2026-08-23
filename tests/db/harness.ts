@@ -140,7 +140,7 @@ export async function createGathering(
       neighborhood: "Test",
       seats: 4,
       status: "approved",
-      origin: "user_created",
+      origin: "user_proposed",
       starts_at: isoIn(60 * 60 * 1000),
       lat: VENUE.lat,
       lng: VENUE.lng,
