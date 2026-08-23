@@ -249,7 +249,7 @@ function QuickTile({ icon: Icon, label, to }: { icon: ElementType; label: string
     >
       <Icon className="h-6 w-6 text-primary" />
       <span className="font-display text-base">{label}</span>
-      <ArrowRight className="mt-auto h-4 w-4 text-muted-foreground" />
+      <ArrowRight className="mt-auto h-4 w-4 text-muted-foreground rtl:rotate-180" />
     </Link>
   );
 }
