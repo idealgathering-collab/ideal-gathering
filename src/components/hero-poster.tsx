@@ -23,12 +23,12 @@ export function HeroPoster() {
         />
         <div className="absolute inset-0 bg-gradient-to-t from-plum/85 via-plum/20 to-transparent" />
         {/* floating soft dots for cafe ambience */}
-        <div className="absolute left-8 top-14 h-24 w-24 rounded-full bg-sunshine/20 blur-2xl" />
-        <div className="absolute right-6 top-24 h-16 w-16 rounded-full bg-tangerine/30 blur-xl" />
+        <div className="absolute start-8 top-14 h-24 w-24 rounded-full bg-sunshine/20 blur-2xl" />
+        <div className="absolute end-6 top-24 h-16 w-16 rounded-full bg-tangerine/30 blur-xl" />
       </div>
 
       {/* secondary chip — top left */}
-      <div className="absolute -left-4 top-8 hidden rounded-2xl border border-border/60 bg-card/95 px-4 py-3 shadow-soft backdrop-blur sm:block">
+      <div className="absolute -start-4 top-8 hidden rounded-2xl border border-border/60 bg-card/95 px-4 py-3 shadow-soft backdrop-blur sm:block">
         <div className="flex items-center gap-2 text-xs">
           <span className="relative flex h-2 w-2">
             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-tangerine opacity-75" />

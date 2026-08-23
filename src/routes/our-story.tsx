@@ -39,7 +39,7 @@ function OurStoryPage() {
         <div className="relative">
           {/* Connecting vertical line */}
           <div
-            className="absolute top-2 bottom-2 left-[19px] w-px bg-white/10 sm:left-[23px]"
+            className="absolute top-2 bottom-2 start-[19px] w-px bg-white/10 sm:start-[23px]"
             aria-hidden="true"
           />
 
@@ -48,7 +48,7 @@ function OurStoryPage() {
           {/* Pull quote */}
           <blockquote className="relative my-12 rounded-2xl border border-white/10 bg-white/[0.03] px-6 py-8 sm:my-16 sm:px-10 sm:py-10">
             <div
-              className="absolute top-0 bottom-0 left-[19px] w-px bg-tangerine/30 sm:left-[23px]"
+              className="absolute top-0 bottom-0 start-[19px] w-px bg-tangerine/30 sm:start-[23px]"
               aria-hidden="true"
             />
             <p className="relative z-10 font-serif-warm text-xl italic leading-relaxed text-white sm:text-2xl sm:leading-relaxed">
@@ -114,13 +114,13 @@ function Chapter({ number, contentKey }: { number: number; contentKey: number })
     <article className="relative mb-12 sm:mb-16">
       {/* Circular badge */}
       <div
-        className="absolute top-0 left-0 flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/[0.04] sm:h-12 sm:w-12"
+        className="absolute top-0 start-0 flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/[0.04] sm:h-12 sm:w-12"
       >
         <span className="text-sm font-bold text-white sm:text-base">{number}</span>
       </div>
 
       {/* Content */}
-      <div className="pl-14 sm:pl-20">
+      <div className="ps-14 sm:ps-20">
         <p className="mb-3 text-xs font-semibold uppercase tracking-[0.12em] text-dark-secondary/80">
           {t(`ourStory.ch${contentKey}.eyebrow`)}
         </p>
