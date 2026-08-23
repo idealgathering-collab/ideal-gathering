@@ -970,7 +970,8 @@ export const translations: Record<Lang, Dict> = {
     "landing.v4.nav.categories": "What you can gather for",
     "landing.v4.nav.why": "Why us",
 
-    "landing.v4.hero.title": "Just Gather.",
+    "landing.v4.hero.title1": "No One Will Be Alone Anymore.",
+    "landing.v4.hero.title2": "Just Gather.",
     "landing.v4.hero.sub":
       "An open platform for small-group meetups — create one for anything, anywhere, and get matched with the right people.",
     "landing.v4.hero.cta": "Start a Gathering",
