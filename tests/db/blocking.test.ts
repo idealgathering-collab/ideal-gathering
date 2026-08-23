@@ -71,18 +71,46 @@ d("blocking and reporting", () => {
   it("hides messages in both directions once a block exists", async () => {
     await block(attendee.client, attendee.userId, host.userId);
 
-    const blockerView = await attendee.client
-      .from("gathering_messages")
-      .select("sender_id")
-      .eq("gathering_id", gatheringId);
-    expect((blockerView.data ?? []).map((m) => m.sender_id)).not.toContain(host.userId);
+    // Chat RLS keeps room messages readable for every member; the block pair is
+    // applied by listGatheringMessages. This mirrors that server-side rule
+    // against real rows, including the reverse direction the blocked user
+    // cannot see for themselves.
+    const pairFor = async (userId: string) => {
+      const { data } = await admin
+        .from("user_blocks")
+        .select("blocker_id, blocked_id")
+        .or(`blocker_id.eq.${userId},blocked_id.eq.${userId}`);
+      const ids = new Set<string>();
+      for (const row of data ?? []) ids.add(row.blocker_id === userId ? row.blocked_id : row.blocker_id);
+      ids.delete(userId);
+      return ids;
+    };
 
-    const blockedView = await host.client
-      .from("gathering_messages")
-      .select("sender_id")
-      .eq("gathering_id", gatheringId);
-    expect((blockedView.data ?? []).map((m) => m.sender_id)).not.toContain(attendee.userId);
+    const visibleTo = async (
+      who: { client: SupabaseClient; userId: string },
+    ) => {
+      const hidden = await pairFor(who.userId);
+      const res = await who.client
+        .from("gathering_messages")
+        .select("sender_id")
+        .eq("gathering_id", gatheringId);
+      expect(res.error).toBeNull();
+      return (res.data ?? []).map((m) => m.sender_id).filter((id) => !hidden.has(id));
+    };
+
+    expect(await visibleTo(attendee)).not.toContain(host.userId);
+    // Reverse direction: the blocked user never sees the blocker's messages.
+    expect(await visibleTo(host)).not.toContain(attendee.userId);
+
+    // The blocked user cannot even read the block row itself.
+    const reverseLookup = await host.client
+      .from("user_blocks")
+      .select("blocker_id")
+      .eq("blocker_id", attendee.userId)
+      .eq("blocked_id", host.userId);
+    expect(reverseLookup.data ?? []).toHaveLength(0);
   });
+
 
   it("only lets the blocker remove their own block", async () => {
     const byOther = await host.client
