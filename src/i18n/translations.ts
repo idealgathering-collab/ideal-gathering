@@ -2174,6 +2174,75 @@ export const translations: Record<Lang, Dict> = {
     "landing.v2.how.guests.step3.title": "Masaya katıl",
     "landing.v2.how.guests.step3.body": "Koltuğunu ayır ve bağ kurmaya hazır gel.",
 
+    // Landing v4 — "Sadece Buluş" sesi
+    "landing.v4.nav.how": "Nasıl çalışır",
+    "landing.v4.nav.categories": "Ne için buluşabilirsin",
+    "landing.v4.nav.why": "Neden biz",
+
+    "landing.v4.hero.title1": "Artık kimse yalnız kalmayacak.",
+    "landing.v4.hero.title2": "Sadece buluş.",
+    "landing.v4.hero.sub":
+      "Küçük grup buluşmaları için açık bir platform — her şey için, her yerde bir buluşma oluştur ve doğru insanlarla eşleş.",
+    "landing.v4.hero.cta": "Bir buluşma başlat",
+    "landing.v4.hero.secondary": "Nasıl çalıştığını gör",
+
+    "landing.v4.how.eyebrow": "Üç adım",
+    "landing.v4.how.title": "Nasıl çalışır",
+    "landing.v4.how.s1.title": "Bir plan seç.",
+    "landing.v4.how.s1.body": "Kahve, yemek, doğa yürüyüşü, oyun gecesi — ne istersen.",
+    "landing.v4.how.s2.title": "Eşleş.",
+    "landing.v4.how.s2.body": "Seni tarzına uyan insanlarla aynı masaya oturturuz.",
+    "landing.v4.how.s3.title": "Sadece git.",
+    "landing.v4.how.s3.body": "Gerçek bir mekâna gel, gerçek insanlarla tanış.",
+
+    "landing.v4.categories.eyebrow": "Her şey için, her yerde",
+    "landing.v4.categories.title": "Ne için buluşabilirsin",
+    "landing.v4.categories.c1.title": "Sadece kahve iç.",
+    "landing.v4.categories.c1.body": "Anlaşmalı kafelerde sıradan buluşmalar.",
+    "landing.v4.categories.c2.title": "Sadece patikaya çık.",
+    "landing.v4.categories.c2.body": "Grup yürüyüşleri ve açık hava planları.",
+    "landing.v4.categories.c3.title": "Sadece oyna.",
+    "landing.v4.categories.c3.body": "Oyun geceleri, kutu oyunları, kalabalık her şey.",
+    "landing.v4.categories.c4.title": "Sadece gel.",
+    "landing.v4.categories.c4.body": "Ya da aklındaki başka bir şey için buluşma oluştur — karar senin.",
+
+    "landing.v4.upcoming.title": "İnsanlar şimdiden buluşuyor.",
+    "landing.v4.upcoming.subtitle": "Şu anda planlananlardan küçük bir tat.",
+    "landing.v4.upcoming.footnote": "Gösterilen buluşmalar örnektir.",
+    "landing.v4.upcoming.g1.activity": "Sabah kahvesi ve uzun sohbet",
+    "landing.v4.upcoming.g1.city": "Kadıköy, İstanbul",
+    "landing.v4.upcoming.g1.when": "Per · 09:30",
+    "landing.v4.upcoming.g2.activity": "Gün doğumunda sırt yürüyüşü",
+    "landing.v4.upcoming.g2.city": "Beykoz, İstanbul",
+    "landing.v4.upcoming.g2.when": "Cmt · 06:45",
+    "landing.v4.upcoming.g3.activity": "Kutu oyunu gecesi",
+    "landing.v4.upcoming.g3.city": "Karaköy, İstanbul",
+    "landing.v4.upcoming.g3.when": "Cum · 20:00",
+    "landing.v4.upcoming.g4.activity": "Uzun bir akşam yemeği, plansız",
+    "landing.v4.upcoming.g4.city": "Beşiktaş, İstanbul",
+    "landing.v4.upcoming.g4.when": "Paz · 19:30",
+    "landing.v4.upcoming.g5.activity": "Film kulübü: eski bir film",
+    "landing.v4.upcoming.g5.city": "Nişantaşı, İstanbul",
+    "landing.v4.upcoming.g5.when": "Çar · 21:00",
+    "landing.v4.upcoming.seats": "{n} kişilik",
+
+    "landing.v4.diff.title": "Biz düzenlemiyoruz. Sen düzenliyorsun.",
+    "landing.v4.diff.body":
+      "Gathering açık bir platform — herkes her şey için, her yerde bir buluşma oluşturabilir. Biz sadece doğru insanları bulmana yardım ederiz.",
+
+    "landing.v4.safety.title": "Baskı yok. Küçük gruplar. Kendi hızında.",
+    "landing.v4.safety.body1":
+      "Masadaki herkes bir zamanlar ilk kez gelmişti. Gruplar bilerek küçük kalıyor, böylece kalabalıkta kaybolmuyorsun.",
+    "landing.v4.safety.body2":
+      "Sadece on beş dakikan varsa on beş dakikalığına gel ve istediğin an ayrıl — açıklama gerekmez.",
+
+    "landing.v4.final.title": "Sadece buluş.",
+    "landing.v4.final.cta": "Bekleme listesine katıl",
+
+    "landing.v4.footer.categories": "Ne için buluşabilirsin",
+    "landing.v4.footer.upcoming": "Yaklaşan buluşmalar",
+    "landing.v4.footer.why": "Neden biz",
+
     // Landing v3
     "landing.v3.nav.how": "Nasıl çalışır",
     "landing.v3.nav.venues": "Mekânlar için",
@@ -3310,6 +3379,75 @@ export const translations: Record<Lang, Dict> = {
     "landing.v2.how.guests.step2.body": "موضوع و میزی را پیدا کنید که با شما حرف می‌زند.",
     "landing.v2.how.guests.step3.title": "به میز بپیوندید",
     "landing.v2.how.guests.step3.body": "صندلی‌تان را رزرو کنید و آمادهٔ ارتباط بیایید.",
+
+    // Landing v4 — «فقط دور هم جمع شو»
+    "landing.v4.nav.how": "چطور کار می‌کند",
+    "landing.v4.nav.categories": "برای چه چیزهایی دور هم جمع شویم",
+    "landing.v4.nav.why": "چرا ما",
+
+    "landing.v4.hero.title1": "دیگر هیچ‌کس تنها نمی‌ماند.",
+    "landing.v4.hero.title2": "فقط دور هم جمع شو.",
+    "landing.v4.hero.sub":
+      "یک بستر باز برای دورهمی‌های کوچک — برای هر بهانه‌ای و هر جایی یکی بساز و با آدم‌های مناسب هم‌سفره شو.",
+    "landing.v4.hero.cta": "یک دورهمی بساز",
+    "landing.v4.hero.secondary": "ببین چطور کار می‌کند",
+
+    "landing.v4.how.eyebrow": "سه قدم",
+    "landing.v4.how.title": "چطور کار می‌کند",
+    "landing.v4.how.s1.title": "یک برنامه انتخاب کن.",
+    "landing.v4.how.s1.body": "قهوه، شام، پیاده‌روی در طبیعت، شب بازی — هر چه دوست داری.",
+    "landing.v4.how.s2.title": "هم‌سفره‌هایت را پیدا کن.",
+    "landing.v4.how.s2.body": "تو را کنار آدم‌هایی می‌نشانیم که با حال‌وهوایت جور باشند.",
+    "landing.v4.how.s3.title": "فقط برو و ببین.",
+    "landing.v4.how.s3.body": "در یک مکان واقعی حاضر شو و آدم‌های واقعی را ببین.",
+
+    "landing.v4.categories.eyebrow": "هر بهانه‌ای، هر جایی",
+    "landing.v4.categories.title": "برای چه چیزهایی دور هم جمع شویم",
+    "landing.v4.categories.c1.title": "فقط یک قهوه.",
+    "landing.v4.categories.c1.body": "دورهمی‌های بی‌تکلف در کافه‌های همکار.",
+    "landing.v4.categories.c2.title": "فقط بزن به دل طبیعت.",
+    "landing.v4.categories.c2.body": "پیاده‌روی گروهی و برنامه‌های فضای باز.",
+    "landing.v4.categories.c3.title": "فقط یک دست بازی.",
+    "landing.v4.categories.c3.body": "شب بازی، بازی‌های رومیزی و هر چیز جمعی دیگر.",
+    "landing.v4.categories.c4.title": "فقط پیدایت شود.",
+    "landing.v4.categories.c4.body": "یا برای هر چیز دیگری یک دورهمی بساز — انتخاب با توست.",
+
+    "landing.v4.upcoming.title": "همین حالا دارند دور هم جمع می‌شوند.",
+    "landing.v4.upcoming.subtitle": "نمونه‌ای از برنامه‌هایی که همین الان در حال شکل گرفتن است.",
+    "landing.v4.upcoming.footnote": "این دورهمی‌ها نمونه و برای نمایش هستند.",
+    "landing.v4.upcoming.g1.activity": "قهوهٔ صبح و گپ آرام",
+    "landing.v4.upcoming.g1.city": "کادیکوی، استانبول",
+    "landing.v4.upcoming.g1.when": "پنجشنبه · ۰۹:۳۰",
+    "landing.v4.upcoming.g2.activity": "پیاده‌روی سحرگاهی تا بلندی",
+    "landing.v4.upcoming.g2.city": "بیکوز، استانبول",
+    "landing.v4.upcoming.g2.when": "شنبه · ۰۶:۴۵",
+    "landing.v4.upcoming.g3.activity": "شب بازی‌های رومیزی",
+    "landing.v4.upcoming.g3.city": "کاراکوی، استانبول",
+    "landing.v4.upcoming.g3.when": "جمعه · ۲۰:۰۰",
+    "landing.v4.upcoming.g4.activity": "یک شام طولانی، بدون برنامه",
+    "landing.v4.upcoming.g4.city": "بشیکتاش، استانبول",
+    "landing.v4.upcoming.g4.when": "یکشنبه · ۱۹:۳۰",
+    "landing.v4.upcoming.g5.activity": "کلوب فیلم: یک فیلم قدیمی",
+    "landing.v4.upcoming.g5.city": "نیشانتاشی، استانبول",
+    "landing.v4.upcoming.g5.when": "چهارشنبه · ۲۱:۰۰",
+    "landing.v4.upcoming.seats": "{n} صندلی",
+
+    "landing.v4.diff.title": "میزبانش ما نیستیم. تو هستی.",
+    "landing.v4.diff.body":
+      "گدرینگ یک بستر باز است — هر کسی می‌تواند برای هر چیزی و هر جایی یک دورهمی بسازد. ما فقط کمک می‌کنیم آدم‌های مناسب را پیدا کنی.",
+
+    "landing.v4.safety.title": "بدون فشار. جمع‌های کوچک. به آهنگ خودت.",
+    "landing.v4.safety.body1":
+      "هر کسی سر این میز، یک بار بار اولش بوده. جمع‌ها عمداً کوچک می‌مانند تا هیچ‌وقت در شلوغی گم نشوی.",
+    "landing.v4.safety.body2":
+      "اگر فقط یک ربع وقت داری، همان یک ربع بیا؛ و هر وقت خواستی برو — لازم نیست توضیحی بدهی.",
+
+    "landing.v4.final.title": "فقط دور هم جمع شو.",
+    "landing.v4.final.cta": "به فهرست انتظار بپیوند",
+
+    "landing.v4.footer.categories": "برای چه چیزهایی دور هم جمع شویم",
+    "landing.v4.footer.upcoming": "دورهمی‌های پیش‌رو",
+    "landing.v4.footer.why": "چرا ما",
 
     // Landing v3
     "landing.v3.nav.how": "چطور کار می‌کند",
