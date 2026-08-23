@@ -1,115 +1,74 @@
-# Homepage "Just Gather" copy + structure refresh
+# Automated tests for core product flows
 
-Rework the public landing page to a short, confident, imperative "Just Gather" voice. Keep the existing violet/nebula design system, all routes, and all backend code untouched. Apply the new English copy first; TR and FA fall back to EN for any new keys until a later translation pass.
+Testing infrastructure only. No app behavior, UI, or copy changes.
 
-## What changes
+## What already exists
 
-- Hero: new headline, subhead, and CTAs.
-- How-it-works: 3 steps with new labels and supporting lines.
-- New "What you can gather for" category cards (coffee, trail, game, open).
-- New "People are already gathering" horizontal teaser strip using sample data.
-- New "We don't host it. You do." differentiation band.
-- New warmer safety/reassurance section.
-- Footer CTA: "Just Gather." + waitlist button.
-- Public header anchors and footer links updated to point to the new sections.
-- Homepage SEO title/description updated for EN only.
+- `bun run test` — Vitest unit suite (`tests/unit/`): geolocation, attendance window/error classification, join-error classification, matching, feedback rules.
+- `bun run test:db` — opt-in integration suite (`tests/db/`) against the hosted database, with a tagged-fixture harness (`[test-<runId>]`), signed-in anon clients so RLS/triggers apply, service-role only for setup/teardown, children-first teardown plus a stale-row sweep, serial file execution.
 
-## What stays the same
+The plan extends both suites rather than introducing a new framework, and adds a small Playwright layer for two end-to-end flows.
 
-- All routes, auth flows, dashboard, admin, matching logic, and database schema.
-- `PublicHeader`, `SiteFooter`, `CosmicBackdrop`, `Reveal`, `SampleGatheringCard`, and the cosmic CSS utilities.
-- Existing TR/FA `landing.v3.*` translation keys are left in place; only new EN keys are added.
+## Layer 1 — Unit (Vitest, fast, always run)
 
-## Section-by-section plan
+Pure logic already extracted or trivially extractable. New files under `tests/unit/`:
 
-### 1. Hero (`src/routes/index.tsx`)
+- `create-gathering-schema.test.ts` — the zod schema and location-key parsing (`venue:<biz>:<table>` vs `saved:<id>`) used by the create-gathering form: required location, subject length bounds, seats 2–30, past-date rejection. Requires extracting the schema + a `parseLocationKey` helper into `src/lib/create-gathering-rules.ts` and importing it from the route (behavior-preserving refactor, no UI change).
+- `attendance-window.test.ts` additions — boundary cases at exactly −30 min and +24 h, and the full `classifyAttendanceError` table (`CHECKIN_TOO_EARLY`, `CHECKIN_WINDOW_CLOSED`, `GATHERING_CLOSED`, `CHECKIN_TOO_FAR`, `NOT_CHECKED_IN`, `ATTENDANCE_ALREADY_SET`, `LOCATION_REQUIRED`, forbidden, unknown).
+- `table-fit-blocking.test.ts` — `scoreTables` excludes blocked users from member counts and scores; a table whose only other member is blocked yields no fit rather than a bogus 100%.
+- `join-errors.test.ts` additions — `23505` → `already_joined`, `GATHERING_FULL` → `full`, `GATHERING_CLOSED` → `closed`, unknown → `other`.
 
-Update the existing `HeroSection` in place:
+## Layer 2 — Database integration (Vitest, opt-in `test:db`)
 
-- Headline: "Just Gather."
-- Subhead directly underneath: "An open platform for small-group meetups — create one for anything, anywhere, and get matched with the right people."
-- Primary CTA: "Start a Gathering" → links to `/auth?mode=signup` (same as the current primary CTA).
-- Secondary CTA: "See How It Works" → anchors to `#how`.
-- Keep the nebula hero visual and caption; remove the third "waitlist" button from the hero row.
+New files under `tests/db/`, reusing `harness.ts`. Harness additions: a third signed-in account (admin) and a venue-owner account, plus fixture helpers for saved locations, blocks, and messages.
 
-### 2. How it works (`src/components/landing/sections.tsx`)
+- `capacity.test.ts` — join succeeds up to `seats`; the seat-filling insert past capacity raises `GATHERING_FULL`; duplicate join by the same user raises the unique-violation path; joining a `cancelled` / `rejected` gathering raises `GATHERING_CLOSED`. Includes one concurrency case: two simultaneous joins on the last remaining seat — exactly one succeeds.
+- `attendance.test.ts` — check-in before the 30-min window → `CHECKIN_TOO_EARLY`; after end+24 h → `CHECKIN_WINDOW_CLOSED`; check-in from `FAR_AWAY` → `CHECKIN_TOO_FAR`; missing coordinates when the gathering is geocoded → `LOCATION_REQUIRED`; checkout without check-in → `NOT_CHECKED_IN`; re-setting an already-set timestamp → `ATTENDANCE_ALREADY_SET`; attempts to change `user_id` / `gathering_id` / `joined_at` → `ATTENDANCE_IMMUTABLE_FIELDS`; another attendee updating someone else's row → `ATTENDANCE_FORBIDDEN`; happy path inside the window at the venue coordinates succeeds and stamps `checked_in_by`.
+- `approvals.test.ts` — state machines and who may drive them:
+  - Gatherings: a non-admin host cannot change `status` (`prevent_gathering_status_change_non_admin`); an admin can move `proposed` → `approved` / `rejected`.
+  - Businesses: an owner cannot self-approve (`prevent_business_status_change_by_owner`); an admin can.
+  - Saved locations: owner inserts and the row lands `pending`; owner cannot flip `status`; admin can approve and reject with a reason; only approved locations are selectable by the owner's approved-location query.
+  - Venue tables: label uniqueness (case-insensitive) and the active-gathering lock (`TABLE_LOCKED`, `TABLE_CAPACITY_LOCKED`).
+- `blocking.test.ts` — with a block in place, chat messages are hidden in both directions through the RLS-scoped anon clients (blocker→blocked and blocked→blocker), and reports insert clamps `status` to `open` for non-admins while admin resolution is permitted.
+- `auth-roles.test.ts` — the `handle_new_user` trigger: a signup with `account_type: "venue"` gets the `venue` role and a profile row; a plain signup gets `user`; an invalid `account_type` falls back to `user`; `user_roles` is not writable by the authenticated role (no self-promotion to admin). Uses service-role `auth.admin.createUser` for throwaway accounts, deleted in teardown.
 
-Keep the 3-step grid, replace icons and copy:
+`getTableFit` blocking exclusion is covered at the unit level (Layer 1) since the server function's data-gathering is a thin admin query around `scoreTables`.
 
-- Step 1 — icon `Compass`, label "Pick a plan.", body "Coffee, dinner, a hike, a game night — anything."
-- Step 2 — icon `Users`, label "Get matched.", body "We fit you with people who match your vibe."
-- Step 3 — icon `DoorOpen`, label "Just meet.", body "Show up at a real place, meet real people."
+## Layer 3 — End-to-end (Playwright, opt-in)
 
-Section id stays `#how` so the header/footer anchors still work.
+Two flows only, run against the local dev server with `bun run test:e2e`:
 
-### 3. What you can gather for (new section)
+1. **Signup → onboarding → create gathering at a saved location.** New user signs up, completes onboarding, adds a saved location (pre-approved via service role to keep the test deterministic), creates a gathering, lands on the detail page.
+2. **Join flow.** A second account signs in, opens that gathering from Explore, joins, sees the seat count decrement, and sees the duplicate-join guard on a second attempt.
 
-Add a `CategoriesSection` after How. 4 cards in a responsive grid, using `cosmic-panel` styling:
+Setup: add `@playwright/test`, a `playwright.config.ts` pointing at `http://localhost:8080` with `webServer` reuse, and `tests/e2e/`. Accounts are created and torn down via service role with the same `[test-<runId>]` tagging discipline. E2E is excluded from `bun run test` so the default suite stays fast and offline.
 
-- "Just grab coffee." — Casual meetups at partner cafés. (icon `Coffee`)
-- "Just hit the trail." — Group hikes and outdoor plans. (icon `Mountain`)
-- "Just play a game." — Game nights, board games, anything social. (icon `Gamepad2`)
-- "Just show up." — Or create a Gathering for anything else — you decide. (icon `Plus`)
+## Scripts
 
-Section id `#categories`.
+- `bun run test` — unit only (unchanged default, no network).
+- `bun run test:db` — DB integration (unchanged gating: `TEST_DB_ENABLED=1` + credentials).
+- `bun run test:e2e` — Playwright (skips with a clear message when credentials are absent).
 
-### 4. Upcoming gatherings / social proof (new section)
+## Env vars needed for the opt-in suites
 
-Add an `UpcomingSection` with id `#gatherings`.
+Existing: `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `SUPABASE_PUBLISHABLE_KEY`, `TEST_HOST_EMAIL/PASSWORD`, `TEST_ATTENDEE_EMAIL/PASSWORD`.
+New: `TEST_ADMIN_EMAIL/PASSWORD` (an account holding the `admin` role) and `TEST_VENUE_EMAIL/PASSWORD` (a `venue` account). Both must be dedicated test accounts.
 
-- Header: "People are already gathering."
-- Horizontal scrolling teaser strip of sample gatherings showing city, activity, and time.
-- No new backend: reuse/adapt `SampleGatheringCard` data and visuals, updating the sample topics to include the open categories (coffee, trail, game, etc.) so the strip reinforces that gatherings are not café-only.
+## Scope and cost estimate
 
-### 5. Differentiation (new section)
+| Layer | New/edited files | Est. tests | Effort |
+| --- | --- | --- | --- |
+| Unit | 4 files + 1 small extraction | ~30 | small |
+| DB integration | 5 files + harness additions | ~35 | medium-large |
+| E2E | config + 2 specs + fixtures | 2 flows | medium |
 
-Add a short centered band, id `#why`:
+Roughly a single focused build session end to end; the DB layer is the bulk of it. The only production-code change is the behavior-preserving extraction of the create-gathering zod schema and location-key parser into `src/lib/create-gathering-rules.ts`.
 
-- Header: "We don't host it. You do."
-- Body: "Gathering is an open platform — anyone can create a gathering, for anything, anywhere. We just help you find the right people."
+## Deliberately out of scope
 
-### 6. Safety / reassurance (new section)
+UI snapshot tests, component render tests, i18n coverage, notification delivery, MCP endpoints, and exhaustive validation edge cases.
 
-Add a warmer, non-imperative section:
+## Open questions
 
-- Header: "No pressure. Small groups. Go at your pace."
-- One to two lines reassuring first-timers/shy users that joining is low-stakes.
-
-### 7. Footer CTA (`FinalCtaSection` in `src/components/landing/sections.tsx`)
-
-Update the existing final CTA:
-
-- Headline: "Just Gather."
-- Button: "Join the waitlist" → links to `/waitlist`.
-- Drop the secondary auth/partner links to keep the close clean.
-
-## Navigation and footer links
-
-- `src/components/landing/public-header.tsx`: update `DEFAULT_ANCHORS` to `[#how, #categories, #why]` with new `landing.v4.nav.*` keys.
-- `src/components/site-footer.tsx`: update explore-column hrefs to the new section ids (`/#how`, `/#categories`, `/#gatherings`, `/#why`). Keep the partnership and legal columns as-is.
-
-## Translations
-
-Add new EN keys under a `landing.v4.*` namespace so existing `landing.v3.*` keys are untouched:
-
-- `landing.v4.nav.how`, `landing.v4.nav.categories`, `landing.v4.nav.why`
-- `landing.v4.hero.title`, `landing.v4.hero.sub`, `landing.v4.hero.cta`, `landing.v4.hero.secondary`
-- `landing.v4.how.s1.title`, `landing.v4.how.s1.body`, etc.
-- `landing.v4.categories.c1.title`, `landing.v4.categories.c1.body`, etc.
-- `landing.v4.upcoming.title`, `landing.v4.upcoming.subtitle`
-- `landing.v4.diff.title`, `landing.v4.diff.body`
-- `landing.v4.safety.title`, `landing.v4.safety.body`
-- `landing.v4.final.title`, `landing.v4.final.cta`
-- New footer explore labels as needed.
-
-TR and FA will show EN fallback for these keys until translated.
-
-## SEO
-
-- Update `PAGE_SEO["/"].en` in `src/lib/seo.ts` to a title/description matching the new voice, e.g. title "Just Gather — Ideal Gathering" and description about the open small-group meetup platform. Leave TR/FA as-is for this pass.
-
-## Verification
-
-- Run the dev build/typecheck.
-- Open the homepage preview, confirm all 7 sections render, anchors scroll correctly, and the header/footer links resolve.
-- Confirm no new backend errors or missing i18n keys in the console.
+1. Can you provide (or should I create via service role) the dedicated `admin` and `venue` test accounts?
+2. Playwright is not currently a dependency — OK to add it as a devDependency, or would you rather keep the suite DB-only for now?
