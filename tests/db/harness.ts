@@ -115,10 +115,16 @@ export async function createBusiness(admin: SupabaseClient, ownerId: string, fx:
   return data.id as string;
 }
 
-export async function createTable(admin: SupabaseClient, businessId: string, fx: Fixture, capacity = 4) {
+export async function createTable(
+  admin: SupabaseClient,
+  businessId: string,
+  fx: Fixture,
+  capacity = 4,
+  label = "T1",
+) {
   const { data, error } = await admin
     .from("venue_tables")
-    .insert({ business_id: businessId, label: tag("T1"), capacity })
+    .insert({ business_id: businessId, label: tag(label), capacity })
     .select("id")
     .single();
   if (error) throw error;

@@ -204,8 +204,8 @@ d("database triggers and RLS", () => {
     it("locks a table that has a future gathering, and releases it on cancel", async () => {
       const fx2 = newFixture();
       try {
-        await createBusiness(admin, host.userId, fx2);
-        const tableId = await createTable(admin, fx2.businessId!, fx2, 4);
+        // Reuse the suite's business: only one business per owner is allowed.
+        const tableId = await createTable(admin, fx.businessId!, fx2, 4, "T-lock");
         const g = await createGathering(admin, fx2, {
           host_id: host.userId,
           business_id: fx2.businessId,
