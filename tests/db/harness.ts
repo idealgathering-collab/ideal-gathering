@@ -26,14 +26,16 @@ export function env(name: string): string | undefined {
   return value && value.length > 0 ? value : undefined;
 }
 
+/**
+ * The suite provisions its own accounts through the service-role Auth Admin
+ * API, so only the project credentials are strictly required. TEST_*_EMAIL /
+ * TEST_*_PASSWORD env vars still win when a project prefers fixed accounts.
+ */
 export const dbTestsEnabled =
   env("TEST_DB_ENABLED") === "1" &&
   !!env("SUPABASE_URL") &&
   !!env("SUPABASE_SERVICE_ROLE_KEY") &&
-  !!env("TEST_HOST_EMAIL") &&
-  !!env("TEST_HOST_PASSWORD") &&
-  !!env("TEST_ATTENDEE_EMAIL") &&
-  !!env("TEST_ATTENDEE_PASSWORD");
+  (!!env("SUPABASE_PUBLISHABLE_KEY") || !!env("SUPABASE_ANON_KEY"));
 
 export function adminClient(): SupabaseClient {
   return createClient(env("SUPABASE_URL")!, env("SUPABASE_SERVICE_ROLE_KEY")!, {
@@ -50,13 +52,23 @@ export async function signIn(email: string, password: string) {
   return { client, userId: data.user.id };
 }
 
+export const PROVISIONED_HOST_EMAIL = env("TEST_HOST_EMAIL") ?? "ig-test-host@example.com";
+export const PROVISIONED_HOST_PASSWORD = env("TEST_HOST_PASSWORD") ?? "ig-test-host-Pw!2026";
+export const PROVISIONED_ATTENDEE_EMAIL = env("TEST_ATTENDEE_EMAIL") ?? "ig-test-attendee@example.com";
+export const PROVISIONED_ATTENDEE_PASSWORD = env("TEST_ATTENDEE_PASSWORD") ?? "ig-test-attendee-Pw!2026";
+
 export async function signInHost() {
-  return signIn(env("TEST_HOST_EMAIL")!, env("TEST_HOST_PASSWORD")!);
+  const admin = adminClient();
+  await ensureAccount(admin, PROVISIONED_HOST_EMAIL, PROVISIONED_HOST_PASSWORD, "user");
+  return signIn(PROVISIONED_HOST_EMAIL, PROVISIONED_HOST_PASSWORD);
 }
 
 export async function signInAttendee() {
-  return signIn(env("TEST_ATTENDEE_EMAIL")!, env("TEST_ATTENDEE_PASSWORD")!);
+  const admin = adminClient();
+  await ensureAccount(admin, PROVISIONED_ATTENDEE_EMAIL, PROVISIONED_ATTENDEE_PASSWORD, "user");
+  return signIn(PROVISIONED_ATTENDEE_EMAIL, PROVISIONED_ATTENDEE_PASSWORD);
 }
+
 
 export function isoIn(ms: number) {
   return new Date(Date.now() + ms).toISOString();
@@ -159,4 +171,155 @@ export async function teardown(admin: SupabaseClient, fx: Fixture) {
 /** Postgres error message helper: true when the error names the given trigger code. */
 export function raised(error: { message?: string } | null, code: string) {
   return !!error?.message?.includes(code);
+}
+
+/* ------------------------------------------------------------------ */
+/* Provisioned test accounts (admin + venue)                           */
+/* ------------------------------------------------------------------ */
+
+/**
+ * The admin and venue accounts are created by the suite itself through the
+ * service-role Auth Admin API, so no one has to hand-craft them. Emails and
+ * passwords can still be overridden with env vars when a project prefers
+ * dedicated pre-existing accounts.
+ */
+export const PROVISIONED_ADMIN_EMAIL = env("TEST_ADMIN_EMAIL") ?? "ig-test-admin@example.com";
+export const PROVISIONED_ADMIN_PASSWORD = env("TEST_ADMIN_PASSWORD") ?? "ig-test-admin-Pw!2026";
+export const PROVISIONED_VENUE_EMAIL = env("TEST_VENUE_EMAIL") ?? "ig-test-venue@example.com";
+export const PROVISIONED_VENUE_PASSWORD = env("TEST_VENUE_PASSWORD") ?? "ig-test-venue-Pw!2026";
+
+async function findUserByEmail(admin: SupabaseClient, email: string) {
+  // listUsers is paginated; the test tenant is small, but scan a few pages anyway.
+  for (let page = 1; page <= 10; page += 1) {
+    const { data, error } = await admin.auth.admin.listUsers({ page, perPage: 200 });
+    if (error) throw error;
+    const hit = data.users.find((u) => u.email?.toLowerCase() === email.toLowerCase());
+    if (hit) return hit;
+    if (data.users.length < 200) return null;
+  }
+  return null;
+}
+
+/**
+ * Creates (or reuses) a confirmed auth account. Returns its id.
+ * `accountType` is passed as user metadata so `handle_new_user` assigns the role.
+ */
+export async function ensureAccount(
+  admin: SupabaseClient,
+  email: string,
+  password: string,
+  accountType: "user" | "venue" = "user",
+) {
+  const existing = await findUserByEmail(admin, email);
+  if (existing) {
+    // Keep the password in sync so a rotated default cannot break sign-in.
+    await admin.auth.admin.updateUserById(existing.id, { password, email_confirm: true });
+    return existing.id;
+  }
+  const { data, error } = await admin.auth.admin.createUser({
+    email,
+    password,
+    email_confirm: true,
+    user_metadata: { account_type: accountType, display_name: tag("account") },
+  });
+  if (error || !data.user) throw new Error(`Could not provision ${email}: ${error?.message}`);
+  return data.user.id;
+}
+
+/** Ensures the account holds the given role (service role only). */
+export async function grantRole(admin: SupabaseClient, userId: string, role: "admin" | "venue" | "user") {
+  const { data } = await admin.from("user_roles").select("id").eq("user_id", userId).eq("role", role).maybeSingle();
+  if (data) return;
+  const { error } = await admin.from("user_roles").insert({ user_id: userId, role });
+  if (error) throw error;
+}
+
+/** Signs in as the provisioned admin, creating the account on first run. */
+export async function signInAdmin(admin: SupabaseClient) {
+  const id = await ensureAccount(admin, PROVISIONED_ADMIN_EMAIL, PROVISIONED_ADMIN_PASSWORD, "user");
+  await grantRole(admin, id, "admin");
+  return signIn(PROVISIONED_ADMIN_EMAIL, PROVISIONED_ADMIN_PASSWORD);
+}
+
+/** Signs in as the provisioned venue owner, creating the account on first run. */
+export async function signInVenue(admin: SupabaseClient) {
+  const id = await ensureAccount(admin, PROVISIONED_VENUE_EMAIL, PROVISIONED_VENUE_PASSWORD, "venue");
+  await grantRole(admin, id, "venue");
+  return signIn(PROVISIONED_VENUE_EMAIL, PROVISIONED_VENUE_PASSWORD);
+}
+
+/** Creates a throwaway signup used by the role/auth tests. Caller must delete it. */
+export async function createThrowawayUser(
+  admin: SupabaseClient,
+  accountType: string | undefined,
+  disposables: string[],
+) {
+  const email = `ig-test-${RUN_ID}-${Math.random().toString(36).slice(2, 8)}@example.com`;
+  const { data, error } = await admin.auth.admin.createUser({
+    email,
+    password: `Tmp-${RUN_ID}-Pw!`,
+    email_confirm: true,
+    user_metadata: accountType === undefined ? { display_name: tag("temp") } : { account_type: accountType },
+  });
+  if (error || !data.user) throw new Error(`Could not create throwaway user: ${error?.message}`);
+  disposables.push(data.user.id);
+  return { id: data.user.id, email };
+}
+
+export async function deleteUsers(admin: SupabaseClient, ids: string[]) {
+  for (const id of ids) {
+    await admin.from("user_roles").delete().eq("user_id", id);
+    await admin.auth.admin.deleteUser(id).catch(() => undefined);
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Extra fixture helpers                                               */
+/* ------------------------------------------------------------------ */
+
+/** Inserts a saved location as its owner (so RLS + the pending default apply). */
+export async function createSavedLocation(
+  client: SupabaseClient,
+  userId: string,
+  fx: Fixture,
+  values: Record<string, unknown> = {},
+) {
+  const { data, error } = await client
+    .from("saved_locations")
+    .insert({
+      user_id: userId,
+      label: tag("Home"),
+      address: tag("Test Street"),
+      street_number: "1",
+      description: tag("integration test location"),
+      city: "Istanbul",
+      lat: VENUE.lat,
+      lng: VENUE.lng,
+      ...values,
+    })
+    .select("id, status")
+    .single();
+  if (error) throw error;
+  fx.savedLocationIds.push(data.id);
+  return data as { id: string; status: string };
+}
+
+/** Blocks `blockedId` as `blockerId` through the blocker's own client. */
+export async function block(client: SupabaseClient, blockerId: string, blockedId: string) {
+  const { error } = await client.from("user_blocks").insert({ blocker_id: blockerId, blocked_id: blockedId });
+  if (error) throw error;
+}
+
+export async function unblockAll(admin: SupabaseClient, userIds: string[]) {
+  if (userIds.length === 0) return;
+  await admin.from("user_blocks").delete().in("blocker_id", userIds);
+  await admin.from("user_blocks").delete().in("blocked_id", userIds);
+}
+
+export async function sendMessage(client: SupabaseClient, gatheringId: string, senderId: string, body: string) {
+  return client
+    .from("gathering_messages")
+    .insert({ gathering_id: gatheringId, sender_id: senderId, body: tag(body) })
+    .select("id")
+    .maybeSingle();
 }

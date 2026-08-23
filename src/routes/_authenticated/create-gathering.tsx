@@ -1,7 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { z } from "zod";
+import { ADD_NEW_LOCATION, createGatheringSchema } from "@/lib/create-gathering-rules";
 import { toast } from "sonner";
 import { Sparkles } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
@@ -29,15 +29,10 @@ export const Route = createFileRoute("/_authenticated/create-gathering")({
   component: CreateGathering,
 });
 
-const schema = z.object({
-  location: z.string().min(1, "Pick a location"),
-  subject: z.string().trim().min(3).max(120),
-  description: z.string().trim().max(800).optional().or(z.literal("")),
-  starts_at: z.string().min(1, "Pick a date & time"),
-  seats: z.coerce.number().int().min(2).max(30),
-});
+const schema = createGatheringSchema;
 
-const ADD_NEW = "__add";
+const ADD_NEW = ADD_NEW_LOCATION;
+
 
 type PartnerOption = {
   key: string; // venue:<biz>:<table>
