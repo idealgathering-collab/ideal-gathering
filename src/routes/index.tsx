@@ -80,8 +80,13 @@ function HeroSection() {
           </Reveal>
 
           <Reveal delay={70}>
-            <h1 className="font-serif-warm animate-headline-glow mt-6 text-[56px] font-extrabold leading-[1.02] tracking-[-0.04em] text-white sm:text-[88px] lg:text-[96px]">
-              {t("landing.v4.hero.title")}
+            <h1 className="font-serif-warm animate-headline-glow mt-6 text-[56px] font-extrabold leading-[1.02] tracking-[-0.04em] sm:text-[88px] lg:text-[96px]">
+              <span className="block text-white">
+                {t("landing.v4.hero.title1")}
+              </span>
+              <span className="block text-nebula-violet">
+                {t("landing.v4.hero.title2")}
+              </span>
             </h1>
           </Reveal>
 
