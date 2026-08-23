@@ -9,6 +9,7 @@ import {
   FAR_AWAY,
   isoIn,
   newFixture,
+  signInAdmin,
   signInAttendee,
   signInHost,
   tag,
@@ -26,12 +27,14 @@ d("database triggers and RLS", () => {
   let admin: SupabaseClient;
   let host: { client: SupabaseClient; userId: string };
   let attendee: { client: SupabaseClient; userId: string };
+  let adminUser: { client: SupabaseClient; userId: string };
   const fx: Fixture = newFixture();
 
   beforeAll(async () => {
     admin = adminClient();
     host = await signInHost();
     attendee = await signInAttendee();
+    adminUser = await signInAdmin(admin);
     await createBusiness(admin, host.userId, fx);
     await createTable(admin, fx.businessId!, fx, 4);
   });
@@ -42,6 +45,7 @@ d("database triggers and RLS", () => {
     } finally {
       await host?.client.auth.signOut();
       await attendee?.client.auth.signOut();
+      await adminUser?.client.auth.signOut();
     }
   });
 
