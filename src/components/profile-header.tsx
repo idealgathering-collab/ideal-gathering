@@ -1,6 +1,7 @@
 import { Camera, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useT } from "@/i18n";
+import { interestLabel } from "@/lib/interests";
 
 /**
  * Identity banner at the top of the profile page.
@@ -84,7 +85,7 @@ export function ProfileHeader({
                 key={tag}
                 className="rounded-full bg-primary/10 px-3 py-1 text-xs text-primary"
               >
-                {tag}
+                {interestLabel(t, tag)}
               </span>
             ))}
             {rest > 0 && (
