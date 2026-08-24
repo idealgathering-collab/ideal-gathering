@@ -1,15 +1,17 @@
-import { useState } from "react";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { Sparkles, ArrowRight, Crosshair, Loader2 } from "lucide-react";
+import { Sparkles, ArrowRight } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { GatheringCard } from "@/components/gathering-card";
 import { CityFilter } from "@/components/city-filter";
+import { ExploreSort } from "@/components/explore-sort";
+import { RecommendedRow } from "@/components/recommended-row";
 import { TakeQuizNudge } from "@/components/table-fit";
 import { Button } from "@/components/ui/button";
 import { fetchApprovedGatherings, fetchGatheringCities, gatheringCoords } from "@/lib/gatherings";
 import { useDeviceLocation, haversineKm } from "@/lib/geolocation";
+import { sortGatherings, pickRecommended, isSortMode, type SortMode } from "@/lib/explore-sort";
 import { toast } from "sonner";
 import { getTableFit } from "@/lib/matching.functions";
 import { supabase } from "@/integrations/supabase/client";
@@ -18,13 +20,14 @@ import { useI18n, useT } from "@/i18n";
 import { localizedHead, jsonLdGatheringList, type SeoLang } from "@/lib/seo";
 import { JsonLd } from "@/components/json-ld";
 
-type ExploreSearch = { lang?: SeoLang; city?: string };
+type ExploreSearch = { lang?: SeoLang; city?: string; sort?: SortMode };
 
 export const Route = createFileRoute("/explore")({
   component: Explore,
   validateSearch: (search: Record<string, unknown>): ExploreSearch => ({
     ...(search.lang === "tr" || search.lang === "fa" ? { lang: search.lang } : {}),
     ...(typeof search.city === "string" && search.city.trim() ? { city: search.city.trim() } : {}),
+    ...(isSortMode(search.sort) ? { sort: search.sort } : {}),
   }),
   head: ({ match }) => localizedHead("/explore", match.search.lang),
 });
