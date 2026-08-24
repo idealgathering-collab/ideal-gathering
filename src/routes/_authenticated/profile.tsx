@@ -426,40 +426,54 @@ function ProfilePage() {
               <section className={cardClass}>
                 <h2 className="font-display text-xl">{t("profile.interests")}</h2>
                 <p className="mt-1 text-sm text-muted-foreground">{t("profile.interests.hint")}</p>
-                <div className="mt-4 flex flex-wrap gap-2">
-                  {interests.map((tag) => (
-                    <span
-                      key={tag}
-                      className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-3 py-1 text-sm text-primary"
-                    >
-                      {tag}
-                      <button
-                        type="button"
-                        onClick={() => removeInterest(tag)}
-                        className="ms-1 rounded-full hover:bg-primary/20"
-                        aria-label={t("profile.interests.remove")}
+                {interests.length > 0 && (
+                  <div className="mt-4 flex flex-wrap gap-2">
+                    {interests.map((tag) => (
+                      <span
+                        key={tag}
+                        className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-3 py-1 text-sm text-primary"
                       >
-                        <X className="h-3.5 w-3.5" />
-                      </button>
-                    </span>
+                        {interestLabel(t, tag)}
+                        <button
+                          type="button"
+                          onClick={() => removeInterest(tag)}
+                          className="ms-1 rounded-full hover:bg-primary/20"
+                          aria-label={t("profile.interests.remove")}
+                        >
+                          <X className="h-3.5 w-3.5" />
+                        </button>
+                      </span>
+                    ))}
+                  </div>
+                )}
+                <div className="mt-5 space-y-4">
+                  {INTEREST_CATEGORIES.map((cat) => (
+                    <div key={cat.id}>
+                      <h3 className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                        {t(`interest.cat.${cat.id}`)}
+                      </h3>
+                      <div className="mt-2 flex flex-wrap gap-2">
+                        {cat.tags.map((tag) => {
+                          const active = interests.includes(tag);
+                          return (
+                            <button
+                              key={tag}
+                              type="button"
+                              aria-pressed={active}
+                              onClick={() => toggleInterest(tag)}
+                              className={
+                                active
+                                  ? "rounded-full border border-primary bg-primary px-3 py-1 text-sm text-primary-foreground"
+                                  : "rounded-full border border-border px-3 py-1 text-sm text-muted-foreground transition-colors hover:border-primary/50 hover:text-foreground"
+                              }
+                            >
+                              {t(`interest.${tag}`)}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
                   ))}
-                </div>
-                <div className="mt-4 flex gap-2">
-                  <Input
-                    value={interestInput}
-                    placeholder={t("profile.interests.add")}
-                    maxLength={40}
-                    onChange={(e) => setInterestInput(e.target.value)}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter" || e.key === ",") {
-                        e.preventDefault();
-                        addInterest();
-                      }
-                    }}
-                  />
-                  <Button type="button" variant="outline" onClick={addInterest} className="rounded-full">
-                    {t("profile.interests.addBtn")}
-                  </Button>
                 </div>
               </section>
 
