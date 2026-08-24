@@ -15,6 +15,7 @@ import { ALL_COUNTRIES } from "@/lib/countries";
 import { useT } from "@/i18n";
 import { SavedLocationsSection } from "@/components/saved-locations-section";
 import { ProfileHeader } from "@/components/profile-header";
+import { INTEREST_CATEGORIES, MAX_INTERESTS, interestLabel } from "@/lib/interests";
 import { useQueryClient } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/_authenticated/profile")({
@@ -82,7 +83,7 @@ function ProfilePage() {
   const [neighborhood, setNeighborhood] = useState("");
   const [country, setCountry] = useState<string>("");
   const [interests, setInterests] = useState<string[]>([]);
-  const [interestInput, setInterestInput] = useState("");
+  
   const [social, setSocial] = useState<SocialLinks>({});
   const [avatarPath, setAvatarPath] = useState<string | null>(null);
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
@@ -139,19 +140,16 @@ function ProfilePage() {
       });
   }, [user]);
 
-  function addInterest() {
-    const v = interestInput.trim();
-    if (!v) return;
-    if (interests.includes(v)) {
-      setInterestInput("");
+  function toggleInterest(tag: string) {
+    if (interests.includes(tag)) {
+      setInterests(interests.filter((i) => i !== tag));
       return;
     }
-    if (interests.length >= 15) {
+    if (interests.length >= MAX_INTERESTS) {
       toast.error(t("profile.interests.max"));
       return;
     }
-    setInterests([...interests, v]);
-    setInterestInput("");
+    setInterests([...interests, tag]);
   }
 
   function removeInterest(tag: string) {
