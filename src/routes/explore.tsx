@@ -160,27 +160,24 @@ function Explore() {
       <main className="mx-auto max-w-6xl px-4 py-14">
         <div className="mb-8 flex flex-wrap items-center gap-3">
           <CityFilter city={activeCity} cities={cities ?? []} onChange={setCity} />
-          {geo.supported && (
-            <Button
-              type="button"
-              variant={nearMe ? "default" : "outline"}
-              className="h-9 rounded-full"
-              disabled={geo.status === "locating"}
-              onClick={toggleNearMe}
-            >
-              {geo.status === "locating" ? (
-                <Loader2 className="me-1.5 h-4 w-4 animate-spin" />
-              ) : (
-                <Crosshair className="me-1.5 h-4 w-4" />
-              )}
-              {t("geo.nearMe")}
-            </Button>
-          )}
+          <ExploreSort
+            mode={sortMode}
+            onChange={setSort}
+            showFit={canSortByFit}
+            showNear={geo.supported}
+            locating={geo.status === "locating"}
+          />
         </div>
         {showQuizNudge && (
           <div className="mb-8">
             <TakeQuizNudge />
           </div>
+        )}
+        {!busy && recommended.length >= 2 && (
+          <RecommendedRow
+            items={recommended.map(({ g, fitRow, distanceKm }) => ({ g, fit: fitRow, distanceKm }))}
+            showCity={!activeCity}
+          />
         )}
         {busy ? (
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -209,11 +206,11 @@ function Explore() {
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {withDistance.map(({ g, distanceKm }) => (
+            {sorted.map(({ g, fitRow, distanceKm }) => (
               <GatheringCard
                 key={g.id}
                 g={g}
-                fit={fitById.get(g.id)}
+                fit={fitRow}
                 showCity={!activeCity}
                 distanceKm={distanceKm}
               />
