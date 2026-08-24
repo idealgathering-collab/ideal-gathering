@@ -1,15 +1,17 @@
-import { useState } from "react";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { Sparkles, ArrowRight, Crosshair, Loader2 } from "lucide-react";
+import { Sparkles, ArrowRight } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { GatheringCard } from "@/components/gathering-card";
 import { CityFilter } from "@/components/city-filter";
+import { ExploreSort } from "@/components/explore-sort";
+import { RecommendedRow } from "@/components/recommended-row";
 import { TakeQuizNudge } from "@/components/table-fit";
 import { Button } from "@/components/ui/button";
 import { fetchApprovedGatherings, fetchGatheringCities, gatheringCoords } from "@/lib/gatherings";
 import { useDeviceLocation, haversineKm } from "@/lib/geolocation";
+import { sortGatherings, pickRecommended, isSortMode, type SortMode } from "@/lib/explore-sort";
 import { toast } from "sonner";
 import { getTableFit } from "@/lib/matching.functions";
 import { supabase } from "@/integrations/supabase/client";
@@ -18,13 +20,14 @@ import { useI18n, useT } from "@/i18n";
 import { localizedHead, jsonLdGatheringList, type SeoLang } from "@/lib/seo";
 import { JsonLd } from "@/components/json-ld";
 
-type ExploreSearch = { lang?: SeoLang; city?: string };
+type ExploreSearch = { lang?: SeoLang; city?: string; sort?: SortMode };
 
 export const Route = createFileRoute("/explore")({
   component: Explore,
   validateSearch: (search: Record<string, unknown>): ExploreSearch => ({
     ...(search.lang === "tr" || search.lang === "fa" ? { lang: search.lang } : {}),
     ...(typeof search.city === "string" && search.city.trim() ? { city: search.city.trim() } : {}),
+    ...(isSortMode(search.sort) ? { sort: search.sort } : {}),
   }),
   head: ({ match }) => localizedHead("/explore", match.search.lang),
 });
@@ -76,34 +79,6 @@ function Explore() {
   }
 
   const geo = useDeviceLocation();
-  const [nearMe, setNearMe] = useState(false);
-
-  async function toggleNearMe() {
-    if (nearMe) {
-      setNearMe(false);
-      return;
-    }
-    const fix = await geo.request();
-    if (!fix) {
-      toast.error(t("geo.failed"));
-      return;
-    }
-    setNearMe(true);
-  }
-
-  const withDistance = (gatherings ?? []).map((g) => {
-    const coords = gatheringCoords(g);
-    const distanceKm =
-      nearMe && geo.fix && coords ? haversineKm(geo.fix, coords) : null;
-    return { g, distanceKm };
-  });
-  if (nearMe && geo.fix) {
-    withDistance.sort((a, b) => {
-      if (a.distanceKm === null) return b.distanceKm === null ? 0 : 1;
-      if (b.distanceKm === null) return -1;
-      return a.distanceKm - b.distanceKm;
-    });
-  }
 
   const ids = (gatherings ?? []).map((g) => g.id);
   const { data: fitData } = useQuery({
@@ -113,9 +88,54 @@ function Explore() {
   });
   const fitById = new Map((fitData?.fits ?? []).map((f) => [f.gatheringId, f]));
   const showQuizNudge = !!user && fitData?.viewerHasTraits === false;
+  const canSortByFit = fitData?.viewerHasTraits === true;
+
+  // Fit-first is the default for anyone with quiz traits; everyone else keeps
+  // the soonest-first order.
+  const sortMode: SortMode =
+    search.sort && (search.sort !== "fit" || canSortByFit)
+      ? search.sort
+      : canSortByFit
+        ? "fit"
+        : "soon";
+  const nearMe = sortMode === "near";
+
+  async function setSort(mode: SortMode) {
+    if (mode === "near" && !geo.fix) {
+      const fix = await geo.request();
+      if (!fix) {
+        toast.error(t("geo.failed"));
+        return;
+      }
+    }
+    navigate({
+      to: "/explore",
+      search: (prev: ExploreSearch) => ({ ...prev, sort: mode }),
+      replace: true,
+    });
+  }
+
+  const withDistance = (gatherings ?? []).map((g) => {
+    const coords = gatheringCoords(g);
+    const distanceKm = nearMe && geo.fix && coords ? haversineKm(geo.fix, coords) : null;
+    const fitRow = fitById.get(g.id);
+    return {
+      id: g.id,
+      starts_at: g.starts_at,
+      g,
+      fit: fitRow,
+      distanceKm,
+    };
+  });
+  const sorted = sortGatherings(
+    withDistance.map((row) => ({ ...row, fit: row.fit?.fit ?? null, fitRow: row.fit })),
+    sortMode,
+  );
+  const recommended = canSortByFit ? pickRecommended(sorted, 3) : [];
 
   const busy = isLoading || waitingForProfile;
   const empty = !busy && (!gatherings || gatherings.length === 0);
+
 
   return (
     <div className="min-h-screen bg-background">
@@ -140,27 +160,24 @@ function Explore() {
       <main className="mx-auto max-w-6xl px-4 py-14">
         <div className="mb-8 flex flex-wrap items-center gap-3">
           <CityFilter city={activeCity} cities={cities ?? []} onChange={setCity} />
-          {geo.supported && (
-            <Button
-              type="button"
-              variant={nearMe ? "default" : "outline"}
-              className="h-9 rounded-full"
-              disabled={geo.status === "locating"}
-              onClick={toggleNearMe}
-            >
-              {geo.status === "locating" ? (
-                <Loader2 className="me-1.5 h-4 w-4 animate-spin" />
-              ) : (
-                <Crosshair className="me-1.5 h-4 w-4" />
-              )}
-              {t("geo.nearMe")}
-            </Button>
-          )}
+          <ExploreSort
+            mode={sortMode}
+            onChange={setSort}
+            showFit={canSortByFit}
+            showNear={geo.supported}
+            locating={geo.status === "locating"}
+          />
         </div>
         {showQuizNudge && (
           <div className="mb-8">
             <TakeQuizNudge />
           </div>
+        )}
+        {!busy && recommended.length >= 2 && (
+          <RecommendedRow
+            items={recommended.map(({ g, fitRow, distanceKm }) => ({ g, fit: fitRow, distanceKm }))}
+            showCity={!activeCity}
+          />
         )}
         {busy ? (
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -189,11 +206,11 @@ function Explore() {
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {withDistance.map(({ g, distanceKm }) => (
+            {sorted.map(({ g, fitRow, distanceKm }) => (
               <GatheringCard
                 key={g.id}
                 g={g}
-                fit={fitById.get(g.id)}
+                fit={fitRow}
                 showCity={!activeCity}
                 distanceKm={distanceKm}
               />
