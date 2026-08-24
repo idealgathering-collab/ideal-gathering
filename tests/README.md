@@ -14,21 +14,28 @@ compatibility scoring, and feedback eligibility.
 ## Database integration (opt-in)
 
 These tests run against the real hosted database, so they are **not** part of
-`bun run test`. They skip themselves unless every variable below is set:
+`bun run test`. They skip themselves unless the project credentials are set:
 
 ```bash
 TEST_DB_ENABLED=1 \
 SUPABASE_URL=... SUPABASE_SERVICE_ROLE_KEY=... SUPABASE_PUBLISHABLE_KEY=... \
-TEST_HOST_EMAIL=... TEST_HOST_PASSWORD=... \
-TEST_ATTENDEE_EMAIL=... TEST_ATTENDEE_PASSWORD=... \
 bun run test:db
 ```
 
+The suite provisions its own host, attendee, admin and venue accounts through
+the service-role Auth Admin API on first run (and keeps their passwords in
+sync afterwards). Set `TEST_HOST_EMAIL` / `TEST_HOST_PASSWORD` and the
+matching `TEST_ATTENDEE_*`, `TEST_ADMIN_*`, `TEST_VENUE_*` variables only when
+you want fixed, pre-existing accounts instead.
+
+There is no Playwright/E2E layer: coverage is unit (Layer 1) plus database
+integration (Layer 2).
+
 Safeguards:
 
-- Two dedicated test accounts (host + attendee). Assertions run through
+- Dedicated test accounts only. Assertions run through
   signed-in anon clients so RLS and triggers actually apply; the service-role
-  client is used only for fixture setup and teardown.
+  client is used only for fixture setup, account provisioning and teardown.
 - Every created row is tagged `[test-<runId>]` in a visible text column.
 - Teardown runs in `afterAll`/`finally`, children before parents, and a global
   sweep removes any `[test-` rows older than one hour left by a crashed run.
