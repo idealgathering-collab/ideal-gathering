@@ -79,34 +79,6 @@ function Explore() {
   }
 
   const geo = useDeviceLocation();
-  const [nearMe, setNearMe] = useState(false);
-
-  async function toggleNearMe() {
-    if (nearMe) {
-      setNearMe(false);
-      return;
-    }
-    const fix = await geo.request();
-    if (!fix) {
-      toast.error(t("geo.failed"));
-      return;
-    }
-    setNearMe(true);
-  }
-
-  const withDistance = (gatherings ?? []).map((g) => {
-    const coords = gatheringCoords(g);
-    const distanceKm =
-      nearMe && geo.fix && coords ? haversineKm(geo.fix, coords) : null;
-    return { g, distanceKm };
-  });
-  if (nearMe && geo.fix) {
-    withDistance.sort((a, b) => {
-      if (a.distanceKm === null) return b.distanceKm === null ? 0 : 1;
-      if (b.distanceKm === null) return -1;
-      return a.distanceKm - b.distanceKm;
-    });
-  }
 
   const ids = (gatherings ?? []).map((g) => g.id);
   const { data: fitData } = useQuery({
@@ -116,9 +88,54 @@ function Explore() {
   });
   const fitById = new Map((fitData?.fits ?? []).map((f) => [f.gatheringId, f]));
   const showQuizNudge = !!user && fitData?.viewerHasTraits === false;
+  const canSortByFit = fitData?.viewerHasTraits === true;
+
+  // Fit-first is the default for anyone with quiz traits; everyone else keeps
+  // the soonest-first order.
+  const sortMode: SortMode =
+    search.sort && (search.sort !== "fit" || canSortByFit)
+      ? search.sort
+      : canSortByFit
+        ? "fit"
+        : "soon";
+  const nearMe = sortMode === "near";
+
+  async function setSort(mode: SortMode) {
+    if (mode === "near" && !geo.fix) {
+      const fix = await geo.request();
+      if (!fix) {
+        toast.error(t("geo.failed"));
+        return;
+      }
+    }
+    navigate({
+      to: "/explore",
+      search: (prev: ExploreSearch) => ({ ...prev, sort: mode }),
+      replace: true,
+    });
+  }
+
+  const withDistance = (gatherings ?? []).map((g) => {
+    const coords = gatheringCoords(g);
+    const distanceKm = nearMe && geo.fix && coords ? haversineKm(geo.fix, coords) : null;
+    const fitRow = fitById.get(g.id);
+    return {
+      id: g.id,
+      starts_at: g.starts_at,
+      g,
+      fit: fitRow,
+      distanceKm,
+    };
+  });
+  const sorted = sortGatherings(
+    withDistance.map((row) => ({ ...row, fit: row.fit?.fit ?? null, fitRow: row.fit })),
+    sortMode,
+  );
+  const recommended = canSortByFit ? pickRecommended(sorted, 3) : [];
 
   const busy = isLoading || waitingForProfile;
   const empty = !busy && (!gatherings || gatherings.length === 0);
+
 
   return (
     <div className="min-h-screen bg-background">
