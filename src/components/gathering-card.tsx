@@ -12,6 +12,7 @@ export function GatheringCard({
   fit,
   showCity,
   distanceKm,
+  highlight,
 }: {
   g: G;
   fit?: TableFit;
@@ -19,6 +20,8 @@ export function GatheringCard({
   showCity?: boolean;
   /** Distance from the viewer's device location, in km. */
   distanceKm?: number | null;
+  /** Accent styling for the "Recommended for you" band. */
+  highlight?: boolean;
 }) {
   const t = useT();
   const { lang } = useI18n();
@@ -41,7 +44,9 @@ export function GatheringCard({
     <Link
       to="/gatherings/$id"
       params={{ id: g.id }}
-      className="group relative flex flex-col overflow-hidden rounded-3xl border border-border bg-card shadow-soft transition hover:-translate-y-0.5 hover:shadow-plum"
+      className={`group relative flex flex-col overflow-hidden rounded-3xl border bg-card shadow-soft transition hover:-translate-y-0.5 hover:shadow-plum ${
+        highlight ? "border-primary/40 ring-1 ring-primary/25" : "border-border"
+      }`}
     >
       <div className="relative h-40 overflow-hidden bg-gradient-warm">
         {g.business?.cover_url ? (
@@ -69,17 +74,18 @@ export function GatheringCard({
       </div>
 
       <div className="flex flex-1 flex-col gap-3 p-5">
+        {fit ? (
+          <div>
+            <TableFitChip fit={fit} />
+          </div>
+        ) : null}
         <h3 className="font-display text-2xl leading-tight text-foreground">
           {g.subject}
         </h3>
         {g.description ? (
           <p className="line-clamp-2 text-sm text-muted-foreground">{g.description}</p>
         ) : null}
-        {fit ? (
-          <div>
-            <TableFitChip fit={fit} />
-          </div>
-        ) : null}
+
 
         <div className="mt-auto flex flex-wrap items-center gap-x-4 gap-y-1.5 pt-2 text-xs text-muted-foreground">
           <span className="inline-flex items-center gap-1.5">
