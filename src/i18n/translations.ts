@@ -342,7 +342,7 @@ export const translations: Record<Lang, Dict> = {
     "explore.sort.soon": "Soonest",
     "explore.sort.near": "Nearest",
     "explore.recommended.title": "Recommended for you",
-    "explore.recommended.subtitle": "Tables that match your quiz answers best.",
+    "explore.recommended.subtitle": "Tables that match your quiz, interests and gathering taste.",
 
     // Card fallback
     "card.gathering": "Gathering",
@@ -1685,7 +1685,7 @@ export const translations: Record<Lang, Dict> = {
     "explore.sort.soon": "En yakın tarih",
     "explore.sort.near": "En yakın konum",
     "explore.recommended.title": "Sana özel öneriler",
-    "explore.recommended.subtitle": "Test cevaplarınla en çok uyuşan masalar.",
+    "explore.recommended.subtitle": "Testin, ilgi alanların ve masa tercihlerinle en çok uyuşan masalar.",
 
     // Card fallback
     "card.gathering": "Buluşma",
@@ -3019,7 +3019,7 @@ export const translations: Record<Lang, Dict> = {
     "explore.sort.soon": "نزدیک‌ترین زمان",
     "explore.sort.near": "نزدیک‌ترین مکان",
     "explore.recommended.title": "پیشنهاد برای شما",
-    "explore.recommended.subtitle": "میزهایی که بیشترین هماهنگی را با پاسخ‌های آزمون شما دارند.",
+    "explore.recommended.subtitle": "میزهایی که با آزمون، علاقه‌ها و سلیقهٔ دورهمی شما جورند.",
 
     // Card fallback
     "card.gathering": "گردهمایی",

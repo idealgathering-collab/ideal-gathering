@@ -1,4 +1,4 @@
-import { averageTraits, fitScore, type TraitScores } from "@/lib/matching";
+import { fitScore, type TraitScores } from "@/lib/matching";
 
 export type TableFit = {
   gatheringId: string;
@@ -45,10 +45,15 @@ export function scoreTables({
     if (hasBlocked) {
       return { gatheringId, fit: null, ratedCount: 0, hasBlocked: true };
     }
-    const avg = averageTraits(rated);
+    // Mean pairwise fit — averaging trait vectors first makes a table of
+    // opposites look like a perfect match for a middle-of-the-road viewer.
+    const fit =
+      rated.length === 0
+        ? null
+        : Math.round(rated.reduce((sum, scores) => sum + fitScore(myTraits, scores), 0) / rated.length);
     return {
       gatheringId,
-      fit: avg ? fitScore(myTraits, avg) : null,
+      fit,
       ratedCount: rated.length,
       hasBlocked: false,
     };

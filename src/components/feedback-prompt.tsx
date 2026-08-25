@@ -90,16 +90,34 @@ export function FeedbackDialog({
       });
       setSubmitted(true);
       onDone();
-      // Re-match: score upcoming tables in the same city with the existing fit engine.
+      // Re-match: chemistry + the viewer's own taste (prefs / interests).
       try {
         const upcoming = (await fetchApprovedGatherings(item.city)).slice(0, 12);
         if (upcoming.length > 0) {
-          const fits = await runFit({ data: { gatheringIds: upcoming.map((g) => g.id) } });
+          const [{ data: auth }, fits] = await Promise.all([
+            supabase.auth.getUser(),
+            runFit({ data: { gatheringIds: upcoming.map((g) => g.id) } }),
+          ]);
+          const userId = auth.user?.id;
+          const [prefs, profile] = userId
+            ? await Promise.all([
+                loadMyGatheringPreferences(userId).catch(() => null),
+                supabase.from("profiles").select("interests").eq("id", userId).maybeSingle(),
+              ])
+            : [null, { data: null }];
+          const interests = Array.isArray(profile.data?.interests)
+            ? (profile.data!.interests as unknown[]).filter((v): v is string => typeof v === "string")
+            : [];
+          const taste = prefs && hasAnyAnswer(prefs) ? prefs : null;
           const byId = new Map(fits.fits.map((f) => [f.gatheringId, f]));
           setSuggestions(
             upcoming
-              .map((g) => ({ g, fit: byId.get(g.id)?.fit ?? null }))
-              .sort((a, b) => (b.fit ?? -1) - (a.fit ?? -1))
+              .map((g) => {
+                const trait = byId.get(g.id)?.fit ?? null;
+                const pref = preferenceScore(g, taste, interests);
+                return { g, fit: trait, rank: composeRank(trait, pref.score) };
+              })
+              .sort((a, b) => (b.rank ?? -1) - (a.rank ?? -1))
               .slice(0, 2),
           );
         }
