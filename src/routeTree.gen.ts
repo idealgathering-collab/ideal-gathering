@@ -23,6 +23,7 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as VenueDashboardRouteImport } from './routes/venue.dashboard'
 import { Route as VenueAuthRouteImport } from './routes/venue.auth'
+import { Route as AdminAuthRouteImport } from './routes/admin.auth'
 import { Route as GatheringsIdRouteImport } from './routes/gatherings.$id'
 import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
 import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
@@ -105,6 +106,11 @@ const VenueDashboardRoute = VenueDashboardRouteImport.update({
 const VenueAuthRoute = VenueAuthRouteImport.update({
   id: '/venue/auth',
   path: '/venue/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminAuthRoute = AdminAuthRouteImport.update({
+  id: '/admin/auth',
+  path: '/admin/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
 const GatheringsIdRoute = GatheringsIdRouteImport.update({
@@ -209,6 +215,7 @@ export interface FileRoutesByFullPath {
   '/gatherings/$id': typeof GatheringsIdRoute
   '/venue/auth': typeof VenueAuthRoute
   '/venue/dashboard': typeof VenueDashboardRoute
+  '/admin/auth': typeof AdminAuthRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/businesses/$id': typeof AuthenticatedBusinessesIdRoute
@@ -238,6 +245,7 @@ export interface FileRoutesByTo {
   '/gatherings/$id': typeof GatheringsIdRoute
   '/venue/auth': typeof VenueAuthRoute
   '/venue/dashboard': typeof VenueDashboardRoute
+  '/admin/auth': typeof AdminAuthRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/businesses/$id': typeof AuthenticatedBusinessesIdRoute
@@ -269,6 +277,7 @@ export interface FileRoutesById {
   '/gatherings/$id': typeof GatheringsIdRoute
   '/venue/auth': typeof VenueAuthRoute
   '/venue/dashboard': typeof VenueDashboardRoute
+  '/admin/auth': typeof AdminAuthRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/_authenticated/businesses/$id': typeof AuthenticatedBusinessesIdRoute
@@ -300,6 +309,7 @@ export interface FileRouteTypes {
     | '/gatherings/$id'
     | '/venue/auth'
     | '/venue/dashboard'
+    | '/admin/auth'
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
     | '/businesses/$id'
@@ -329,6 +339,7 @@ export interface FileRouteTypes {
     | '/gatherings/$id'
     | '/venue/auth'
     | '/venue/dashboard'
+    | '/admin/auth'
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
     | '/businesses/$id'
@@ -359,6 +370,7 @@ export interface FileRouteTypes {
     | '/gatherings/$id'
     | '/venue/auth'
     | '/venue/dashboard'
+    | '/admin/auth'
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
     | '/_authenticated/businesses/$id'
@@ -382,6 +394,7 @@ export interface RootRouteChildren {
   GatheringsIdRoute: typeof GatheringsIdRoute
   VenueAuthRoute: typeof VenueAuthRoute
   VenueDashboardRoute: typeof VenueDashboardRoute
+  AdminAuthRoute: typeof AdminAuthRoute
   DotlovableOauthConsentRoute: typeof DotlovableOauthConsentRoute
   Char91DotmcpChar93InvokeToolToolRoute: typeof Char91DotmcpChar93InvokeToolToolRoute
 }
@@ -484,6 +497,13 @@ declare module '@tanstack/react-router' {
       path: '/venue/auth'
       fullPath: '/venue/auth'
       preLoaderRoute: typeof VenueAuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/auth': {
+      id: '/admin/auth'
+      path: '/admin/auth'
+      fullPath: '/admin/auth'
+      preLoaderRoute: typeof AdminAuthRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/gatherings/$id': {
@@ -633,6 +653,7 @@ const rootRouteChildren: RootRouteChildren = {
   GatheringsIdRoute: GatheringsIdRoute,
   VenueAuthRoute: VenueAuthRoute,
   VenueDashboardRoute: VenueDashboardRoute,
+  AdminAuthRoute: AdminAuthRoute,
   DotlovableOauthConsentRoute: DotlovableOauthConsentRoute,
   Char91DotmcpChar93InvokeToolToolRoute: Char91DotmcpChar93InvokeToolToolRoute,
 }

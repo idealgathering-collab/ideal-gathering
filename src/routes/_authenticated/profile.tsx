@@ -18,6 +18,7 @@ import { ProfileHeader } from "@/components/profile-header";
 import { INTEREST_CATEGORIES, MAX_INTERESTS, interestLabel } from "@/lib/interests";
 import { ageFromDob } from "@/lib/age";
 import { useQueryClient } from "@tanstack/react-query";
+import { setAdminPreview } from "@/lib/roles";
 
 export const Route = createFileRoute("/_authenticated/profile")({
   head: () => ({ meta: [{ title: "Your profile — Ideal Gathering" }] }),
@@ -548,7 +549,7 @@ function ProfilePage() {
                     </p>
                     <div className="mt-3 flex flex-wrap gap-2">
                       <Button asChild variant="outline" size="sm" className="rounded-full">
-                        <Link to="/dashboard">
+                        <Link to="/dashboard" onClick={() => setAdminPreview(true)}>
                           <LayoutDashboard className="me-2 h-4 w-4" />
                           {t("nav.dashboard")}
                         </Link>
@@ -560,7 +561,7 @@ function ProfilePage() {
                         </Link>
                       </Button>
                       <Button asChild variant="outline" size="sm" className="rounded-full">
-                        <Link to="/admin">
+                        <Link to="/admin" onClick={() => setAdminPreview(false)}>
                           <Shield className="me-2 h-4 w-4" />
                           {t("nav.admin")}
                         </Link>

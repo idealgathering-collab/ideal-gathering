@@ -12,6 +12,7 @@ import { LanguageSwitcher } from "@/components/language-switcher";
 import { QuizSavedNote } from "@/components/quiz-saved-note";
 
 import { localizedHead } from "@/lib/seo";
+import { homePathForUser } from "@/lib/roles";
 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -49,8 +50,10 @@ function AuthPage() {
 
   useEffect(() => {
     if (current === "forgot") return;
-    supabase.auth.getSession().then(({ data }) => {
-      if (data.session) navigate({ to: redirect ?? "/dashboard" });
+    supabase.auth.getSession().then(async ({ data }) => {
+      if (!data.session) return;
+      const to = await homePathForUser(data.session.user.id, redirect);
+      navigate({ to });
     });
   }, [navigate, redirect, current]);
 
@@ -92,7 +95,11 @@ function AuthPage() {
         if (error) throw error;
         toast.success(t("auth.welcomeBack"));
       }
-      navigate({ to: redirect ?? "/dashboard" });
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      const to = user ? await homePathForUser(user.id, redirect) : (redirect ?? "/dashboard");
+      navigate({ to });
     } catch (err) {
       const msg = err instanceof Error ? err.message : t("auth.generic");
       toast.error(msg);
@@ -160,7 +167,11 @@ function AuthPage() {
                     });
                     if (result.error) throw result.error;
                     if (result.redirected) return;
-                    navigate({ to: redirect ?? "/dashboard" });
+                    const {
+                      data: { user },
+                    } = await supabase.auth.getUser();
+                    const to = user ? await homePathForUser(user.id, redirect) : (redirect ?? "/dashboard");
+                    navigate({ to });
                   } catch (err) {
                     const msg = err instanceof Error ? err.message : t("auth.googleFailed");
                     toast.error(msg);

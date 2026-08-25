@@ -16,11 +16,16 @@ import { getCachedFix, haversineKm } from "@/lib/geolocation";
 import { FeedbackCard, FeedbackDialog, usePendingFeedback } from "@/components/feedback-prompt";
 import { useState } from "react";
 import type { PendingFeedback } from "@/lib/feedback.functions";
+import { fetchRoles, isAdminPreview } from "@/lib/roles";
 
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   beforeLoad: async ({ context, location }) => {
     const userId = context.user.id;
+    const roles = await fetchRoles(userId);
+    if (roles.has("admin") && !isAdminPreview()) {
+      throw redirect({ to: "/admin", replace: true });
+    }
     const { data: profile, error } = await supabase
       .from("profiles")
       .select("onboarded_at")
