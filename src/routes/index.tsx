@@ -10,6 +10,7 @@ import {
   type SeoLang,
 } from "@/lib/seo";
 import { useSession } from "@/hooks/use-session";
+import { homePathForUser } from "@/lib/roles";
 import { PublicHeader } from "@/components/landing/public-header";
 import { CosmicBackdrop } from "@/components/cosmic-backdrop";
 import {
@@ -170,7 +171,7 @@ function Home() {
 
   useEffect(() => {
     if (!loading && session) {
-      navigate({ to: "/dashboard", replace: true });
+      homePathForUser(session.user.id).then((to) => navigate({ to, replace: true }));
     }
   }, [loading, session, navigate]);
 

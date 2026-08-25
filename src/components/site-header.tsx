@@ -11,6 +11,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useQueryClient } from "@tanstack/react-query";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { useT } from "@/i18n";
+import { setAdminPreview } from "@/lib/roles";
 
 export function SiteHeader() {
   const { user } = useSession();
@@ -39,6 +40,7 @@ export function SiteHeader() {
 
 
   async function handleSignOut() {
+    setAdminPreview(false);
     await qc.cancelQueries();
     qc.clear();
     await supabase.auth.signOut();
@@ -47,6 +49,18 @@ export function SiteHeader() {
 
   return (
     <header className="glass-card sticky top-0 z-40 w-full text-dark-secondary">
+      {isAdmin && (
+        <div className="border-b border-border/60 bg-muted/40 px-4 py-1.5 text-center text-xs text-muted-foreground">
+          {t("adminAuth.previewBanner")}{" "}
+          <Link
+            to="/admin"
+            className="font-medium text-primary hover:underline"
+            onClick={() => setAdminPreview(false)}
+          >
+            {t("adminAuth.backToOwner")}
+          </Link>
+        </div>
+      )}
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-3 px-4">
         <div className="flex items-center gap-1.5">
           {showBack && (
@@ -87,10 +101,12 @@ export function SiteHeader() {
               <NavLink to="/profile" pathname={pathname}>{t("nav.profile")}</NavLink>
 
               {isAdmin && (
-                <NavLink to="/admin" pathname={pathname}>
-                  <Shield className="me-1 h-3.5 w-3.5" />
-                  {t("nav.admin")}
-                </NavLink>
+                <Button asChild variant="ghost" size="sm" className="hidden rounded-full sm:inline-flex">
+                  <Link to="/admin" onClick={() => setAdminPreview(false)}>
+                    <Shield className="me-1 h-3.5 w-3.5" />
+                    {t("nav.admin")}
+                  </Link>
+                </Button>
               )}
               <Button
                 asChild

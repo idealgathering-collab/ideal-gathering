@@ -7,10 +7,18 @@ export function isSortMode(v: unknown): v is SortMode {
 export type SortableItem = {
   id: string;
   starts_at: string;
-  /** 0-100 compatibility, or null when unscored. */
+  /** 0-100 table chemistry, or null when unscored. */
   fit?: number | null;
+  /** Composite recommend rank (chemistry + taste). Preferred over `fit` when sorting. */
+  rank?: number | null;
   distanceKm?: number | null;
 };
+
+function rankOf(item: SortableItem): number | null {
+  if (typeof item.rank === "number") return item.rank;
+  if (typeof item.fit === "number") return item.fit;
+  return null;
+}
 
 function bySoonest(a: SortableItem, b: SortableItem) {
   return a.starts_at.localeCompare(b.starts_at);
@@ -35,8 +43,8 @@ export function sortGatherings<T extends SortableItem>(items: T[], mode: SortMod
     });
   }
   return copy.sort((a, b) => {
-    const fa = typeof a.fit === "number" ? a.fit : null;
-    const fb = typeof b.fit === "number" ? b.fit : null;
+    const fa = rankOf(a);
+    const fb = rankOf(b);
     if (fa === null && fb === null) return bySoonest(a, b);
     if (fa === null) return 1;
     if (fb === null) return -1;
@@ -45,10 +53,19 @@ export function sortGatherings<T extends SortableItem>(items: T[], mode: SortMod
   });
 }
 
-/** Top N scored gatherings for the "Recommended for you" band. */
+/**
+ * Floor for the Recommended band. Age-mismatched or vibe-clashing tables
+ * land well below this after scoring, so they never get the "for you" slot.
+ */
+export const MIN_RECOMMEND_SCORE = 45;
+
+/** Top N ranked gatherings for the "Recommended for you" band. */
 export function pickRecommended<T extends SortableItem>(items: T[], count = 3): T[] {
   return sortGatherings(
-    items.filter((i) => typeof i.fit === "number"),
+    items.filter((i) => {
+      const r = rankOf(i);
+      return r !== null && r >= MIN_RECOMMEND_SCORE;
+    }),
     "fit",
   ).slice(0, count);
 }

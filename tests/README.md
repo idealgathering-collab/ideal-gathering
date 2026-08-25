@@ -9,7 +9,7 @@ bun run test:watch  # watch mode
 
 Pure logic only — no network, no database. Covers distance/formatting, the
 check-in window and error classification, join-error classification,
-compatibility scoring, and feedback eligibility.
+compatibility scoring, preference ranking, and feedback eligibility.
 
 ## Database integration (opt-in)
 

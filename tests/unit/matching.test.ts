@@ -91,6 +91,23 @@ describe("scoreTables", () => {
     expect(fits[0]).toMatchObject({ fit: 100, ratedCount: 1 });
   });
 
+  it("uses mean pairwise fit of the whole table, not just viewer-vs-others", () => {
+    // Viewer 70s, twin a (100), opposite b (40). a-vs-b is also 40.
+    // Viewer-only mean would be 70; whole-table mean is (100+40+40)/3 = 60.
+    const fits = scoreTables({
+      viewerId: me,
+      myTraits,
+      gatheringIds: ["g1"],
+      membersByGathering: new Map([["g1", new Set(["a", "b"])]]),
+      traitsByUser: new Map([
+        ["a", T(70, 70, 70, 70)],
+        ["b", T(10, 10, 10, 10)],
+      ]),
+      blockedWith: new Set(),
+    });
+    expect(fits[0]).toMatchObject({ fit: 60, ratedCount: 2, hasBlocked: false });
+  });
+
   it("counts the host as a member", () => {
     const fits = scoreTables({
       viewerId: me,

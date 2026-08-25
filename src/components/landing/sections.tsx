@@ -506,7 +506,8 @@ export function FinalCtaSection() {
               {t("landing.v4.final.title")}
             </h2>
             <Link
-              to="/waitlist"
+              to="/auth"
+              search={{ mode: "signup" }}
               className="cosmic-cta mt-8 inline-flex items-center justify-center gap-2 rounded-full px-9 py-4 text-base font-semibold text-white"
             >
               {t("landing.v4.final.cta")}

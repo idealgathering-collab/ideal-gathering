@@ -32,6 +32,30 @@ describe("pickRecommended", () => {
   it("returns only scored tables, best first, capped", () => {
     expect(pickRecommended(items, 2).map((i) => i.id)).toEqual(["d", "b"]);
   });
+
+  it("prefers composite rank over raw chemistry", () => {
+    const mixed = [
+      { id: "chem", starts_at: "2026-09-01T10:00:00Z", fit: 99, rank: 40 },
+      { id: "taste", starts_at: "2026-09-02T10:00:00Z", fit: 40, rank: 90 },
+    ];
+    expect(pickRecommended(mixed, 1).map((i) => i.id)).toEqual(["taste"]);
+  });
+
+  it("can recommend from rank alone when chemistry is missing", () => {
+    const onlyTaste = [
+      { id: "x", starts_at: "2026-09-01T10:00:00Z", fit: null, rank: 77 },
+      { id: "y", starts_at: "2026-09-02T10:00:00Z", fit: null, rank: null },
+    ];
+    expect(pickRecommended(onlyTaste, 3).map((i) => i.id)).toEqual(["x"]);
+  });
+
+  it("never recommends an age- or vibe-crushed table", () => {
+    const crushed = [
+      { id: "gap", starts_at: "2026-09-01T10:00:00Z", fit: 6 },
+      { id: "ok", starts_at: "2026-09-02T10:00:00Z", fit: 88 },
+    ];
+    expect(pickRecommended(crushed, 3).map((i) => i.id)).toEqual(["ok"]);
+  });
 });
 
 describe("isSortMode", () => {

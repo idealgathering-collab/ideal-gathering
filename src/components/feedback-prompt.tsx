@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
@@ -10,6 +10,10 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { listPendingFeedback, submitRatings, type PendingFeedback } from "@/lib/feedback.functions";
 import { getTableFit } from "@/lib/matching.functions";
 import { fetchApprovedGatherings, formatDateTime, type GatheringCard } from "@/lib/gatherings";
+import { composeRank, preferenceScore } from "@/lib/recommend";
+import { hasAnyAnswer, loadMyGatheringPreferences } from "@/lib/gathering-preferences";
+import { FEEDBACK_REASONS, type FeedbackReason } from "@/lib/match-history";
+import { supabase } from "@/integrations/supabase/client";
 import { TableFitChip } from "@/components/table-fit";
 import { useI18n, useT } from "@/i18n";
 
@@ -71,7 +75,7 @@ export function FeedbackDialog({
   const runFit = useServerFn(getTableFit);
   const [score, setScore] = useState(0);
   const [comment, setComment] = useState("");
-  const [people, setPeople] = useState<Record<string, number>>({});
+  const [people, setPeople] = useState<Record<string, { score: number; reasons: FeedbackReason[] }>>({});
   const [busy, setBusy] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [suggestions, setSuggestions] = useState<Array<{ g: GatheringCard; fit: number | null }>>([]);
@@ -85,21 +89,41 @@ export function FeedbackDialog({
           gatheringId: item.gathering_id,
           score,
           comment: comment.trim() || undefined,
-          people: Object.entries(people).map(([userId, s]) => ({ userId, score: s })),
+          people: Object.entries(people)
+            .filter(([, p]) => p.score > 0)
+            .map(([userId, p]) => ({ userId, score: p.score, reasons: p.reasons })),
         },
       });
       setSubmitted(true);
       onDone();
-      // Re-match: score upcoming tables in the same city with the existing fit engine.
+      // Re-match: chemistry + the viewer's own taste (prefs / interests).
       try {
         const upcoming = (await fetchApprovedGatherings(item.city)).slice(0, 12);
         if (upcoming.length > 0) {
-          const fits = await runFit({ data: { gatheringIds: upcoming.map((g) => g.id) } });
+          const [{ data: auth }, fits] = await Promise.all([
+            supabase.auth.getUser(),
+            runFit({ data: { gatheringIds: upcoming.map((g) => g.id) } }),
+          ]);
+          const userId = auth.user?.id;
+          const [prefs, profile] = userId
+            ? await Promise.all([
+                loadMyGatheringPreferences(userId).catch(() => null),
+                supabase.from("profiles").select("interests").eq("id", userId).maybeSingle(),
+              ])
+            : [null, { data: null }];
+          const interests = Array.isArray(profile.data?.interests)
+            ? (profile.data!.interests as unknown[]).filter((v): v is string => typeof v === "string")
+            : [];
+          const taste = prefs && hasAnyAnswer(prefs) ? prefs : null;
           const byId = new Map(fits.fits.map((f) => [f.gatheringId, f]));
           setSuggestions(
             upcoming
-              .map((g) => ({ g, fit: byId.get(g.id)?.fit ?? null }))
-              .sort((a, b) => (b.fit ?? -1) - (a.fit ?? -1))
+              .map((g) => {
+                const trait = byId.get(g.id)?.fit ?? null;
+                const pref = preferenceScore(g, taste, interests);
+                return { g, fit: trait, rank: composeRank(trait, pref.score) };
+              })
+              .sort((a, b) => (b.rank ?? -1) - (a.rank ?? -1))
               .slice(0, 2),
           );
         }
@@ -138,7 +162,8 @@ export function FeedbackDialog({
                 <p className="text-sm text-muted-foreground">{t("fb.peopleScore")}</p>
                 <ul className="mt-2 grid gap-2">
                   {item.people.map((p) => (
-                    <li key={p.user_id} className="flex items-center justify-between gap-3">
+                    <Fragment key={p.user_id}>
+                    <li className="flex items-center justify-between gap-3">
                       <span className="flex items-center gap-2 text-sm">
                         {p.avatar_url ? (
                           <img src={p.avatar_url} alt="" className="h-7 w-7 rounded-full object-cover" />
@@ -150,10 +175,50 @@ export function FeedbackDialog({
                         {p.display_name ?? t("room.chat.someone")}
                       </span>
                       <Stars
-                        value={people[p.user_id] ?? 0}
-                        onChange={(v) => setPeople((cur) => ({ ...cur, [p.user_id]: v }))}
+                        value={people[p.user_id]?.score ?? 0}
+                        onChange={(v) =>
+                          setPeople((cur) => ({
+                            ...cur,
+                            [p.user_id]: {
+                              score: v,
+                              reasons: v <= 3 ? (cur[p.user_id]?.reasons ?? []) : [],
+                            },
+                          }))
+                        }
                       />
                     </li>
+                    {(people[p.user_id]?.score ?? 0) > 0 && (people[p.user_id]?.score ?? 0) <= 3 && (
+                      <li className="ms-9 flex flex-wrap gap-1.5 pb-1">
+                        <span className="w-full text-[11px] text-muted-foreground">{t("fb.reasonHint")}</span>
+                        {FEEDBACK_REASONS.map((reason) => {
+                          const on = people[p.user_id]?.reasons.includes(reason) ?? false;
+                          return (
+                            <button
+                              key={reason}
+                              type="button"
+                              aria-pressed={on}
+                              onClick={() =>
+                                setPeople((cur) => {
+                                  const row = cur[p.user_id] ?? { score: 0, reasons: [] };
+                                  const reasons = on
+                                    ? row.reasons.filter((r) => r !== reason)
+                                    : [...row.reasons, reason];
+                                  return { ...cur, [p.user_id]: { ...row, reasons } };
+                                })
+                              }
+                              className={
+                                on
+                                  ? "rounded-full bg-primary px-2.5 py-0.5 text-[11px] text-primary-foreground"
+                                  : "rounded-full border border-border px-2.5 py-0.5 text-[11px] text-muted-foreground"
+                              }
+                            >
+                              {t(`fb.reason.${reason}`)}
+                            </button>
+                          );
+                        })}
+                      </li>
+                    )}
+                    </Fragment>
                   ))}
                 </ul>
               </div>

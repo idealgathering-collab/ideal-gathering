@@ -14,6 +14,8 @@ import { useDeviceLocation, haversineKm } from "@/lib/geolocation";
 import { sortGatherings, pickRecommended, isSortMode, type SortMode } from "@/lib/explore-sort";
 import { toast } from "sonner";
 import { getTableFit } from "@/lib/matching.functions";
+import { composeRank, preferenceScore } from "@/lib/recommend";
+import { hasAnyAnswer, loadMyGatheringPreferences } from "@/lib/gathering-preferences";
 import { supabase } from "@/integrations/supabase/client";
 import { useSession } from "@/hooks/use-session";
 import { useI18n, useT } from "@/i18n";
@@ -40,19 +42,26 @@ function Explore() {
   const search = Route.useSearch();
 
   // Profile city is the default scope for signed-in users who haven't picked one in the URL.
-  const { data: profileCity, isLoading: profileLoading } = useQuery({
-    queryKey: ["profile-city", user?.id],
+  const { data: profileTaste, isLoading: profileLoading } = useQuery({
+    queryKey: ["profile-taste", user?.id],
     enabled: !!user,
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("profiles")
-        .select("city")
-        .eq("id", user!.id)
-        .maybeSingle();
+      const [{ data, error }, prefs] = await Promise.all([
+        supabase.from("profiles").select("city, interests").eq("id", user!.id).maybeSingle(),
+        loadMyGatheringPreferences(user!.id).catch(() => null),
+      ]);
       if (error) throw error;
-      return (data?.city ?? "").trim() || null;
+      const interests = Array.isArray(data?.interests)
+        ? (data!.interests as unknown[]).filter((v): v is string => typeof v === "string")
+        : [];
+      return {
+        city: (data?.city ?? "").trim() || null,
+        interests,
+        prefs: prefs && hasAnyAnswer(prefs) ? prefs : null,
+      };
     },
   });
+  const profileCity = profileTaste?.city ?? null;
 
   const explicitCity = search.city === "all" ? null : search.city ?? null;
   const hasExplicitChoice = !!search.city;
@@ -88,14 +97,15 @@ function Explore() {
   });
   const fitById = new Map((fitData?.fits ?? []).map((f) => [f.gatheringId, f]));
   const showQuizNudge = !!user && fitData?.viewerHasTraits === false;
-  const canSortByFit = fitData?.viewerHasTraits === true;
+  const hasTaste = Boolean(profileTaste?.prefs) || (profileTaste?.interests.length ?? 0) > 0;
+  const canRecommend = fitData?.viewerHasSignal === true || fitData?.viewerHasTraits === true || hasTaste;
 
-  // Fit-first is the default for anyone with quiz traits; everyone else keeps
-  // the soonest-first order.
+  // Fit-first is the default once we have any taste signal (quiz, prefs, or
+  // interests). Everyone else keeps the soonest-first order.
   const sortMode: SortMode =
-    search.sort && (search.sort !== "fit" || canSortByFit)
+    search.sort && (search.sort !== "fit" || canRecommend)
       ? search.sort
-      : canSortByFit
+      : canRecommend
         ? "fit"
         : "soon";
   const nearMe = sortMode === "near";
@@ -119,11 +129,13 @@ function Explore() {
     const coords = gatheringCoords(g);
     const distanceKm = nearMe && geo.fix && coords ? haversineKm(geo.fix, coords) : null;
     const fitRow = fitById.get(g.id);
+    const pref = preferenceScore(g, profileTaste?.prefs ?? null, profileTaste?.interests ?? []);
     return {
       id: g.id,
       starts_at: g.starts_at,
       g,
       fit: fitRow,
+      rank: composeRank(fitRow?.fit ?? null, pref.score),
       distanceKm,
     };
   });
@@ -131,7 +143,7 @@ function Explore() {
     withDistance.map((row) => ({ ...row, fit: row.fit?.fit ?? null, fitRow: row.fit })),
     sortMode,
   );
-  const recommended = canSortByFit ? pickRecommended(sorted, 3) : [];
+  const recommended = canRecommend ? pickRecommended(sorted, 3) : [];
 
   const busy = isLoading || waitingForProfile;
   const empty = !busy && (!gatherings || gatherings.length === 0);
@@ -163,7 +175,7 @@ function Explore() {
           <ExploreSort
             mode={sortMode}
             onChange={setSort}
-            showFit={canSortByFit}
+            showFit={canRecommend}
             showNear={geo.supported}
             locating={geo.status === "locating"}
           />

@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { useServerFn } from "@tanstack/react-start";
-import { SiteHeader } from "@/components/site-header";
+import { AdminHeader } from "@/components/admin-header";
 import { supabase } from "@/integrations/supabase/client";
 import { useSession } from "@/hooks/use-session";
 import { Button } from "@/components/ui/button";
@@ -66,7 +66,7 @@ function AdminPage() {
   if (loading || allowed === null) {
     return (
       <div className="min-h-screen bg-background">
-        <SiteHeader />
+        <AdminHeader />
         <main className="mx-auto max-w-5xl px-4 py-12 text-sm text-muted-foreground">
           {t("common.loading")}
         </main>
@@ -76,7 +76,7 @@ function AdminPage() {
   if (!allowed) {
     return (
       <div className="min-h-screen bg-background">
-        <SiteHeader />
+        <AdminHeader />
         <main className="mx-auto max-w-2xl px-4 py-16 text-center">
           <h1 className="font-display text-3xl">{t("admin.forbidden.title")}</h1>
           <p className="mt-2 text-sm text-muted-foreground">{t("admin.forbidden.body")}</p>
@@ -90,8 +90,9 @@ function AdminPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <SiteHeader />
+      <AdminHeader />
       <main className="mx-auto max-w-5xl px-4 py-12">
+        <p className="text-sm uppercase tracking-wide text-muted-foreground">{t("admin.eyebrow")}</p>
         <h1 className="font-display text-4xl">{t("admin.title")}</h1>
         <p className="mt-1 text-sm text-muted-foreground">{t("admin.subtitle")}</p>
 

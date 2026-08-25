@@ -16,7 +16,9 @@ import { useT } from "@/i18n";
 import { SavedLocationsSection } from "@/components/saved-locations-section";
 import { ProfileHeader } from "@/components/profile-header";
 import { INTEREST_CATEGORIES, MAX_INTERESTS, interestLabel } from "@/lib/interests";
+import { ageFromDob } from "@/lib/age";
 import { useQueryClient } from "@tanstack/react-query";
+import { setAdminPreview } from "@/lib/roles";
 
 export const Route = createFileRoute("/_authenticated/profile")({
   head: () => ({ meta: [{ title: "Your profile — Ideal Gathering" }] }),
@@ -46,17 +48,6 @@ function maxDobString() {
   const d = new Date();
   d.setFullYear(d.getFullYear() - 18);
   return d.toISOString().slice(0, 10);
-}
-
-function ageFromDob(dob: string): number | null {
-  if (!dob) return null;
-  const b = new Date(dob);
-  if (Number.isNaN(b.getTime())) return null;
-  const now = new Date();
-  let age = now.getFullYear() - b.getFullYear();
-  const m = now.getMonth() - b.getMonth();
-  if (m < 0 || (m === 0 && now.getDate() < b.getDate())) age -= 1;
-  return age;
 }
 
 function GroupHeading({ label, hint }: { label: string; hint?: string }) {
@@ -558,7 +549,7 @@ function ProfilePage() {
                     </p>
                     <div className="mt-3 flex flex-wrap gap-2">
                       <Button asChild variant="outline" size="sm" className="rounded-full">
-                        <Link to="/dashboard">
+                        <Link to="/dashboard" onClick={() => setAdminPreview(true)}>
                           <LayoutDashboard className="me-2 h-4 w-4" />
                           {t("nav.dashboard")}
                         </Link>
@@ -570,7 +561,7 @@ function ProfilePage() {
                         </Link>
                       </Button>
                       <Button asChild variant="outline" size="sm" className="rounded-full">
-                        <Link to="/admin">
+                        <Link to="/admin" onClick={() => setAdminPreview(false)}>
                           <Shield className="me-2 h-4 w-4" />
                           {t("nav.admin")}
                         </Link>
