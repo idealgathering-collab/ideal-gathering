@@ -8,10 +8,17 @@ import { useT } from "@/i18n";
 import { saveMyTraits } from "@/lib/profile-traits";
 import { type QuizResult } from "@/lib/matching";
 import { OnboardingQuiz, OnboardingQuizResult } from "@/components/onboarding/quiz-steps";
+import { GatheringPreferencesFlow } from "@/components/onboarding/preference-steps";
+import {
+  hasAnyAnswer,
+  loadMyGatheringPreferences,
+  saveMyGatheringPreferences,
+  type GatheringPreferences,
+} from "@/lib/gathering-preferences";
 import { supabase } from "@/integrations/supabase/client";
 
 const SEARCH = z.object({
-  step: z.enum(["welcome", "how", "qintro", "quiz", "quiz-result"]).optional(),
+  step: z.enum(["welcome", "how", "prefs-intro", "prefs", "qintro", "quiz", "quiz-result"]).optional(),
 });
 
 export const Route = createFileRoute("/_authenticated/onboarding")({
@@ -22,17 +29,33 @@ export const Route = createFileRoute("/_authenticated/onboarding")({
 type Step = z.infer<typeof SEARCH>["step"];
 
 function Onboarding() {
-  const t = useT();
   const navigate = useNavigate();
   const { user } = useSession();
   const search = Route.useSearch();
   const [step, setStep] = useState<Step>(search.step ?? "welcome");
   const [quizResult, setQuizResult] = useState<QuizResult | null>(null);
+  const [prefs, setPrefs] = useState<GatheringPreferences | null>(null);
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     setStep(search.step ?? "welcome");
   }, [search.step]);
+
+  // Load previously saved answers so returning users can edit them.
+  useEffect(() => {
+    if (!user) return;
+    let mounted = true;
+    loadMyGatheringPreferences(user.id)
+      .then((p) => {
+        if (mounted && p) setPrefs(p);
+      })
+      .catch(() => {
+        // non-blocking: onboarding still works without prior answers
+      });
+    return () => {
+      mounted = false;
+    };
+  }, [user]);
 
   function go(next: Step) {
     setStep(next);
@@ -51,6 +74,13 @@ function Onboarding() {
           // non-blocking: onboarding still completes without the profile write
         }
       }
+      if (prefs && hasAnyAnswer(prefs)) {
+        try {
+          await saveMyGatheringPreferences(user.id, prefs);
+        } catch {
+          // non-blocking
+        }
+      }
       await supabase.from("profiles").update({ onboarded_at: new Date().toISOString() }).eq("id", user.id);
       await navigate({ to: "/dashboard", replace: true });
     } finally {
@@ -58,11 +88,13 @@ function Onboarding() {
     }
   }
 
-  const dot = (s: Step) =>
-    step === s ||
-    (s === "quiz" && (step === "qintro" || step === "quiz" || step === "quiz-result"))
-      ? "bg-primary"
-      : "bg-muted-foreground/30";
+  const dot = (s: Step) => {
+    const active =
+      step === s ||
+      (s === "prefs" && (step === "prefs-intro" || step === "prefs")) ||
+      (s === "quiz" && (step === "qintro" || step === "quiz" || step === "quiz-result"));
+    return active ? "bg-primary" : "bg-muted-foreground/30";
+  };
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-background px-4 py-12">
@@ -71,6 +103,7 @@ function Onboarding() {
         <div className="mb-8 flex items-center justify-center gap-2">
           <span className={`h-2 w-2 rounded-full ${dot("welcome")}`} />
           <span className={`h-2 w-2 rounded-full ${dot("how")}`} />
+          <span className={`h-2 w-2 rounded-full ${dot("prefs")}`} />
           <span className={`h-2 w-2 rounded-full ${dot("quiz")}`} />
         </div>
 
@@ -79,7 +112,20 @@ function Onboarding() {
             <WelcomeStep name={user?.user_metadata?.display_name ?? ""} onNext={() => go("how")} />
           )}
           {step === "how" && (
-            <HowItWorksStep onNext={() => go("qintro")} onBack={() => go("welcome")} />
+            <HowItWorksStep onNext={() => go("prefs-intro")} onBack={() => go("welcome")} />
+          )}
+          {step === "prefs-intro" && (
+            <PrefsIntroStep onStart={() => go("prefs")} onBack={() => go("how")} onSkip={() => go("qintro")} />
+          )}
+          {step === "prefs" && (
+            <GatheringPreferencesFlow
+              initial={prefs}
+              onDone={(p) => {
+                setPrefs(p);
+                go("qintro");
+              }}
+              onSkip={() => go("qintro")}
+            />
           )}
           {step === "qintro" && (
             <QuizIntroStep onStart={() => go("quiz")} onSkip={() => finish(false)} />
@@ -152,6 +198,39 @@ function HowItWorksStep({ onNext, onBack }: { onNext: () => void; onBack: () => 
         <Button className="rounded-full" onClick={onNext}>
           {t("onboarding.continue")}
           <ArrowRight className="ms-1.5 h-4 w-4 rtl:rotate-180" />
+        </Button>
+      </div>
+    </div>
+  );
+}
+
+function PrefsIntroStep({
+  onStart,
+  onBack,
+  onSkip,
+}: {
+  onStart: () => void;
+  onBack: () => void;
+  onSkip: () => void;
+}) {
+  const t = useT();
+  return (
+    <div className="text-center">
+      <Sparkles className="mx-auto h-10 w-10 text-primary" />
+      <h1 className="font-display mt-4 text-3xl sm:text-4xl">{t("onboarding.prefs.intro.title")}</h1>
+      <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+        {t("onboarding.prefs.intro.body")}
+      </p>
+      <div className="mt-8 flex flex-col gap-2">
+        <Button className="w-full rounded-full" onClick={onStart}>
+          {t("onboarding.prefs.intro.start")}
+          <ArrowRight className="ms-1.5 h-4 w-4 rtl:rotate-180" />
+        </Button>
+        <Button variant="ghost" onClick={onSkip}>
+          {t("onboarding.skipForNow")}
+        </Button>
+        <Button variant="ghost" onClick={onBack}>
+          {t("landing.v3.matching.quiz.back")}
         </Button>
       </div>
     </div>

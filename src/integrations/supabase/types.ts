@@ -601,6 +601,50 @@ export type Database = {
         }
         Relationships: []
       }
+      user_gathering_preferences: {
+        Row: {
+          conversation_style: string | null
+          gathering_types: Json
+          intentions: Json
+          preferred_group_size: number | null
+          social_energy: string | null
+          spontaneity: string | null
+          stranger_comfort: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          conversation_style?: string | null
+          gathering_types?: Json
+          intentions?: Json
+          preferred_group_size?: number | null
+          social_energy?: string | null
+          spontaneity?: string | null
+          stranger_comfort?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          conversation_style?: string | null
+          gathering_types?: Json
+          intentions?: Json
+          preferred_group_size?: number | null
+          social_energy?: string | null
+          spontaneity?: string | null
+          stranger_comfort?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_gathering_preferences_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_roles: {
         Row: {
           id: string
