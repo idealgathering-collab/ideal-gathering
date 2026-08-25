@@ -65,9 +65,10 @@ function OurStoryPage() {
             alt="A small group of friends talking around a candlelit café table"
           />
 
-          <Chapter number={4} contentKey={5} />
-          <Chapter number={5} contentKey={6} />
-          <Chapter number={6} contentKey={7} />
+          <Chapter number={4} contentKey={4} />
+          <Chapter number={5} contentKey={5} />
+          <Chapter number={6} contentKey={6} />
+          <Chapter number={7} contentKey={7} />
 
           {/* Image 2: empty chair pulled out */}
           <StoryImage
@@ -75,7 +76,7 @@ function OurStoryPage() {
             alt="A single empty chair pulled out from a warm café table"
           />
 
-          <Chapter number={7} contentKey={8} />
+          <Chapter number={8} contentKey={8} />
         </div>
 
         {/* Closing */}

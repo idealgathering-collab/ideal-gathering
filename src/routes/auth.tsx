@@ -145,15 +145,6 @@ function AuthPage() {
           <p className="mt-1 text-sm text-muted-foreground">
             {isForgot ? t("auth.forgot.subtitle") : isSignup ? t("auth.subtitle.signup") : t("auth.subtitle.signin")}
           </p>
-          {isSignup && (
-            <p className="mt-1 text-sm text-muted-foreground">
-              {t("auth.waitlistHint")}{" "}
-              <Link to="/waitlist" className="text-primary hover:underline">
-                {t("auth.waitlistLink")}
-              </Link>
-              .
-            </p>
-          )}
 
           {!isForgot && (
             <>
@@ -200,12 +191,36 @@ function AuthPage() {
             {isSignup && !isForgot && (
               <div className="grid gap-2">
                 <Label htmlFor="name">{t("auth.name")}</Label>
-                <Input id="name" value={name} onChange={(e) => setName(e.target.value)} required maxLength={80} />
+                <Input
+                  id="name"
+                  value={name}
+                  onChange={(e) => {
+                    e.currentTarget.setCustomValidity("");
+                    setName(e.target.value);
+                  }}
+                  onInvalid={(e) => e.currentTarget.setCustomValidity(t("auth.fieldRequired"))}
+                  required
+                  maxLength={80}
+                />
               </div>
             )}
             <div className="grid gap-2">
               <Label htmlFor="email">{t("auth.email")}</Label>
-              <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required maxLength={255} />
+              <Input
+                id="email"
+                type="email"
+                value={email}
+                onChange={(e) => {
+                  e.currentTarget.setCustomValidity("");
+                  setEmail(e.target.value);
+                }}
+                onInvalid={(e) => {
+                  const el = e.currentTarget;
+                  el.setCustomValidity(el.validity.valueMissing ? t("auth.fieldRequired") : t("auth.invalidEmail"));
+                }}
+                required
+                maxLength={255}
+              />
             </div>
             {!isForgot && (
               <div className="grid gap-2">
@@ -221,7 +236,24 @@ function AuthPage() {
                     </button>
                   )}
                 </div>
-                <Input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={6} maxLength={72} />
+                <Input
+                  id="password"
+                  type="password"
+                  value={password}
+                  onChange={(e) => {
+                    e.currentTarget.setCustomValidity("");
+                    setPassword(e.target.value);
+                  }}
+                  onInvalid={(e) => {
+                    const el = e.currentTarget;
+                    el.setCustomValidity(
+                      el.validity.valueMissing ? t("auth.fieldRequired") : t("auth.passwordHint"),
+                    );
+                  }}
+                  required
+                  minLength={6}
+                  maxLength={72}
+                />
               </div>
             )}
 
@@ -271,7 +303,7 @@ function AuthPage() {
               onClick={() => setCurrent(isSignup ? "signin" : "signup")}
               className="mt-4 w-full text-center text-sm text-muted-foreground hover:text-foreground"
             >
-              {isSignup ? `${t("auth.haveAccount")} ${t("auth.switchSignin")}` : `${t("auth.noAccount")} ${t("auth.switchSignup")}`}
+              {isSignup ? `${t("auth.haveAccount")} ${t("auth.switchSignin")}` : `${t("auth.needAccount")} ${t("auth.switchSignup")}`}
             </button>
           )}
 

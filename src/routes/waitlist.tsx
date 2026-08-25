@@ -216,10 +216,17 @@ function WaitlistPage() {
           )}
 
           <div className="mt-6 border-t border-border pt-4 text-center text-xs text-muted-foreground">
-            {t("wait.footer.q")}{" "}
-            <Link to="/auth" search={{ mode: "signup" } as never} className="text-primary hover:underline">
-              {t("wait.footer.link")}
-            </Link>
+            <p>
+              <Link to="/auth" search={{ mode: "signup" }} className="text-primary hover:underline">
+                {t("wait.createAccount")}
+              </Link>
+            </p>
+            <p className="mt-2">
+              {t("wait.footer.q")}{" "}
+              <Link to="/venue/auth" className="text-primary hover:underline">
+                {t("wait.footer.link")}
+              </Link>
+            </p>
           </div>
         </div>
       </div>
