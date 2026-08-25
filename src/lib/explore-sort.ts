@@ -53,10 +53,19 @@ export function sortGatherings<T extends SortableItem>(items: T[], mode: SortMod
   });
 }
 
+/**
+ * Floor for the Recommended band. Age-mismatched or vibe-clashing tables
+ * land well below this after scoring, so they never get the "for you" slot.
+ */
+export const MIN_RECOMMEND_SCORE = 45;
+
 /** Top N ranked gatherings for the "Recommended for you" band. */
 export function pickRecommended<T extends SortableItem>(items: T[], count = 3): T[] {
   return sortGatherings(
-    items.filter((i) => rankOf(i) !== null),
+    items.filter((i) => {
+      const r = rankOf(i);
+      return r !== null && r >= MIN_RECOMMEND_SCORE;
+    }),
     "fit",
   ).slice(0, count);
 }

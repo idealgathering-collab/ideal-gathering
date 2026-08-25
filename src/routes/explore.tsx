@@ -98,7 +98,7 @@ function Explore() {
   const fitById = new Map((fitData?.fits ?? []).map((f) => [f.gatheringId, f]));
   const showQuizNudge = !!user && fitData?.viewerHasTraits === false;
   const hasTaste = Boolean(profileTaste?.prefs) || (profileTaste?.interests.length ?? 0) > 0;
-  const canRecommend = fitData?.viewerHasTraits === true || hasTaste;
+  const canRecommend = fitData?.viewerHasSignal === true || fitData?.viewerHasTraits === true || hasTaste;
 
   // Fit-first is the default once we have any taste signal (quiz, prefs, or
   // interests). Everyone else keeps the soonest-first order.

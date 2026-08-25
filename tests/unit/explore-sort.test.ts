@@ -48,6 +48,14 @@ describe("pickRecommended", () => {
     ];
     expect(pickRecommended(onlyTaste, 3).map((i) => i.id)).toEqual(["x"]);
   });
+
+  it("never recommends an age- or vibe-crushed table", () => {
+    const crushed = [
+      { id: "gap", starts_at: "2026-09-01T10:00:00Z", fit: 6 },
+      { id: "ok", starts_at: "2026-09-02T10:00:00Z", fit: 88 },
+    ];
+    expect(pickRecommended(crushed, 3).map((i) => i.id)).toEqual(["ok"]);
+  });
 });
 
 describe("isSortMode", () => {
