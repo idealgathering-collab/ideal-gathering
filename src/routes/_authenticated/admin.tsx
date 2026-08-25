@@ -90,8 +90,9 @@ function AdminPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <SiteHeader />
+      <AdminHeader />
       <main className="mx-auto max-w-5xl px-4 py-12">
+        <p className="text-sm uppercase tracking-wide text-muted-foreground">{t("admin.eyebrow")}</p>
         <h1 className="font-display text-4xl">{t("admin.title")}</h1>
         <p className="mt-1 text-sm text-muted-foreground">{t("admin.subtitle")}</p>
 
