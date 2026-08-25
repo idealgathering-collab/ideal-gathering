@@ -1,8 +1,14 @@
 import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { ageFromDob } from "@/lib/age";
+import {
+  avoidBandsFromHistory,
+  parseReasons,
+  type PersonRating,
+} from "@/lib/match-history";
 import { traitsFromRow, type TraitScores } from "@/lib/matching";
 import { scoreTables, type TableFit } from "@/lib/table-fit";
+import { energyForPerson, type EnergyBand } from "@/lib/vibe";
 
 export type { TableFit } from "@/lib/table-fit";
 
@@ -21,7 +27,7 @@ function asStringList(value: unknown): string[] {
 /**
  * Compatibility must be computed server-side: RLS hides other attendees' rows
  * and their profiles from the browser. Only aggregate numbers leave this handler
- * — never another person's date of birth, age, or raw prefs.
+ * — never another person's date of birth, age, ratings, or raw prefs.
  */
 export const getTableFit = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
@@ -113,6 +119,67 @@ export const getTableFit = createServerFn({ method: "POST" })
       }
     }
 
+    const ratingsByUser = new Map<string, PersonRating>();
+    const avoidEnergy: EnergyBand[] = [];
+    let ratingRows: Array<{ ratee_id: string | null; score: number; reasons?: unknown }> | null = null;
+    {
+      const withReasons = await supabaseAdmin
+        .from("gathering_ratings")
+        .select("ratee_id, score, reasons")
+        .eq("rater_id", userId)
+        .not("ratee_id", "is", null);
+      if (withReasons.error) {
+        const fallback = await supabaseAdmin
+          .from("gathering_ratings")
+          .select("ratee_id, score")
+          .eq("rater_id", userId)
+          .not("ratee_id", "is", null);
+        ratingRows = fallback.data;
+      } else {
+        ratingRows = withReasons.data;
+      }
+    }
+
+    const historyIds = new Set<string>();
+    for (const row of ratingRows ?? []) {
+      if (!row.ratee_id) continue;
+      const prev = ratingsByUser.get(row.ratee_id);
+      // Keep the harshest score if they sat together more than once.
+      if (!prev || row.score < prev.score) {
+        ratingsByUser.set(row.ratee_id, { score: row.score, reasons: parseReasons(row.reasons) });
+      }
+      if (row.score <= 2) historyIds.add(row.ratee_id);
+    }
+
+    if (historyIds.size > 0) {
+      const need = [...historyIds].filter((id) => !traitsByUser.has(id) && !energyPrefByUser.has(id));
+      if (need.length > 0) {
+        const [{ data: pastProfiles }, { data: pastPrefs }] = await Promise.all([
+          supabaseAdmin
+            .from("profiles")
+            .select("id, trait_spark, trait_curiosity, trait_warmth, trait_depth")
+            .in("id", need),
+          supabaseAdmin.from("user_gathering_preferences").select("user_id, social_energy").in("user_id", need),
+        ]);
+        for (const p of pastProfiles ?? []) {
+          const scores = traitsFromRow(p);
+          if (scores) traitsByUser.set(p.id, scores);
+        }
+        for (const row of pastPrefs ?? []) {
+          if (row.social_energy) energyPrefByUser.set(row.user_id, row.social_energy);
+        }
+      }
+      avoidEnergy.push(
+        ...avoidBandsFromHistory(
+          [...ratingsByUser.entries()].map(([id, r]) => ({
+            score: r.score,
+            reasons: r.reasons,
+            energy: energyForPerson(energyPrefByUser.get(id) ?? null, traitsByUser.get(id) ?? null),
+          })),
+        ),
+      );
+    }
+
     const fits = scoreTables({
       viewerId: userId,
       myTraits,
@@ -126,6 +193,8 @@ export const getTableFit = createServerFn({ method: "POST" })
       interestsByUser,
       viewerEnergyPref,
       energyPrefByUser,
+      ratingsByUser,
+      avoidEnergy,
     });
 
     return { viewerHasTraits, viewerHasSignal, fits };

@@ -2,6 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { FEEDBACK_TTL_DAYS, isFeedbackPending } from "@/lib/feedback-rules";
+import { isFeedbackReason, parseReasons } from "@/lib/match-history";
 
 
 export type FeedbackPerson = {
@@ -118,7 +119,13 @@ export const submitRatings = createServerFn({ method: "POST" })
         score: z.number().int().min(1).max(5),
         comment: z.string().trim().max(1000).optional(),
         people: z
-          .array(z.object({ userId: z.string().uuid(), score: z.number().int().min(1).max(5) }))
+          .array(
+            z.object({
+              userId: z.string().uuid(),
+              score: z.number().int().min(1).max(5),
+              reasons: z.array(z.string()).max(4).optional(),
+            }),
+          )
           .max(20)
           .optional(),
       })

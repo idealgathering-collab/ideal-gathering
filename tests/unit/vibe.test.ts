@@ -3,6 +3,7 @@ import {
   energyFromPref,
   energyFromSpark,
   interestJaccard,
+  tableCohesionFactor,
   tableInterestScore,
   vibeFactor,
 } from "@/lib/vibe";
@@ -59,5 +60,15 @@ describe("interest overlap", () => {
   it("returns null when nobody at the table listed interests", () => {
     expect(tableInterestScore(["coffee"], [[], []])).toBeNull();
     expect(tableInterestScore([], [["coffee"]])).toBeNull();
+  });
+});
+
+describe("tableCohesionFactor", () => {
+  it("flags a table that already mixes reserved and outgoing people", () => {
+    expect(tableCohesionFactor(["reserved", "reserved", "outgoing"])).toBe(0.28);
+  });
+
+  it("is 1 when the table is one band", () => {
+    expect(tableCohesionFactor(["reserved", "mixed", "reserved"])).toBe(1);
   });
 });

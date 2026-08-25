@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { ageFromDob, ageGapFactor, maxAgeGap } from "@/lib/age";
+import { ageFromDob, ageGapFactor, maxAgeGap, tableAgeSpan } from "@/lib/age";
 
 describe("ageFromDob", () => {
   const now = new Date("2026-08-25T12:00:00Z");
@@ -26,24 +26,35 @@ describe("ageGapFactor", () => {
     expect(ageGapFactor(6)).toBe(1);
   });
 
-  it("crushes an 18+ year gap so a 20-year-old is not ranked with a 40-year-old", () => {
-    expect(ageGapFactor(20)).toBe(0.06);
-    expect(ageGapFactor(18)).toBe(0.06);
+  it("crushes anything over 10 years, even with identical interests", () => {
+    expect(ageGapFactor(11, 100)).toBe(0.06);
+    expect(ageGapFactor(20, 100)).toBe(0.06);
   });
 
-  it("steps down between those extremes", () => {
-    expect(ageGapFactor(10)).toBe(0.7);
-    expect(ageGapFactor(15)).toBe(0.28);
+  it("lets shared interests keep a 10-year gap almost whole", () => {
+    expect(ageGapFactor(10, 80)).toBe(0.95);
+    expect(ageGapFactor(10, null)).toBe(0.72);
+  });
+});
+
+describe("tableAgeSpan", () => {
+  it("uses oldest minus youngest at the table", () => {
+    expect(tableAgeSpan([22, 40, 21])).toBe(19);
+  });
+
+  it("returns null when fewer than two ages are known", () => {
+    expect(tableAgeSpan([22, null])).toBeNull();
+    expect(tableAgeSpan([])).toBeNull();
   });
 });
 
 describe("maxAgeGap", () => {
-  it("uses the largest gap at the table", () => {
+  it("uses the largest gap at the table, including the viewer", () => {
     expect(maxAgeGap(20, [22, 40, 21])).toBe(20);
   });
 
   it("returns null when the viewer or everyone else is unknown", () => {
-    expect(maxAgeGap(null, [22, 40])).toBeNull();
+    expect(maxAgeGap(null, [22])).toBeNull();
     expect(maxAgeGap(20, [null, undefined])).toBeNull();
   });
 });

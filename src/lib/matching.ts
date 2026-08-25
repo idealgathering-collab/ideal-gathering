@@ -226,6 +226,23 @@ export function fitScore(a: TraitScores, b: TraitScores): number {
   return Math.round(Math.max(0, Math.min(100, 100 - distance)));
 }
 
+/**
+ * Mean fit across every unique pair. A table has to work for everyone at it,
+ * not just the host vs each guest.
+ */
+export function meanPairwiseFit(people: TraitScores[]): number | null {
+  if (people.length < 2) return null;
+  let sum = 0;
+  let n = 0;
+  for (let i = 0; i < people.length; i++) {
+    for (let j = i + 1; j < people.length; j++) {
+      sum += fitScore(people[i], people[j]);
+      n += 1;
+    }
+  }
+  return n === 0 ? null : sum / n;
+}
+
 
 export const QUIZ_STORAGE_KEY = "ig.matching.quiz.v1";
 

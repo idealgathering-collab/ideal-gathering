@@ -1,6 +1,12 @@
-import { ageGapFactor, maxAgeGap } from "@/lib/age";
-import { fitScore, type TraitScores } from "@/lib/matching";
-import { energyForPerson, tableInterestScore, vibeFactor, type EnergyBand } from "@/lib/vibe";
+import { ageGapFactor, tableAgeSpan } from "@/lib/age";
+import { learnedEnergyFactor, personHistoryFactor, type PersonRating } from "@/lib/match-history";
+import { meanPairwiseFit, type TraitScores } from "@/lib/matching";
+import {
+  energyForPerson,
+  tableCohesionFactor,
+  tableInterestScore,
+  type EnergyBand,
+} from "@/lib/vibe";
 
 export type TableFit = {
   gatheringId: string;
@@ -29,6 +35,10 @@ export type ScoreTablesInput = {
   /** Explicit social_energy pref. Spark is used as a fallback when this is missing. */
   viewerEnergyPref?: string | null;
   energyPrefByUser?: Map<string, string>;
+  /** Viewer's past ratings of specific people. Never sent to the client. */
+  ratingsByUser?: Map<string, PersonRating>;
+  /** Energy bands the viewer has already said they didn't enjoy. */
+  avoidEnergy?: EnergyBand[];
 };
 
 function clampScore(n: number): number {
@@ -57,16 +67,19 @@ export function scoreTables({
   interestsByUser,
   viewerEnergyPref = null,
   energyPrefByUser,
+  ratingsByUser,
+  avoidEnergy = [],
 }: ScoreTablesInput): TableFit[] {
   const viewerEnergy = energyForPerson(viewerEnergyPref, myTraits);
 
   return gatheringIds.map((gatheringId) => {
     const members = membersByGathering.get(gatheringId) ?? new Set<string>();
     let hasBlocked = false;
+    const otherIds: string[] = [];
     const rated: TraitScores[] = [];
-    const otherAges: number[] = [];
+    const ages: Array<number | null> = typeof viewerAge === "number" ? [viewerAge] : [];
     const otherInterests: string[][] = [];
-    const otherEnergy: Array<EnergyBand | null> = [];
+    const bands: Array<EnergyBand | null> = [viewerEnergy];
 
     for (const id of members) {
       if (id === viewerId) continue;
@@ -74,39 +87,42 @@ export function scoreTables({
         hasBlocked = true;
         continue;
       }
+      otherIds.push(id);
       const scores = traitsByUser.get(id);
       if (scores) rated.push(scores);
       const age = agesByUser?.get(id);
-      if (typeof age === "number") otherAges.push(age);
+      if (typeof age === "number") ages.push(age);
       const tags = interestsByUser?.get(id);
       if (tags && tags.length > 0) otherInterests.push(tags);
-      otherEnergy.push(energyOf(id, traitsByUser, energyPrefByUser));
+      bands.push(energyOf(id, traitsByUser, energyPrefByUser));
     }
 
     if (hasBlocked) {
       return { gatheringId, fit: null, ratedCount: 0, hasBlocked: true };
     }
 
-    // Mean pairwise fit — averaging trait vectors first makes a table of
-    // opposites look like a perfect match for a middle-of-the-road viewer.
-    const chemistry =
-      myTraits && rated.length > 0
-        ? rated.reduce((sum, scores) => sum + fitScore(myTraits, scores), 0) / rated.length
-        : null;
+    // Every pair at the table — host included. Averaging only viewer-vs-other
+    // lets a mismatched pair of guests hide behind a popular host.
+    const pool = myTraits ? [myTraits, ...rated] : rated;
+    const chemistry = meanPairwiseFit(pool);
 
-    const gap = maxAgeGap(viewerAge, otherAges);
-    const af = gap === null ? 1 : ageGapFactor(gap);
-    const vf = vibeFactor(viewerEnergy, otherEnergy);
     const interests = tableInterestScore(viewerInterests, otherInterests);
+    const gap = tableAgeSpan(ages);
+    const af = gap === null ? 1 : ageGapFactor(gap, interests);
+    const vf = tableCohesionFactor(bands);
+    const hf = personHistoryFactor(otherIds, ratingsByUser);
+    const lf = learnedEnergyFactor(avoidEnergy, bands);
 
-    const hasSignal = chemistry !== null || af < 1 || vf < 1 || interests !== null;
+    const hasSignal =
+      chemistry !== null || af < 1 || vf < 1 || hf < 1 || lf < 1 || interests !== null;
     if (!hasSignal) {
       return { gatheringId, fit: null, ratedCount: rated.length, hasBlocked: false };
     }
 
     const base = chemistry ?? 70;
-    let raw = base * af * vf;
-    if (interests !== null) raw = raw * 0.78 + interests * 0.22;
+    let raw = base * af * vf * hf * lf;
+    // Shared interests can lift a 7–10 year pairing. They cannot rescue a hard age miss.
+    if (interests !== null && af > 0.1) raw = raw * 0.78 + interests * 0.22;
     return {
       gatheringId,
       fit: clampScore(raw),

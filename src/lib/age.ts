@@ -1,3 +1,6 @@
+/** Hard ceiling. Shared interests can soften a 7–10 year gap; they cannot save 11+. */
+export const MAX_COMPATIBLE_AGE_GAP = 10;
+
 /** Full years since `dob` (ISO date). Null when the value isn't a real date. */
 export function ageFromDob(dob: string | null | undefined, now: Date = new Date()): number | null {
   if (!dob) return null;
@@ -11,30 +14,30 @@ export function ageFromDob(dob: string | null | undefined, now: Date = new Date(
 }
 
 /**
- * Multiplier applied to table chemistry so a 20-year-old is not ranked
- * next to a 40-year-old. Uses the *largest* gap at the table — one
- * mismatched person is enough.
+ * Multiplier from the *span* of ages at the table (oldest − youngest).
+ * One mismatched person is enough — the table has to work for everyone.
  *
- * 0–6 years → 1. 18+ years → ~0.06.
+ * `interestOverlap` 0–100: same-interest pairs keep 7–10 years nearly whole.
+ * Anything over 10 years is crushed regardless.
  */
-export function ageGapFactor(maxGapYears: number): number {
+export function ageGapFactor(maxGapYears: number, interestOverlap: number | null = null): number {
   if (!Number.isFinite(maxGapYears) || maxGapYears <= 6) return 1;
-  if (maxGapYears <= 8) return 0.88;
-  if (maxGapYears <= 10) return 0.7;
-  if (maxGapYears <= 12) return 0.48;
-  if (maxGapYears <= 15) return 0.28;
-  if (maxGapYears <= 17) return 0.15;
-  return 0.06;
+  if (maxGapYears > MAX_COMPATIBLE_AGE_GAP) return 0.06;
+  const shared = (interestOverlap ?? 0) >= 40;
+  if (maxGapYears <= 8) return shared ? 1 : 0.9;
+  return shared ? 0.95 : 0.72;
+}
+
+/** Largest |a − b| among known ages, or null when fewer than two ages. */
+export function tableAgeSpan(ages: Array<number | null | undefined>): number | null {
+  const known: number[] = [];
+  for (const age of ages) if (typeof age === "number") known.push(age);
+  if (known.length < 2) return null;
+  return Math.max(...known) - Math.min(...known);
 }
 
 /** Largest |viewer − other| among known ages, or null when we can't compare. */
 export function maxAgeGap(viewerAge: number | null | undefined, others: Array<number | null | undefined>): number | null {
-  if (typeof viewerAge !== "number") return null;
-  let max: number | null = null;
-  for (const age of others) {
-    if (typeof age !== "number") continue;
-    const gap = Math.abs(viewerAge - age);
-    if (max === null || gap > max) max = gap;
-  }
-  return max;
+  if (typeof viewerAge !== "number") return tableAgeSpan(others);
+  return tableAgeSpan([viewerAge, ...others]);
 }

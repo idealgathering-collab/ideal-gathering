@@ -50,6 +50,22 @@ export function vibeFactor(viewer: EnergyBand | null, table: Array<EnergyBand | 
   return 0.28;
 }
 
+/**
+ * Whole-table cohesion: reserved and outgoing people should not share a table.
+ * Mixed does not count as a clash. Used so the table works for everyone, not
+ * just the person currently browsing.
+ */
+export function tableCohesionFactor(bands: Array<EnergyBand | null>): number {
+  let reserved = 0;
+  let outgoing = 0;
+  for (const b of bands) {
+    if (b === "reserved") reserved += 1;
+    else if (b === "outgoing") outgoing += 1;
+  }
+  if (reserved > 0 && outgoing > 0) return 0.28;
+  return 1;
+}
+
 /** Jaccard overlap 0–100 between two interest slug lists. */
 export function interestJaccard(a: string[], b: string[]): number {
   if (a.length === 0 || b.length === 0) return 0;
