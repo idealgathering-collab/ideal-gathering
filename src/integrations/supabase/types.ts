@@ -219,7 +219,6 @@ export type Database = {
           id: string
           ratee_id: string | null
           rater_id: string
-          reasons: string[]
           score: number
         }
         Insert: {
@@ -229,7 +228,6 @@ export type Database = {
           id?: string
           ratee_id?: string | null
           rater_id: string
-          reasons?: string[]
           score: number
         }
         Update: {
@@ -239,7 +237,6 @@ export type Database = {
           id?: string
           ratee_id?: string | null
           rater_id?: string
-          reasons?: string[]
           score?: number
         }
         Relationships: [
