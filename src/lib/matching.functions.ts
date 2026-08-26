@@ -136,7 +136,7 @@ export const getTableFit = createServerFn({ method: "POST" })
           .not("ratee_id", "is", null);
         ratingRows = fallback.data;
       } else {
-        ratingRows = withReasons.data;
+        ratingRows = (withReasons.data ?? []) as unknown as typeof ratingRows;
       }
     }
 
