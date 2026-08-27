@@ -124,15 +124,21 @@ export function getInterestVisual(interest: string): string {
  * Get a small (thumbnail) version of an interest visual.
  */
 export function getInterestVisualSmall(interest: string): string {
-  const url = getInterestVisual(interest);
-  // Replace or add width parameter
-  return url.replace(/w=\d+/, 'w=200') + (url.includes('?') ? '&' : '?') + 'q=80';
+  return withWidth(getInterestVisual(interest), 200);
 }
 
 /**
  * Get a medium version of an interest visual.
  */
 export function getInterestVisualMedium(interest: string): string {
-  const url = getInterestVisual(interest);
-  return url.replace(/w=\d+/, 'w=400') + (url.includes('?') ? '&' : '?') + 'q=80';
+  return withWidth(getInterestVisual(interest), 400);
 }
+
+function withWidth(url: string, width: number): string {
+  const [base, query = ""] = url.split("?");
+  const params = new URLSearchParams(query);
+  params.set("w", String(width));
+  params.set("q", "80");
+  return `${base}?${params.toString()}`;
+}
+

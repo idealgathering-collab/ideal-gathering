@@ -192,7 +192,7 @@ export function getLocationString(profile: {
  */
 export function hasAuraData(profile: GuestProfile): boolean {
   return (
-    profile.personaColor !== null &&
+    profile.personaColor !== null ||
     (profile.traitSpark !== null ||
       profile.traitCuriosity !== null ||
       profile.traitWarmth !== null ||
