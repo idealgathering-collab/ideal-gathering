@@ -112,26 +112,6 @@ export interface GuestStory {
 }
 
 /**
- * Database row type for profiles with story data.
+ * Database row type for profiles.
  */
-export type ProfileWithStory = Database["public"]["Tables"]["profiles"]["Row"] & {
-  gatherings_attended: Array<{
-    id: string;
-    gathering: {
-      id: string;
-      title: string;
-      start_time: string;
-      host: {
-        display_name: string | null;
-      } | null;
-    } | null;
-    venue: {
-      id: string;
-      name: string;
-      cover_url: string | null;
-      business: {
-        cover_url: string | null;
-      } | null;
-    } | null;
-  }>;
-};
+export type ProfileRow = Database["public"]["Tables"]["profiles"]["Row"];
