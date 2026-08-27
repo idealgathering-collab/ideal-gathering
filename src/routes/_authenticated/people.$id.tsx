@@ -52,7 +52,7 @@ function PeopleProfilePage() {
   }, [userId, user?.id]);
 
   const handleMessageClick = () => {
-    navigate({ to: "/chat", search: { user: userId } });
+    navigate({ to: "/chat" });
   };
 
   if (loading) {
