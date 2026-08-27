@@ -113,10 +113,11 @@ export function GatheringPreferencesFlow({
   }
 
   function toggleType(value: string) {
-    const has = prefs.gathering_types.includes(value);
+    const typed = value as GatheringPreferences["gathering_types"][number];
+    const has = prefs.gathering_types.includes(typed);
     set(
       "gathering_types",
-      has ? prefs.gathering_types.filter((v) => v !== value) : [...prefs.gathering_types, value],
+      has ? prefs.gathering_types.filter((v) => v !== typed) : [...prefs.gathering_types, typed],
     );
   }
 

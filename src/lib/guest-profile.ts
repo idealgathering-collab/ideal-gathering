@@ -13,6 +13,7 @@ export interface GuestProfile {
   neighborhood: string | null;
   country: string | null;
   bio: string | null;
+  dateOfBirth: string | null;
   
   // Aura data (from quiz)
   personaColor: string | null;

@@ -60,18 +60,18 @@ export function Identity({
   const hasAvatar = !!avatarUrl;
 
   const personaTitle = scores ? getPersonaTitle({
-    spark: scores.spark ?? null,
-    curiosity: scores.curiosity ?? null,
-    warmth: scores.warmth ?? null,
-    depth: scores.depth ?? null,
+    spark: scores.spark ?? 0,
+    curiosity: scores.curiosity ?? 0,
+    warmth: scores.warmth ?? 0,
+    depth: scores.depth ?? 0,
   }, t) : null;
 
   const tags = (style || intentions) ? getPersonaTags({
     scores: scores ? {
-      spark: scores.spark ?? null,
-      curiosity: scores.curiosity ?? null,
-      warmth: scores.warmth ?? null,
-      depth: scores.depth ?? null,
+      spark: scores.spark ?? 0,
+      curiosity: scores.curiosity ?? 0,
+      warmth: scores.warmth ?? 0,
+      depth: scores.depth ?? 0,
     } : null,
     energyLevel: style?.energyLevel ?? null,
     groupSize: style?.groupSize ?? null,
