@@ -21,7 +21,7 @@ import {
   interestLabel 
 } from "@/lib/interests";
 import { INTENTION_OPTIONS } from "@/lib/gathering-preferences";
-import { GATHERING_TYPE_OPTIONS } from "@/lib/gathering-types";
+import { GATHERING_TYPES, type GatheringType } from "@/lib/gathering-types";
 import { ageFromDob } from "@/lib/age";
 import { useQueryClient } from "@tanstack/react-query";
 import { setAdminPreview } from "@/lib/roles";
@@ -190,8 +190,8 @@ function ProfilePage() {
       .maybeSingle()
       .then(({ data: prefsData }) => {
         if (prefsData) {
-          setIntentions(Array.isArray(prefsData.intentions) ? prefsData.intentions : []);
-          setGatheringTypes(Array.isArray(prefsData.gathering_types) ? prefsData.gathering_types : []);
+          setIntentions(Array.isArray(prefsData.intentions) ? (prefsData.intentions as string[]) : []);
+          setGatheringTypes(Array.isArray(prefsData.gathering_types) ? (prefsData.gathering_types as string[]) : []);
         }
       });
   }, [user, guestProfile]);
@@ -339,7 +339,7 @@ function ProfilePage() {
                 navigate({ to: "/onboarding" });
               }}
               onStoryItemClick={(item) => {
-                navigate({ to: "/gathering/$id", params: { id: item.gatheringId } });
+                navigate({ to: "/gatherings/$id", params: { id: item.gatheringId } });
               }}
             />
           )}
@@ -662,7 +662,7 @@ function ProfilePage() {
                   </div>
                 )}
                 <div className="mt-5 flex flex-wrap gap-2">
-                  {GATHERING_TYPE_OPTIONS.map((type) => {
+                  {GATHERING_TYPES.map((type: GatheringType) => {
                     const active = gatheringTypes.includes(type);
                     return (
                       <button
@@ -776,7 +776,6 @@ function ProfilePage() {
                   </div>
                 </div>
               </section>
-            </div>
 
             <div className="flex justify-stretch sm:justify-end">
               <Button

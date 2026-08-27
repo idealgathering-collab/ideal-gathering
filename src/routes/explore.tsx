@@ -32,7 +32,7 @@ export const Route = createFileRoute("/explore")({
     ...(search.lang === "tr" || search.lang === "fa" ? { lang: search.lang } : {}),
     ...(typeof search.city === "string" && search.city.trim() ? { city: search.city.trim() } : {}),
     ...(isSortMode(search.sort) ? { sort: search.sort } : {}),
-    ...(typeof search.type === "string" && GATHERING_TYPES.includes(search.type as GatheringType) ? { type: search.type } : {}),
+    ...(typeof search.type === "string" && GATHERING_TYPES.includes(search.type as GatheringType) ? { type: search.type as GatheringType } : {}),
   }),
   head: ({ match }) => localizedHead("/explore", match.search.lang),
 });

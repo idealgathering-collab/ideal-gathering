@@ -1,3 +1,4 @@
+import type { SectionCompletion } from "@/lib/profile-completion";
 import type { GuestAura } from "@/lib/guest-profile";
 import { Sector, type SectorProps } from "@/components/profile/sector";
 import { useT } from "@/i18n";
@@ -6,10 +7,11 @@ import { useT } from "@/i18n";
  * Aura component - EXACT match to image design
  * Shows trait meters with icons and percentages in 2x2 grid
  */
-export interface AuraProps extends Omit<SectorProps, "sector" | "hasData"> {
+export interface AuraProps extends Omit<SectorProps, "sector" | "hasData" | "children"> {
   aura: GuestAura | null;
   completion?: SectionCompletion;
   isSelf?: boolean;
+  children?: React.ReactNode;
 }
 
 const TRAIT_CONFIG = [
@@ -49,7 +51,7 @@ function getTraitValue(aura: GuestAura | null, key: TraitKey): number {
     depth: "traitDepth",
   };
   const value = aura?.[traitMap[key]];
-  return value !== null && value !== undefined ? value : 0;
+  return typeof value === "number" ? value : 0;
 }
 
 /**
@@ -113,7 +115,7 @@ export function Aura({ aura, completion, isSelf = false, children, ...props }: A
   return (
     <Sector 
       sector="aura" 
-      hasData={hasAura}
+      hasData={!!hasAura}
       title={t("profile.sector.aura")}
       hint={t("profile.sector.auraHint")}
       completion={completion}

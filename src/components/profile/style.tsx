@@ -1,3 +1,4 @@
+import type { SectionCompletion } from "@/lib/profile-completion";
 import type { GuestStyle } from "@/lib/guest-profile";
 import { Sector, type SectorProps } from "@/components/profile/sector";
 import { useT } from "@/i18n";
@@ -6,10 +7,11 @@ import { useT } from "@/i18n";
  * Style component - EXACT match to image design
  * Shows icon tiles in a row for: energy / size / talk / new people
  */
-export interface StyleProps extends Omit<SectorProps, "sector" | "hasData"> {
+export interface StyleProps extends Omit<SectorProps, "sector" | "hasData" | "children"> {
   style: GuestStyle | null;
   completion?: SectionCompletion;
   isSelf?: boolean;
+  children?: React.ReactNode;
 }
 
 const STYLE_ICONS: Record<string, { icon: string; labelKey: string; color: string }> = {
@@ -72,15 +74,7 @@ export function Style({ style, children, ...props }: StyleProps) {
   const talkConfig = style.talkStyle ? STYLE_ICONS[style.talkStyle] : null;
   const newPeopleConfig = style.newPeople ? STYLE_ICONS[style.newPeople] : null;
 
-  // Subtitles for each category
-  const energySubtitle = "Energy";
-  const sizeSubtitle = "Size";
-  const talkSubtitle = "Talk";
-  const newPeopleSubtitle = "New People";
-
-  const t = useT();
-  
-  // i18n keys for subtitles
+  // i18n labels for subtitles
   const energySubtitle = t("profile.style.energy");
   const sizeSubtitle = t("profile.style.groupSize");
   const talkSubtitle = t("profile.style.talkStyle");
@@ -133,8 +127,6 @@ export function Style({ style, children, ...props }: StyleProps) {
     <Sector 
       sector="style" 
       hasData={true}
-      completion={completion}
-      isSelf={isSelf}
       {...props}
     >
       {tiles}

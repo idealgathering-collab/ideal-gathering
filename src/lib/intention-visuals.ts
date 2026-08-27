@@ -83,14 +83,21 @@ export function getIntentionVisual(intention: string): string {
  * Get a small version of an intention visual.
  */
 export function getIntentionVisualSmall(intention: string): string {
-  const url = getIntentionVisual(intention);
-  return url.replace(/w=\d+/, 'w=200') + (url.includes('?') ? '&' : '?') + 'q=80';
+  return withWidth(getIntentionVisual(intention), 200);
 }
 
 /**
  * Get a medium version of an intention visual.
  */
 export function getIntentionVisualMedium(intention: string): string {
-  const url = getIntentionVisual(intention);
-  return url.replace(/w=\d+/, 'w=400') + (url.includes('?') ? '&' : '?') + 'q=80';
+  return withWidth(getIntentionVisual(intention), 400);
 }
+
+function withWidth(url: string, width: number): string {
+  const [base, query = ""] = url.split("?");
+  const params = new URLSearchParams(query);
+  params.set("w", String(width));
+  params.set("q", "80");
+  return `${base}?${params.toString()}`;
+}
+

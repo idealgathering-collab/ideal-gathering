@@ -1,3 +1,4 @@
+import type { SectionCompletion } from "@/lib/profile-completion";
 import type { GuestStory, GuestStoryItem } from "@/lib/guest-profile";
 import { Sector, type SectorProps } from "@/components/profile/sector";
 import { useT } from "@/i18n";
@@ -7,7 +8,7 @@ import { ChevronRight } from "lucide-react";
  * Story component - EXACT match to image design
  * Shows timeline with venue covers and timestamp dots
  */
-export interface StoryProps extends Omit<SectorProps, "sector" | "hasData"> {
+export interface StoryProps extends Omit<SectorProps, "sector" | "hasData" | "children"> {
   story: GuestStory | null;
   maxDisplay?: number;
   interactive?: boolean;
@@ -16,6 +17,7 @@ export interface StoryProps extends Omit<SectorProps, "sector" | "hasData"> {
   onViewAll?: () => void;
   completion?: SectionCompletion;
   isSelf?: boolean;
+  children?: React.ReactNode;
 }
 
 const FALLBACK_COVER = "https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=400&q=80";

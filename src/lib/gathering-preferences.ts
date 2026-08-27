@@ -70,7 +70,7 @@ export async function loadMyGatheringPreferences(userId: string): Promise<Gather
   if (!data) return null;
   return {
     intentions: asStringArray(data.intentions),
-    gathering_types: asStringArray(data.gathering_types),
+    gathering_types: asStringArray(data.gathering_types) as GatheringPreferences["gathering_types"],
     preferred_group_size: data.preferred_group_size ?? null,
     social_energy: data.social_energy ?? null,
     conversation_style: data.conversation_style ?? null,

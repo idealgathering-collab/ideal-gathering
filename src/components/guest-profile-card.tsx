@@ -96,6 +96,11 @@ export function GuestProfileCard({
   interactive = false,
   onStoryItemClick,
   className = "",
+  isSelf,
+  onComplete,
+  viewerProfile,
+  viewerDob,
+  showMatchBreakdown,
 }: GuestProfileCardProps) {
   const [profile, setProfile] = useState<GuestProfile | null>(propProfile ?? null);
   const [loading, setLoading] = useState(propLoading ?? !propProfile);
@@ -124,6 +129,12 @@ export function GuestProfileCard({
       setProfile(propProfile);
     }
   }, [propProfile]);
+
+  // Calculate match score if we have a viewer profile (hook must run before early returns)
+  const matchResult = useMemo(() => {
+    if (!viewerProfile || !profile || isSelf) return null;
+    return calculateUserMatch(viewerProfile, profile, viewerDob ?? null, profile.dateOfBirth ?? null);
+  }, [viewerProfile, profile, viewerDob, isSelf]);
 
   if (loading) {
     return <GuestProfileCardSkeleton darkTheme={darkTheme} className={className} />;
@@ -212,14 +223,6 @@ export function GuestProfileCard({
     here: getSectionCompletion("here", profile, isSelfProfile),
     story: getSectionCompletion("story", profile, isSelfProfile),
   };
-
-  // Calculate match score if we have a viewer profile
-  const matchResult = useMemo(() => {
-    if (!viewerProfile || isSelfProfile) {
-      return null;
-    }
-    return calculateUserMatch(viewerProfile, profile, viewerDob, profile.dateOfBirth ?? null);
-  }, [viewerProfile, profile, viewerDob, isSelfProfile]);
 
   // Use provided matchScore or calculated one
   const displayMatchScore = matchScore ?? matchResult?.score ?? null;
