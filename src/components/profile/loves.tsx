@@ -98,8 +98,6 @@ export function Loves({
     <Sector 
       sector="loves" 
       hasData={true}
-      completion={completion}
-      isSelf={isSelf}
       {...props}
     >
       <div className="flex flex-wrap gap-3 w-full">

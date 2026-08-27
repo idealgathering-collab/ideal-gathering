@@ -135,8 +135,6 @@ export function Style({ style, children, ...props }: StyleProps) {
     <Sector 
       sector="style" 
       hasData={true}
-      completion={completion}
-      isSelf={isSelf}
       {...props}
     >
       {tiles}

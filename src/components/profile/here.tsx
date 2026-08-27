@@ -97,8 +97,6 @@ export function Here({ here, maxDisplay = 8, children, ...props }: HereProps) {
     <Sector 
       sector="here" 
       hasData={true}
-      completion={completion}
-      isSelf={isSelf}
       {...props}
     >
       <div className="flex flex-wrap gap-3 w-full">
