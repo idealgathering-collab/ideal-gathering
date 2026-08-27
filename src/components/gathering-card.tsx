@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { Users, MapPin, CalendarClock } from "lucide-react";
+import { Users, MapPin, CalendarClock, Tag } from "lucide-react";
 import type { GatheringCard as G } from "@/lib/gatherings";
 import { formatDateTime } from "@/lib/gatherings";
 import { TableFitChip } from "@/components/table-fit";
@@ -71,6 +71,14 @@ export function GatheringCard({
             {full ? t("card.full") : t(seatsLeft === 1 ? "card.seatLeft" : "card.seatsLeft", { n: seatsLeft })}
           </span>
         </div>
+        {g.gathering_type && (
+          <div className="absolute bottom-3 start-3">
+            <span className="inline-flex items-center gap-1 rounded-full bg-background/90 px-2 py-1 text-[11px] text-foreground/80">
+              <Tag className="h-3 w-3" />
+              {t(`gatheringType.${g.gathering_type}`)}
+            </span>
+          </div>
+        )}
       </div>
 
       <div className="flex flex-1 flex-col gap-3 p-5">

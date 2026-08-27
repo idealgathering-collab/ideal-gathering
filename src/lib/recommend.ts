@@ -3,26 +3,31 @@ import {
   hasAnyAnswer,
   type GatheringPreferences,
 } from "@/lib/gathering-preferences";
+import { GATHERING_TYPES, type GatheringType } from "@/lib/gathering-types";
 
 export type Recommendable = {
   subject: string;
   description?: string | null;
   seats: number;
   starts_at?: string;
+  gathering_type?: string | null;
 };
 
 export type PreferenceScore = {
   /** 0–100, or null when the viewer has no usable taste signal. */
   score: number | null;
   hasSignal: boolean;
-  matchedTypes: string[];
+  matchedTypes: GatheringType[];
   interestHits: number;
 };
 
 const NEUTRAL = 50;
 
-/** EN / TR / FA stems used to infer a gathering type from free-text subject. */
-export const TYPE_KEYWORDS: Record<string, string[]> = {
+/**
+ * EN / TR / FA stems used to infer a gathering type from free-text subject.
+ * Keys must match GATHERING_TYPES from gathering-types.ts
+ */
+export const TYPE_KEYWORDS: Record<GatheringType, string[]> = {
   coffee: ["coffee", "cafe", "café", "espresso", "latte", "kahve", "çay", "tea", "قهوه", "چای", "کافه"],
   food: [
     "dinner",
@@ -30,6 +35,7 @@ export const TYPE_KEYWORDS: Record<string, string[]> = {
     "brunch",
     "food",
     "restaurant",
+    "eat",
     "yemek",
     "akşam",
     "sofra",
@@ -39,28 +45,34 @@ export const TYPE_KEYWORDS: Record<string, string[]> = {
     "ناهار",
     "صبحانه",
   ],
-  city: ["city", "neighbourhood", "neighborhood", "walk the", "explore", "şehir", "mahalle", "keşif", "شهر", "محله"],
+  city: ["city", "neighbourhood", "neighborhood", "walk the", "explore", "urban", "şehir", "mahalle", "keşif", "شهر", "محله", "downtown"],
   outdoors: [
     "hike",
     "hiking",
     "outdoor",
+    "nature",
     "walk",
     "trail",
     "park",
+    "beach",
+    "picnic",
+    "camp",
+    "camping",
     "yürüyüş",
     "doğa",
     "kamp",
     "پیاده‌روی",
     "طبیعت",
     "کوه",
+    "ساحل",
   ],
-  games: ["game", "board game", "chess", "oyun", "satranç", "kutu", "بازی", "شطرنج"],
-  creative: ["creative", "write", "paint", "craft", "yaratıcı", "yazı", "resim", "خلاق", "نقاشی", "نوشتن"],
-  learning: ["learn", "workshop", "class", "öğren", "ders", "atölye", "یادگیر", "کارگاه"],
-  books: ["book", "books", "novel", "poetry", "kitap", "roman", "şiir", "کتاب", "شعر", "رمان"],
-  tech: ["tech", "startup", "ai", "code", "girişim", "teknoloji", "yazılım", "فناوری", "استارتاپ", "کد"],
-  arts: ["art", "museum", "theatre", "film", "cinema", "sanat", "müze", "tiyatro", "سینما", "موزه", "تئاتر", "هنر"],
-  spontaneous: ["tonight", "last minute", "spontaneous", "bu akşam", "امشب"],
+  games: ["game", "board game", "card game", "chess", "play", "oyun", "satranç", "kutu", "kart", "بازی", "شطرنج", "ورق"],
+  creative: ["creative", "write", "paint", "craft", "draw", "make", "DIY", "yaratıcı", "yazı", "resim", "çizim", "yapım", "خلاق", "نقاشی", "نوشتن", "ساختن"],
+  learning: ["learn", "workshop", "class", "study", "course", "educate", "öğren", "ders", "atölye", "eğitim", "یادگیر", "کارگاه", "کلاس", "دوره"],
+  books: ["book", "books", "novel", "poetry", "read", "literature", "library", "kitap", "roman", "şiir", "okuma", "edebiyat", "کتاب", "شعر", "رمان", "ادبیات"],
+  tech: ["tech", "startup", "ai", "code", "program", "software", "computer", "girişim", "teknoloji", "yazılım", "kod", "yapay zeka", "فناوری", "استارتاپ", "کد", "هوش مصنوعی"],
+  arts: ["art", "museum", "theatre", "theater", "film", "cinema", "movie", "concert", "music", "dance", "sanat", "müze", "tiyatro", "sinema", "film", "konser", "müzik", "dans", "سینما", "موزه", "تئاتر", "هنر", "موسیقی"],
+  spontaneous: ["tonight", "last minute", "spontaneous", "impromptu", "right now", "short notice", "bu akşam", "şimdi", "anında", "امشب", "الان", "فوری"],
 };
 
 const INTEREST_ALIASES: Record<string, string[]> = {
@@ -127,18 +139,34 @@ export function gatheringText(g: Pick<Recommendable, "subject" | "description">)
   return `${g.subject ?? ""} ${g.description ?? ""}`;
 }
 
-/** Infer zero or more gathering-type slugs from subject + description. */
-export function inferGatheringTypes(g: Pick<Recommendable, "subject" | "description">): string[] {
+/** Infer zero or more gathering-type slugs from subject + description.
+ * If gathering has an explicit gathering_type, it's included first.
+ */
+export function inferGatheringTypes(g: Pick<Recommendable, "subject" | "description" | "gathering_type">): GatheringType[] {
+  const hits: GatheringType[] = [];
+  
+  // If gathering has explicit type, include it first
+  if (g.gathering_type && isGatheringType(g.gathering_type)) {
+    hits.push(g.gathering_type);
+  }
+  
   const text = gatheringText(g);
-  const hits: string[] = [];
-  for (const [type, words] of Object.entries(TYPE_KEYWORDS)) {
+  for (const type of GATHERING_TYPES) {
+    // Skip if we already have this type from explicit field
+    if (g.gathering_type === type) continue;
+    const words = TYPE_KEYWORDS[type];
     if (words.some((w) => textHas(text, w))) hits.push(type);
   }
   return hits;
 }
 
-function typeScore(prefs: GatheringPreferences | null, inferred: string[]): { score: number; matched: string[] } {
-  const wanted = prefs?.gathering_types ?? [];
+/** Check if a string is a valid gathering type. */
+function isGatheringType(value: string): value is GatheringType {
+  return (GATHERING_TYPES as readonly string[]).includes(value);
+}
+
+function typeScore(prefs: GatheringPreferences | null, inferred: GatheringType[]): { score: number; matched: GatheringType[] } {
+  const wanted = (prefs?.gathering_types ?? []).filter((t): t is GatheringType => GATHERING_TYPES.includes(t as GatheringType));
   if (wanted.length === 0) return { score: NEUTRAL, matched: [] };
   if (inferred.length === 0) return { score: NEUTRAL, matched: [] };
   const matched = inferred.filter((t) => wanted.includes(t));

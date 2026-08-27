@@ -257,6 +257,7 @@ export type Database = {
           created_at: string
           description: string | null
           ends_at: string | null
+          gathering_type: string | null
           host_id: string
           id: string
           lat: number | null
@@ -277,6 +278,7 @@ export type Database = {
           created_at?: string
           description?: string | null
           ends_at?: string | null
+          gathering_type?: string | null
           host_id: string
           id?: string
           lat?: number | null
@@ -297,6 +299,7 @@ export type Database = {
           created_at?: string
           description?: string | null
           ends_at?: string | null
+          gathering_type?: string | null
           host_id?: string
           id?: string
           lat?: number | null

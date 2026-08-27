@@ -1,7 +1,7 @@
 import type { ElementType } from "react";
 import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { Compass, Plus, Users, MessageCircle, Calendar, ArrowRight } from "lucide-react";
+import { Compass, Plus, Users, MessageCircle, Calendar, ArrowRight, Sparkles } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { GatheringCard } from "@/components/gathering-card";
 import { Button } from "@/components/ui/button";
@@ -17,6 +17,8 @@ import { FeedbackCard, FeedbackDialog, usePendingFeedback } from "@/components/f
 import { useState } from "react";
 import type { PendingFeedback } from "@/lib/feedback.functions";
 import { fetchRoles, isAdminPreview } from "@/lib/roles";
+import { getMostIncompleteSection, getProfileCompletion, type ProfileCompletion } from "@/lib/profile-completion";
+import type { GuestProfile } from "@/lib/guest-profile";
 
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
@@ -150,6 +152,18 @@ function Dashboard() {
   const pending = usePendingFeedback(!!user);
   const [fbItem, setFbItem] = useState<PendingFeedback | null>(null);
 
+  const { data: guestProfile } = useQuery({
+    queryKey: ["guest-profile", user?.id],
+    enabled: !!user,
+    queryFn: async () => {
+      const { loadGuestProfile } = await import("@/lib/guest-profile.functions");
+      return await loadGuestProfile(user!.id);
+    },
+  });
+
+  const completion = guestProfile ? getProfileCompletion(guestProfile, true) : null;
+  const mostIncomplete = guestProfile ? getMostIncompleteSection(guestProfile, true) : null;
+
   const next = data?.next;
   const fix = getCachedFix();
   const nextCoords = next ? gatheringCoords(next) : null;
@@ -188,6 +202,12 @@ function Dashboard() {
         {!traits && (
           <div className="mt-8">
             <TakeQuizNudge />
+          </div>
+        )}
+
+        {mostIncomplete && mostIncomplete.section !== "aura" && (
+          <div className="mt-8">
+            <CompleteProfileNudge section={mostIncomplete} />
           </div>
         )}
 
@@ -256,5 +276,36 @@ function QuickTile({ icon: Icon, label, to }: { icon: ElementType; label: string
       <span className="font-display text-base">{label}</span>
       <ArrowRight className="mt-auto h-4 w-4 text-muted-foreground rtl:rotate-180" />
     </Link>
+  );
+}
+
+function CompleteProfileNudge({ section }: { section: ReturnType<typeof getMostIncompleteSection> }) {
+  const t = useT();
+  
+  if (!section) return null;
+
+  return (
+    <div className="rounded-2xl border border-border bg-card p-6">
+      <div className="flex items-start gap-4">
+        <div className="grid h-12 w-12 flex-shrink-0 place-items-center rounded-xl bg-gradient-hero">
+          <Sparkles className="h-6 w-6 text-primary-foreground" />
+        </div>
+        <div className="min-w-0 flex-1">
+          <p className="text-sm font-medium text-muted-foreground">
+            {t("dash.completeProfile")}
+          </p>
+          <p className="mt-1 text-sm text-muted-foreground/70">
+            {t(section.promptKey)}
+          </p>
+          {section.actionUrl && (
+            <Button asChild size="sm" className="mt-3 rounded-full">
+              <Link to={section.actionUrl}>
+                {t("dash.completeProfileCtA")}
+              </Link>
+            </Button>
+          )}
+        </div>
+      </div>
+    </div>
   );
 }

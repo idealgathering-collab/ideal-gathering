@@ -1,5 +1,5 @@
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
-import { ArrowLeft, LogOut, Settings, Shield } from "lucide-react";
+import { ArrowLeft, LogOut, Settings, Shield, Sparkles } from "lucide-react";
 import { NotificationsBell } from "@/components/notifications-bell";
 import { useEffect, useState } from "react";
 import logoAsset from "@/assets/ideal-gathering-logo.png.asset.json";
@@ -12,6 +12,8 @@ import { useQueryClient } from "@tanstack/react-query";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { useT } from "@/i18n";
 import { setAdminPreview } from "@/lib/roles";
+import { getMostIncompleteSection, getCompletionLevel, getCompletionColor } from "@/lib/profile-completion";
+import type { GuestProfile } from "@/lib/guest-profile";
 
 export function SiteHeader() {
   const { user } = useSession();
@@ -23,12 +25,18 @@ export function SiteHeader() {
   const showBack = !topLevelNavPaths.includes(pathname);
 
   const [isAdmin, setIsAdmin] = useState(false);
+  const [completionPercent, setCompletionPercent] = useState<number | null>(null);
+  const [incompleteSection, setIncompleteSection] = useState<ReturnType<typeof getMostIncompleteSection> | null>(null);
 
   useEffect(() => {
     if (!user) {
       setIsAdmin(false);
+      setCompletionPercent(null);
+      setIncompleteSection(null);
       return;
     }
+    
+    // Load admin status
     supabase
       .from("user_roles")
       .select("role")
@@ -36,6 +44,23 @@ export function SiteHeader() {
       .eq("role", "admin")
       .maybeSingle()
       .then(({ data }) => setIsAdmin(!!data));
+    
+    // Load profile completion
+    async function loadCompletion() {
+      const { loadGuestProfile } = await import("@/lib/guest-profile.functions");
+      const profile = await loadGuestProfile(user.id);
+      if (profile) {
+        const { getProfileCompletion } = await import("@/lib/profile-completion");
+        const completion = getProfileCompletion(profile, true);
+        setCompletionPercent(completion.overallPercent);
+        
+        const { getMostIncompleteSection } = await import("@/lib/profile-completion");
+        const incomplete = getMostIncompleteSection(profile, true);
+        setIncompleteSection(incomplete);
+      }
+    }
+    
+    loadCompletion();
   }, [user]);
 
 
@@ -99,6 +124,20 @@ export function SiteHeader() {
               <NavLink to="/my-gatherings" pathname={pathname}>{t("nav.myGatherings")}</NavLink>
               <NavLink to="/chat" pathname={pathname}>{t("nav.chat")}</NavLink>
               <NavLink to="/profile" pathname={pathname}>{t("nav.profile")}</NavLink>
+              
+              {incompleteSection && (
+                <Button
+                  asChild
+                  variant="ghost"
+                  size="sm"
+                  className="hidden rounded-full sm:inline-flex text-orange-500 hover:text-orange-400 hover:bg-orange-500/10"
+                >
+                  <Link to={incompleteSection.actionUrl ?? "/profile"}>
+                    <Sparkles className="me-1 h-3.5 w-3.5" />
+                    {t("nav.completeProfile")}
+                  </Link>
+                </Button>
+              )}
 
               {isAdmin && (
                 <Button asChild variant="ghost" size="sm" className="hidden rounded-full sm:inline-flex">

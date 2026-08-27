@@ -15,10 +15,19 @@ import { ALL_COUNTRIES } from "@/lib/countries";
 import { useT } from "@/i18n";
 import { SavedLocationsSection } from "@/components/saved-locations-section";
 import { ProfileHeader } from "@/components/profile-header";
-import { INTEREST_CATEGORIES, MAX_INTERESTS, interestLabel } from "@/lib/interests";
+import {
+  INTEREST_CATEGORIES, 
+  MAX_INTERESTS, 
+  interestLabel 
+} from "@/lib/interests";
+import { INTENTION_OPTIONS } from "@/lib/gathering-preferences";
+import { GATHERING_TYPE_OPTIONS } from "@/lib/gathering-types";
 import { ageFromDob } from "@/lib/age";
 import { useQueryClient } from "@tanstack/react-query";
 import { setAdminPreview } from "@/lib/roles";
+import { GuestProfileCard, GuestProfileCardSkeleton } from "@/components/guest-profile-card";
+import { loadGuestProfile } from "@/lib/guest-profile.functions";
+import type { GuestProfile } from "@/lib/guest-profile";
 
 export const Route = createFileRoute("/_authenticated/profile")({
   head: () => ({ meta: [{ title: "Your profile — Ideal Gathering" }] }),
@@ -74,6 +83,12 @@ function ProfilePage() {
   const [neighborhood, setNeighborhood] = useState("");
   const [country, setCountry] = useState<string>("");
   const [interests, setInterests] = useState<string[]>([]);
+  const [intentions, setIntentions] = useState<string[]>([]);
+  const [gatheringTypes, setGatheringTypes] = useState<string[]>([]);
+  const [traitSpark, setTraitSpark] = useState<number | null>(null);
+  const [traitCuriosity, setTraitCuriosity] = useState<number | null>(null);
+  const [traitWarmth, setTraitWarmth] = useState<number | null>(null);
+  const [traitDepth, setTraitDepth] = useState<number | null>(null);
   
   const [social, setSocial] = useState<SocialLinks>({});
   const [avatarPath, setAvatarPath] = useState<string | null>(null);
@@ -83,6 +98,10 @@ function ProfilePage() {
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const avatarRef = useRef<HTMLInputElement>(null);
+
+  // Guest profile card state
+  const [guestProfile, setGuestProfile] = useState<GuestProfile | null>(null);
+  const [profileLoading, setProfileLoading] = useState(true);
 
   useEffect(() => {
     if (!user) {
@@ -98,13 +117,43 @@ function ProfilePage() {
       .then(({ data }) => setIsAdmin(!!data));
   }, [user]);
 
-  async function handleSignOut() {
-    await qc.cancelQueries();
-    qc.clear();
-    await supabase.auth.signOut();
-    navigate({ to: "/", replace: true });
-  }
+  // Load guest profile for the card
+  useEffect(() => {
+    if (!user) {
+      setProfileLoading(false);
+      return;
+    }
+    setProfileLoading(true);
+    loadGuestProfile(user.id)
+      .then((profile) => {
+        setGuestProfile(profile);
+        // Pre-fill form fields from profile
+        if (profile) {
+          setDisplayName(profile.displayName ?? "");
+          setBio(profile.bio ?? "");
+          setCity(profile.city ?? "");
+          setNeighborhood(profile.neighborhood ?? "");
+          setCountry(profile.country ?? "");
+          setInterests(profile.interests ?? []);
+          setIntentions(profile.intentions ?? []);
+          setTraitSpark(profile.traitSpark ?? null);
+          setTraitCuriosity(profile.traitCuriosity ?? null);
+          setTraitWarmth(profile.traitWarmth ?? null);
+          setTraitDepth(profile.traitDepth ?? null);
+          setAvatarPath(profile.avatarUrl ?? null);
+          setAvatarUrl(profile.avatarUrl ?? null);
+        }
+      })
+      .catch((err) => {
+        console.error("Failed to load guest profile:", err);
+        setGuestProfile(null);
+      })
+      .finally(() => {
+        setProfileLoading(false);
+      });
+  }, [user?.id]);
 
+  // Load additional profile data (for fields not in guest profile)
   useEffect(() => {
     if (!user) return;
     supabase
@@ -116,20 +165,43 @@ function ProfilePage() {
       .maybeSingle()
       .then(async ({ data }) => {
         if (!data) return;
-        setDisplayName(data.display_name ?? "");
-        setBio(data.bio ?? "");
-        setDob(((data as { date_of_birth?: string | null }).date_of_birth ?? "") as string);
-        setNationality(((data as { nationality?: string | null }).nationality ?? "") as string);
-        setGender(((data as { gender?: string | null }).gender ?? "") as string);
-        setCity(data.city ?? "");
-        setNeighborhood(((data as { neighborhood?: string | null }).neighborhood ?? "") as string);
-        setCountry(((data as { country?: string | null }).country ?? "") as string);
-        setInterests(Array.isArray(data.interests) ? (data.interests as string[]) : []);
-        setSocial((data.social_links as SocialLinks) ?? {});
-        setAvatarPath(data.avatar_url ?? null);
-        setAvatarUrl(await signedUrl(data.avatar_url));
+        // Only update if we haven't loaded from guest profile yet
+        if (!guestProfile) {
+          setDisplayName(data.display_name ?? "");
+          setBio(data.bio ?? "");
+          setDob(((data as { date_of_birth?: string | null }).date_of_birth ?? "") as string);
+          setNationality(((data as { nationality?: string | null }).nationality ?? "") as string);
+          setGender(((data as { gender?: string | null }).gender ?? "") as string);
+          setCity(data.city ?? "");
+          setNeighborhood(((data as { neighborhood?: string | null }).neighborhood ?? "") as string);
+          setCountry(((data as { country?: string | null }).country ?? "") as string);
+          setInterests(Array.isArray(data.interests) ? (data.interests as string[]) : []);
+          setSocial((data.social_links as SocialLinks) ?? {});
+          setAvatarPath(data.avatar_url ?? null);
+          setAvatarUrl(await signedUrl(data.avatar_url));
+        }
       });
-  }, [user]);
+    
+    // Load gathering preferences (intentions and gathering_types)
+    supabase
+      .from("user_gathering_preferences")
+      .select("intentions, gathering_types")
+      .eq("user_id", user.id)
+      .maybeSingle()
+      .then(({ data: prefsData }) => {
+        if (prefsData) {
+          setIntentions(Array.isArray(prefsData.intentions) ? prefsData.intentions : []);
+          setGatheringTypes(Array.isArray(prefsData.gathering_types) ? prefsData.gathering_types : []);
+        }
+      });
+  }, [user, guestProfile]);
+
+  async function handleSignOut() {
+    await qc.cancelQueries();
+    qc.clear();
+    await supabase.auth.signOut();
+    navigate({ to: "/", replace: true });
+  }
 
   function toggleInterest(tag: string) {
     if (interests.includes(tag)) {
@@ -147,6 +219,16 @@ function ProfilePage() {
     setInterests(interests.filter((i) => i !== tag));
   }
 
+  function toggleIntention(value: string) {
+    const has = intentions.includes(value);
+    setIntentions(has ? intentions.filter((v) => v !== value) : [...intentions, value]);
+  }
+
+  function toggleGatheringType(value: string) {
+    const has = gatheringTypes.includes(value);
+    setGatheringTypes(has ? gatheringTypes.filter((v) => v !== value) : [...gatheringTypes, value]);
+  }
+
   async function saveProfile() {
     if (!user) return;
     if (bio.length > 500) {
@@ -162,7 +244,9 @@ function ProfilePage() {
     }
     try {
       setSaving(true);
-      const { error } = await supabase
+      
+      // Save profile data
+      const { error: profileError } = await supabase
         .from("profiles")
         .update({
           display_name: displayName.trim(),
@@ -177,8 +261,24 @@ function ProfilePage() {
           social_links: social,
         } as never)
         .eq("id", user.id);
-      if (error) throw error;
+      
+      if (profileError) throw profileError;
+      
+      // Save gathering preferences (intentions and gathering_types)
+      const { error: prefsError } = await supabase
+        .from("user_gathering_preferences")
+        .upsert({
+          user_id: user.id,
+          intentions: intentions,
+          gathering_types: gatheringTypes,
+          updated_at: new Date().toISOString(),
+        } as never, { onConflict: "user_id" });
+      
+      if (prefsError) throw prefsError;
+      
       toast.success(t("profile.saved"));
+      // Refresh guest profile after save
+      loadGuestProfile(user.id).then(setGuestProfile);
     } catch (err) {
       toast.error(err instanceof Error ? err.message : t("auth.generic"));
     } finally {
@@ -207,6 +307,8 @@ function ProfilePage() {
       if (error) throw error;
       setAvatarPath(path);
       setAvatarUrl(await signedUrl(path));
+      // Update guest profile avatar
+      setGuestProfile(prev => prev ? { ...prev, avatarUrl: path } : null);
       toast.success(t("profile.avatarUpdated"));
     } catch (err) {
       toast.error(err instanceof Error ? err.message : t("auth.generic"));
@@ -222,7 +324,28 @@ function ProfilePage() {
     <div className="min-h-screen bg-background">
       <SiteHeader />
       <main className="mx-auto max-w-3xl px-4 pb-28 pt-6 sm:pb-16 sm:pt-10">
-        {/* Identity header */}
+        {/* Guest Profile Card - Photo-first phone card (430px) - Dark theme to match image */}
+        <div className="mb-10">
+          {profileLoading ? (
+            <GuestProfileCardSkeleton darkTheme={true} />
+          ) : (
+            <GuestProfileCard
+              profile={guestProfile}
+              darkTheme={true}
+              interactive={true}
+              isSelf={true}
+              onComplete={() => {
+                // Navigate to onboarding to complete profile
+                navigate({ to: "/onboarding" });
+              }}
+              onStoryItemClick={(item) => {
+                navigate({ to: "/gathering/$id", params: { id: item.gatheringId } });
+              }}
+            />
+          )}
+        </div>
+
+        {/* Identity header - for editing */}
         <ProfileHeader
           displayName={displayName}
           email={user?.email}
@@ -412,24 +535,125 @@ function ProfilePage() {
               </div>
             </section>
 
+            {/* Interests */}
+            <section className={cardClass}>
+              <h2 className="font-display text-xl">{t("profile.interests")}</h2>
+              <p className="mt-1 text-sm text-muted-foreground">{t("profile.interests.hint")}</p>
+              {interests.length > 0 && (
+                <div className="mt-4 flex flex-wrap gap-2">
+                  {interests.map((tag) => (
+                    <span
+                      key={tag}
+                      className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-3 py-1 text-sm text-primary"
+                    >
+                      {interestLabel(t, tag)}
+                      <button
+                        type="button"
+                        onClick={() => removeInterest(tag)}
+                        className="ms-1 rounded-full hover:bg-primary/20"
+                        aria-label={t("profile.interests.remove")}
+                      >
+                        <X className="h-3.5 w-3.5" />
+                      </button>
+                    </span>
+                  ))}
+                </div>
+              )}
+              <div className="mt-5 space-y-4">
+                {INTEREST_CATEGORIES.map((cat) => (
+                  <div key={cat.id}>
+                    <h3 className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                      {t(`interest.cat.${cat.id}`)}
+                    </h3>
+                    <div className="mt-2 flex flex-wrap gap-2">
+                      {cat.tags.map((tag) => {
+                        const active = interests.includes(tag);
+                        return (
+                          <button
+                            key={tag}
+                            type="button"
+                            aria-pressed={active}
+                            onClick={() => toggleInterest(tag)}
+                            className={
+                              active
+                                ? "rounded-full border border-primary bg-primary px-3 py-1 text-sm text-primary-foreground"
+                                : "rounded-full border border-border px-3 py-1 text-sm text-muted-foreground transition-colors hover:border-primary/50 hover:text-foreground"
+                            }
+                          >
+                            {t(`interest.${tag}`)}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
+
+            {/* Intentions */}
+            <section className={cardClass}>
+              <h2 className="font-display text-xl">{t("profile.intentions")}</h2>
+              <p className="mt-1 text-sm text-muted-foreground">{t("profile.intentions.hint")}</p>
+              {intentions.length > 0 && (
+                <div className="mt-4 flex flex-wrap gap-2">
+                  {intentions.map((intention) => (
+                    <span
+                      key={intention}
+                      className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-3 py-1 text-sm text-primary"
+                    >
+                      {t(`onboarding.prefs.intentions.${intention}`)}
+                      <button
+                        type="button"
+                        onClick={() => toggleIntention(intention)}
+                        className="ms-1 rounded-full hover:bg-primary/20"
+                        aria-label={t("common.remove")}
+                      >
+                        <X className="h-3.5 w-3.5" />
+                      </button>
+                    </span>
+                  ))}
+                </div>
+              )}
+              <div className="mt-5 flex flex-wrap gap-2">
+                {INTENTION_OPTIONS.map((intention) => {
+                  const active = intentions.includes(intention);
+                  return (
+                    <button
+                      key={intention}
+                      type="button"
+                      aria-pressed={active}
+                      onClick={() => toggleIntention(intention)}
+                      className={
+                        active
+                          ? "rounded-full border border-primary bg-primary px-3 py-1 text-sm text-primary-foreground"
+                          : "rounded-full border border-border px-3 py-1 text-sm text-muted-foreground transition-colors hover:border-primary/50 hover:text-foreground"
+                      }
+                    >
+                      {t(`onboarding.prefs.intentions.${intention}`)}
+                    </button>
+                  );
+                })}
+              </div>
+            </section>
+
             <div className="grid gap-4 lg:grid-cols-2">
-              {/* Interests */}
+              {/* Gathering Types */}
               <section className={cardClass}>
-                <h2 className="font-display text-xl">{t("profile.interests")}</h2>
-                <p className="mt-1 text-sm text-muted-foreground">{t("profile.interests.hint")}</p>
-                {interests.length > 0 && (
+                <h2 className="font-display text-xl">{t("profile.gatheringTypes")}</h2>
+                <p className="mt-1 text-sm text-muted-foreground">{t("profile.gatheringTypes.hint")}</p>
+                {gatheringTypes.length > 0 && (
                   <div className="mt-4 flex flex-wrap gap-2">
-                    {interests.map((tag) => (
+                    {gatheringTypes.map((type) => (
                       <span
-                        key={tag}
+                        key={type}
                         className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-3 py-1 text-sm text-primary"
                       >
-                        {interestLabel(t, tag)}
+                        {t(`gatheringType.${type}`)}
                         <button
                           type="button"
-                          onClick={() => removeInterest(tag)}
+                          onClick={() => toggleGatheringType(type)}
                           className="ms-1 rounded-full hover:bg-primary/20"
-                          aria-label={t("profile.interests.remove")}
+                          aria-label={t("common.remove")}
                         >
                           <X className="h-3.5 w-3.5" />
                         </button>
@@ -437,38 +661,75 @@ function ProfilePage() {
                     ))}
                   </div>
                 )}
-                <div className="mt-5 space-y-4">
-                  {INTEREST_CATEGORIES.map((cat) => (
-                    <div key={cat.id}>
-                      <h3 className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                        {t(`interest.cat.${cat.id}`)}
-                      </h3>
-                      <div className="mt-2 flex flex-wrap gap-2">
-                        {cat.tags.map((tag) => {
-                          const active = interests.includes(tag);
-                          return (
-                            <button
-                              key={tag}
-                              type="button"
-                              aria-pressed={active}
-                              onClick={() => toggleInterest(tag)}
-                              className={
-                                active
-                                  ? "rounded-full border border-primary bg-primary px-3 py-1 text-sm text-primary-foreground"
-                                  : "rounded-full border border-border px-3 py-1 text-sm text-muted-foreground transition-colors hover:border-primary/50 hover:text-foreground"
-                              }
-                            >
-                              {t(`interest.${tag}`)}
-                            </button>
-                          );
-                        })}
+                <div className="mt-5 flex flex-wrap gap-2">
+                  {GATHERING_TYPE_OPTIONS.map((type) => {
+                    const active = gatheringTypes.includes(type);
+                    return (
+                      <button
+                        key={type}
+                        type="button"
+                        aria-pressed={active}
+                        onClick={() => toggleGatheringType(type)}
+                        className={
+                          active
+                            ? "rounded-full border border-primary bg-primary px-3 py-1 text-sm text-primary-foreground"
+                            : "rounded-full border border-border px-3 py-1 text-sm text-muted-foreground transition-colors hover:border-primary/50 hover:text-foreground"
+                        }
+                      >
+                        {t(`gatheringType.${type}`)}
+                      </button>
+                    );
+                  })}
+                </div>
+              </section>
+
+              {/* Trait Scores / Personality */}
+              <section className={cardClass}>
+                <h2 className="font-display text-xl">{t("profile.personality")}</h2>
+                <p className="mt-1 text-sm text-muted-foreground">{t("profile.personality.hint")}</p>
+                
+                <div className="mt-4 grid grid-cols-2 gap-4">
+                  {[
+                    { key: "spark", label: t("profile.aura.spark"), value: traitSpark, color: "#8B5CF6" },
+                    { key: "curiosity", label: t("profile.aura.curiosity"), value: traitCuriosity, color: "#F59E0B" },
+                    { key: "warmth", label: t("profile.aura.warmth"), value: traitWarmth, color: "#10B981" },
+                    { key: "depth", label: t("profile.aura.depth"), value: traitDepth, color: "#3B82F6" },
+                  ].map((trait) => (
+                    <div key={trait.key} className="flex items-center gap-3">
+                      <span className="text-xl" style={{ color: trait.color }}>✨</span>
+                      <div className="flex-1">
+                        <div className="flex justify-between items-center mb-1">
+                          <span className="text-sm font-medium">{trait.label}</span>
+                          <span className="text-sm font-bold">{trait.value ?? 0}%</span>
+                        </div>
+                        <div className="h-1.5 rounded-full bg-muted overflow-hidden">
+                          <div
+                            className="h-full rounded-full"
+                            style={{
+                              width: `${trait.value ?? 0}%`,
+                              backgroundColor: trait.color,
+                            }}
+                          />
+                        </div>
                       </div>
                     </div>
                   ))}
                 </div>
+                
+                <div className="mt-4">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="w-full rounded-full"
+                    onClick={() => navigate({ to: "/onboarding", search: { step: "qintro" } })}
+                  >
+                    {t("profile.retakeQuiz")}
+                  </Button>
+                </div>
               </section>
+            </div>
 
-              {/* Social links */}
+            {/* Social links */}
               <section className={cardClass}>
                 <h2 className="font-display text-xl">{t("profile.social")}</h2>
                 <div className="mt-4 grid gap-4">

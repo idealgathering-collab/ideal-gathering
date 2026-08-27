@@ -195,7 +195,6 @@ export const translations: Record<Lang, Dict> = {
     "onboarding.prefs.types.tech": "Technology & startups",
     "onboarding.prefs.types.arts": "Arts & culture",
     "onboarding.prefs.types.spontaneous": "Something spontaneous",
-    "onboarding.prefs.types.other": "Other",
     "onboarding.prefs.size.q": "What’s your ideal table?",
     "onboarding.prefs.size.hint": "Small and quiet, or a little fuller?",
     "onboarding.prefs.size.small": "2–3 people",
@@ -306,6 +305,8 @@ export const translations: Record<Lang, Dict> = {
     "create.descriptionPh": "What's this gathering about? Who should come?",
     "create.datetime": "Date & time",
     "create.seats": "Seats",
+    "create.gatheringType": "Gathering type",
+    "create.gatheringTypePh": "Select gathering type",
     "create.needsApproval":
       "The venue owner will review and approve your gathering before it appears publicly.",
     "create.sending": "Sending…",
@@ -340,6 +341,8 @@ export const translations: Record<Lang, Dict> = {
     "explore.city.browsing": "Browsing:",
     "explore.city.change": "change",
     "explore.city.all": "All cities",
+    "explore.type.browsing": "Type:",
+    "explore.allTypes": "All types",
     "explore.emptyCity.title": "No tables in {city} yet",
     "explore.emptyCity.browseAll": "Browse all cities",
     "explore.sort.label": "Sort:",
@@ -416,6 +419,8 @@ export const translations: Record<Lang, Dict> = {
     "dash.next.title": "Your Next Gathering",
     "dash.next.none": "No upcoming gatherings.",
     "dash.next.find": "Find a Gathering",
+    "dash.completeProfile": "Complete your profile",
+    "dash.completeProfileCtA": "Complete now",
     "dash.quick.title": "Quick actions",
     "dash.quick.browse": "Browse Gatherings",
     "dash.quick.host": "Host a Gathering",
@@ -607,6 +612,7 @@ export const translations: Record<Lang, Dict> = {
 
     // Profile
     "nav.profile": "Profile",
+    "nav.completeProfile": "Complete profile",
     "nav.settings": "Settings",
     "profile.group.public": "Your public info",
     "profile.group.publicHint": "What other guests see when they meet you at a table.",
@@ -698,6 +704,37 @@ export const translations: Record<Lang, Dict> = {
     "interest.festivals": "Festivals",
     "interest.volunteering": "Volunteering",
     "interest.meetups": "Meetups",
+
+    // Gathering Types
+    "gatheringType.coffee": "Coffee",
+    "gatheringType.coffee.description": "Casual meetups at coffee shops and cafes",
+    "gatheringType.food": "Food",
+    "gatheringType.food.description": "Dinner, lunch, brunch, and food-focused gatherings",
+    "gatheringType.city": "City Exploration",
+    "gatheringType.city.description": "Exploring neighborhoods, streets, and urban areas",
+    "gatheringType.outdoors": "Outdoors",
+    "gatheringType.outdoors.description": "Hiking, parks, nature, and outdoor activities",
+    "gatheringType.games": "Games",
+    "gatheringType.games.description": "Board games, card games, and game nights",
+    "gatheringType.creative": "Creative",
+    "gatheringType.creative.description": "Making, creating, DIY, and craft activities",
+    "gatheringType.arts": "Arts",
+    "gatheringType.arts.description": "Museums, galleries, concerts, and performances",
+    "gatheringType.learning": "Learning",
+    "gatheringType.learning.description": "Workshops, classes, and educational gatherings",
+    "gatheringType.books": "Books",
+    "gatheringType.books.description": "Book clubs, reading groups, and literary discussions",
+    "gatheringType.tech": "Tech",
+    "gatheringType.tech.description": "Tech meetups, coding sessions, and startup discussions",
+    "gatheringType.spontaneous": "Spontaneous",
+    "gatheringType.spontaneous.description": "Last-minute and impromptu gatherings",
+    "gatheringType.category.foodDrink": "Food & Drink",
+    "gatheringType.category.exploration": "Exploration",
+    "gatheringType.category.entertainment": "Entertainment",
+    "gatheringType.category.creative": "Creative",
+    "gatheringType.category.intellectual": "Intellectual",
+    "gatheringType.category.timing": "Timing",
+
     "profile.social": "Social links",
     "profile.website": "Website",
     "profile.dob": "Date of birth",
@@ -729,6 +766,97 @@ export const translations: Record<Lang, Dict> = {
     "profile.delete.cancel": "Cancel",
     "profile.delete.confirmButton": "Delete forever",
     "profile.delete.done": "Account deleted",
+    
+    // Guest Profile Card (Photo-first phone card)
+    "profile.loading": "Loading profile…",
+    "profile.notFound": "Profile not found",
+    "profile.notFoundMessage": "This profile doesn't exist or has been removed.",
+    "profile.error": "Couldn't load profile",
+    "profile.messageButton": "Message",
+    "profile.viewFullProfile": "View full profile",
+    
+    // Guest Profile Sectors
+    "profile.sector.aura": "Aura",
+    "profile.sector.auraHint": "Your personality vibe from the quiz",
+    "profile.sector.auraEmpty": "Take the quiz to see your aura",
+    "profile.sector.style": "Style",
+    "profile.sector.styleHint": "How you like to gather",
+    "profile.sector.styleEmpty": "Complete preferences to see your style",
+    "profile.sector.loves": "Loves",
+    "profile.sector.lovesHint": "What you're into",
+    "profile.sector.lovesEmpty": "Add interests to show what you love",
+    "profile.sector.here": "Here",
+    "profile.sector.hereHint": "What you're looking for",
+    "profile.sector.hereEmpty": "Add intentions to show what you're here for",
+    "profile.sector.story": "Story",
+    "profile.sector.storyHint": "Tables you've joined",
+    "profile.sector.storyEmpty": "Join gatherings to build your story",
+    
+    // Profile completion
+    "profile.completion.title": "Complete your profile",
+    "profile.completion.aura.title": "Personality Quiz",
+    "profile.completion.aura.prompt": "Take the 2-minute quiz to show your aura",
+    "profile.completion.style.title": "Gathering Style",
+    "profile.completion.style.prompt": "Tell us how you like to gather",
+    "profile.completion.loves.title": "Interests",
+    "profile.completion.loves.prompt": "Add what you love",
+    "profile.completion.here.title": "Intentions",
+    "profile.completion.here.prompt": "What are you here for?",
+    "profile.completion.story.title": "Your Story",
+    "profile.completion.story.prompt": "Join gatherings to build your story",
+    "profile.completion.identity.title": "Your Identity",
+    "profile.completion.identity.prompt": "Add a photo and name",
+    "profile.completion.overall": "{percent}% complete",
+    "profile.completion.complete": "Profile complete!",
+    "profile.completion.continue": "Complete profile",
+    
+    // Match explanations
+    "match.explanation.traits": "{score}% trait compatibility",
+    "match.explanation.interests": "{score}% shared interests",
+    "match.explanation.age.high": "Similar age range",
+    "match.explanation.age.good": "Compatible age range",
+    "match.explanation.age.steady": "Moderate age difference",
+    "match.explanation.age.low": "Different age range",
+    "match.explanation.title": "Why you match",
+    
+    // Aura traits
+    "profile.aura.spark": "Spark",
+    "profile.aura.curiosity": "Curiosity",
+    "profile.aura.warmth": "Warmth",
+    "profile.aura.depth": "Depth",
+    
+    // Style preferences
+    "profile.style.energy": "Energy",
+    "profile.style.groupSize": "Group Size",
+    "profile.style.talkStyle": "Conversation",
+    "profile.style.newPeople": "New People",
+    "profile.style.energyHigh": "High energy",
+    "profile.style.energyMedium": "Medium energy",
+    "profile.style.energyLow": "Low energy",
+    "profile.style.sizeIntimate": "Intimate",
+    "profile.style.sizeSmall": "Small",
+    "profile.style.sizeLarge": "Large",
+    "profile.style.talkListener": "Listener",
+    "profile.style.talkBalanced": "Balanced",
+    "profile.style.talkTalker": "Talker",
+    "profile.style.newPeopleLove": "Love meeting new people",
+    "profile.style.newPeopleNeutral": "Neutral",
+    "profile.style.newPeopleAvoid": "Prefer familiar faces",
+    
+    // Loves and Here
+    "profile.loves.more": "more",
+    "profile.here.more": "more",
+    "profile.story.more": "more",
+    
+    // Persona titles and descriptions
+    "persona.spark.title": "The Spark",
+    "persona.spark.description": "You get things moving. We'll seat you with people who'll run with it — and one or two who'll keep it grounded.",
+    "persona.curiosity.title": "The Curious Explorer",
+    "persona.curiosity.description": "New subjects, new people, no problem. Your table will be the one that goes somewhere unexpected.",
+    "persona.warmth.title": "The Warm Connector",
+    "persona.warmth.description": "You notice who hasn't spoken yet. We'll put you with people who'll appreciate it — and look after you back.",
+    "persona.depth.title": "The Deep Listener",
+    "persona.depth.description": "One real conversation beats ten small ones. Your table will be small, slow and worth staying at.",
 
     // Admin
     "admin.title": "Owner dashboard",
@@ -865,8 +993,19 @@ export const translations: Record<Lang, Dict> = {
     "profile.neighborhood": "Neighborhood",
     "profile.neighborhoodPh": "e.g. Kadıköy",
     "profile.selectNeighborhood": "Select neighborhood",
-
-    // Privacy
+    
+    // Profile - Intentions
+    "profile.intentions": "Intentions",
+    "profile.intentions.hint": "What are you hoping to find at gatherings?",
+    
+    // Profile - Gathering Types
+    "profile.gatheringTypes": "Gathering Types",
+    "profile.gatheringTypes.hint": "What types of gatherings do you prefer?",
+    
+    // Profile - Personality
+    "profile.personality": "Personality",
+    "profile.personality.hint": "Your trait scores from the quiz",
+    "profile.retakeQuiz": "Retake personality quiz",
     "privacy.title": "Privacy Policy",
     "privacy.updated": "Last updated July 2026",
     "privacy.intro.title": "Introduction",
@@ -1563,7 +1702,6 @@ export const translations: Record<Lang, Dict> = {
     "onboarding.prefs.types.tech": "Teknoloji ve girişimler",
     "onboarding.prefs.types.arts": "Sanat ve kültür",
     "onboarding.prefs.types.spontaneous": "Anlık bir şeyler",
-    "onboarding.prefs.types.other": "Diğer",
     "onboarding.prefs.size.q": "İdeal masan nasıl?",
     "onboarding.prefs.size.hint": "Küçük ve sakin mi, biraz daha kalabalık mı?",
     "onboarding.prefs.size.small": "2–3 kişi",
@@ -1674,6 +1812,8 @@ export const translations: Record<Lang, Dict> = {
     "create.descriptionPh": "Bu buluşma ne hakkında? Kimler gelmeli?",
     "create.datetime": "Tarih ve saat",
     "create.seats": "Koltuk",
+    "create.gatheringType": "Buluşma türü",
+    "create.gatheringTypePh": "Buluşma türü seç",
     "create.needsApproval":
       "Mekân sahibi, buluşman herkese açılmadan önce inceleyip onaylayacak.",
     "create.sending": "Gönderiliyor…",
@@ -1708,6 +1848,8 @@ export const translations: Record<Lang, Dict> = {
     "explore.city.browsing": "Görüntülenen:",
     "explore.city.change": "değiştir",
     "explore.city.all": "Tüm şehirler",
+    "explore.type.browsing": "Tür:",
+    "explore.allTypes": "Tüm türler",
     "explore.emptyCity.title": "{city} şehrinde henüz masa yok",
     "explore.emptyCity.browseAll": "Tüm şehirlere göz at",
     "explore.sort.label": "Sırala:",
@@ -1784,6 +1926,8 @@ export const translations: Record<Lang, Dict> = {
     "dash.next.title": "Sıradaki Buluşman",
     "dash.next.none": "Yaklaşan buluşma yok.",
     "dash.next.find": "Buluşma Bul",
+    "dash.completeProfile": "Profilini tamamla",
+    "dash.completeProfileCtA": "Şimdi tamamla",
     "dash.quick.title": "Hızlı işlemler",
     "dash.quick.browse": "Buluşmalara Göz At",
     "dash.quick.host": "Buluşmaya Ev Sahipliği Yap",
@@ -1975,6 +2119,7 @@ export const translations: Record<Lang, Dict> = {
 
     // Profile
     "nav.profile": "Profil",
+    "nav.completeProfile": "Profili tamamla",
     "nav.settings": "Ayarlar",
     "profile.group.public": "Herkese açık bilgilerin",
     "profile.group.publicHint": "Masada tanıştığın kişilerin gördükleri.",
@@ -2080,6 +2225,37 @@ export const translations: Record<Lang, Dict> = {
     "interest.festivals": "Festivaller",
     "interest.volunteering": "Gönüllülük",
     "interest.meetups": "Buluşmalar",
+
+    // Gathering Types
+    "gatheringType.coffee": "Kahve",
+    "gatheringType.coffee.description": "Kafe ve kahve dükkanlarında rahat buluşmalar",
+    "gatheringType.food": "Yemek",
+    "gatheringType.food.description": "Akşam yemeği, öğle yemeği, kahvaltı ve yemek odaklı buluşmalar",
+    "gatheringType.city": "Şehir Keşfi",
+    "gatheringType.city.description": "Mahalleleri, sokakları ve kentsel alanları keşfetmek",
+    "gatheringType.outdoors": "Açık Hava",
+    "gatheringType.outdoors.description": "Yürüyüş, parklar, doğa ve açık hava aktiviteleri",
+    "gatheringType.games": "Oyunlar",
+    "gatheringType.games.description": "Masa oyunları, kart oyunları ve oyun geceleri",
+    "gatheringType.creative": "Yaratıcı",
+    "gatheringType.creative.description": "Yapmak, yaratmak, DIY ve el işi aktiviteleri",
+    "gatheringType.arts": "Sanat",
+    "gatheringType.arts.description": "Müzeler, galeriler, konserler ve performanslar",
+    "gatheringType.learning": "Öğrenme",
+    "gatheringType.learning.description": "Atölyeler, dersler ve eğitim buluşmaları",
+    "gatheringType.books": "Kitaplar",
+    "gatheringType.books.description": "Kitap kulüpleri, okuma grupları ve edebi tartışmalar",
+    "gatheringType.tech": "Teknoloji",
+    "gatheringType.tech.description": "Teknoloji buluşmaları, kodlama oturumları ve girişim tartışmaları",
+    "gatheringType.spontaneous": "Anlık",
+    "gatheringType.spontaneous.description": "Son dakika ve anlık buluşmalar",
+    "gatheringType.category.foodDrink": "Yeme & İçme",
+    "gatheringType.category.exploration": "Keşif",
+    "gatheringType.category.entertainment": "Eğlence",
+    "gatheringType.category.creative": "Yaratıcı",
+    "gatheringType.category.intellectual": "Entellektüel",
+    "gatheringType.category.timing": "Zamanlama",
+
     "profile.social": "Sosyal bağlantılar",
     "profile.website": "Web sitesi",
     "profile.displayName": "Görünen ad",
@@ -2097,6 +2273,97 @@ export const translations: Record<Lang, Dict> = {
     "profile.delete.cancel": "Vazgeç",
     "profile.delete.confirmButton": "Kalıcı olarak sil",
     "profile.delete.done": "Hesap silindi",
+    
+    // Guest Profile Card
+    "profile.loading": "Profil yükleniyor…",
+    "profile.notFound": "Profil bulunamadı",
+    "profile.notFoundMessage": "Bu profil mevcut değil veya kaldırılmış.",
+    "profile.error": "Profil yüklenemedi",
+    "profile.messageButton": "Mesaj gönder",
+    "profile.viewFullProfile": "Tüm profilini gör",
+    
+    // Guest Profile Sectors
+    "profile.sector.aura": "Aura",
+    "profile.sector.auraHint": "Testten kişilik duruşun",
+    "profile.sector.auraEmpty": "Auranı görmek için testi çöz",
+    "profile.sector.style": "Stil",
+    "profile.sector.styleHint": "Nasıl buluştuğunu",
+    "profile.sector.styleEmpty": "Tercihlerini tamamla stilini gör",
+    "profile.sector.loves": "İlgi alanları",
+    "profile.sector.lovesHint": "Ne sevdiğin",
+    "profile.sector.lovesEmpty": "İlgi alanları ekle",
+    "profile.sector.here": "Amaç",
+    "profile.sector.hereHint": "Ne aradığını",
+    "profile.sector.hereEmpty": "Niyet ekle",
+    "profile.sector.story": "Hikaye",
+    "profile.sector.storyHint": "Katıldığın masalar",
+    "profile.sector.storyEmpty": "Buluşmalara katıl hikayeni oluştur",
+    
+    // Profile completion
+    "profile.completion.title": "Profilini tamamla",
+    "profile.completion.aura.title": "Kişilik Testi",
+    "profile.completion.aura.prompt": "2 dakikalık testi çöz auranı gör",
+    "profile.completion.style.title": "Buluşma Stili",
+    "profile.completion.style.prompt": "Nasıl buluştuğunu anlat",
+    "profile.completion.loves.title": "İlgi Alanları",
+    "profile.completion.loves.prompt": "Sevdiklerini ekle",
+    "profile.completion.here.title": "Amaçlar",
+    "profile.completion.here.prompt": "Burada ne arıyorsun?",
+    "profile.completion.story.title": "Hikayen",
+    "profile.completion.story.prompt": "Buluşmalara katıl hikayeni oluştur",
+    "profile.completion.identity.title": "Kimliğin",
+    "profile.completion.identity.prompt": "Fotoğraf ve isim ekle",
+    "profile.completion.overall": "%{percent} tamam",
+    "profile.completion.complete": "Profil tamam!",
+    "profile.completion.continue": "Profili tamamla",
+    
+    // Match explanations
+    "match.explanation.traits": "%{score} kişilik uyumu",
+    "match.explanation.interests": "%{score} ortak ilgi alanı",
+    "match.explanation.age.high": "Benzer yaş aralığı",
+    "match.explanation.age.good": "Uyumlu yaş aralığı",
+    "match.explanation.age.steady": "Orta düzey yaş farkı",
+    "match.explanation.age.low": "Farklı yaş aralığı",
+    "match.explanation.title": "Neden uyuşuyorsunuz",
+    
+    // Aura traits
+    "profile.aura.spark": "Kıvılcım",
+    "profile.aura.curiosity": "Merak",
+    "profile.aura.warmth": "Sıcaklık",
+    "profile.aura.depth": "Derinlik",
+    
+    // Style preferences
+    "profile.style.energy": "Enerji",
+    "profile.style.groupSize": "Grup Boyutu",
+    "profile.style.talkStyle": "Sohbet",
+    "profile.style.newPeople": "Yeni İnsanlar",
+    "profile.style.energyHigh": "Yüksek enerji",
+    "profile.style.energyMedium": "Orta enerji",
+    "profile.style.energyLow": "Düşük enerji",
+    "profile.style.sizeIntimate": "Samimi",
+    "profile.style.sizeSmall": "Küçük",
+    "profile.style.sizeLarge": "Büyük",
+    "profile.style.talkListener": "Dinleyici",
+    "profile.style.talkBalanced": "Denge",
+    "profile.style.talkTalker": "Konuşmacı",
+    "profile.style.newPeopleLove": "Yeni insanları seviyorum",
+    "profile.style.newPeopleNeutral": "Tarafsız",
+    "profile.style.newPeopleAvoid": "Tanıdık yüzleri tercih ederim",
+    
+    // Loves and Here
+    "profile.loves.more": "daha fazla",
+    "profile.here.more": "daha fazla",
+    "profile.story.more": "daha fazla",
+    
+    // Persona titles and descriptions
+    "persona.spark.title": "Kıvılcım",
+    "persona.spark.description": "İşleri sen başlatırsın. Seni bu enerjiyi sürdürecek kişilerle ve dengeyi koruyacak bir ikiliyle oturturuz.",
+    "persona.curiosity.title": "Meraklı Kaşif",
+    "persona.curiosity.description": "Yeni konular, yeni insanlar, sorun değil. Masan beklenmedik yerlere giden masa olacak.",
+    "persona.warmth.title": "Sıcak Bağ Kuran",
+    "persona.warmth.description": "Kimin konuşmadığını fark edersin. Seni bunun kıymetini bilen ve sana da göz kulak olacak kişilerle oturturuz.",
+    "persona.depth.title": "Derin Dinleyici",
+    "persona.depth.description": "Tek gerçek bir sohbet, on yüzeysel sohbete bedeldir. Masan küçük, sakin ve kalmaya değer olacak.",
 
     // Admin
     "admin.title": "Sahip paneli",
@@ -2228,6 +2495,19 @@ export const translations: Record<Lang, Dict> = {
     "profile.neighborhood": "Mahalle / Semt",
     "profile.neighborhoodPh": "örn. Kadıköy",
     "profile.selectNeighborhood": "Mahalle seç",
+    
+    // Profile - Intentions
+    "profile.intentions": "Niyetler",
+    "profile.intentions.hint": "Buluşmalardan ne bulmayı umuyorsunuz?",
+    
+    // Profile - Gathering Types
+    "profile.gatheringTypes": "Buluşma Türleri",
+    "profile.gatheringTypes.hint": "Hangi tür buluşmaları tercih edersiniz?",
+    
+    // Profile - Personality
+    "profile.personality": "Kişilik",
+    "profile.personality.hint": "Testten aldığınız özellik puanları",
+    "profile.retakeQuiz": "Kişilik testini yenile",
 
     // Privacy
     "privacy.title": "Gizlilik Politikası",
@@ -2917,7 +3197,6 @@ export const translations: Record<Lang, Dict> = {
     "onboarding.prefs.types.tech": "فناوری و استارتاپ",
     "onboarding.prefs.types.arts": "هنر و فرهنگ",
     "onboarding.prefs.types.spontaneous": "چیزی خودجوش",
-    "onboarding.prefs.types.other": "موارد دیگر",
     "onboarding.prefs.size.q": "میز ایده‌آل شما چند نفره است؟",
     "onboarding.prefs.size.hint": "کوچک و آرام یا کمی پرجمعیت‌تر؟",
     "onboarding.prefs.size.small": "۲ تا ۳ نفر",
@@ -3028,6 +3307,8 @@ export const translations: Record<Lang, Dict> = {
     "create.descriptionPh": "این گردهمایی دربارهٔ چیست؟ چه کسانی بیایند؟",
     "create.datetime": "تاریخ و ساعت",
     "create.seats": "صندلی",
+    "create.gatheringType": "نوع گردهمایی",
+    "create.gatheringTypePh": "نوع گردهمایی را انتخاب کنید",
     "create.needsApproval":
       "صاحب مکان قبل از انتشار عمومی، گردهمایی شما را بررسی و تأیید می‌کند.",
     "create.sending": "در حال ارسال…",
@@ -3062,6 +3343,8 @@ export const translations: Record<Lang, Dict> = {
     "explore.city.browsing": "در حال مرور:",
     "explore.city.change": "تغییر",
     "explore.city.all": "همه شهرها",
+    "explore.type.browsing": "نوع:",
+    "explore.allTypes": "همه انواع",
     "explore.emptyCity.title": "هنوز میزی در {city} نیست",
     "explore.emptyCity.browseAll": "مرور همه شهرها",
     "explore.sort.label": "مرتب‌سازی:",
@@ -3138,6 +3421,8 @@ export const translations: Record<Lang, Dict> = {
     "dash.next.title": "گردهمایی بعدی شما",
     "dash.next.none": "گردهمایی پیش‌رو نیست.",
     "dash.next.find": "پیدا کردن گردهمایی",
+    "dash.completeProfile": "پروفایل خود را کامل کنید",
+    "dash.completeProfileCtA": "اکنون کامل کنید",
     "dash.quick.title": "عملیات سریع",
     "dash.quick.browse": "مرور گردهمایی‌ها",
     "dash.quick.host": "میزبانی گردهمایی",
@@ -3329,6 +3614,7 @@ export const translations: Record<Lang, Dict> = {
 
     // Profile
     "nav.profile": "پروفایل",
+    "nav.completeProfile": "تکمیل پروفایل",
     "nav.settings": "تنظیمات",
     "profile.group.public": "اطلاعات عمومی شما",
     "profile.group.publicHint": "آنچه دیگران هنگام دیدار سر میز می‌بینند.",
@@ -3434,6 +3720,37 @@ export const translations: Record<Lang, Dict> = {
     "interest.festivals": "فستیوال",
     "interest.volunteering": "داوطلبی",
     "interest.meetups": "دورهمی‌ها",
+
+    // Gathering Types
+    "gatheringType.coffee": "قهوه",
+    "gatheringType.coffee.description": "دورهمی‌های صمیمانه در کافه‌ها",
+    "gatheringType.food": "غذا",
+    "gatheringType.food.description": "شام، نهار، صبحانه و دورهمی‌های غذایی",
+    "gatheringType.city": "کاوش شهری",
+    "gatheringType.city.description": "کاوش محله‌ها، خیابان‌ها و مناطق شهری",
+    "gatheringType.outdoors": "طبیعت",
+    "gatheringType.outdoors.description": "پیاده‌روی، پارک‌ها، طبیعت و فعالیت‌های فضای باز",
+    "gatheringType.games": "بازی",
+    "gatheringType.games.description": "بازی‌های رومیزی، کارت و شب‌های بازی",
+    "gatheringType.creative": "خلاقیت",
+    "gatheringType.creative.description": "ساختن، خلق کردن، DIY و فعالیت‌های دستی",
+    "gatheringType.arts": "هنر",
+    "gatheringType.arts.description": "موزه‌ها، گالری‌ها، کنسرت‌ها و اجراها",
+    "gatheringType.learning": "یادگیری",
+    "gatheringType.learning.description": "کارگاه‌ها، کلاس‌ها و دورهمی‌های آموزشی",
+    "gatheringType.books": "کتاب",
+    "gatheringType.books.description": " باشگاه‌های کتاب، گروه‌های مطالعه و بحث‌های ادبی",
+    "gatheringType.tech": "فناوری",
+    "gatheringType.tech.description": "دورهمی‌های فناوری، جلسات کد نویسی و بحث‌های استارتاپی",
+    "gatheringType.spontaneous": "خودجوش",
+    "gatheringType.spontaneous.description": "دورهمی‌های آنی و خودجوش",
+    "gatheringType.category.foodDrink": "خوراک و نوشیدنی",
+    "gatheringType.category.exploration": "کاوش",
+    "gatheringType.category.entertainment": "سرگرمی",
+    "gatheringType.category.creative": "خلاقیت",
+    "gatheringType.category.intellectual": "فکری",
+    "gatheringType.category.timing": "زمان‌بندی",
+
     "profile.social": "لینک‌های اجتماعی",
     "profile.website": "وب‌سایت",
     "profile.displayName": "نام نمایشی",
@@ -3451,6 +3768,97 @@ export const translations: Record<Lang, Dict> = {
     "profile.delete.cancel": "انصراف",
     "profile.delete.confirmButton": "حذف برای همیشه",
     "profile.delete.done": "حساب حذف شد",
+    
+    // Guest Profile Card
+    "profile.loading": "در حال بارگذاری پروفایل…",
+    "profile.notFound": "پروفایل یافت نشد",
+    "profile.notFoundMessage": "این پروفایل وجود ندارد یا حذف شده است.",
+    "profile.error": "بارگذاری پروفایل ممکن نشد",
+    "profile.messageButton": "ارسال پیام",
+    "profile.viewFullProfile": "مشاهدهٔ پروفایل کامل",
+    
+    // Guest Profile Sectors
+    "profile.sector.aura": "حالت",
+    "profile.sector.auraHint": "شخصیت‌تان از آزمون",
+    "profile.sector.auraEmpty": "برای دیدن حالت آزمون را انجام دهید",
+    "profile.sector.style": "سبک",
+    "profile.sector.styleHint": "چطور دور هم جمع می‌شوید",
+    "profile.sector.styleEmpty": "ترجیحات را کامل کنید تا سبک‌تان را ببینید",
+    "profile.sector.loves": "علایق",
+    "profile.sector.lovesHint": "چه چیزهایی دوست دارید",
+    "profile.sector.lovesEmpty": "علایق اضافه کنید",
+    "profile.sector.here": "هدف",
+    "profile.sector.hereHint": "به دنبال چه هستید",
+    "profile.sector.hereEmpty": "نیت‌ها را اضافه کنید",
+    "profile.sector.story": "داستان",
+    "profile.sector.storyHint": "میزهایی که به آن‌ها پیوسته‌اید",
+    "profile.sector.storyEmpty": "به گردهمایی‌ها بپیوندید تا داستان‌تان ساخته شود",
+    
+    // Profile completion
+    "profile.completion.title": "پروفایل خود را کامل کنید",
+    "profile.completion.aura.title": "آزمون شخصیت",
+    "profile.completion.aura.prompt": "آزمون ۲ دقیقه‌ای را انجام دهید تا حالت خود را ببینید",
+    "profile.completion.style.title": "سبک گردهمایی",
+    "profile.completion.style.prompt": "بگوید چطور دور هم جمع می‌شوید",
+    "profile.completion.loves.title": "علایق",
+    "profile.completion.loves.prompt": "چیزهایی که دوست دارید را اضافه کنید",
+    "profile.completion.here.title": "نیت‌ها",
+    "profile.completion.here.prompt": "به دنبال چه هستید؟",
+    "profile.completion.story.title": "داستان شما",
+    "profile.completion.story.prompt": "به گردهمایی‌ها بپیوندید تا داستان‌تان ساخته شود",
+    "profile.completion.identity.title": "هویت شما",
+    "profile.completion.identity.prompt": "عکس و نام اضافه کنید",
+    "profile.completion.overall": "%{percent} کامل",
+    "profile.completion.complete": "پروفایل کامل!",
+    "profile.completion.continue": "تکمیل پروفایل",
+    
+    // Match explanations
+    "match.explanation.traits": "{score}٪ هماهنگی شخصیت",
+    "match.explanation.interests": "{score}٪ علایق مشترک",
+    "match.explanation.age.high": "رنج سنی مشابه",
+    "match.explanation.age.good": "رنج سنی سازگار",
+    "match.explanation.age.steady": "تفاوت سنی متوسط",
+    "match.explanation.age.low": "رنج سنی متفاوت",
+    "match.explanation.title": "چرا با هم جورید",
+    
+    // Aura traits
+    "profile.aura.spark": "جرقه",
+    "profile.aura.curiosity": "کنجکاوی",
+    "profile.aura.warmth": "گرمی",
+    "profile.aura.depth": "عمق",
+    
+    // Style preferences
+    "profile.style.energy": "انرژی",
+    "profile.style.groupSize": "اندازه گروه",
+    "profile.style.talkStyle": "مکالمه",
+    "profile.style.newPeople": "آدم‌های جدید",
+    "profile.style.energyHigh": "انرژی بالا",
+    "profile.style.energyMedium": "انرژی متوسط",
+    "profile.style.energyLow": "انرژی پایین",
+    "profile.style.sizeIntimate": "صمیمانه",
+    "profile.style.sizeSmall": "کوچک",
+    "profile.style.sizeLarge": "بزرگ",
+    "profile.style.talkListener": "شنونده",
+    "profile.style.talkBalanced": "متعادل",
+    "profile.style.talkTalker": "حرف‌زن",
+    "profile.style.newPeopleLove": "دوست دارم آدم‌های جدید ملاقات کنم",
+    "profile.style.newPeopleNeutral": "بی‌تفاوت",
+    "profile.style.newPeopleAvoid": "چهره‌های آشنا را ترجیح می‌دهم",
+    
+    // Loves and Here
+    "profile.loves.more": "بیشتر",
+    "profile.here.more": "بیشتر",
+    "profile.story.more": "بیشتر",
+    
+    // Persona titles and descriptions
+    "persona.spark.title": "جرقه",
+    "persona.spark.description": "شما ماجرا را راه می‌اندازید. کنار کسانی می‌نشانیم‌تان که همراهی‌تان کنند و یکی‌دو نفر که زمین را نگه دارند.",
+    "persona.curiosity.title": "کنجکاوی",
+    "persona.curiosity.description": "موضوع تازه، آدم تازه، مشکلی نیست. میز شما همانی است که به جاهای غیرمنتظره می‌رود.",
+    "persona.warmth.title": "پیونددهندهٔ گرم",
+    "persona.warmth.description": "می‌فهمید چه کسی هنوز حرف نزده. کنار کسانی می‌نشانیم‌تان که قدرش را بدانند و هوای‌تان را داشته باشند.",
+    "persona.depth.title": "شنوندهٔ عمیق",
+    "persona.depth.description": "یک گفت‌وگوی واقعی از ده گفت‌وگوی سطحی بهتر است. میز شما کوچک، آرام و ارزش ماندن دارد.",
 
     // Admin
     "admin.title": "داشبورد مالک",
@@ -3587,6 +3995,19 @@ export const translations: Record<Lang, Dict> = {
     "profile.neighborhood": "محله",
     "profile.neighborhoodPh": "مثلاً: تجریش",
     "profile.selectNeighborhood": "انتخاب محله",
+    
+    // Profile - Intentions
+    "profile.intentions": "قصدها",
+    "profile.intentions.hint": "از گردهمایی‌ها چه می‌خواهید؟",
+    
+    // Profile - Gathering Types
+    "profile.gatheringTypes": "انواع گردهمایی",
+    "profile.gatheringTypes.hint": "چه نوع گردهمایی‌هایی را ترجیح می‌دهید؟",
+    
+    // Profile - Personality
+    "profile.personality": "شخصیت",
+    "profile.personality.hint": "امتیازهای ویژگی‌های شما از آزمون",
+    "profile.retakeQuiz": "تکرار آزمون شخصیت",
 
     // Privacy
     "privacy.title": "سیاست حریم خصوصی",

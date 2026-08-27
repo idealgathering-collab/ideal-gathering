@@ -1,11 +1,12 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { Sparkles, ArrowRight } from "lucide-react";
+import { Sparkles, ArrowRight, Tag } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { GatheringCard } from "@/components/gathering-card";
 import { CityFilter } from "@/components/city-filter";
 import { ExploreSort } from "@/components/explore-sort";
+import { GatheringTypeFilter } from "@/components/gathering-type-filter";
 import { RecommendedRow } from "@/components/recommended-row";
 import { TakeQuizNudge } from "@/components/table-fit";
 import { Button } from "@/components/ui/button";
@@ -16,13 +17,14 @@ import { toast } from "sonner";
 import { getTableFit } from "@/lib/matching.functions";
 import { composeRank, preferenceScore } from "@/lib/recommend";
 import { hasAnyAnswer, loadMyGatheringPreferences } from "@/lib/gathering-preferences";
+import { GATHERING_TYPES, type GatheringType } from "@/lib/gathering-types";
 import { supabase } from "@/integrations/supabase/client";
 import { useSession } from "@/hooks/use-session";
 import { useI18n, useT } from "@/i18n";
 import { localizedHead, jsonLdGatheringList, type SeoLang } from "@/lib/seo";
 import { JsonLd } from "@/components/json-ld";
 
-type ExploreSearch = { lang?: SeoLang; city?: string; sort?: SortMode };
+type ExploreSearch = { lang?: SeoLang; city?: string; sort?: SortMode; type?: GatheringType };
 
 export const Route = createFileRoute("/explore")({
   component: Explore,
@@ -30,6 +32,7 @@ export const Route = createFileRoute("/explore")({
     ...(search.lang === "tr" || search.lang === "fa" ? { lang: search.lang } : {}),
     ...(typeof search.city === "string" && search.city.trim() ? { city: search.city.trim() } : {}),
     ...(isSortMode(search.sort) ? { sort: search.sort } : {}),
+    ...(typeof search.type === "string" && GATHERING_TYPES.includes(search.type as GatheringType) ? { type: search.type } : {}),
   }),
   head: ({ match }) => localizedHead("/explore", match.search.lang),
 });
@@ -67,6 +70,7 @@ function Explore() {
   const hasExplicitChoice = !!search.city;
   const waitingForProfile = !!user && !hasExplicitChoice && profileLoading;
   const activeCity = hasExplicitChoice ? explicitCity : profileCity ?? null;
+  const activeType = search.type ?? null;
 
   const { data: cities } = useQuery({
     queryKey: ["gathering-cities"],
@@ -74,15 +78,23 @@ function Explore() {
   });
 
   const { data: gatherings, isLoading } = useQuery({
-    queryKey: ["gatherings", "approved", activeCity ?? "all"],
+    queryKey: ["gatherings", "approved", activeCity ?? "all", activeType ?? "all"],
     enabled: !waitingForProfile,
-    queryFn: () => fetchApprovedGatherings(activeCity),
+    queryFn: () => fetchApprovedGatherings(activeCity, activeType),
   });
 
   function setCity(city: string | null) {
     navigate({
       to: "/explore",
       search: (prev: ExploreSearch) => ({ ...prev, city: city ?? "all" }),
+      replace: true,
+    });
+  }
+
+  function setGatheringType(type: GatheringType | null) {
+    navigate({
+      to: "/explore",
+      search: (prev: ExploreSearch) => ({ ...prev, type: type ?? undefined }),
       replace: true,
     });
   }
@@ -172,6 +184,7 @@ function Explore() {
       <main className="mx-auto max-w-6xl px-4 py-14">
         <div className="mb-8 flex flex-wrap items-center gap-3">
           <CityFilter city={activeCity} cities={cities ?? []} onChange={setCity} />
+          <GatheringTypeFilter type={activeType} onChange={setGatheringType} />
           <ExploreSort
             mode={sortMode}
             onChange={setSort}

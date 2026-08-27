@@ -77,6 +77,7 @@ export type PublicGathering = {
   status: string;
   venue_name: string | null;
   neighborhood: string | null;
+  gathering_type: string | null;
   attendee_count: number;
   business: {
     id: string;
@@ -88,7 +89,7 @@ export type PublicGathering = {
 };
 
 const PUBLIC_GATHERING_COLS =
-  "id, subject, description, starts_at, seats, status, venue_name, neighborhood, business:businesses(id,name,city,address,cover_url), gathering_attendees(user_id)";
+  "id, subject, description, starts_at, seats, status, venue_name, neighborhood, gathering_type, business:businesses(id,name,city,address,cover_url), gathering_attendees(user_id)";
 
 type RawGathering = Record<string, unknown>;
 
@@ -102,6 +103,7 @@ function toPublicGathering(row: RawGathering): PublicGathering {
     status: row.status as string,
     venue_name: (row.venue_name as string | null) ?? null,
     neighborhood: (row.neighborhood as string | null) ?? null,
+    gathering_type: (row.gathering_type as string | null) ?? null,
     attendee_count: (row.gathering_attendees as Array<unknown> | null)?.length ?? 0,
     business: (row.business as PublicGathering["business"]) ?? null,
   };

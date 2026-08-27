@@ -11,6 +11,7 @@ export type GatheringCard = {
   venue_name: string;
   neighborhood: string;
   city: string | null;
+  gathering_type?: string | null;
   lat?: number | null;
   lng?: number | null;
   business: {
@@ -43,15 +44,16 @@ function upcomingCutoff() {
  * Approved upcoming gatherings. Pass a city to scope the feed to one market;
  * pass null/undefined to browse every city.
  */
-export async function fetchApprovedGatherings(city?: string | null): Promise<GatheringCard[]> {
+export async function fetchApprovedGatherings(city?: string | null, gatheringType?: string | null): Promise<GatheringCard[]> {
   let query = supabase
     .from("gatherings")
     .select(
-      "id, subject, description, starts_at, seats, venue_name, neighborhood, city, lat, lng, business:businesses(id,name,city,cover_url,lat,lng), table:venue_tables(id,label), gathering_attendees(user_id)"
+      "id, subject, description, starts_at, seats, venue_name, neighborhood, city, lat, lng, gathering_type, business:businesses(id,name,city,cover_url,lat,lng), table:venue_tables(id,label), gathering_attendees(user_id)"
     )
     .eq("status", "approved")
     .gte("starts_at", upcomingCutoff());
   if (city) query = query.eq("city", city);
+  if (gatheringType) query = query.eq("gathering_type", gatheringType);
   const { data, error } = await query.order("starts_at", { ascending: true }).limit(60);
   if (error) throw error;
   return (data ?? []).map((row) => ({
@@ -63,6 +65,7 @@ export async function fetchApprovedGatherings(city?: string | null): Promise<Gat
     venue_name: row.venue_name ?? "",
     neighborhood: row.neighborhood ?? "",
     city: row.city ?? null,
+    gathering_type: (row as { gathering_type?: string | null }).gathering_type ?? null,
     lat: (row as { lat?: number | null }).lat ?? null,
     lng: (row as { lng?: number | null }).lng ?? null,
     business: row.business as GatheringCard["business"],
@@ -92,7 +95,7 @@ export async function fetchGathering(id: string) {
   const { data, error } = await supabase
     .from("gatherings")
     .select(
-      "id, subject, description, starts_at, seats, status, host_id, venue_name, neighborhood, business:businesses(id,name,city,address,cover_url), table:venue_tables(id,label,capacity), gathering_attendees(user_id)"
+      "id, subject, description, starts_at, seats, status, host_id, venue_name, neighborhood, gathering_type, business:businesses(id,name,city,address,cover_url), table:venue_tables(id,label,capacity), gathering_attendees(user_id)"
     )
     .eq("id", id)
     .maybeSingle();

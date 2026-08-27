@@ -1,4 +1,5 @@
 import { z } from "zod";
+import type { GatheringType } from "@/lib/gathering-types";
 
 /** Sentinel value for the "add a new location" item in the location select. */
 export const ADD_NEW_LOCATION = "__add";
@@ -10,6 +11,7 @@ export const createGatheringSchema = z.object({
   description: z.string().trim().max(800).optional().or(z.literal("")),
   starts_at: z.string().min(1, "Pick a date & time"),
   seats: z.coerce.number().int().min(2).max(30),
+  gathering_type: z.string().optional(),
 });
 
 export type CreateGatheringValues = z.infer<typeof createGatheringSchema>;

@@ -1,7 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { CalendarClock, MapPin, Users, ArrowLeft, Coffee, Lock, CalendarPlus, Share2, Flag } from "lucide-react";
+import { CalendarClock, MapPin, Users, ArrowLeft, Coffee, Lock, CalendarPlus, Share2, Flag, Tag } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { MenuSection } from "@/components/menu-section";
 import { GatheringChat, GatheringChecklist } from "@/components/gathering-room";
@@ -201,6 +201,15 @@ function GatheringDetail() {
             </div>
           </div>
         </div>
+
+        {g.gathering_type && (
+          <div className="mt-4">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-3 py-1 text-sm text-primary">
+              <Tag className="h-3.5 w-3.5" />
+              {t(`gatheringType.${g.gathering_type}`)}
+            </span>
+          </div>
+        )}
 
         {fit && (
           <div className="mt-6">

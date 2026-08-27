@@ -1,3 +1,4 @@
+import { GATHERING_TYPES, MAX_GATHERING_TYPES, type GatheringType } from "@/lib/gathering-types";
 import { supabase } from "@/integrations/supabase/client";
 
 /** Stable machine-readable option values for the gathering preference questions. */
@@ -12,20 +13,11 @@ export const INTENTION_OPTIONS = [
   "get_out",
 ] as const;
 
-export const GATHERING_TYPE_OPTIONS = [
-  "coffee",
-  "food",
-  "city",
-  "outdoors",
-  "games",
-  "creative",
-  "learning",
-  "books",
-  "tech",
-  "arts",
-  "spontaneous",
-  "other",
-] as const;
+/**
+ * Gathering type options for user preferences.
+ * Must match GATHERING_TYPES from gathering-types.ts for consistency.
+ */
+export const GATHERING_TYPE_OPTIONS: readonly GatheringType[] = GATHERING_TYPES;
 
 /** value === null means "I don't really mind". */
 export const GROUP_SIZE_OPTIONS = [
@@ -41,10 +33,11 @@ export const SPONTANEITY_OPTIONS = ["spontaneous", "sometimes", "some_planning",
 export const STRANGER_COMFORT_OPTIONS = ["love_it", "comfortable", "familiar_face", "warm_up"] as const;
 
 export const MAX_INTENTIONS = 3;
+export { MAX_GATHERING_TYPES } from "@/lib/gathering-types";
 
 export type GatheringPreferences = {
   intentions: string[];
-  gathering_types: string[];
+  gathering_types: GatheringType[];
   preferred_group_size: number | null;
   social_energy: string | null;
   conversation_style: string | null;

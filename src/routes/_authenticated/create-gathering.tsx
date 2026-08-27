@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { ADD_NEW_LOCATION, createGatheringSchema } from "@/lib/create-gathering-rules";
 import { toast } from "sonner";
@@ -24,6 +24,7 @@ import {
 } from "@/components/ui/select";
 import { SavedLocationDialog } from "@/components/saved-location-dialog";
 import { useT } from "@/i18n";
+import { GATHERING_TYPES, GATHERING_TYPE_CATEGORIES, DEFAULT_GATHERING_TYPE, type GatheringType } from "@/lib/gathering-types";
 
 export const Route = createFileRoute("/_authenticated/create-gathering")({
   component: CreateGathering,
@@ -63,14 +64,6 @@ function CreateGathering() {
   const [loading, setLoading] = useState(false);
   const [addOpen, setAddOpen] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [form, setForm] = useState({
-    location: "",
-    subject: "",
-    description: "",
-    starts_at: "",
-    seats: 4,
-  });
-
   const emailVerified = Boolean(user?.email_confirmed_at);
 
   const { data: profileCountry } = useQuery({
@@ -81,6 +74,35 @@ function CreateGathering() {
       return (data?.country ?? null) as string | null;
     },
   });
+
+  const { data: userGatheringTypes } = useQuery({
+    queryKey: ["user-gathering-types", user?.id],
+    enabled: !!user,
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("user_gathering_preferences")
+        .select("gathering_types")
+        .eq("user_id", user!.id)
+        .maybeSingle();
+      return (data?.gathering_types as GatheringType[] ?? []) as GatheringType[];
+    },
+  });
+
+  const [form, setForm] = useState({
+    location: "",
+    subject: "",
+    description: "",
+    starts_at: "",
+    seats: 4,
+    gathering_type: "",
+  });
+
+  // Set initial gathering type from user preferences
+  useEffect(() => {
+    if (userGatheringTypes && userGatheringTypes.length > 0 && !form.gathering_type) {
+      setForm((prev) => ({ ...prev, gathering_type: userGatheringTypes[0] }));
+    }
+  }, [userGatheringTypes, form.gathering_type]);
 
   const { data: partners } = useQuery({
     queryKey: ["partner-options"],
@@ -148,6 +170,7 @@ function CreateGathering() {
         description: v.description || null,
         starts_at: iso,
         seats: v.seats,
+        gathering_type: v.gathering_type || null,
         status: "proposed",
         origin: "user_proposed",
       };
@@ -293,6 +316,31 @@ function CreateGathering() {
               aria-invalid={!!errors.description}
             />
             {errors.description && <p className="field-error">{errors.description}</p>}
+          </div>
+
+          <div className="grid gap-2">
+            <Label htmlFor="gathering_type">{t("create.gatheringType")}</Label>
+            <Select
+              value={form.gathering_type}
+              onValueChange={(v) => setForm({ ...form, gathering_type: v })}
+            >
+              <SelectTrigger id="gathering_type" aria-invalid={!!errors.gathering_type}>
+                <SelectValue placeholder={t("create.gatheringTypePh")} />
+              </SelectTrigger>
+              <SelectContent>
+                {GATHERING_TYPE_CATEGORIES.map((category) => (
+                  <SelectGroup key={category.id}>
+                    <SelectLabel>{t(category.labelKey)}</SelectLabel>
+                    {category.types.map((type) => (
+                      <SelectItem key={type} value={type}>
+                        {t(`gatheringType.${type}`)}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                ))}
+              </SelectContent>
+            </Select>
+            {errors.gathering_type && <p className="field-error">{errors.gathering_type}</p>}
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2">
