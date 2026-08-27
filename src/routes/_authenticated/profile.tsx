@@ -776,7 +776,6 @@ function ProfilePage() {
                   </div>
                 </div>
               </section>
-            </div>
 
             <div className="flex justify-stretch sm:justify-end">
               <Button
