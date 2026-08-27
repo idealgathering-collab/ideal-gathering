@@ -46,9 +46,10 @@ export function SiteHeader() {
       .then(({ data }) => setIsAdmin(!!data));
     
     // Load profile completion
+    const currentUser = user;
     async function loadCompletion() {
       const { loadGuestProfile } = await import("@/lib/guest-profile.functions");
-      const profile = await loadGuestProfile(user.id);
+      const profile = await loadGuestProfile(currentUser.id);
       if (profile) {
         const { getProfileCompletion } = await import("@/lib/profile-completion");
         const completion = getProfileCompletion(profile, true);

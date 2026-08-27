@@ -1,4 +1,4 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate, useRouter } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
 import { ArrowLeft, MessageSquareMore } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
@@ -13,18 +13,17 @@ export const Route = createFileRoute("/_authenticated/people/$id")({
   head: ({ params }) => ({
     meta: [{ title: `Profile — Ideal Gathering` }],
   }),
-  loader: async ({ params }) => {
-    return { userId: params.id };
-  },
+
   component: PeopleProfilePage,
 });
 
 function PeopleProfilePage() {
   const t = useT();
   const navigate = useNavigate();
+  const router = useRouter();
   const { user } = useSession();
   
-  const { userId } = Route.useLoaderData();
+  const { id: userId } = Route.useParams();
   const isSelf = user?.id === userId;
 
   const [profile, setProfile] = useState<GuestProfile | null>(null);
@@ -53,7 +52,7 @@ function PeopleProfilePage() {
   }, [userId, user?.id]);
 
   const handleMessageClick = () => {
-    navigate({ to: "/messages/$id", params: { id: userId } });
+    navigate({ to: "/chat", search: { user: userId } });
   };
 
   if (loading) {
@@ -65,7 +64,7 @@ function PeopleProfilePage() {
             <Button
               variant="outline"
               size="icon"
-              onClick={() => navigate({ to: "-1" })}
+              onClick={() => router.history.back()}
               className="h-9 w-9 bg-white/10 border-white/20 hover:bg-white/20 text-white"
             >
               <ArrowLeft className="h-4 w-4" />
@@ -87,7 +86,7 @@ function PeopleProfilePage() {
             <Button
               variant="outline"
               size="icon"
-              onClick={() => navigate({ to: "-1" })}
+              onClick={() => router.history.back()}
               className="h-9 w-9 bg-white/10 border-white/20 hover:bg-white/20 text-white"
             >
               <ArrowLeft className="h-4 w-4" />
@@ -115,7 +114,7 @@ function PeopleProfilePage() {
             <Button
               variant="outline"
               size="icon"
-              onClick={() => navigate({ to: "-1" })}
+              onClick={() => router.history.back()}
               className="h-9 w-9 bg-white/10 border-white/20 hover:bg-white/20 text-white"
             >
               <ArrowLeft className="h-4 w-4" />
@@ -139,7 +138,7 @@ function PeopleProfilePage() {
           <Button
             variant="outline"
             size="icon"
-            onClick={() => navigate({ to: "-1" })}
+            onClick={() => router.history.back()}
             className="h-9 w-9 bg-white/10 border-white/20 hover:bg-white/20 text-white"
           >
             <ArrowLeft className="h-4 w-4" />
@@ -154,10 +153,10 @@ function PeopleProfilePage() {
           interactive={true}
           isSelf={isSelf}
           viewerProfile={viewerProfile}
-          viewerDob={user?.date_of_birth}
+          
           showMatchBreakdown={!isSelf}
           onStoryItemClick={(item) => {
-            navigate({ to: "/gathering/$id", params: { id: item.gatheringId } });
+            navigate({ to: "/gatherings/$id", params: { id: item.gatheringId } });
           }}
         />
 
