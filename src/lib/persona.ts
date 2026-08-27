@@ -55,11 +55,11 @@ export function getPersona(scores: TraitScores | null): Persona | null {
   if (!scores) return null;
   
   const entries = Object.entries(PERSONAS) as [PersonaId, Persona][];
-  const highest = entries.reduce((best, [id, persona]) => {
+  const highest = entries.reduce<{ id: PersonaId; persona: Persona }>((best, [id, persona]) => {
     const score = scores[id];
     const bestScore = scores[best.id];
-    return score > bestScore ? { id, persona } : { id: best.id, persona: best.persona };
-  }, { id: "spark" as PersonaId, persona: PERSONAS.spark });
+    return score > bestScore ? { id, persona } : best;
+  }, { id: "spark" as PersonaId, persona: PERSONAS.spark as Persona });
   
   return highest.persona;
 }

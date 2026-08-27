@@ -51,7 +51,7 @@ function getTraitValue(aura: GuestAura | null, key: TraitKey): number {
     depth: "traitDepth",
   };
   const value = aura?.[traitMap[key]];
-  return value !== null && value !== undefined ? value : 0;
+  return typeof value === "number" ? value : 0;
 }
 
 /**
@@ -115,7 +115,7 @@ export function Aura({ aura, completion, isSelf = false, children, ...props }: A
   return (
     <Sector 
       sector="aura" 
-      hasData={hasAura}
+      hasData={!!hasAura}
       title={t("profile.sector.aura")}
       hint={t("profile.sector.auraHint")}
       completion={completion}
