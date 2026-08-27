@@ -1,3 +1,4 @@
+import type { SectionCompletion } from "@/lib/profile-completion";
 import type { GuestStyle } from "@/lib/guest-profile";
 import { Sector, type SectorProps } from "@/components/profile/sector";
 import { useT } from "@/i18n";
@@ -6,10 +7,11 @@ import { useT } from "@/i18n";
  * Style component - EXACT match to image design
  * Shows icon tiles in a row for: energy / size / talk / new people
  */
-export interface StyleProps extends Omit<SectorProps, "sector" | "hasData"> {
+export interface StyleProps extends Omit<SectorProps, "sector" | "hasData" | "children"> {
   style: GuestStyle | null;
   completion?: SectionCompletion;
   isSelf?: boolean;
+  children?: React.ReactNode;
 }
 
 const STYLE_ICONS: Record<string, { icon: string; labelKey: string; color: string }> = {

@@ -1,3 +1,4 @@
+import type { SectionCompletion } from "@/lib/profile-completion";
 import type { GuestHere } from "@/lib/guest-profile";
 import { Sector, type SectorProps } from "@/components/profile/sector";
 import { getIntentionVisualMedium } from "@/lib/intention-visuals";
@@ -7,11 +8,12 @@ import { useT } from "@/i18n";
  * Here component - EXACT match to image design
  * Shows intentions as circular photo tiles with icons (same style as Loves)
  */
-export interface HereProps extends Omit<SectorProps, "sector" | "hasData"> {
+export interface HereProps extends Omit<SectorProps, "sector" | "hasData" | "children"> {
   here: GuestHere | null;
   maxDisplay?: number;
   completion?: SectionCompletion;
   isSelf?: boolean;
+  children?: React.ReactNode;
 }
 
 const INTENTION_ICONS: Record<string, string> = {

@@ -1,3 +1,4 @@
+import type { SectionCompletion } from "@/lib/profile-completion";
 import type { GuestLoves } from "@/lib/guest-profile";
 import { Sector, type SectorProps } from "@/components/profile/sector";
 import { getInterestVisualMedium } from "@/lib/interest-visuals";
@@ -9,13 +10,14 @@ import { Edit3 } from "lucide-react";
  * Loves component - EXACT match to image design
  * Shows interests as circular photo tiles with icons
  */
-export interface LovesProps extends Omit<SectorProps, "sector" | "hasData"> {
+export interface LovesProps extends Omit<SectorProps, "sector" | "hasData" | "children"> {
   loves: GuestLoves | null;
   maxDisplay?: number;
   showEdit?: boolean;
   onEdit?: () => void;
   completion?: SectionCompletion;
   isSelf?: boolean;
+  children?: React.ReactNode;
 }
 
 const INTEREST_ICONS: Record<string, string> = {
