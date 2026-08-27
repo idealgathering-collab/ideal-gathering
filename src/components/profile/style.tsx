@@ -74,15 +74,7 @@ export function Style({ style, children, ...props }: StyleProps) {
   const talkConfig = style.talkStyle ? STYLE_ICONS[style.talkStyle] : null;
   const newPeopleConfig = style.newPeople ? STYLE_ICONS[style.newPeople] : null;
 
-  // Subtitles for each category
-  const energySubtitle = "Energy";
-  const sizeSubtitle = "Size";
-  const talkSubtitle = "Talk";
-  const newPeopleSubtitle = "New People";
-
-  const t = useT();
-  
-  // i18n keys for subtitles
+  // i18n labels for subtitles
   const energySubtitle = t("profile.style.energy");
   const sizeSubtitle = t("profile.style.groupSize");
   const talkSubtitle = t("profile.style.talkStyle");
