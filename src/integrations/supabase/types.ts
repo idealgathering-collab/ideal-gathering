@@ -260,6 +260,7 @@ export type Database = {
           created_at: string
           description: string | null
           ends_at: string | null
+          gathering_type: string | null
           host_id: string
           id: string
           lat: number | null
@@ -280,6 +281,7 @@ export type Database = {
           created_at?: string
           description?: string | null
           ends_at?: string | null
+          gathering_type?: string | null
           host_id: string
           id?: string
           lat?: number | null
@@ -300,6 +302,7 @@ export type Database = {
           created_at?: string
           description?: string | null
           ends_at?: string | null
+          gathering_type?: string | null
           host_id?: string
           id?: string
           lat?: number | null
@@ -420,18 +423,25 @@ export type Database = {
           created_at: string
           date_of_birth: string | null
           display_name: string | null
+          energy_level: string | null
           gender: string | null
+          group_size: string | null
           id: string
+          intentions: string[]
           interests: Json
           nationality: string | null
           neighborhood: string | null
+          new_people_pref: string | null
           onboarded_at: string | null
+          persona_color: string | null
           social_links: Json
+          talk_style: string | null
           trait_curiosity: number | null
           trait_depth: number | null
           trait_spark: number | null
           trait_warmth: number | null
           traits_updated_at: string | null
+          updated_at: string
         }
         Insert: {
           avatar_url?: string | null
@@ -442,18 +452,25 @@ export type Database = {
           created_at?: string
           date_of_birth?: string | null
           display_name?: string | null
+          energy_level?: string | null
           gender?: string | null
+          group_size?: string | null
           id: string
+          intentions?: string[]
           interests?: Json
           nationality?: string | null
           neighborhood?: string | null
+          new_people_pref?: string | null
           onboarded_at?: string | null
+          persona_color?: string | null
           social_links?: Json
+          talk_style?: string | null
           trait_curiosity?: number | null
           trait_depth?: number | null
           trait_spark?: number | null
           trait_warmth?: number | null
           traits_updated_at?: string | null
+          updated_at?: string
         }
         Update: {
           avatar_url?: string | null
@@ -464,18 +481,25 @@ export type Database = {
           created_at?: string
           date_of_birth?: string | null
           display_name?: string | null
+          energy_level?: string | null
           gender?: string | null
+          group_size?: string | null
           id?: string
+          intentions?: string[]
           interests?: Json
           nationality?: string | null
           neighborhood?: string | null
+          new_people_pref?: string | null
           onboarded_at?: string | null
+          persona_color?: string | null
           social_links?: Json
+          talk_style?: string | null
           trait_curiosity?: number | null
           trait_depth?: number | null
           trait_spark?: number | null
           trait_warmth?: number | null
           traits_updated_at?: string | null
+          updated_at?: string
         }
         Relationships: []
       }
