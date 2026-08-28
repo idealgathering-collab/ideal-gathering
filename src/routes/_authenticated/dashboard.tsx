@@ -22,7 +22,7 @@ import type { GuestProfile } from "@/lib/guest-profile";
 
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
-  beforeLoad: async ({ context, location }) => {
+  beforeLoad: async ({ context }) => {
     const userId = context.user.id;
     const roles = await fetchRoles(userId);
     if (roles.has("admin") && !isAdminPreview()) {
