@@ -81,7 +81,18 @@ function Onboarding() {
           // non-blocking
         }
       }
-      await supabase.from("profiles").update({ onboarded_at: new Date().toISOString() }).eq("id", user.id);
+      // This write is the only thing that stops /dashboard bouncing back here.
+      // If it fails silently we must NOT navigate, or the user is trapped in a loop.
+      const { data: marked, error: markError } = await supabase
+        .from("profiles")
+        .update({ onboarded_at: new Date().toISOString() })
+        .eq("id", user.id)
+        .select("id")
+        .maybeSingle();
+      if (markError || !marked) {
+        toast.error(t("common.somethingWrong"));
+        return;
+      }
       await navigate({ to: "/dashboard", replace: true });
     } finally {
       setSaving(false);
