@@ -24,6 +24,17 @@ const SEARCH = z.object({
 
 export const Route = createFileRoute("/_authenticated/onboarding")({
   validateSearch: SEARCH,
+  head: () => ({
+    meta: [
+      { title: "Get started — Ideal Gathering" },
+      { name: "description", content: "Set up your profile and tell us what kind of table you're looking for." },
+      { property: "og:title", content: "Get started — Ideal Gathering" },
+      { property: "og:description", content: "Set up your profile and tell us what kind of table you're looking for." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
+      { name: "robots", content: "noindex" },
+    ],
+  }),
   component: Onboarding,
 });
 
