@@ -16,6 +16,7 @@ import {
   type GatheringPreferences,
 } from "@/lib/gathering-preferences";
 import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 const SEARCH = z.object({
   step: z.enum(["welcome", "how", "prefs-intro", "prefs", "qintro", "quiz", "quiz-result"]).optional(),
@@ -29,6 +30,7 @@ export const Route = createFileRoute("/_authenticated/onboarding")({
 type Step = z.infer<typeof SEARCH>["step"];
 
 function Onboarding() {
+  const t = useT();
   const navigate = useNavigate();
   const { user } = useSession();
   const search = Route.useSearch();
