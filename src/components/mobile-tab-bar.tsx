@@ -12,8 +12,16 @@ export function MobileTabBar() {
   const t = useT();
 
   if (!user) return null;
-  // Hide on landing / auth pages
-  if (pathname === "/" || pathname.startsWith("/auth") || pathname.startsWith("/venue/auth")) return null;
+  // Hide on landing, auth pages, and every non-guest surface (admin, venue, onboarding).
+  // These tabs all point into the guest `_authenticated` subtree, which bounces
+  // venue/admin users straight back out again.
+  const hidden =
+    pathname === "/" ||
+    pathname.startsWith("/auth") ||
+    pathname.startsWith("/admin") ||
+    pathname.startsWith("/venue") ||
+    pathname.startsWith("/onboarding");
+  if (hidden) return null;
 
   const tabs: Tab[] = [
     { to: "/dashboard", label: t("nav.dashboard"), icon: LayoutDashboard, match: (p) => p === "/dashboard" },

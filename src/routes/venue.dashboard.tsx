@@ -30,6 +30,17 @@ import { useT } from "@/i18n";
 import logoAsset from "@/assets/ideal-gathering-logo.png.asset.json";
 
 export const Route = createFileRoute("/venue/dashboard")({
+  head: () => ({
+    meta: [
+      { title: "Venue portal — Ideal Gathering" },
+      { name: "description", content: "Manage your venue, tables, menu and the gatherings hosted at your place." },
+      { property: "og:title", content: "Venue portal — Ideal Gathering" },
+      { property: "og:description", content: "Manage your venue, tables, menu and the gatherings hosted at your place." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
+      { name: "robots", content: "noindex" },
+    ],
+  }),
   component: VenueDashboard,
 });
 

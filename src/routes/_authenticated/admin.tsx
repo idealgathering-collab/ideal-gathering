@@ -1,4 +1,5 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, redirect } from "@tanstack/react-router";
+import { fetchRoles } from "@/lib/roles";
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { useServerFn } from "@tanstack/react-start";
@@ -20,7 +21,19 @@ import { COUNTRIES, citiesFor, countryName } from "@/lib/locations";
 import { insertNotification } from "@/lib/notifications";
 
 export const Route = createFileRoute("/_authenticated/admin")({
-  head: () => ({ meta: [{ title: "Admin — Ideal Gathering" }] }),
+  // Guard in beforeLoad like the rest of the app, so non-admins never render the
+  // admin shell (or its title) before the client-side check catches up.
+  beforeLoad: async ({ context }) => {
+    const roles = await fetchRoles(context.user.id);
+    if (!roles.has("admin")) throw redirect({ to: "/dashboard", replace: true });
+  },
+  head: () => ({
+    meta: [
+      { title: "Admin — Ideal Gathering" },
+      { name: "description", content: "Approve venues, review reports and manage members." },
+      { name: "robots", content: "noindex" },
+    ],
+  }),
   component: AdminPage,
 });
 

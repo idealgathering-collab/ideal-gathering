@@ -10,8 +10,22 @@ import { useT } from "@/i18n";
 import type { GuestProfile } from "@/lib/guest-profile";
 
 export const Route = createFileRoute("/_authenticated/people/$id")({
-  head: ({ params }) => ({
-    meta: [{ title: `Profile — Ideal Gathering` }],
+  head: () => ({
+    meta: [
+      { title: "Member profile — Ideal Gathering" },
+      {
+        name: "description",
+        content: "See who you're sharing a table with: their vibe, interests and what they're looking for.",
+      },
+      { property: "og:title", content: "Member profile — Ideal Gathering" },
+      {
+        property: "og:description",
+        content: "See who you're sharing a table with: their vibe, interests and what they're looking for.",
+      },
+      { property: "og:type", content: "profile" },
+      { name: "twitter:card", content: "summary" },
+      { name: "robots", content: "noindex" },
+    ],
   }),
 
   component: PeopleProfilePage,

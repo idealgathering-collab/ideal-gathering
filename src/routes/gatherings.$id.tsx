@@ -139,7 +139,12 @@ function GatheringDetail() {
   const seatsLeft = Math.max(0, g.seats - attendees.length);
   const isHost = user?.id === g.host_id;
   const isMember = isHost || isAttending;
-  const checkinOpen = Date.now() >= checkinWindow(g.starts_at).opensAt;
+  // Mirror the DB guard: the roster is only actionable inside the check-in window
+  // and while the gathering is live. Gating on opensAt alone left the tab up forever.
+  const window_ = checkinWindow(g.starts_at, g.ends_at);
+  const now = Date.now();
+  const checkinOpen =
+    now >= window_.opensAt && now <= window_.closesAt && g.status !== "cancelled" && g.status !== "rejected";
 
   return (
     <div className="min-h-screen bg-background">

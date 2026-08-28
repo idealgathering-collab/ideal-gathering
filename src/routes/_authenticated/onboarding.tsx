@@ -16,6 +16,7 @@ import {
   type GatheringPreferences,
 } from "@/lib/gathering-preferences";
 import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 const SEARCH = z.object({
   step: z.enum(["welcome", "how", "prefs-intro", "prefs", "qintro", "quiz", "quiz-result"]).optional(),
@@ -23,12 +24,24 @@ const SEARCH = z.object({
 
 export const Route = createFileRoute("/_authenticated/onboarding")({
   validateSearch: SEARCH,
+  head: () => ({
+    meta: [
+      { title: "Get started — Ideal Gathering" },
+      { name: "description", content: "Set up your profile and tell us what kind of table you're looking for." },
+      { property: "og:title", content: "Get started — Ideal Gathering" },
+      { property: "og:description", content: "Set up your profile and tell us what kind of table you're looking for." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
+      { name: "robots", content: "noindex" },
+    ],
+  }),
   component: Onboarding,
 });
 
 type Step = z.infer<typeof SEARCH>["step"];
 
 function Onboarding() {
+  const t = useT();
   const navigate = useNavigate();
   const { user } = useSession();
   const search = Route.useSearch();
@@ -81,7 +94,18 @@ function Onboarding() {
           // non-blocking
         }
       }
-      await supabase.from("profiles").update({ onboarded_at: new Date().toISOString() }).eq("id", user.id);
+      // This write is the only thing that stops /dashboard bouncing back here.
+      // If it fails silently we must NOT navigate, or the user is trapped in a loop.
+      const { data: marked, error: markError } = await supabase
+        .from("profiles")
+        .update({ onboarded_at: new Date().toISOString() })
+        .eq("id", user.id)
+        .select("id")
+        .maybeSingle();
+      if (markError || !marked) {
+        toast.error(t("common.somethingWrong"));
+        return;
+      }
       await navigate({ to: "/dashboard", replace: true });
     } finally {
       setSaving(false);

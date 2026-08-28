@@ -22,7 +22,18 @@ import type { GuestProfile } from "@/lib/guest-profile";
 
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
-  beforeLoad: async ({ context, location }) => {
+  head: () => ({
+    meta: [
+      { title: "Your dashboard — Ideal Gathering" },
+      { name: "description", content: "Your upcoming tables, invitations and gatherings worth joining this week." },
+      { property: "og:title", content: "Your dashboard — Ideal Gathering" },
+      { property: "og:description", content: "Your upcoming tables, invitations and gatherings worth joining this week." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
+      { name: "robots", content: "noindex" },
+    ],
+  }),
+  beforeLoad: async ({ context }) => {
     const userId = context.user.id;
     const roles = await fetchRoles(userId);
     if (roles.has("admin") && !isAdminPreview()) {
@@ -37,8 +48,7 @@ export const Route = createFileRoute("/_authenticated/dashboard")({
     if (!profile?.onboarded_at) {
       throw redirect({ to: "/onboarding", search: { step: "welcome" }, replace: true });
     }
-    const fromOnboarding = location.searchStr.includes("onboarded=1");
-    return { onboarded: true, fromOnboarding };
+    return { onboarded: true };
   },
   loader: async ({ context }) => {
     const { data, error } = await supabase

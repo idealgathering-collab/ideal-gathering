@@ -64,8 +64,15 @@ export async function loadGuestProfile(userId: string): Promise<GuestProfile | n
     .maybeSingle();
 
   if (error || !data) {
-    if (error) console.error("Error loading guest profile:", error);
-    return null;
+    // RLS only exposes the viewer's own row, so any other member's profile has to
+    // come back through the server function with a redacted public projection.
+    const { loadPublicProfile } = await import("./public-profile.functions");
+    const publicRow = await loadPublicProfile({ data: { userId } });
+    if (!publicRow) {
+      if (error) console.error("Error loading guest profile:", error);
+      return null;
+    }
+    return transformProfileData(publicRow as unknown as ProfileSelection, []);
   }
 
   const story = await loadStoryItems(userId);

@@ -146,6 +146,8 @@ export const submitRatings = createServerFn({ method: "POST" })
         ratee_id: p.userId,
         score: p.score,
         comment: null as string | null,
+        // Only low scores carry actionable "what didn't work" signal.
+        reasons: p.score <= 3 ? parseReasons(p.reasons ?? []) : [],
       })),
     ];
 
