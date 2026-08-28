@@ -46,8 +46,8 @@ export type PublicProfileRow = {
   group_size: string | null;
   talk_style: string | null;
   new_people_pref: string | null;
-  interests: unknown;
-  intentions: unknown;
+  interests: string[];
+  intentions: string[];
   created_at: string;
   updated_at: string;
 };
