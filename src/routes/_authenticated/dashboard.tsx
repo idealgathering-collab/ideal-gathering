@@ -37,8 +37,7 @@ export const Route = createFileRoute("/_authenticated/dashboard")({
     if (!profile?.onboarded_at) {
       throw redirect({ to: "/onboarding", search: { step: "welcome" }, replace: true });
     }
-    const fromOnboarding = location.searchStr.includes("onboarded=1");
-    return { onboarded: true, fromOnboarding };
+    return { onboarded: true };
   },
   loader: async ({ context }) => {
     const { data, error } = await supabase

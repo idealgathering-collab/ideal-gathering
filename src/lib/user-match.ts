@@ -108,11 +108,13 @@ export function calculateUserMatch(
     totalWeight += 0.3;
   }
 
-  // Add age factor (20% weight)
-  // ageFactor is 0-1, convert to 0-100 scale
-  const ageScore = ageFactor * 100;
-  score += (ageScore - 50) * 0.2;
-  totalWeight += 0.2;
+  // Add age factor (20% weight) — only when both birthdates are known.
+  // Counting it unconditionally added a phantom +10 to every ageless pair.
+  if (hasAgeData) {
+    const ageScore = ageFactor * 100;
+    score += (ageScore - 50) * 0.2;
+    totalWeight += 0.2;
+  }
 
   // Normalize if we have partial data
   if (totalWeight > 0 && totalWeight < 1) {
