@@ -27,5 +27,11 @@ export const loadPublicProfile = createServerFn({ method: "GET" })
 
     if (error || !row) return null;
 
-    return { ...row, date_of_birth: coarsenDob(row.date_of_birth) } as PublicProfileRow;
+    const r = row as unknown as PublicProfileRow;
+    return {
+      ...r,
+      date_of_birth: coarsenDob(r.date_of_birth),
+      interests: Array.isArray(r.interests) ? r.interests.filter((v) => typeof v === "string") : [],
+      intentions: Array.isArray(r.intentions) ? r.intentions.filter((v) => typeof v === "string") : [],
+    };
   });
