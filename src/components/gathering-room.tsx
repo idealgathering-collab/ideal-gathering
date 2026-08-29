@@ -69,10 +69,16 @@ export function GatheringChat({
   const [body, setBody] = useState("");
   const [sending, setSending] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+  // The realtime handler must read the *current* block list, not the empty set
+  // captured when the channel was first subscribed.
+  const hiddenRef = useRef<Set<string>>(new Set());
+  const profilesRef = useRef<Record<string, Profile>>({});
+  profilesRef.current = profiles;
 
   async function loadMessages(): Promise<Msg[] | null> {
     try {
       const res = await listGatheringMessages({ data: { gatheringId } });
+      hiddenRef.current = new Set(res.hiddenUserIds);
       setHidden(new Set(res.hiddenUserIds));
       setMessages(res.messages);
       return res.messages;
@@ -108,9 +114,9 @@ export function GatheringChat({
         },
         async (payload) => {
           const m = payload.new as Msg;
-          if (hidden.has(m.sender_id)) return;
+          if (hiddenRef.current.has(m.sender_id)) return;
           setMessages((prev) => (prev.some((x) => x.id === m.id) ? prev : [...prev, m]));
-          if (!profiles[m.sender_id]) {
+          if (!profilesRef.current[m.sender_id]) {
             const more = await loadProfiles([m.sender_id]);
             setProfiles((prev) => ({ ...prev, ...more }));
           }
@@ -121,7 +127,7 @@ export function GatheringChat({
       supabase.removeChannel(channel);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [gatheringId, hidden]);
+  }, [gatheringId]);
 
   async function confirmBlock() {
     if (!blockTarget) return;
