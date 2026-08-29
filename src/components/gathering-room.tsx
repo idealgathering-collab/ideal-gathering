@@ -72,6 +72,8 @@ export function GatheringChat({
   // The realtime handler must read the *current* block list, not the empty set
   // captured when the channel was first subscribed.
   const hiddenRef = useRef<Set<string>>(new Set());
+  const profilesRef = useRef<Record<string, Profile>>({});
+  profilesRef.current = profiles;
 
   async function loadMessages(): Promise<Msg[] | null> {
     try {
