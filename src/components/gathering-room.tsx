@@ -114,10 +114,8 @@ export function GatheringChat({
           const m = payload.new as Msg;
           if (hiddenRef.current.has(m.sender_id)) return;
           setMessages((prev) => (prev.some((x) => x.id === m.id) ? prev : [...prev, m]));
-          if (!profiles[m.sender_id]) {
-            const more = await loadProfiles([m.sender_id]);
-            setProfiles((prev) => ({ ...prev, ...more }));
-          }
+          const more = await loadProfiles([m.sender_id]);
+          setProfiles((prev) => (prev[m.sender_id] ? prev : { ...prev, ...more }));
         },
       )
       .subscribe();
@@ -125,7 +123,7 @@ export function GatheringChat({
       supabase.removeChannel(channel);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [gatheringId, hidden]);
+  }, [gatheringId]);
 
   async function confirmBlock() {
     if (!blockTarget) return;
