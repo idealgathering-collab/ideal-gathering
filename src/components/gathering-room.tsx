@@ -114,8 +114,10 @@ export function GatheringChat({
           const m = payload.new as Msg;
           if (hiddenRef.current.has(m.sender_id)) return;
           setMessages((prev) => (prev.some((x) => x.id === m.id) ? prev : [...prev, m]));
-          const more = await loadProfiles([m.sender_id]);
-          setProfiles((prev) => (prev[m.sender_id] ? prev : { ...prev, ...more }));
+          if (!profilesRef.current[m.sender_id]) {
+            const more = await loadProfiles([m.sender_id]);
+            setProfiles((prev) => ({ ...prev, ...more }));
+          }
         },
       )
       .subscribe();
