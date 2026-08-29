@@ -69,10 +69,14 @@ export function GatheringChat({
   const [body, setBody] = useState("");
   const [sending, setSending] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+  // The realtime handler must read the *current* block list, not the empty set
+  // captured when the channel was first subscribed.
+  const hiddenRef = useRef<Set<string>>(new Set());
 
   async function loadMessages(): Promise<Msg[] | null> {
     try {
       const res = await listGatheringMessages({ data: { gatheringId } });
+      hiddenRef.current = new Set(res.hiddenUserIds);
       setHidden(new Set(res.hiddenUserIds));
       setMessages(res.messages);
       return res.messages;
