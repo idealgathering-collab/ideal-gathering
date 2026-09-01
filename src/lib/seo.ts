@@ -1,16 +1,16 @@
 export const SITE_URL = "https://www.idealgathering.com";
 
-export const SEO_LANGS = ["en", "tr", "fa"] as const;
+export const SEO_LANGS = ["en", "ru", "fa"] as const;
 export type SeoLang = (typeof SEO_LANGS)[number];
 
 export const OG_LOCALE: Record<SeoLang, string> = {
   en: "en_US",
-  tr: "tr_TR",
+  ru: "ru_RU",
   fa: "fa_IR",
 };
 
 export function normalizeLang(value: unknown): SeoLang {
-  return value === "tr" || value === "fa" ? value : "en";
+  return value === "ru" || value === "fa" ? value : "en";
 }
 
 type Copy = { title: string; description: string };
@@ -219,7 +219,7 @@ export function localizedHead(path: string, rawLang: unknown) {
  * Schema.org structured data (localized)
  * ------------------------------------------------------------------------- */
 
-const SCHEMA_LOCALE: Record<SeoLang, string> = { en: "en", tr: "tr", fa: "fa" };
+const SCHEMA_LOCALE: Record<SeoLang, string> = { en: "en", ru: "ru", fa: "fa" };
 
 export function jsonLdOrganization(lang: SeoLang) {
   return {
@@ -392,7 +392,7 @@ const GATHERING_FALLBACK: Record<
     `گردهمایی حول یک موضوع در ${when}${where ? ` در ${where}` : ""}. ${seats} صندلی سر میز — در Ideal Gathering بپیوندید.`,
 };
 
-const GATHERING_AT: Record<SeoLang, string> = { en: "at", tr: "—", fa: "در" };
+const GATHERING_AT: Record<SeoLang, string> = { en: "at", ru: "—", fa: "در" };
 
 export type GatheringHeadInput = SchemaGathering & {
   status?: string | null;
