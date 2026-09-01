@@ -2,7 +2,7 @@
 
 > Real tables at real cafés and restaurants. Each gathering has one subject and a few seats, so strangers can meet over something worth talking about.
 
-People join or host a gathering around a subject; cafés and restaurants register their venue and tables and approve the gatherings they host during quiet hours. The site is available in English, Turkish and Farsi via a `?lang=en|tr|fa` parameter.
+People join or host a gathering around a subject; cafés and restaurants register their venue and tables and approve the gatherings they host during quiet hours. The site is available in English, Russian and Farsi via a `?lang=en|ru|fa` parameter.
 
 ## Pages
 
