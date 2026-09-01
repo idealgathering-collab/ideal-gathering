@@ -37,7 +37,7 @@ import logoAsset from "@/assets/ideal-gathering-logo.png.asset.json";
 export const Route = createFileRoute("/")({
   component: Home,
   validateSearch: (search: Record<string, unknown>): { lang?: SeoLang } =>
-    search.lang === "tr" || search.lang === "fa" ? { lang: search.lang } : {},
+    search.lang === "ru" || search.lang === "fa" ? { lang: search.lang } : {},
   head: ({ match }) => {
     const seo = localizedHead("/", match.search.lang);
     return {

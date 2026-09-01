@@ -29,7 +29,7 @@ type ExploreSearch = { lang?: SeoLang; city?: string; sort?: SortMode; type?: Ga
 export const Route = createFileRoute("/explore")({
   component: Explore,
   validateSearch: (search: Record<string, unknown>): ExploreSearch => ({
-    ...(search.lang === "tr" || search.lang === "fa" ? { lang: search.lang } : {}),
+    ...(search.lang === "ru" || search.lang === "fa" ? { lang: search.lang } : {}),
     ...(typeof search.city === "string" && search.city.trim() ? { city: search.city.trim() } : {}),
     ...(isSortMode(search.sort) ? { sort: search.sort } : {}),
     ...(typeof search.type === "string" && GATHERING_TYPES.includes(search.type as GatheringType) ? { type: search.type as GatheringType } : {}),
