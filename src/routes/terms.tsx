@@ -7,7 +7,7 @@ import { localizedHead, type SeoLang } from "@/lib/seo";
 
 export const Route = createFileRoute("/terms")({
   validateSearch: (search: Record<string, unknown>): { lang?: SeoLang } =>
-    search.lang === "tr" || search.lang === "fa" ? { lang: search.lang } : {},
+    search.lang === "ru" || search.lang === "fa" ? { lang: search.lang } : {},
   head: ({ match }) => localizedHead("/terms", match.search.lang),
   component: TermsPage,
 });

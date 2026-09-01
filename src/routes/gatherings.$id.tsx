@@ -27,7 +27,7 @@ import { useState } from "react";
 export const Route = createFileRoute("/gatherings/$id")({
   component: GatheringDetail,
   validateSearch: (search: Record<string, unknown>): { lang?: SeoLang } =>
-    search.lang === "tr" || search.lang === "fa" ? { lang: search.lang } : {},
+    search.lang === "ru" || search.lang === "fa" ? { lang: search.lang } : {},
   loader: async ({ params }) => {
     try {
       return { g: await getPublicGathering({ data: { id: params.id } }) };

@@ -1,16 +1,16 @@
 export const SITE_URL = "https://www.idealgathering.com";
 
-export const SEO_LANGS = ["en", "tr", "fa"] as const;
+export const SEO_LANGS = ["en", "ru", "fa"] as const;
 export type SeoLang = (typeof SEO_LANGS)[number];
 
 export const OG_LOCALE: Record<SeoLang, string> = {
   en: "en_US",
-  tr: "tr_TR",
+  ru: "ru_RU",
   fa: "fa_IR",
 };
 
 export function normalizeLang(value: unknown): SeoLang {
-  return value === "tr" || value === "fa" ? value : "en";
+  return value === "ru" || value === "fa" ? value : "en";
 }
 
 type Copy = { title: string; description: string };
@@ -23,10 +23,10 @@ export const PAGE_SEO: Record<string, Record<SeoLang, Copy>> = {
         "An open platform for small-group meetups. Create a gathering for anything, anywhere — coffee, a hike, a game night — and get matched with the right people.",
     },
 
-    tr: {
-      title: "Ideal Gathering — Kimse Artık Yalnız Olmayacak",
+    ru: {
+      title: "Ideal Gathering — Больше никто не будет один",
       description:
-        "Gerçek kafelerde gerçek masalar. Bir konu, birkaç sandalye ve tanışmaya değer insanlar. Bir buluşmaya katıl ya da kendin düzenle.",
+        "Настоящие столы в настоящих кафе. Одна тема, несколько стульев и люди, с которыми стоит познакомиться. Присоединяйся к встрече или организуй свою.",
     },
     fa: {
       title: "Ideal Gathering — دیگر هیچ‌کس تنها نخواهد بود",
@@ -40,10 +40,10 @@ export const PAGE_SEO: Record<string, Record<SeoLang, Copy>> = {
       description:
         "Browse upcoming gatherings around a subject at cafes and restaurants near you.",
     },
-    tr: {
-      title: "Buluşmaları Keşfet · Ideal Gathering",
+    ru: {
+      title: "Найти встречи · Ideal Gathering",
       description:
-        "Yakınındaki kafe ve restoranlarda bir konu etrafında düzenlenen yaklaşan buluşmalara göz at.",
+        "Смотри предстоящие встречи по интересам в кафе и ресторанах рядом с тобой.",
     },
     fa: {
       title: "کشف گردهمایی‌ها · Ideal Gathering",
@@ -57,10 +57,10 @@ export const PAGE_SEO: Record<string, Record<SeoLang, Copy>> = {
       description:
         "Turn quiet hours into themed Gatherings at your cafe or restaurant. You approve every Gathering — full control, no bidding, no commitment.",
     },
-    tr: {
-      title: "İş Ortaklığı — Ideal Gathering",
+    ru: {
+      title: "Партнёрство — Ideal Gathering",
       description:
-        "Kafenizin sakin saatlerini temalı buluşmalara dönüştürün. Her buluşmayı siz onaylarsınız — tam kontrol, taahhüt yok.",
+        "Превратите тихие часы вашего кафе в тематические встречи. Каждую встречу утверждаете вы — полный контроль, без обязательств.",
     },
     fa: {
       title: "همکاری — Ideal Gathering",
@@ -74,10 +74,10 @@ export const PAGE_SEO: Record<string, Record<SeoLang, Copy>> = {
       description:
         "The rules for using Ideal Gathering: acceptable use, host and venue responsibilities, and liability.",
     },
-    tr: {
-      title: "Kullanım Koşulları — Ideal Gathering",
+    ru: {
+      title: "Условия использования — Ideal Gathering",
       description:
-        "Ideal Gathering kullanım kuralları: kabul edilebilir kullanım, ev sahibi ve mekân sorumlulukları ve yasal sorumluluk.",
+        "Правила пользования Ideal Gathering: допустимое использование, ответственность организатора и площадки, и ограничение ответственности.",
     },
     fa: {
       title: "شرایط استفاده — Ideal Gathering",
@@ -91,10 +91,10 @@ export const PAGE_SEO: Record<string, Record<SeoLang, Copy>> = {
       description:
         "How Ideal Gathering collects, uses, and protects your data. KVKK-aware notice for users in Türkiye.",
     },
-    tr: {
-      title: "Gizlilik Politikası — Ideal Gathering",
+    ru: {
+      title: "Политика конфиденциальности — Ideal Gathering",
       description:
-        "Ideal Gathering verilerinizi nasıl topluyor, kullanıyor ve koruyor. Türkiye'deki kullanıcılar için KVKK uyumlu bilgilendirme.",
+        "Как Ideal Gathering собирает, использует и защищает ваши данные. Уведомление с учётом требований KVKK для пользователей из Турции.",
     },
     fa: {
       title: "سیاست حریم خصوصی — Ideal Gathering",
@@ -108,10 +108,10 @@ export const PAGE_SEO: Record<string, Record<SeoLang, Copy>> = {
       description:
         "How Ideal Gathering started: a weekly table of friends, scattered by life, rebuilt into something anyone can have again.",
     },
-    tr: {
-      title: "Our Story — Ideal Gathering",
+    ru: {
+      title: "Наша история — Ideal Gathering",
       description:
-        "How Ideal Gathering started: a weekly table of friends, scattered by life, rebuilt into something anyone can have again.",
+        "Как появился Ideal Gathering: еженедельный стол друзей, которых разбросала жизнь, — и то, как мы вернули это каждому.",
     },
     fa: {
       title: "Our Story — Ideal Gathering",
@@ -125,10 +125,10 @@ export const PAGE_SEO: Record<string, Record<SeoLang, Copy>> = {
       description:
         "Create your free Ideal Gathering account to join a table near you, or sign back in to see your upcoming gatherings.",
     },
-    tr: {
-      title: "Giriş Yap veya Katıl — Ideal Gathering",
+    ru: {
+      title: "Войти или присоединиться — Ideal Gathering",
       description:
-        "Yakınındaki bir masaya katılmak için ücretsiz Ideal Gathering hesabını oluştur ya da yaklaşan buluşmalarını görmek için giriş yap.",
+        "Создай бесплатный аккаунт Ideal Gathering, чтобы занять место за столом рядом с тобой, или войди, чтобы увидеть предстоящие встречи.",
     },
     fa: {
       title: "ورود یا عضویت — Ideal Gathering",
@@ -142,10 +142,10 @@ export const PAGE_SEO: Record<string, Record<SeoLang, Copy>> = {
       description:
         "Cafés and restaurants: create a venue account to list your tables and host themed gatherings during quiet hours.",
     },
-    tr: {
-      title: "Mekân Girişi — Ideal Gathering",
+    ru: {
+      title: "Вход для заведений — Ideal Gathering",
       description:
-        "Kafeler ve restoranlar: masalarınızı listelemek ve sakin saatlerde temalı buluşmalara ev sahipliği yapmak için mekân hesabı oluşturun.",
+        "Кафе и рестораны: создайте аккаунт заведения, чтобы добавить свои столы и принимать тематические встречи в тихие часы.",
     },
     fa: {
       title: "ورود مکان‌ها — Ideal Gathering",
@@ -159,10 +159,10 @@ export const PAGE_SEO: Record<string, Record<SeoLang, Copy>> = {
       description:
         "Tell us your city and interests and we'll invite you as new tables open up at cafés near you.",
     },
-    tr: {
-      title: "Misafir Listesi — Ideal Gathering",
+    ru: {
+      title: "Лист ожидания — Ideal Gathering",
       description:
-        "Şehrini ve ilgi alanlarını paylaş; yakınındaki kafelerde yeni masalar açıldıkça seni davet edelim.",
+        "Расскажи, в каком ты городе и что тебе интересно, — и мы пригласим тебя, когда рядом откроются новые столы.",
     },
     fa: {
       title: "فهرست انتظار مهمان — Ideal Gathering",
@@ -219,7 +219,7 @@ export function localizedHead(path: string, rawLang: unknown) {
  * Schema.org structured data (localized)
  * ------------------------------------------------------------------------- */
 
-const SCHEMA_LOCALE: Record<SeoLang, string> = { en: "en", tr: "tr", fa: "fa" };
+const SCHEMA_LOCALE: Record<SeoLang, string> = { en: "en", ru: "ru", fa: "fa" };
 
 export function jsonLdOrganization(lang: SeoLang) {
   return {
@@ -386,13 +386,13 @@ const GATHERING_FALLBACK: Record<
 > = {
   en: ({ when, where, seats }) =>
     `A gathering around one subject on ${when}${where ? ` at ${where}` : ""}. ${seats} seat${seats === 1 ? "" : "s"} at the table — join on Ideal Gathering.`,
-  tr: ({ when, where, seats }) =>
-    `${when} tarihinde${where ? ` ${where} mekânında` : ""} tek bir konu etrafında bir buluşma. Masada ${seats} sandalye — Ideal Gathering'de katıl.`,
+  ru: ({ when, where, seats }) =>
+    `Встреча на одну тему ${when}${where ? ` в ${where}` : ""}. За столом ${seats} мест — присоединяйся на Ideal Gathering.`,
   fa: ({ when, where, seats }) =>
     `گردهمایی حول یک موضوع در ${when}${where ? ` در ${where}` : ""}. ${seats} صندلی سر میز — در Ideal Gathering بپیوندید.`,
 };
 
-const GATHERING_AT: Record<SeoLang, string> = { en: "at", tr: "—", fa: "در" };
+const GATHERING_AT: Record<SeoLang, string> = { en: "at", ru: "—", fa: "در" };
 
 export type GatheringHeadInput = SchemaGathering & {
   status?: string | null;

@@ -124,7 +124,7 @@ export async function leaveGathering(gatheringId: string, userId: string) {
   if (error) throw error;
 }
 
-export function formatDateTime(iso: string, lang?: "en" | "tr" | "fa") {
+export function formatDateTime(iso: string, lang?: "en" | "ru" | "fa") {
   const d = new Date(iso);
   return d.toLocaleString(lang, {
     weekday: "short",

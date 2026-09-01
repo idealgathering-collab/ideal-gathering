@@ -9,7 +9,7 @@ import emptyChairAsset from "@/assets/our-story-empty-chair.png.asset.json";
 
 export const Route = createFileRoute("/our-story")({
   validateSearch: (search: Record<string, unknown>): { lang?: SeoLang } =>
-    search.lang === "tr" || search.lang === "fa" ? { lang: search.lang } : {},
+    search.lang === "ru" || search.lang === "fa" ? { lang: search.lang } : {},
   head: ({ match }) => localizedHead("/our-story", match.search.lang),
   component: OurStoryPage,
 });

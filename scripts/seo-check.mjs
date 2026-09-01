@@ -6,7 +6,7 @@
  *   - /robots.txt      : reachable, not blanket-disallowed, sitemap directive
  *   - /sitemap.xml     : valid XML, absolute self-consistent <loc>s, hreflang alternates
  *   - every page       : unique title + description, canonical self-reference,
- *                        hreflang set (en/tr/fa + x-default) that round-trips,
+ *                        hreflang set (en/ru/fa + x-default) that round-trips,
  *                        og:title/og:description/og:url/og:locale, twitter:card
  *   - JSON-LD          : parses, has @context/@type, Event nodes carry required fields
  *
@@ -24,7 +24,7 @@ const BASE = (args.find((a) => !a.startsWith("--")) ?? "http://localhost:8080").
 
 /** Canonical/hreflang host the source hardcodes (src/lib/seo.ts SITE_URL). */
 const SITE_URL = "https://www.idealgathering.com";
-const LANGS = ["en", "tr", "fa"];
+const LANGS = ["en", "ru", "fa"];
 
 const results = [];
 function check(group, name, ok, detail = "") {
@@ -116,7 +116,7 @@ async function checkSitemap() {
     const missingAlt = blocks.filter(
       (b) => !LANGS.every((l) => b.includes(`hreflang="${l}"`)) || !b.includes('hreflang="x-default"'),
     );
-    check(g, "every URL has en/tr/fa + x-default alternates", missingAlt.length === 0, `${missingAlt.length} entries missing`);
+    check(g, "every URL has en/ru/fa + x-default alternates", missingAlt.length === 0, `${missingAlt.length} entries missing`);
     check(g, "no fabricated <lastmod>", !body.includes("<lastmod>"), "");
   } catch (e) {
     check(g, "reachable", false, String(e));
@@ -170,7 +170,7 @@ async function checkPage(path, lang, seen) {
   if (!noindex) {
     const alts = linksOf(html, "alternate").filter((l) => l.hreflang);
     const map = new Map(alts.map((a) => [a.hreflang.toLowerCase(), a.href]));
-    check(g, "hreflang en/tr/fa present", LANGS.every((l) => map.has(l)), [...map.keys()].join(","));
+    check(g, "hreflang en/ru/fa present", LANGS.every((l) => map.has(l)), [...map.keys()].join(","));
     check(g, "hreflang x-default present", map.has("x-default"), "");
     check(
       g,
@@ -189,7 +189,7 @@ async function checkPage(path, lang, seen) {
   check(
     g,
     "og:locale matches language",
-    metaContent(html, "og:locale") === { en: "en_US", tr: "tr_TR", fa: "fa_IR" }[lang],
+    metaContent(html, "og:locale") === { en: "en_US", ru: "ru_RU", fa: "fa_IR" }[lang],
     metaContent(html, "og:locale") ?? "",
   );
   check(g, "has twitter:card", !!metaContent(html, "twitter:card"), "");

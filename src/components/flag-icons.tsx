@@ -31,16 +31,12 @@ export function FlagUK(props: FlagProps) {
   );
 }
 
-export function FlagTR(props: FlagProps) {
+export function FlagRU(props: FlagProps) {
   return (
     <svg {...baseProps} {...props}>
-      <rect width="60" height="40" fill="#E30A17" />
-      <circle cx="22" cy="20" r="8" fill="#fff" />
-      <circle cx="24.5" cy="20" r="6.4" fill="#E30A17" />
-      <polygon
-        fill="#fff"
-        points="33.5,20 29.35,21.35 31.92,17.82 31.92,22.18 29.35,18.65"
-      />
+      <rect width="60" height="13.33" y="0" fill="#fff" />
+      <rect width="60" height="13.34" y="13.33" fill="#0039A6" />
+      <rect width="60" height="13.33" y="26.67" fill="#D52B1E" />
     </svg>
   );
 }
@@ -60,7 +56,7 @@ export function FlagIR(props: FlagProps) {
 
 export function LangFlag({ code, className }: { code: Lang; className?: string }) {
   const common = { className, role: "img" as const, "aria-hidden": true };
-  if (code === "tr") return <FlagTR {...common} />;
+  if (code === "ru") return <FlagRU {...common} />;
   if (code === "fa") return <FlagIR {...common} />;
   return <FlagUK {...common} />;
 }
