@@ -1,8 +1,10 @@
-export type Lang = "en" | "tr" | "fa";
+import { ru } from "./ru";
+
+export type Lang = "en" | "ru" | "fa";
 
 export const LANGS: { code: Lang; label: string; short: string; flag: string }[] = [
   { code: "en", label: "English", short: "EN", flag: "🇬🇧" },
-  { code: "tr", label: "Türkçe", short: "TR", flag: "🇹🇷" },
+  { code: "ru", label: "Русский", short: "RU", flag: "🇷🇺" },
   { code: "fa", label: "فارسی", short: "FA", flag: "🇮🇷" },
 ];
 
