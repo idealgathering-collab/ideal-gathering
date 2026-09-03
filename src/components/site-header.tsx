@@ -12,7 +12,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { useT } from "@/i18n";
 import { setAdminPreview } from "@/lib/roles";
-import { getMostIncompleteSection, getCompletionLevel, getCompletionColor } from "@/lib/profile-completion";
+import { getMostIncompleteSection, getCompletionLevel, getCompletionColor, parseActionUrl } from "@/lib/profile-completion";
 import type { GuestProfile } from "@/lib/guest-profile";
 
 export function SiteHeader() {

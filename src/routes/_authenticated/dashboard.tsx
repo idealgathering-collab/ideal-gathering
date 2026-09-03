@@ -17,7 +17,7 @@ import { FeedbackCard, FeedbackDialog, usePendingFeedback } from "@/components/f
 import { useState } from "react";
 import type { PendingFeedback } from "@/lib/feedback.functions";
 import { fetchRoles, isAdminPreview } from "@/lib/roles";
-import { getMostIncompleteSection, getProfileCompletion, type ProfileCompletion } from "@/lib/profile-completion";
+import { getMostIncompleteSection, getProfileCompletion, parseActionUrl, type ProfileCompletion } from "@/lib/profile-completion";
 import type { GuestProfile } from "@/lib/guest-profile";
 
 
