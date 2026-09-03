@@ -1,7 +1,7 @@
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { ArrowLeft, LogOut, Settings, Shield, Sparkles } from "lucide-react";
 import { NotificationsBell } from "@/components/notifications-bell";
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ComponentProps } from "react";
 import logoAsset from "@/assets/ideal-gathering-logo.png.asset.json";
 
 
@@ -12,7 +12,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { useT } from "@/i18n";
 import { setAdminPreview } from "@/lib/roles";
-import { getMostIncompleteSection, getCompletionLevel, getCompletionColor } from "@/lib/profile-completion";
+import { getMostIncompleteSection, getCompletionLevel, getCompletionColor, parseActionUrl } from "@/lib/profile-completion";
 import type { GuestProfile } from "@/lib/guest-profile";
 
 export function SiteHeader() {
@@ -133,7 +133,7 @@ export function SiteHeader() {
                   size="sm"
                   className="hidden rounded-full sm:inline-flex text-orange-500 hover:text-orange-400 hover:bg-orange-500/10"
                 >
-                  <Link to={incompleteSection.actionUrl ?? "/profile"}>
+                  <Link {...(parseActionUrl(incompleteSection.actionUrl ?? "/profile") as unknown as ComponentProps<typeof Link>)}>
                     <Sparkles className="me-1 h-3.5 w-3.5" />
                     {t("nav.completeProfile")}
                   </Link>

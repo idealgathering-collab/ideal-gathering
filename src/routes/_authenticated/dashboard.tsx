@@ -1,4 +1,4 @@
-import type { ElementType } from "react";
+import type { ComponentProps, ElementType } from "react";
 import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { Compass, Plus, Users, MessageCircle, Calendar, ArrowRight, Sparkles } from "lucide-react";
@@ -17,7 +17,7 @@ import { FeedbackCard, FeedbackDialog, usePendingFeedback } from "@/components/f
 import { useState } from "react";
 import type { PendingFeedback } from "@/lib/feedback.functions";
 import { fetchRoles, isAdminPreview } from "@/lib/roles";
-import { getMostIncompleteSection, getProfileCompletion, type ProfileCompletion } from "@/lib/profile-completion";
+import { getMostIncompleteSection, getProfileCompletion, parseActionUrl, type ProfileCompletion } from "@/lib/profile-completion";
 import type { GuestProfile } from "@/lib/guest-profile";
 
 
@@ -309,7 +309,7 @@ function CompleteProfileNudge({ section }: { section: ReturnType<typeof getMostI
           </p>
           {section.actionUrl && (
             <Button asChild size="sm" className="mt-3 rounded-full">
-              <Link to={section.actionUrl}>
+              <Link {...(parseActionUrl(section.actionUrl) as unknown as ComponentProps<typeof Link>)}>
                 {t("dash.completeProfileCtA")}
               </Link>
             </Button>

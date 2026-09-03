@@ -122,12 +122,12 @@ export function getSectionCompletion(
     aura: {
       promptKey: "profile.completion.aura.prompt",
       titleKey: "profile.completion.aura.title",
-      actionUrl: isSelf ? "/onboarding/quiz" : undefined,
+      actionUrl: isSelf ? "/onboarding?step=quiz" : undefined,
     },
     style: {
       promptKey: "profile.completion.style.prompt",
       titleKey: "profile.completion.style.title",
-      actionUrl: isSelf ? "/onboarding/preferences" : undefined,
+      actionUrl: isSelf ? "/onboarding?step=prefs" : undefined,
     },
     loves: {
       promptKey: "profile.completion.loves.prompt",
@@ -137,7 +137,7 @@ export function getSectionCompletion(
     here: {
       promptKey: "profile.completion.here.prompt",
       titleKey: "profile.completion.here.title",
-      actionUrl: isSelf ? "/onboarding/preferences" : undefined,
+      actionUrl: isSelf ? "/onboarding?step=prefs" : undefined,
     },
     story: {
       promptKey: "profile.completion.story.prompt",
@@ -280,4 +280,21 @@ export function getCompletionColor(level: CompletionLevel): string {
     complete: "#8B5CF6",   // purple-500
   };
   return colors[level];
+}
+
+/**
+ * Split an actionUrl like "/onboarding?step=prefs" or "/profile#interests"
+ * into props usable by TanStack Router's <Link>.
+ */
+export function parseActionUrl(url: string): {
+  to: string;
+  search?: Record<string, string>;
+  hash?: string;
+} {
+  const [pathAndSearch, hash] = url.split("#");
+  const [to, query] = pathAndSearch.split("?");
+  const search = query
+    ? Object.fromEntries(new URLSearchParams(query).entries())
+    : undefined;
+  return { to, search, hash };
 }
