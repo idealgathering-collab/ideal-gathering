@@ -30,7 +30,7 @@
           "type": "object",
           "properties": {
             "city": {
-              "description": "Filter by venue city (e.g. Istanbul).",
+              "description": "Filter by venue city (e.g. Yerevan).",
               "type": "string"
             },
             "search": {

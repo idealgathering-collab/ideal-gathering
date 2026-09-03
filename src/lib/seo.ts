@@ -89,7 +89,7 @@ export const PAGE_SEO: Record<string, Record<SeoLang, Copy>> = {
     en: {
       title: "Privacy Policy — Ideal Gathering",
       description:
-        "How Ideal Gathering collects, uses, and protects your data. KVKK-aware notice for users in Türkiye.",
+        "How Ideal Gathering collects, uses, and protects your data. Privacy notice for users in Armenia.",
     },
     ru: {
       title: "Политика конфиденциальности — Ideal Gathering",

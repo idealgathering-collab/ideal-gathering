@@ -25,7 +25,7 @@ const TABLES: DemoTable[] = [
   {
     id: "t1",
     topicKey: "landing.v3.demo.card1.topic",
-    venue: "MOC Kadıköy",
+    venue: "Mirzoyan Kentron",
     whenKey: "landing.v3.demo.card1.when",
     seats: 5,
     taken: 3,

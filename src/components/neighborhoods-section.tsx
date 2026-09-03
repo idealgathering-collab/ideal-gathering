@@ -2,10 +2,10 @@ import { MapPin } from "lucide-react";
 import { useT } from "@/i18n";
 
 const HOODS: { name: string; cafes: string[] }[] = [
-  { name: "Kadıköy", cafes: ["MOC", "Petra Roasting Co.", "Coffee Department"] },
-  { name: "Karaköy", cafes: ["Kronotrop", "Norm Coffee", "Federal Coffee"] },
-  { name: "Beşiktaş", cafes: ["Ministry of Coffee", "Coffee Sapiens", "Walter's"] },
-  { name: "Nişantaşı", cafes: ["Probador Colectiva", "Pat!sserie", "Journey"] },
+  { name: "Kentron", cafes: ["Mirzoyan Library", "The Green Bean", "Aeon"] },
+  { name: "Cascade", cafes: ["Jazzve", "Charles", "Anteb"] },
+  { name: "Arabkir", cafes: ["Artbridge", "Tuff", "Coffeestory"] },
+  { name: "Nor Nork", cafes: ["247 Café", "Sam's Café", "Big Story"] },
 ];
 
 export function NeighborhoodsSection() {
@@ -41,7 +41,7 @@ export function NeighborhoodsSection() {
               <div className="relative">
                 <div className="flex items-center justify-between">
                   <div className="inline-flex items-center gap-1.5 text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                    <MapPin className="h-3.5 w-3.5" /> İstanbul
+                    <MapPin className="h-3.5 w-3.5" /> Yerevan
                   </div>
                   <span className="rounded-full bg-sunshine/60 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide">
                     {t("hoods.soon")}
