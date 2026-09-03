@@ -133,7 +133,7 @@ export function SiteHeader() {
                   size="sm"
                   className="hidden rounded-full sm:inline-flex text-orange-500 hover:text-orange-400 hover:bg-orange-500/10"
                 >
-                  <Link to={incompleteSection.actionUrl ?? "/profile"}>
+                  <Link {...(parseActionUrl(incompleteSection.actionUrl ?? "/profile") as never)}>
                     <Sparkles className="me-1 h-3.5 w-3.5" />
                     {t("nav.completeProfile")}
                   </Link>

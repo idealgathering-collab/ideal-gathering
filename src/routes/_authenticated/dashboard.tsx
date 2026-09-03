@@ -309,7 +309,7 @@ function CompleteProfileNudge({ section }: { section: ReturnType<typeof getMostI
           </p>
           {section.actionUrl && (
             <Button asChild size="sm" className="mt-3 rounded-full">
-              <Link to={section.actionUrl}>
+              <Link {...(parseActionUrl(section.actionUrl) as never)}>
                 {t("dash.completeProfileCtA")}
               </Link>
             </Button>
