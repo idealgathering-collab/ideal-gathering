@@ -21,14 +21,14 @@ type Props = {
   value: MapLocationValue | null;
   onChange: (v: MapLocationValue | null) => void;
   countryCode?: string | null;
-  /** Default center — falls back to Istanbul. */
+  /** Default center — falls back to Yerevan. */
   defaultCenter?: { lat: number; lng: number };
 };
 
-const DEFAULT_CENTER = { lat: 41.0082, lng: 28.9784 };
+const DEFAULT_CENTER = { lat: 40.1792, lng: 44.4991 };
 
 
-/** Device location (only when already granted), then profile city, then Istanbul. */
+/** Device location (only when already granted), then profile city, then Yerevan. */
 async function bestDefaultCenter(userId?: string) {
   const fix = await getPositionIfGranted();
   if (fix) return fix;

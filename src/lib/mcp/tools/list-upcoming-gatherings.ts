@@ -8,7 +8,7 @@ export default defineTool({
   description:
     "List approved upcoming gatherings at partner cafes/restaurants, ordered by start time. Optionally filter by city or a text search over the subject.",
   inputSchema: {
-    city: z.string().optional().describe("Filter by venue city (e.g. Istanbul)."),
+    city: z.string().optional().describe("Filter by venue city (e.g. Yerevan)."),
     search: z.string().optional().describe("Case-insensitive substring match on the gathering subject."),
     limit: z.number().int().min(1).max(50).optional().describe("Max rows to return (default 20)."),
   },

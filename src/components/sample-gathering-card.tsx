@@ -12,7 +12,7 @@ export type SampleGathering = {
 export const SAMPLE_GATHERINGS: SampleGathering[] = [
   {
     topic: "Building Startups over Espresso",
-    venue: "MOC Kadıköy",
+    venue: "Mirzoyan Kentron",
     when: "Thu · 19:00",
     seats: 5,
     filled: [
