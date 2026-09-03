@@ -281,3 +281,20 @@ export function getCompletionColor(level: CompletionLevel): string {
   };
   return colors[level];
 }
+
+/**
+ * Split an actionUrl like "/onboarding?step=prefs" or "/profile#interests"
+ * into props usable by TanStack Router's <Link>.
+ */
+export function parseActionUrl(url: string): {
+  to: string;
+  search?: Record<string, string>;
+  hash?: string;
+} {
+  const [pathAndSearch, hash] = url.split("#");
+  const [to, query] = pathAndSearch.split("?");
+  const search = query
+    ? Object.fromEntries(new URLSearchParams(query).entries())
+    : undefined;
+  return { to, search, hash };
+}
