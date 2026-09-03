@@ -599,3 +599,4 @@ export const ru: Record<string, string> = {
   "reset.mismatch": "Пароли не совпадают",
   "reset.submit": "Обновить пароль",
   "reset.success": "Пароль обновлён. Пожалуйста, войдите.",
+};
