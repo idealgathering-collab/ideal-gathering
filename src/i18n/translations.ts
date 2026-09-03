@@ -2532,8 +2532,8 @@ export const translations: Record<Lang, Dict> = {
     "privacy.retention.body": "تا زمانی که حساب‌تان فعال است. هر زمان می‌توانید از صفحهٔ پروفایل حساب‌تان را حذف کنید — این کار پروفایل، گردهمایی‌های میزبانی‌شده و صندلی‌های رزرو‌شدهٔ شما را پاک می‌کند.",
     "privacy.rights.title": "حقوق شما",
     "privacy.rights.body": "می‌توانید به دادهٔ خود دسترسی داشته باشید، آن را اصلاح یا حذف کنید. با ما تماس بگیرید و در زمانی معقول پاسخ می‌دهیم.",
-    "privacy.kvkk.title": "اطلاعیهٔ KVKK (ترکیه)",
-    "privacy.kvkk.body": "اگر در ترکیه هستید، قانون حفاظت از داده‌های شخصی (KVKK، شمارهٔ ۶۶۹۸) حقوقی مانند دسترسی، اصلاح، حذف و اعتراض بر داده‌های شخصی به شما می‌دهد. برای اعمال این حقوق به hello@idealgathering.com بنویسید.",
+    "privacy.kvkk.title": "اطلاعیهٔ حریم خصوصی (ارمنستان)",
+    "privacy.kvkk.body": "اگر در ارمنستان هستید، قانون حفاظت از داده‌های شخصی جمهوری ارمنستان حقوقی مانند دسترسی، اصلاح، حذف و اعتراض بر داده‌های شخصی به شما می‌دهد. برای اعمال این حقوق به hello@idealgathering.com بنویسید.",
     "privacy.contact.title": "تماس",
     "privacy.contact.body": "سؤالی دارید؟ hello@idealgathering.com.",
 
@@ -2555,7 +2555,7 @@ export const translations: Record<Lang, Dict> = {
     "terms.liability.title": "مسئولیت",
     "terms.liability.body": "سرویس «همان‌طور که هست» ارائه می‌شود. تا حداکثری که قانون اجازه می‌دهد، مسئول خسارت‌های غیرمستقیم یا تبعی نیستیم.",
     "terms.law.title": "قانون حاکم",
-    "terms.law.body": "این شرایط تابع قوانین جمهوری ترکیه است، بدون توجه به قواعد تعارض قوانین.",
+    "terms.law.body": "این شرایط تابع قوانین جمهوری ارمنستان است، بدون توجه به قواعد تعارض قوانین.",
     "terms.contact.title": "تماس",
     "terms.contact.body": "سؤالی دربارهٔ این شرایط دارید؟ hello@idealgathering.com.",
 
@@ -2766,7 +2766,7 @@ export const translations: Record<Lang, Dict> = {
     "landing.v4.hero.title1": "دیگر هیچ‌کس تنها نمی‌ماند.",
     "landing.v4.hero.title2": "فقط دور هم جمع شو.",
     "landing.v4.hero.sub":
-      "در یک مکان واقعی میزی کوچک و موضوع‌محور پیدا کن یا بساز. از استانبول شروع می‌کنیم — حساب مهمان رایگان بساز، بعد یک صندلی بردار.",
+      "در یک مکان واقعی میزی کوچک و موضوع‌محور پیدا کن یا بساز. از ایروان شروع می‌کنیم — حساب مهمان رایگان بساز، بعد یک صندلی بردار.",
     "landing.v4.hero.cta": "به یک گردهمایی بپیوند",
     "landing.v4.hero.secondary": "ببین چطور کار می‌کند",
 
@@ -2794,25 +2794,25 @@ export const translations: Record<Lang, Dict> = {
     "landing.v4.upcoming.subtitle": "نمونه‌هایی از میزهایی که می‌توانی به آن‌ها بپیوندی یا میزبان‌شان باشی.",
     "landing.v4.upcoming.footnote": "این دورهمی‌ها نمونه و برای نمایش هستند.",
     "landing.v4.upcoming.g1.activity": "قهوهٔ صبح و گپ آرام",
-    "landing.v4.upcoming.g1.city": "کادیکوی، استانبول",
+    "landing.v4.upcoming.g1.city": "کنتربن، ایروان",
     "landing.v4.upcoming.g1.when": "پنجشنبه · ۰۹:۳۰",
     "landing.v4.upcoming.g2.activity": "پیاده‌روی سحرگاهی تا بلندی",
-    "landing.v4.upcoming.g2.city": "بیکوز، استانبول",
+    "landing.v4.upcoming.g2.city": "نور نورک، ایروان",
     "landing.v4.upcoming.g2.when": "شنبه · ۰۶:۴۵",
     "landing.v4.upcoming.g3.activity": "شب بازی‌های رومیزی",
-    "landing.v4.upcoming.g3.city": "کاراکوی، استانبول",
+    "landing.v4.upcoming.g3.city": "کاسکاد، ایروان",
     "landing.v4.upcoming.g3.when": "جمعه · ۲۰:۰۰",
     "landing.v4.upcoming.g4.activity": "یک شام طولانی، بدون برنامه",
-    "landing.v4.upcoming.g4.city": "بشیکتاش، استانبول",
+    "landing.v4.upcoming.g4.city": "عربکیر، ایروان",
     "landing.v4.upcoming.g4.when": "یکشنبه · ۱۹:۳۰",
     "landing.v4.upcoming.g5.activity": "کلوب فیلم: یک فیلم قدیمی",
-    "landing.v4.upcoming.g5.city": "نیشانتاشی، استانبول",
+    "landing.v4.upcoming.g5.city": "داوتاشن، ایروان",
     "landing.v4.upcoming.g5.when": "چهارشنبه · ۲۱:۰۰",
     "landing.v4.upcoming.seats": "{n} صندلی",
 
     "landing.v4.diff.title": "میز را تو انتخاب می‌کنی. آدم‌ها را ما کمک می‌کنیم پیدا کنی.",
     "landing.v4.diff.body":
-      "به یک گردهمایی موجود بپیوند یا خودت یکی بساز — جمع کوچک، یک موضوع، یک مکان واقعی. از استانبول شروع می‌کنیم.",
+      "به یک گردهمایی موجود بپیوند یا خودت یکی بساز — جمع کوچک، یک موضوع، یک مکان واقعی. از ایروان شروع می‌کنیم.",
 
     "landing.v4.safety.title": "بدون فشار. جمع‌های کوچک. به آهنگ خودت.",
     "landing.v4.safety.body1":
@@ -2839,7 +2839,7 @@ export const translations: Record<Lang, Dict> = {
     "landing.v3.hero.sub": "Ideal Gathering چند نفر را دور یک موضوع، در کافه‌ای در محلهٔ شما، سر یک میز می‌نشاند. موضوع را انتخاب کنید، صندلی‌تان را بگیرید و بیایید.",
     "landing.v3.hero.cta": "به یک گردهمایی بپیوندید",
     "landing.v3.hero.secondary": "ببینید چطور کار می‌کند",
-    "landing.v3.hero.note": "پیوستن رایگان · تأیید ایمیل · شروع از استانبول",
+    "landing.v3.hero.note": "پیوستن رایگان · تأیید ایمیل · شروع از ایروان",
     "landing.v3.hero.waitlist": "یا به فهرست انتظار بپیوندید",
     "landing.v3.hero.caption": "سر هر میز یک صندلی خالی می‌ماند. تمام ماجرا همان صندلی است.",
 
@@ -2992,7 +2992,7 @@ export const translations: Record<Lang, Dict> = {
     "landing.v3.traction.t1.title": "سه زبان، به‌طور کامل",
     "landing.v3.traction.t1.body": "انگلیسی، ترکی و فارسی — همراه با چیدمان راست‌به‌چپ برای فارسی.",
     "landing.v3.traction.t2.title": "شهر به شهر راه می‌اندازیم",
-    "landing.v3.traction.t2.body": "از استانبول شروع می‌کنیم و محله به محله رشد می‌کنیم. شهرهای بعدی بعداً می‌آیند.",
+    "landing.v3.traction.t2.body": "از ایروان شروع می‌کنیم و محله به محله رشد می‌کنیم. شهرهای بعدی بعداً می‌آیند.",
     "landing.v3.traction.t3.title": "مکان‌های بررسی‌شده",
     "landing.v3.traction.t3.body": "هر کافه یا رستوران پیش از میزبانی از مسیر تأیید مدیر عبور می‌کند.",
     "landing.v3.traction.t4.title": "عضویت تأییدشده",
