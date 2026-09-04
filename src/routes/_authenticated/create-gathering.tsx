@@ -2,6 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { ADD_NEW_LOCATION, createGatheringSchema } from "@/lib/create-gathering-rules";
+import { areaForPoint } from "@/lib/yerevan-areas";
 import { toast } from "sonner";
 import { Sparkles } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
@@ -41,6 +42,7 @@ type PartnerOption = {
   tableId: string;
   bizName: string;
   bizCity: string | null;
+  bizArea: string | null;
   tableLabel: string;
   tableCapacity: number;
 };
