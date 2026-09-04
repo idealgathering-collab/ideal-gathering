@@ -115,16 +115,22 @@ function CreateGathering() {
         .from("venue_tables")
         .select("id,label,capacity,business_id")
         .in("business_id", ids);
-      const bizMap = new Map<string, { name: string; city: string | null }>();
-      for (const b of bizList) bizMap.set(b.id, { name: b.name, city: b.city });
+      const bizMap = new Map<
+        string,
+        { name: string; city: string | null; lat: number | null; lng: number | null }
+      >();
+      for (const b of bizList)
+        bizMap.set(b.id, { name: b.name, city: b.city, lat: b.lat, lng: b.lng });
       return (tables ?? []).map((tbl) => {
-        const biz = bizMap.get(tbl.business_id) ?? { name: "—", city: null };
+        const biz = bizMap.get(tbl.business_id) ?? { name: "—", city: null, lat: null, lng: null };
         return {
           key: `venue:${tbl.business_id}:${tbl.id}`,
           bizId: tbl.business_id,
           tableId: tbl.id,
           bizName: biz.name,
           bizCity: biz.city,
+          bizArea:
+            biz.lat != null && biz.lng != null ? areaForPoint(biz.lat, biz.lng) : null,
           tableLabel: tbl.label,
           tableCapacity: tbl.capacity,
         };
@@ -184,7 +190,7 @@ function CreateGathering() {
           business_id: bizId,
           table_id: tableId,
           venue_name: p.bizName,
-          neighborhood: p.bizCity ?? "",
+          neighborhood: p.bizArea ?? "",
           city: p.bizCity,
         };
       } else if (v.location.startsWith("saved:")) {
