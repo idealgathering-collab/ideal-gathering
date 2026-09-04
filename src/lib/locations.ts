@@ -1,3 +1,5 @@
+import { YEREVAN_AREA_NAMES } from "@/lib/yerevan-areas";
+
 // Static country + city + neighborhood catalogue for profile dropdowns.
 // TR + IR are our primary markets; a few global cities help early expat/international users.
 
@@ -79,22 +81,8 @@ export const CITIES_BY_COUNTRY: Record<string, string[]> = {
 // Recognizable districts/neighborhoods per city. Any city not listed here
 // falls back to a free-text input in the profile UI.
 export const NEIGHBORHOODS_BY_CITY: Record<string, string[]> = {
-  "Yerevan": [
-    "Kentron",
-    "Arabkir",
-    "Ajapnyak",
-    "Avan",
-    "Davtashen",
-    "Erebuni",
-    "Kanaker-Zeytun",
-    "Malatia-Sebastia",
-    "Nor Nork",
-    "Nork-Marash",
-    "Nubarashen",
-    "Shengavit",
-    "Cascade",
-    "Kond",
-  ],
+  // Yerevan comes from the canonical area catalogue so there is a single list.
+  "Yerevan": YEREVAN_AREA_NAMES,
   "İstanbul": [
     "Kadıköy",
     "Beşiktaş",

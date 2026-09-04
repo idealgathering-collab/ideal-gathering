@@ -1,3 +1,8 @@
+import { YEREVAN_BOUNDS } from "@/lib/yerevan-areas";
+
+/** Yerevan bias box: left,top,right,bottom. */
+const YEREVAN_VIEWBOX = `${YEREVAN_BOUNDS.minLng},${YEREVAN_BOUNDS.maxLat},${YEREVAN_BOUNDS.maxLng},${YEREVAN_BOUNDS.minLat}`;
+
 // Shared Nominatim rate limiter (1.1s between requests per usage policy).
 let lastRequestAt = 0;
 
@@ -67,7 +72,13 @@ export async function geocodePlace(
   if (!key) return null;
   if (forwardCache.has(key)) return forwardCache.get(key) ?? null;
   await nominatimRateLimit();
-  const params = new URLSearchParams({ format: "jsonv2", q: query, limit: "1" });
+  const params = new URLSearchParams({
+    format: "jsonv2",
+    q: query,
+    limit: "1",
+    countrycodes: "am",
+    viewbox: YEREVAN_VIEWBOX,
+  });
   try {
     const res = await fetch(`https://nominatim.openstreetmap.org/search?${params}`, { signal });
     if (!res.ok) return null;

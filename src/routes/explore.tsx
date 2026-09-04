@@ -5,6 +5,7 @@ import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { GatheringCard } from "@/components/gathering-card";
 import { CityFilter } from "@/components/city-filter";
+import { AreaFilter } from "@/components/area-filter";
 import { ExploreSort } from "@/components/explore-sort";
 import { GatheringTypeFilter } from "@/components/gathering-type-filter";
 import { RecommendedRow } from "@/components/recommended-row";
@@ -18,19 +19,21 @@ import { getTableFit } from "@/lib/matching.functions";
 import { composeRank, preferenceScore } from "@/lib/recommend";
 import { hasAnyAnswer, loadMyGatheringPreferences } from "@/lib/gathering-preferences";
 import { GATHERING_TYPES, type GatheringType } from "@/lib/gathering-types";
+import { YEREVAN_AREA_NAMES, isYerevan } from "@/lib/yerevan-areas";
 import { supabase } from "@/integrations/supabase/client";
 import { useSession } from "@/hooks/use-session";
 import { useI18n, useT } from "@/i18n";
 import { localizedHead, jsonLdGatheringList, type SeoLang } from "@/lib/seo";
 import { JsonLd } from "@/components/json-ld";
 
-type ExploreSearch = { lang?: SeoLang; city?: string; sort?: SortMode; type?: GatheringType };
+type ExploreSearch = { lang?: SeoLang; city?: string; area?: string; sort?: SortMode; type?: GatheringType };
 
 export const Route = createFileRoute("/explore")({
   component: Explore,
   validateSearch: (search: Record<string, unknown>): ExploreSearch => ({
     ...(search.lang === "ru" || search.lang === "fa" ? { lang: search.lang } : {}),
     ...(typeof search.city === "string" && search.city.trim() ? { city: search.city.trim() } : {}),
+    ...(typeof search.area === "string" && search.area.trim() ? { area: search.area.trim() } : {}),
     ...(isSortMode(search.sort) ? { sort: search.sort } : {}),
     ...(typeof search.type === "string" && GATHERING_TYPES.includes(search.type as GatheringType) ? { type: search.type as GatheringType } : {}),
   }),
@@ -71,6 +74,8 @@ function Explore() {
   const waitingForProfile = !!user && !hasExplicitChoice && profileLoading;
   const activeCity = hasExplicitChoice ? explicitCity : profileCity ?? null;
   const activeType = search.type ?? null;
+  const showAreaFilter = isYerevan(activeCity);
+  const activeArea = showAreaFilter ? search.area ?? null : null;
 
   const { data: cities } = useQuery({
     queryKey: ["gathering-cities"],
@@ -87,6 +92,14 @@ function Explore() {
     navigate({
       to: "/explore",
       search: (prev: ExploreSearch) => ({ ...prev, city: city ?? "all" }),
+      replace: true,
+    });
+  }
+
+  function setArea(area: string | null) {
+    navigate({
+      to: "/explore",
+      search: (prev: ExploreSearch) => ({ ...prev, area: area ?? undefined }),
       replace: true,
     });
   }
@@ -137,7 +150,11 @@ function Explore() {
     });
   }
 
-  const withDistance = (gatherings ?? []).map((g) => {
+  const visible = activeArea
+    ? (gatherings ?? []).filter((g) => (g.neighborhood ?? "").trim() === activeArea)
+    : gatherings ?? [];
+
+  const withDistance = visible.map((g) => {
     const coords = gatheringCoords(g);
     const distanceKm = nearMe && geo.fix && coords ? haversineKm(geo.fix, coords) : null;
     const fitRow = fitById.get(g.id);
@@ -158,7 +175,7 @@ function Explore() {
   const recommended = canRecommend ? pickRecommended(sorted, 3) : [];
 
   const busy = isLoading || waitingForProfile;
-  const empty = !busy && (!gatherings || gatherings.length === 0);
+  const empty = !busy && visible.length === 0;
 
 
   return (
@@ -184,6 +201,9 @@ function Explore() {
       <main className="mx-auto max-w-6xl px-4 py-14">
         <div className="mb-8 flex flex-wrap items-center gap-3">
           <CityFilter city={activeCity} cities={cities ?? []} onChange={setCity} />
+          {showAreaFilter && (
+            <AreaFilter area={activeArea} areas={YEREVAN_AREA_NAMES} onChange={setArea} />
+          )}
           <GatheringTypeFilter type={activeType} onChange={setGatheringType} />
           <ExploreSort
             mode={sortMode}

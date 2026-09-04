@@ -1,15 +1,19 @@
 import { MapPin } from "lucide-react";
-import { useT } from "@/i18n";
+import { useI18n, useT } from "@/i18n";
+import { YEREVAN_AREAS, areaLabel } from "@/lib/yerevan-areas";
 
-const HOODS: { name: string; cafes: string[] }[] = [
-  { name: "Kentron", cafes: ["Mirzoyan Library", "The Green Bean", "Aeon"] },
-  { name: "Cascade", cafes: ["Jazzve", "Charles", "Anteb"] },
-  { name: "Arabkir", cafes: ["Artbridge", "Tuff", "Coffeestory"] },
-  { name: "Nor Nork", cafes: ["247 Café", "Sam's Café", "Big Story"] },
-];
+const CAFES_BY_AREA: Record<string, string[]> = {
+  Kentron: ["Mirzoyan Library", "The Green Bean", "Aeon"],
+  Cascade: ["Jazzve", "Charles", "Anteb"],
+  Arabkir: ["Artbridge", "Tuff", "Coffeestory"],
+  "Nor Nork": ["247 Café", "Sam's Café", "Big Story"],
+};
+
+const HOODS = YEREVAN_AREAS.filter((a) => a.featured).slice(0, 4);
 
 export function NeighborhoodsSection() {
   const t = useT();
+  const { lang } = useI18n();
   return (
     <section id="partners" className="border-t border-border bg-background">
       <div className="mx-auto max-w-6xl px-4 py-20 sm:py-28">
@@ -27,7 +31,7 @@ export function NeighborhoodsSection() {
         <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {HOODS.map((h) => (
             <article
-              key={h.name}
+              key={h.id}
               className="group relative overflow-hidden rounded-3xl border border-border bg-card p-6 shadow-soft transition hover:-translate-y-1 hover:shadow-plum"
             >
               <div
@@ -47,9 +51,9 @@ export function NeighborhoodsSection() {
                     {t("hoods.soon")}
                   </span>
                 </div>
-                <h3 className="mt-3 font-display text-3xl leading-tight">{h.name}</h3>
+                <h3 className="mt-3 font-display text-3xl leading-tight">{areaLabel(h.id, lang)}</h3>
                 <ul className="mt-5 space-y-2">
-                  {h.cafes.map((c) => (
+                  {(CAFES_BY_AREA[h.id] ?? []).map((c) => (
                     <li key={c} className="flex items-center gap-2 text-sm">
                       <span className="grid h-7 w-7 place-items-center rounded-lg bg-gradient-cool text-[11px] font-medium text-primary-foreground">
                         {c
