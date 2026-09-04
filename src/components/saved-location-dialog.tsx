@@ -13,28 +13,45 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { LocationMapPicker, type MapLocationValue } from "@/components/location-map-picker";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { YEREVAN_AREAS, areaLabel } from "@/lib/yerevan-areas";
 import { supabase } from "@/integrations/supabase/client";
 import { useSession } from "@/hooks/use-session";
-import { useT } from "@/i18n";
+import { useI18n, useT } from "@/i18n";
 
 type Props = {
   open: boolean;
   onOpenChange: (v: boolean) => void;
   onSaved?: (id: string) => void;
-  /** ISO country code to bias Nominatim search. Falls back to TR. */
+  /** ISO country code to bias Nominatim search. Falls back to AM. */
   countryCode?: string | null;
 };
 
 export function SavedLocationDialog({ open, onOpenChange, onSaved, countryCode }: Props) {
   const t = useT();
+  const { lang } = useI18n();
   const { user } = useSession();
   const [label, setLabel] = useState("");
   const [picked, setPicked] = useState<MapLocationValue | null>(null);
+  const [area, setArea] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
   function reset() {
     setLabel("");
     setPicked(null);
+    setArea(null);
+  }
+
+  function handlePicked(v: MapLocationValue | null) {
+    setPicked(v);
+    // Pre-fill the area from the pin; the host can still change it.
+    setArea(v?.area ?? null);
   }
 
   async function submit() {
@@ -52,7 +69,7 @@ export function SavedLocationDialog({ open, onOpenChange, onSaved, countryCode }
           label: label.trim(),
           address: picked.address || picked.display_name,
           city: picked.city || null,
-          neighborhood: null,
+          neighborhood: area,
           lat: picked.lat,
           lng: picked.lng,
           street_number: picked.street_number.trim(),
@@ -98,10 +115,25 @@ export function SavedLocationDialog({ open, onOpenChange, onSaved, countryCode }
           <ClientOnly fallback={<div className="h-72 rounded-2xl border border-border bg-muted/30" />}>
             <LocationMapPicker
               value={picked}
-              onChange={setPicked}
-              countryCode={countryCode ?? "tr"}
+              onChange={handlePicked}
+              countryCode={countryCode ?? "am"}
             />
           </ClientOnly>
+          <div className="grid gap-2">
+            <Label>{t("savedLoc.area")}</Label>
+            <Select value={area ?? undefined} onValueChange={setArea}>
+              <SelectTrigger>
+                <SelectValue placeholder={t("savedLoc.areaPh")} />
+              </SelectTrigger>
+              <SelectContent>
+                {YEREVAN_AREAS.map((a) => (
+                  <SelectItem key={a.id} value={a.id}>
+                    {areaLabel(a.id, lang)}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
         </div>
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)} disabled={busy}>

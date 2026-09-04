@@ -38,7 +38,7 @@ type Props = {
   placeholder?: string;
   cityOnly?: boolean;
   required?: boolean;
-  countryCodes?: string; // e.g. "tr"
+  countryCodes?: string; // e.g. "am"
 };
 
 // Client-side rate limit: min 1.1s between requests per Nominatim policy
@@ -58,7 +58,7 @@ export function LocationAutocomplete({
   placeholder,
   cityOnly = false,
   required,
-  countryCodes = "tr",
+  countryCodes = "am",
 }: Props) {
   const [results, setResults] = useState<NominatimResult[]>([]);
   const [open, setOpen] = useState(false);

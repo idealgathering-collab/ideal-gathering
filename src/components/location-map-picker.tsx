@@ -8,6 +8,7 @@ import { LocationAutocomplete, type LocationValue } from "@/components/location-
 import { reverseGeocode, extractCity, geocodePlace } from "@/lib/nominatim";
 import { UseMyLocationButton } from "@/components/use-my-location-button";
 import { getPositionIfGranted } from "@/lib/geolocation";
+import { areaForPoint } from "@/lib/yerevan-areas";
 import { supabase } from "@/integrations/supabase/client";
 import { useSession } from "@/hooks/use-session";
 import { useT } from "@/i18n";
@@ -15,6 +16,8 @@ import { useT } from "@/i18n";
 export type MapLocationValue = LocationValue & {
   street_number: string;
   description: string;
+  /** Resolved Yerevan area for the pin, when it falls inside the city. */
+  area?: string | null;
 };
 
 type Props = {
@@ -154,7 +157,7 @@ export function LocationMapPicker({ value, onChange, countryCode, defaultCenter 
   }
 
   function emit(next: MapLocationValue) {
-    onChange(next);
+    onChange({ ...next, area: areaForPoint(next.lat, next.lng) });
   }
 
   function onAutocompletePick(v: LocationValue) {
@@ -217,7 +220,7 @@ export function LocationMapPicker({ value, onChange, countryCode, defaultCenter 
             value={searchText}
             onChange={setSearchText}
             onSelect={onAutocompletePick}
-            countryCodes={(countryCode ?? "tr").toLowerCase()}
+            countryCodes={(countryCode ?? "am").toLowerCase()}
             placeholder={t("savedLoc.addressPh")}
           />
         </div>
