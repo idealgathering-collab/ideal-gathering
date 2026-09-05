@@ -205,8 +205,13 @@ function asStringArray(value: unknown): string[] {
 
 /**
  * Transform database profile data into the ProfileCardData format.
+ * Style fields come from user_gathering_preferences, not from profiles.
  */
-function transformProfileData(data: ProfileSelection, story: ProfileCardStoryItem[]): ProfileCardData {
+function transformProfileData(
+  data: ProfileSelection,
+  story: ProfileCardStoryItem[],
+  style: StylePrefs,
+): ProfileCardData {
   return {
     id: data.id,
     displayName: data.display_name,
@@ -222,10 +227,10 @@ function transformProfileData(data: ProfileSelection, story: ProfileCardStoryIte
     traitCuriosity: data.trait_curiosity,
     traitWarmth: data.trait_warmth,
     traitDepth: data.trait_depth,
-    energyLevel: data.energy_level,
-    groupSize: data.group_size,
-    talkStyle: data.talk_style,
-    newPeople: data.new_people_pref,
+    energyLevel: style.energyLevel,
+    groupSize: style.groupSize,
+    talkStyle: style.talkStyle,
+    newPeople: style.newPeople,
     interests: asStringArray(data.interests),
     intentions: asStringArray(data.intentions),
     story,
@@ -235,13 +240,19 @@ function transformProfileData(data: ProfileSelection, story: ProfileCardStoryIte
 }
 
 /**
- * Get the display name for a profile, falling back to a generic label.
+ * Get the display name for a profile.
+ * Falls back to the email local-part, then a neutral label — never "Guest".
  */
-export function getDisplayName(profile: { displayName: string | null } | null): string {
+export function getDisplayName(
+  profile: { displayName: string | null; email?: string | null } | null,
+): string {
   if (!profile) return "Unknown";
-  if (profile.displayName) return profile.displayName;
-  return "Guest";
+  if (profile.displayName?.trim()) return profile.displayName;
+  const local = profile.email?.split("@")[0]?.trim();
+  if (local) return local;
+  return "New member";
 }
+
 
 /**
  * Get the location string for a profile.
