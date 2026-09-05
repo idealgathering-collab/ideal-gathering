@@ -190,13 +190,19 @@ describe("Guest Profile Functions", () => {
       expect(getDisplayName(profile as ProfileCardData)).toBe("John Doe");
     });
 
-    it("should return 'Guest' when displayName is null", () => {
+    it("should fall back to the email local-part when displayName is null", () => {
+      expect(getDisplayName({ displayName: null, email: "ani@example.com" })).toBe("ani");
+    });
+
+    it("should never say 'Guest' when there is no name or email", () => {
       const profile: Partial<ProfileCardData> = {
         id: "1",
         displayName: null,
       };
-      expect(getDisplayName(profile as ProfileCardData)).toBe("Guest");
+      expect(getDisplayName(profile as ProfileCardData)).toBe("New member");
     });
+
+
 
     it("should return 'Unknown' when profile is null", () => {
       expect(getDisplayName(null)).toBe("Unknown");
