@@ -2,12 +2,12 @@ import { createFileRoute, Link, useNavigate, useRouter } from "@tanstack/react-r
 import { useState, useEffect } from "react";
 import { ArrowLeft, MessageSquareMore } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
-import { GuestProfileCard, GuestProfileCardSkeleton } from "@/components/guest-profile-card";
-import { loadGuestProfile } from "@/lib/guest-profile.functions";
+import { ProfileCard, ProfileCardSkeleton } from "@/components/profile-card";
+import { loadProfileCard } from "@/lib/profile-card.functions";
 import { useSession } from "@/hooks/use-session";
 import { Button } from "@/components/ui/button";
 import { useT } from "@/i18n";
-import type { GuestProfile } from "@/lib/guest-profile";
+import type { ProfileCardData } from "@/lib/profile-card";
 
 export const Route = createFileRoute("/_authenticated/people/$id")({
   head: () => ({
@@ -40,8 +40,8 @@ function PeopleProfilePage() {
   const { id: userId } = Route.useParams();
   const isSelf = user?.id === userId;
 
-  const [profile, setProfile] = useState<GuestProfile | null>(null);
-  const [viewerProfile, setViewerProfile] = useState<GuestProfile | null>(null);
+  const [profile, setProfile] = useState<ProfileCardData | null>(null);
+  const [viewerProfile, setViewerProfile] = useState<ProfileCardData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
@@ -49,8 +49,8 @@ function PeopleProfilePage() {
   useEffect(() => {
     setLoading(true);
     Promise.all([
-      loadGuestProfile(userId),
-      user ? loadGuestProfile(user.id) : Promise.resolve(null),
+      loadProfileCard(userId),
+      user ? loadProfileCard(user.id) : Promise.resolve(null),
     ])
       .then(([p, viewerP]) => {
         setProfile(p);
@@ -85,7 +85,7 @@ function PeopleProfilePage() {
             </Button>
             <h1 className="font-display text-xl text-white">{t("profile.loading")}</h1>
           </div>
-          <GuestProfileCardSkeleton darkTheme={true} />
+          <ProfileCardSkeleton darkTheme={true} />
         </main>
       </div>
     );
@@ -161,7 +161,7 @@ function PeopleProfilePage() {
         </div>
 
         {/* Profile card with dark theme - EXACT from image */}
-        <GuestProfileCard
+        <ProfileCard
           profile={profile}
           darkTheme={true}
           interactive={true}

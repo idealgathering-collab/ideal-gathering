@@ -1,5 +1,5 @@
 import type { SectionCompletion } from "@/lib/profile-completion";
-import type { GuestStory, GuestStoryItem } from "@/lib/guest-profile";
+import type { ProfileCardStory, ProfileCardStoryItem } from "@/lib/profile-card";
 import { Sector, type SectorProps } from "@/components/profile/sector";
 import { useT } from "@/i18n";
 import { ChevronRight } from "lucide-react";
@@ -9,10 +9,10 @@ import { ChevronRight } from "lucide-react";
  * Shows timeline with venue covers and timestamp dots
  */
 export interface StoryProps extends Omit<SectorProps, "sector" | "hasData" | "children"> {
-  story: GuestStory | null;
+  story: ProfileCardStory | null;
   maxDisplay?: number;
   interactive?: boolean;
-  onItemClick?: (item: GuestStoryItem) => void;
+  onItemClick?: (item: ProfileCardStoryItem) => void;
   showViewAll?: boolean;
   onViewAll?: () => void;
   completion?: SectionCompletion;
@@ -30,9 +30,9 @@ function StoryItemCard({
   interactive,
   onClick,
 }: {
-  item: GuestStoryItem;
+  item: ProfileCardStoryItem;
   interactive: boolean;
-  onClick?: (item: GuestStoryItem) => void;
+  onClick?: (item: ProfileCardStoryItem) => void;
 }) {
   const date = new Date(item.date);
   const dateStr = date.toLocaleDateString(undefined, {
@@ -169,8 +169,8 @@ export function StoryFilmstrip({
   items,
   onItemClick,
 }: {
-  items: GuestStoryItem[];
-  onItemClick?: (item: GuestStoryItem) => void;
+  items: ProfileCardStoryItem[];
+  onItemClick?: (item: ProfileCardStoryItem) => void;
 }) {
   if (!items || items.length === 0) {
     return null;

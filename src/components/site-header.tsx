@@ -13,7 +13,7 @@ import { LanguageSwitcher } from "@/components/language-switcher";
 import { useT } from "@/i18n";
 import { setAdminPreview } from "@/lib/roles";
 import { getMostIncompleteSection, getCompletionLevel, getCompletionColor, parseActionUrl } from "@/lib/profile-completion";
-import type { GuestProfile } from "@/lib/guest-profile";
+import type { ProfileCardData } from "@/lib/profile-card";
 
 export function SiteHeader() {
   const { user } = useSession();
@@ -48,8 +48,8 @@ export function SiteHeader() {
     // Load profile completion
     const currentUser = user;
     async function loadCompletion() {
-      const { loadGuestProfile } = await import("@/lib/guest-profile.functions");
-      const profile = await loadGuestProfile(currentUser.id);
+      const { loadProfileCard } = await import("@/lib/profile-card.functions");
+      const profile = await loadProfileCard(currentUser.id);
       if (profile) {
         const { getProfileCompletion } = await import("@/lib/profile-completion");
         const completion = getProfileCompletion(profile, true);

@@ -1,5 +1,5 @@
 import type { SectionCompletion } from "@/lib/profile-completion";
-import type { GuestLoves } from "@/lib/guest-profile";
+import type { ProfileCardLoves } from "@/lib/profile-card";
 import { Sector, type SectorProps } from "@/components/profile/sector";
 import { getInterestVisualMedium } from "@/lib/interest-visuals";
 import { useT } from "@/i18n";
@@ -11,7 +11,7 @@ import { Edit3 } from "lucide-react";
  * Shows interests as circular photo tiles with icons
  */
 export interface LovesProps extends Omit<SectorProps, "sector" | "hasData" | "children"> {
-  loves: GuestLoves | null;
+  loves: ProfileCardLoves | null;
   maxDisplay?: number;
   showEdit?: boolean;
   onEdit?: () => void;

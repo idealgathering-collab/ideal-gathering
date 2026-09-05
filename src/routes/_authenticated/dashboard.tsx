@@ -18,7 +18,7 @@ import { useState } from "react";
 import type { PendingFeedback } from "@/lib/feedback.functions";
 import { fetchRoles, isAdminPreview } from "@/lib/roles";
 import { getMostIncompleteSection, getProfileCompletion, parseActionUrl, type ProfileCompletion } from "@/lib/profile-completion";
-import type { GuestProfile } from "@/lib/guest-profile";
+import type { ProfileCardData } from "@/lib/profile-card";
 
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
@@ -162,17 +162,17 @@ function Dashboard() {
   const pending = usePendingFeedback(!!user);
   const [fbItem, setFbItem] = useState<PendingFeedback | null>(null);
 
-  const { data: guestProfile } = useQuery({
-    queryKey: ["guest-profile", user?.id],
+  const { data: profileCard } = useQuery({
+    queryKey: ["profile-card", user?.id],
     enabled: !!user,
     queryFn: async () => {
-      const { loadGuestProfile } = await import("@/lib/guest-profile.functions");
-      return await loadGuestProfile(user!.id);
+      const { loadProfileCard } = await import("@/lib/profile-card.functions");
+      return await loadProfileCard(user!.id);
     },
   });
 
-  const completion = guestProfile ? getProfileCompletion(guestProfile, true) : null;
-  const mostIncomplete = guestProfile ? getMostIncompleteSection(guestProfile, true) : null;
+  const completion = profileCard ? getProfileCompletion(profileCard, true) : null;
+  const mostIncomplete = profileCard ? getMostIncompleteSection(profileCard, true) : null;
 
   const next = data?.next;
   const fix = getCachedFix();

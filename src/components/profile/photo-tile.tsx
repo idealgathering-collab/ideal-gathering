@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { GuestStoryItem } from "@/lib/guest-profile";
+import type { ProfileCardStoryItem } from "@/lib/profile-card";
 
 /**
  * Photo tile component used in Loves, Here, and Story sectors.
@@ -120,9 +120,9 @@ export function PhotoTile({
  * Shows venue cover with gathering title and date.
  */
 export interface StoryPhotoTileProps {
-  item: GuestStoryItem;
+  item: ProfileCardStoryItem;
   size?: "small" | "medium" | "large";
-  onClick?: (item: GuestStoryItem) => void;
+  onClick?: (item: ProfileCardStoryItem) => void;
   interactive?: boolean;
 }
 

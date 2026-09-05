@@ -1,5 +1,5 @@
-import type { GuestProfile } from "./guest-profile";
-import { hasAuraData, hasStyleData } from "./guest-profile.functions";
+import type { ProfileCardData } from "./profile-card";
+import { hasAuraData, hasStyleData } from "./profile-card.functions";
 
 /**
  * Profile completion system.
@@ -52,7 +52,7 @@ export interface ProfileCompletion {
 /**
  * Minimum requirements for each section to be considered complete.
  */
-const SECTION_REQUIREMENTS: Record<ProfileSection, (profile: GuestProfile) => boolean> = {
+const SECTION_REQUIREMENTS: Record<ProfileSection, (profile: ProfileCardData) => boolean> = {
   aura: (p) => hasAuraData(p),
   style: (p) => hasStyleData(p),
   loves: (p) => p.interests.length > 0,
@@ -64,7 +64,7 @@ const SECTION_REQUIREMENTS: Record<ProfileSection, (profile: GuestProfile) => bo
 /**
  * Get completion percentage for a section.
  */
-function getSectionPercent(section: ProfileSection, profile: GuestProfile): number {
+function getSectionPercent(section: ProfileSection, profile: ProfileCardData): number {
   switch (section) {
     case "aura":
       // Check how many traits are set
@@ -111,7 +111,7 @@ function getSectionPercent(section: ProfileSection, profile: GuestProfile): numb
  */
 export function getSectionCompletion(
   section: ProfileSection,
-  profile: GuestProfile,
+  profile: ProfileCardData,
   isSelf: boolean = false
 ): SectionCompletion {
   const isComplete = SECTION_REQUIREMENTS[section](profile);
@@ -198,7 +198,7 @@ export function getSectionCompletion(
  * Get overall profile completion status.
  */
 export function getProfileCompletion(
-  profile: GuestProfile,
+  profile: ProfileCardData,
   isSelf: boolean = false
 ): ProfileCompletion {
   const sections: ProfileSection[] = ["identity", "aura", "style", "loves", "here", "story"];
@@ -238,7 +238,7 @@ export function getCompletionLevel(percent: number): CompletionLevel {
 /**
  * Check if profile has any data at all.
  */
-export function hasAnyProfileData(profile: GuestProfile): boolean {
+export function hasAnyProfileData(profile: ProfileCardData): boolean {
   return (
     hasAuraData(profile) ||
     hasStyleData(profile) ||
@@ -255,7 +255,7 @@ export function hasAnyProfileData(profile: GuestProfile): boolean {
  * Get the most incomplete section (for prioritizing prompts).
  */
 export function getMostIncompleteSection(
-  profile: GuestProfile,
+  profile: ProfileCardData,
   isSelf: boolean = false
 ): SectionCompletion | null {
   const sections: ProfileSection[] = ["identity", "aura", "style", "loves", "here", "story"];
