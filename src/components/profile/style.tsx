@@ -1,5 +1,5 @@
 import type { SectionCompletion } from "@/lib/profile-completion";
-import type { GuestStyle } from "@/lib/guest-profile";
+import type { ProfileCardStyle } from "@/lib/profile-card";
 import { Sector, type SectorProps } from "@/components/profile/sector";
 import { useT } from "@/i18n";
 
@@ -8,7 +8,7 @@ import { useT } from "@/i18n";
  * Shows icon tiles in a row for: energy / size / talk / new people
  */
 export interface StyleProps extends Omit<SectorProps, "sector" | "hasData" | "children"> {
-  style: GuestStyle | null;
+  style: ProfileCardStyle | null;
   completion?: SectionCompletion;
   isSelf?: boolean;
   children?: React.ReactNode;

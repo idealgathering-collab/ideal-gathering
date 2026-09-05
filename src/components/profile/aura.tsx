@@ -1,5 +1,5 @@
 import type { SectionCompletion } from "@/lib/profile-completion";
-import type { GuestAura } from "@/lib/guest-profile";
+import type { ProfileCardAura } from "@/lib/profile-card";
 import { Sector, type SectorProps } from "@/components/profile/sector";
 import { useT } from "@/i18n";
 
@@ -8,7 +8,7 @@ import { useT } from "@/i18n";
  * Shows trait meters with icons and percentages in 2x2 grid
  */
 export interface AuraProps extends Omit<SectorProps, "sector" | "hasData" | "children"> {
-  aura: GuestAura | null;
+  aura: ProfileCardAura | null;
   completion?: SectionCompletion;
   isSelf?: boolean;
   children?: React.ReactNode;
@@ -43,8 +43,8 @@ const TRAIT_CONFIG = [
 
 type TraitKey = typeof TRAIT_CONFIG[number]["key"];
 
-function getTraitValue(aura: GuestAura | null, key: TraitKey): number {
-  const traitMap: Record<TraitKey, keyof GuestAura> = {
+function getTraitValue(aura: ProfileCardAura | null, key: TraitKey): number {
+  const traitMap: Record<TraitKey, keyof ProfileCardAura> = {
     spark: "traitSpark",
     curiosity: "traitCuriosity",
     warmth: "traitWarmth",

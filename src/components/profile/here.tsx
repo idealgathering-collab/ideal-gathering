@@ -1,5 +1,5 @@
 import type { SectionCompletion } from "@/lib/profile-completion";
-import type { GuestHere } from "@/lib/guest-profile";
+import type { ProfileCardHere } from "@/lib/profile-card";
 import { Sector, type SectorProps } from "@/components/profile/sector";
 import { getIntentionVisualMedium } from "@/lib/intention-visuals";
 import { useT } from "@/i18n";
@@ -9,7 +9,7 @@ import { useT } from "@/i18n";
  * Shows intentions as circular photo tiles with icons (same style as Loves)
  */
 export interface HereProps extends Omit<SectorProps, "sector" | "hasData" | "children"> {
-  here: GuestHere | null;
+  here: ProfileCardHere | null;
   maxDisplay?: number;
   completion?: SectionCompletion;
   isSelf?: boolean;

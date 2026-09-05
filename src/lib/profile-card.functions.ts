@@ -1,5 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
-import type { GuestProfile, GuestStoryItem, ProfileRow } from "./guest-profile";
+import type { ProfileCardData, ProfileCardStoryItem, ProfileRow } from "./profile-card";
 
 const PROFILE_COLUMNS = `
   id,
@@ -56,7 +56,7 @@ type ProfileSelection = Pick<
  * Load a guest profile by user ID.
  * Used for both self profile (/profile) and other profiles (/people/$id).
  */
-export async function loadGuestProfile(userId: string): Promise<GuestProfile | null> {
+export async function loadProfileCardData(userId: string): Promise<ProfileCardData | null> {
   const { data, error } = await supabase
     .from("profiles")
     .select(PROFILE_COLUMNS)
@@ -82,7 +82,7 @@ export async function loadGuestProfile(userId: string): Promise<GuestProfile | n
 /**
  * Load multiple guest profiles by user IDs (without story data).
  */
-export async function loadGuestProfiles(userIds: string[]): Promise<GuestProfile[]> {
+export async function loadProfileCardDatas(userIds: string[]): Promise<ProfileCardData[]> {
   if (userIds.length === 0) return [];
 
   const { data, error } = await supabase
@@ -101,7 +101,7 @@ export async function loadGuestProfiles(userIds: string[]): Promise<GuestProfile
 /**
  * Load past gatherings the user attended, as visual story items.
  */
-async function loadStoryItems(userId: string): Promise<GuestStoryItem[]> {
+async function loadStoryItems(userId: string): Promise<ProfileCardStoryItem[]> {
   const { data, error } = await supabase
     .from("gathering_attendees")
     .select(
@@ -126,7 +126,7 @@ async function loadStoryItems(userId: string): Promise<GuestStoryItem[]> {
     .filter((g) => new Date(g.starts_at).getTime() < now)
     .sort((a, b) => new Date(b.starts_at).getTime() - new Date(a.starts_at).getTime())
     .slice(0, 4)
-    .map((g): GuestStoryItem => ({
+    .map((g): ProfileCardStoryItem => ({
       id: g.id,
       gatheringId: g.id,
       venueId: g.business?.id ?? "",
@@ -143,9 +143,9 @@ function asStringArray(value: unknown): string[] {
 }
 
 /**
- * Transform database profile data into the GuestProfile format.
+ * Transform database profile data into the ProfileCardData format.
  */
-function transformProfileData(data: ProfileSelection, story: GuestStoryItem[]): GuestProfile {
+function transformProfileData(data: ProfileSelection, story: ProfileCardStoryItem[]): ProfileCardData {
   return {
     id: data.id,
     displayName: data.display_name,
@@ -197,7 +197,7 @@ export function getLocationString(profile: {
 /**
  * Check if a profile has completed the quiz (has aura data).
  */
-export function hasAuraData(profile: GuestProfile): boolean {
+export function hasAuraData(profile: ProfileCardData): boolean {
   return (
     profile.personaColor !== null ||
     (profile.traitSpark !== null ||
@@ -210,7 +210,7 @@ export function hasAuraData(profile: GuestProfile): boolean {
 /**
  * Check if a profile has style preferences.
  */
-export function hasStyleData(profile: GuestProfile): boolean {
+export function hasStyleData(profile: ProfileCardData): boolean {
   return (
     profile.energyLevel !== null ||
     profile.groupSize !== null ||

@@ -25,9 +25,9 @@ import { GATHERING_TYPES, type GatheringType } from "@/lib/gathering-types";
 import { ageFromDob } from "@/lib/age";
 import { useQueryClient } from "@tanstack/react-query";
 import { setAdminPreview } from "@/lib/roles";
-import { GuestProfileCard, GuestProfileCardSkeleton } from "@/components/guest-profile-card";
-import { loadGuestProfile } from "@/lib/guest-profile.functions";
-import type { GuestProfile } from "@/lib/guest-profile";
+import { ProfileCard, ProfileCardSkeleton } from "@/components/profile-card";
+import { loadProfileCardData } from "@/lib/profile-card.functions";
+import type { ProfileCardData } from "@/lib/profile-card";
 
 export const Route = createFileRoute("/_authenticated/profile")({
   head: () => ({ meta: [{ title: "Your profile — Ideal Gathering" }] }),
@@ -100,7 +100,7 @@ function ProfilePage() {
   const avatarRef = useRef<HTMLInputElement>(null);
 
   // Guest profile card state
-  const [guestProfile, setGuestProfile] = useState<GuestProfile | null>(null);
+  const [guestProfile, setProfileCardData] = useState<ProfileCardData | null>(null);
   const [profileLoading, setProfileLoading] = useState(true);
 
   useEffect(() => {
@@ -124,9 +124,9 @@ function ProfilePage() {
       return;
     }
     setProfileLoading(true);
-    loadGuestProfile(user.id)
+    loadProfileCardData(user.id)
       .then((profile) => {
-        setGuestProfile(profile);
+        setProfileCardData(profile);
         // Pre-fill form fields from profile
         if (profile) {
           setDisplayName(profile.displayName ?? "");
@@ -146,7 +146,7 @@ function ProfilePage() {
       })
       .catch((err) => {
         console.error("Failed to load guest profile:", err);
-        setGuestProfile(null);
+        setProfileCardData(null);
       })
       .finally(() => {
         setProfileLoading(false);
@@ -278,7 +278,7 @@ function ProfilePage() {
       
       toast.success(t("profile.saved"));
       // Refresh guest profile after save
-      loadGuestProfile(user.id).then(setGuestProfile);
+      loadProfileCardData(user.id).then(setProfileCardData);
     } catch (err) {
       toast.error(err instanceof Error ? err.message : t("auth.generic"));
     } finally {
@@ -308,7 +308,7 @@ function ProfilePage() {
       setAvatarPath(path);
       setAvatarUrl(await signedUrl(path));
       // Update guest profile avatar
-      setGuestProfile(prev => prev ? { ...prev, avatarUrl: path } : null);
+      setProfileCardData(prev => prev ? { ...prev, avatarUrl: path } : null);
       toast.success(t("profile.avatarUpdated"));
     } catch (err) {
       toast.error(err instanceof Error ? err.message : t("auth.generic"));
@@ -327,9 +327,9 @@ function ProfilePage() {
         {/* Guest Profile Card - Photo-first phone card (430px) - Dark theme to match image */}
         <div className="mb-10">
           {profileLoading ? (
-            <GuestProfileCardSkeleton darkTheme={true} />
+            <ProfileCardSkeleton darkTheme={true} />
           ) : (
-            <GuestProfileCard
+            <ProfileCard
               profile={guestProfile}
               darkTheme={true}
               interactive={true}

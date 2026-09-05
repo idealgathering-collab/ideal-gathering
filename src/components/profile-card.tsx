@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
-import type { GuestProfile } from "@/lib/guest-profile";
-import { loadGuestProfile } from "@/lib/guest-profile.functions";
+import type { ProfileCardData } from "@/lib/profile-card";
+import { loadProfileCardData } from "@/lib/profile-card.functions";
 import { PROFILE_SECTORS } from "@/lib/profile-sectors";
 import { Identity, IdentitySkeleton } from "@/components/profile/identity";
 import { Aura } from "@/components/profile/aura";
@@ -20,14 +20,14 @@ import { calculateUserMatch } from "@/lib/user-match";
  * Trust is OFF - not included
  * Dark theme with purple/black background
  */
-export interface GuestProfileCardProps {
+export interface ProfileCardProps {
   userId?: string;
-  profile?: GuestProfile | null;
+  profile?: ProfileCardData | null;
   loading?: boolean;
   darkTheme?: boolean;
   matchScore?: number | null;
   interactive?: boolean;
-  onStoryItemClick?: (item: GuestProfile["story"][0]) => void;
+  onStoryItemClick?: (item: ProfileCardData["story"][0]) => void;
   className?: string;
   /**
    * Whether this is the viewer's own profile.
@@ -41,7 +41,7 @@ export interface GuestProfileCardProps {
   /**
    * Viewer's profile (for calculating match score between viewer and profile).
    */
-  viewerProfile?: GuestProfile | null;
+  viewerProfile?: ProfileCardData | null;
   /**
    * Viewer's date of birth (for age compatibility).
    */
@@ -55,7 +55,7 @@ export interface GuestProfileCardProps {
 /**
  * Skeleton loader - EXACT match to image
  */
-export function GuestProfileCardSkeleton({
+export function ProfileCardSkeleton({
   darkTheme = true,
   className = "",
 }: {
@@ -87,7 +87,7 @@ export function GuestProfileCardSkeleton({
   );
 }
 
-export function GuestProfileCard({
+export function ProfileCard({
   userId,
   profile: propProfile,
   loading: propLoading,
@@ -101,15 +101,15 @@ export function GuestProfileCard({
   viewerProfile,
   viewerDob,
   showMatchBreakdown,
-}: GuestProfileCardProps) {
-  const [profile, setProfile] = useState<GuestProfile | null>(propProfile ?? null);
+}: ProfileCardProps) {
+  const [profile, setProfile] = useState<ProfileCardData | null>(propProfile ?? null);
   const [loading, setLoading] = useState(propLoading ?? !propProfile);
   const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
     if (userId && !propProfile && !profile) {
       setLoading(true);
-      loadGuestProfile(userId)
+      loadProfileCardData(userId)
         .then((p) => {
           setProfile(p);
           setError(null);
@@ -137,7 +137,7 @@ export function GuestProfileCard({
   }, [viewerProfile, profile, viewerDob, isSelf]);
 
   if (loading) {
-    return <GuestProfileCardSkeleton darkTheme={darkTheme} className={className} />;
+    return <ProfileCardSkeleton darkTheme={darkTheme} className={className} />;
   }
 
   if (error) {
@@ -300,21 +300,21 @@ export function GuestProfileCard({
 /**
  * Compact version for lists/grids
  */
-export function GuestProfileCardCompact({
+export function ProfileCardCompact({
   profile,
   onClick,
   matchScore,
   darkTheme = true,
   className = "",
 }: {
-  profile: GuestProfile | null;
+  profile: ProfileCardData | null;
   onClick?: () => void;
   matchScore?: number | null;
   darkTheme?: boolean;
   className?: string;
 }) {
   if (!profile) {
-    return <GuestProfileCardSkeleton darkTheme={darkTheme} className={className} />;
+    return <ProfileCardSkeleton darkTheme={darkTheme} className={className} />;
   }
 
   const identity = {

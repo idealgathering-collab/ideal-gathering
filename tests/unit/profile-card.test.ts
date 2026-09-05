@@ -19,8 +19,8 @@ import {
   hasStyleData,
   getDisplayName,
   getLocationString,
-} from "@/lib/guest-profile.functions";
-import type { GuestProfile, GuestAura, GuestStyle } from "@/lib/guest-profile";
+} from "@/lib/profile-card.functions";
+import type { ProfileCardData, ProfileCardAura, ProfileCardStyle } from "@/lib/profile-card";
 
 // Mock the translations
 vi.mock("@/i18n", () => ({
@@ -126,76 +126,76 @@ describe("Intention Visuals", () => {
 describe("Guest Profile Functions", () => {
   describe("hasAuraData", () => {
     it("should return true when personaColor is present", () => {
-      const aura: GuestAura = {
+      const aura: ProfileCardAura = {
         personaColor: "#FF0000",
         traitSpark: null,
         traitCuriosity: null,
         traitWarmth: null,
         traitDepth: null,
       };
-      expect(hasAuraData(aura as unknown as GuestProfile)).toBe(true);
+      expect(hasAuraData(aura as unknown as ProfileCardData)).toBe(true);
     });
 
     it("should return true when any trait is present", () => {
-      const aura: GuestAura = {
+      const aura: ProfileCardAura = {
         personaColor: null,
         traitSpark: 80,
         traitCuriosity: null,
         traitWarmth: null,
         traitDepth: null,
       };
-      expect(hasAuraData(aura as unknown as GuestProfile)).toBe(true);
+      expect(hasAuraData(aura as unknown as ProfileCardData)).toBe(true);
     });
 
     it("should return false when all aura data is null", () => {
-      const aura: GuestAura = {
+      const aura: ProfileCardAura = {
         personaColor: null,
         traitSpark: null,
         traitCuriosity: null,
         traitWarmth: null,
         traitDepth: null,
       };
-      expect(hasAuraData(aura as unknown as GuestProfile)).toBe(false);
+      expect(hasAuraData(aura as unknown as ProfileCardData)).toBe(false);
     });
   });
 
   describe("hasStyleData", () => {
     it("should return true when any style preference is present", () => {
-      const style: GuestStyle = {
+      const style: ProfileCardStyle = {
         energyLevel: "high",
         groupSize: null,
         talkStyle: null,
         newPeople: null,
       };
-      expect(hasStyleData(style as unknown as GuestProfile)).toBe(true);
+      expect(hasStyleData(style as unknown as ProfileCardData)).toBe(true);
     });
 
     it("should return false when all style data is null", () => {
-      const style: GuestStyle = {
+      const style: ProfileCardStyle = {
         energyLevel: null,
         groupSize: null,
         talkStyle: null,
         newPeople: null,
       };
-      expect(hasStyleData(style as unknown as GuestProfile)).toBe(false);
+      expect(hasStyleData(style as unknown as ProfileCardData)).toBe(false);
     });
   });
 
   describe("getDisplayName", () => {
     it("should return displayName when present", () => {
-      const profile: Partial<GuestProfile> = {
+      const profile: Partial<ProfileCardData> = {
         id: "1",
         displayName: "John Doe",
       };
-      expect(getDisplayName(profile as GuestProfile)).toBe("John Doe");
+      expect(getDisplayName(profile as ProfileCardData)).toBe("John Doe");
     });
 
     it("should return 'Guest' when displayName is null", () => {
-      const profile: Partial<GuestProfile> = {
+      const profile: Partial<ProfileCardData> = {
         id: "1",
         displayName: null,
       };
-      expect(getDisplayName(profile as GuestProfile)).toBe("Guest");
+      expect(getDisplayName(profile as ProfileCardData)).toBe("Guest");
     });
 
     it("should return 'Unknown' when profile is null", () => {
@@ -205,33 +205,33 @@ describe("Guest Profile Functions", () => {
 
   describe("getLocationString", () => {
     it("should return formatted location string", () => {
-      const profile: Partial<GuestProfile> = {
+      const profile: Partial<ProfileCardData> = {
         id: "1",
         city: "Istanbul",
         neighborhood: "Kadıköy",
         country: "Turkey",
       };
-      expect(getLocationString(profile as GuestProfile)).toBe("Kadıköy, Istanbul, Turkey");
+      expect(getLocationString(profile as ProfileCardData)).toBe("Kadıköy, Istanbul, Turkey");
     });
 
     it("should return null when no location data", () => {
-      const profile: Partial<GuestProfile> = {
+      const profile: Partial<ProfileCardData> = {
         id: "1",
         city: null,
         neighborhood: null,
         country: null,
       };
-      expect(getLocationString(profile as GuestProfile)).toBeNull();
+      expect(getLocationString(profile as ProfileCardData)).toBeNull();
     });
 
     it("should handle partial location data", () => {
-      const profile: Partial<GuestProfile> = {
+      const profile: Partial<ProfileCardData> = {
         id: "1",
         city: "Istanbul",
         neighborhood: null,
         country: null,
       };
-      expect(getLocationString(profile as GuestProfile)).toBe("Istanbul");
+      expect(getLocationString(profile as ProfileCardData)).toBe("Istanbul");
     });
   });
 });

@@ -18,7 +18,7 @@ import { useState } from "react";
 import type { PendingFeedback } from "@/lib/feedback.functions";
 import { fetchRoles, isAdminPreview } from "@/lib/roles";
 import { getMostIncompleteSection, getProfileCompletion, parseActionUrl, type ProfileCompletion } from "@/lib/profile-completion";
-import type { GuestProfile } from "@/lib/guest-profile";
+import type { ProfileCardData } from "@/lib/profile-card";
 
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
@@ -166,8 +166,8 @@ function Dashboard() {
     queryKey: ["guest-profile", user?.id],
     enabled: !!user,
     queryFn: async () => {
-      const { loadGuestProfile } = await import("@/lib/guest-profile.functions");
-      return await loadGuestProfile(user!.id);
+      const { loadProfileCardData } = await import("@/lib/profile-card.functions");
+      return await loadProfileCardData(user!.id);
     },
   });
 

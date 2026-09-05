@@ -4,7 +4,7 @@ import type { Database } from "@/integrations/supabase/types";
  * Guest profile data for the photo-first card.
  * Used on both /profile (self) and /people/$id (other).
  */
-export interface GuestProfile {
+export interface ProfileCardData {
   id: string;
   displayName: string | null;
   avatarUrl: string | null;
@@ -35,7 +35,7 @@ export interface GuestProfile {
   intentions: string[];
   
   // Story = past approved tables (visual filmstrip)
-  story: GuestStoryItem[];
+  story: ProfileCardStoryItem[];
   
   // Metadata
   createdAt: string;
@@ -45,7 +45,7 @@ export interface GuestProfile {
 /**
  * A story item representing a past approved gathering/table.
  */
-export interface GuestStoryItem {
+export interface ProfileCardStoryItem {
   id: string;
   gatheringId: string;
   venueId: string;
@@ -59,7 +59,7 @@ export interface GuestStoryItem {
 /**
  * Minimal profile for displaying in the card header.
  */
-export interface GuestIdentity {
+export interface ProfileCardIdentity {
   id: string;
   displayName: string | null;
   avatarUrl: string | null;
@@ -73,7 +73,7 @@ export interface GuestIdentity {
 /**
  * Aura sector data.
  */
-export interface GuestAura {
+export interface ProfileCardAura {
   personaColor: string | null;
   traitSpark: number | null;
   traitCuriosity: number | null;
@@ -84,7 +84,7 @@ export interface GuestAura {
 /**
  * Style sector data.
  */
-export interface GuestStyle {
+export interface ProfileCardStyle {
   energyLevel: string | null;
   groupSize: string | null;
   talkStyle: string | null;
@@ -94,22 +94,22 @@ export interface GuestStyle {
 /**
  * Loves sector data (interests with visuals).
  */
-export interface GuestLoves {
+export interface ProfileCardLoves {
   interests: string[];
 }
 
 /**
  * Here sector data (intentions with visuals).
  */
-export interface GuestHere {
+export interface ProfileCardHere {
   intentions: string[];
 }
 
 /**
  * Story sector data.
  */
-export interface GuestStory {
-  items: GuestStoryItem[];
+export interface ProfileCardStory {
+  items: ProfileCardStoryItem[];
 }
 
 /**

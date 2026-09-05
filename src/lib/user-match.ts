@@ -1,4 +1,4 @@
-import type { GuestProfile } from "./guest-profile";
+import type { ProfileCardData } from "./profile-card";
 import { fitScore, type TraitScores } from "./matching";
 import { interestJaccard } from "./vibe";
 import { ageFromDob, ageGapFactor, MAX_COMPATIBLE_AGE_GAP } from "./age";
@@ -39,8 +39,8 @@ export interface UserMatchResult {
  * Falls back to available data only.
  */
 export function calculateUserMatch(
-  userA: GuestProfile,
-  userB: GuestProfile,
+  userA: ProfileCardData,
+  userB: ProfileCardData,
   userADob?: string | null,
   userBDob?: string | null,
 ): UserMatchResult {
@@ -141,8 +141,8 @@ export function calculateUserMatch(
  * Uses only trait scores and interests.
  */
 export function calculateProfileMatch(
-  profileA: GuestProfile,
-  profileB: GuestProfile,
+  profileA: ProfileCardData,
+  profileB: ProfileCardData,
 ): number {
   const result = calculateUserMatch(profileA, profileB);
   return result.score;

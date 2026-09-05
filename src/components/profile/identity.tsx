@@ -1,5 +1,5 @@
-import type { GuestIdentity } from "@/lib/guest-profile";
-import { getDisplayName, getLocationString } from "@/lib/guest-profile.functions";
+import type { ProfileCardIdentity } from "@/lib/profile-card";
+import { getDisplayName, getLocationString } from "@/lib/profile-card.functions";
 import { getPersonaTitle, getPersonaTags, formatPersonaId } from "@/lib/persona";
 import { useT } from "@/i18n";
 import { MapPin } from "lucide-react";
@@ -10,7 +10,7 @@ import { MatchScoreBadge } from "@/components/profile/match-score";
  * Shows: cover + circular face with glow ring + name + persona title + location + tags
  */
 export interface IdentityProps {
-  identity: GuestIdentity | null;
+  identity: ProfileCardIdentity | null;
   scores?: {
     spark: number | null;
     curiosity: number | null;
