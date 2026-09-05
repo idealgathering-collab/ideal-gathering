@@ -26,7 +26,7 @@ import { ageFromDob } from "@/lib/age";
 import { useQueryClient } from "@tanstack/react-query";
 import { setAdminPreview } from "@/lib/roles";
 import { ProfileCard, ProfileCardSkeleton } from "@/components/profile-card";
-import { loadProfileCardData } from "@/lib/profile-card.functions";
+import { loadProfileCard } from "@/lib/profile-card.functions";
 import type { ProfileCardData } from "@/lib/profile-card";
 
 export const Route = createFileRoute("/_authenticated/profile")({

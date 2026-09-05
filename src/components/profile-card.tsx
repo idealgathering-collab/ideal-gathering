@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import type { ProfileCardData } from "@/lib/profile-card";
-import { loadProfileCardData } from "@/lib/profile-card.functions";
+import { loadProfileCard } from "@/lib/profile-card.functions";
 import { PROFILE_SECTORS } from "@/lib/profile-sectors";
 import { Identity, IdentitySkeleton } from "@/components/profile/identity";
 import { Aura } from "@/components/profile/aura";

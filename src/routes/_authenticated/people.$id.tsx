@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { ArrowLeft, MessageSquareMore } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { ProfileCard, ProfileCardSkeleton } from "@/components/profile-card";
-import { loadProfileCardData } from "@/lib/profile-card.functions";
+import { loadProfileCard } from "@/lib/profile-card.functions";
 import { useSession } from "@/hooks/use-session";
 import { Button } from "@/components/ui/button";
 import { useT } from "@/i18n";

@@ -48,7 +48,7 @@ export function SiteHeader() {
     // Load profile completion
     const currentUser = user;
     async function loadCompletion() {
-      const { loadProfileCardData } = await import("@/lib/profile-card.functions");
+      const { loadProfileCard } = await import("@/lib/profile-card.functions");
       const profile = await loadProfileCard(currentUser.id);
       if (profile) {
         const { getProfileCompletion } = await import("@/lib/profile-completion");

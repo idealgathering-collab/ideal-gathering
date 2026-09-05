@@ -166,7 +166,7 @@ function Dashboard() {
     queryKey: ["guest-profile", user?.id],
     enabled: !!user,
     queryFn: async () => {
-      const { loadProfileCardData } = await import("@/lib/profile-card.functions");
+      const { loadProfileCard } = await import("@/lib/profile-card.functions");
       return await loadProfileCard(user!.id);
     },
   });
