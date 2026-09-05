@@ -52,8 +52,48 @@ type ProfileSelection = Pick<
   | "updated_at"
 >;
 
+/** Style preferences live in user_gathering_preferences, the table onboarding writes to. */
+export type StylePrefs = {
+  energyLevel: string | null;
+  groupSize: string | null;
+  talkStyle: string | null;
+  newPeople: string | null;
+};
+
+const EMPTY_STYLE: StylePrefs = {
+  energyLevel: null,
+  groupSize: null,
+  talkStyle: null,
+  newPeople: null,
+};
+
+/** Map the numeric preferred_group_size (3/4/5) onto the card's string buckets. */
+function groupSizeBucket(size: number | null | undefined): string | null {
+  if (size === null || size === undefined) return null;
+  if (size <= 3) return "intimate";
+  if (size === 4) return "small";
+  return "large";
+}
+
+async function loadStylePrefs(userId: string): Promise<StylePrefs> {
+  const { data, error } = await supabase
+    .from("user_gathering_preferences")
+    .select("social_energy, conversation_style, stranger_comfort, preferred_group_size")
+    .eq("user_id", userId)
+    .maybeSingle();
+
+  if (error || !data) return EMPTY_STYLE;
+
+  return {
+    energyLevel: data.social_energy ?? null,
+    groupSize: groupSizeBucket(data.preferred_group_size),
+    talkStyle: data.conversation_style ?? null,
+    newPeople: data.stranger_comfort ?? null,
+  };
+}
+
 /**
- * Load a guest profile by user ID.
+ * Load a profile card by user ID.
  * Used for both self profile (/profile) and other profiles (/people/$id).
  */
 export async function loadProfileCard(userId: string): Promise<ProfileCardData | null> {
@@ -69,18 +109,18 @@ export async function loadProfileCard(userId: string): Promise<ProfileCardData |
     const { loadPublicProfile } = await import("./public-profile.functions");
     const publicRow = await loadPublicProfile({ data: { userId } });
     if (!publicRow) {
-      if (error) console.error("Error loading guest profile:", error);
+      if (error) console.error("Error loading profile card:", error);
       return null;
     }
-    return transformProfileData(publicRow as unknown as ProfileSelection, []);
+    return transformProfileData(publicRow as unknown as ProfileSelection, [], EMPTY_STYLE);
   }
 
-  const story = await loadStoryItems(userId);
-  return transformProfileData(data as ProfileSelection, story);
+  const [story, style] = await Promise.all([loadStoryItems(userId), loadStylePrefs(userId)]);
+  return transformProfileData(data as ProfileSelection, story, style);
 }
 
 /**
- * Load multiple guest profiles by user IDs (without story data).
+ * Load multiple profile cards by user IDs (without story data).
  */
 export async function loadProfileCards(userIds: string[]): Promise<ProfileCardData[]> {
   if (userIds.length === 0) return [];
@@ -91,12 +131,33 @@ export async function loadProfileCards(userIds: string[]): Promise<ProfileCardDa
     .in("id", userIds);
 
   if (error || !data) {
-    if (error) console.error("Error loading guest profiles:", error);
+    if (error) console.error("Error loading profile cards:", error);
     return [];
   }
 
-  return (data as ProfileSelection[]).map((row) => transformProfileData(row, []));
+  const { data: prefRows } = await supabase
+    .from("user_gathering_preferences")
+    .select("user_id, social_energy, conversation_style, stranger_comfort, preferred_group_size")
+    .in("user_id", userIds);
+
+  const styleByUser = new Map<string, StylePrefs>(
+    (prefRows ?? []).map((row) => [
+      row.user_id,
+      {
+        energyLevel: row.social_energy ?? null,
+        groupSize: groupSizeBucket(row.preferred_group_size),
+        talkStyle: row.conversation_style ?? null,
+        newPeople: row.stranger_comfort ?? null,
+      },
+    ]),
+  );
+
+  return (data as ProfileSelection[]).map((row) =>
+    transformProfileData(row, [], styleByUser.get(row.id) ?? EMPTY_STYLE),
+  );
 }
+
+
 
 /**
  * Load past gatherings the user attended, as visual story items.
