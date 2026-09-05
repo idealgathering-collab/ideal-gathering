@@ -14,7 +14,7 @@ import { getProfileCompletion, getSectionCompletion } from "@/lib/profile-comple
 import { calculateUserMatch } from "@/lib/user-match";
 
 /**
- * Guest Profile Card - EXACT match to image design
+ * Profile Card - EXACT match to image design
  * Photo-first phone card (430px column)
  * Sectors: aura → style → loves → here → story
  * Trust is OFF - not included

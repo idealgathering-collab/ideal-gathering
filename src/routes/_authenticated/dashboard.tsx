@@ -162,7 +162,7 @@ function Dashboard() {
   const pending = usePendingFeedback(!!user);
   const [fbItem, setFbItem] = useState<PendingFeedback | null>(null);
 
-  const { data: guestProfile } = useQuery({
+  const { data: profileCard } = useQuery({
     queryKey: ["guest-profile", user?.id],
     enabled: !!user,
     queryFn: async () => {
@@ -171,8 +171,8 @@ function Dashboard() {
     },
   });
 
-  const completion = guestProfile ? getProfileCompletion(guestProfile, true) : null;
-  const mostIncomplete = guestProfile ? getMostIncompleteSection(guestProfile, true) : null;
+  const completion = profileCard ? getProfileCompletion(profileCard, true) : null;
+  const mostIncomplete = profileCard ? getMostIncompleteSection(profileCard, true) : null;
 
   const next = data?.next;
   const fix = getCachedFix();

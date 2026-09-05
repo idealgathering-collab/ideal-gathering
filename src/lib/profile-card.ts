@@ -1,7 +1,7 @@
 import type { Database } from "@/integrations/supabase/types";
 
 /**
- * Guest profile data for the photo-first card.
+ * Profile card data for the photo-first card.
  * Used on both /profile (self) and /people/$id (other).
  */
 export interface ProfileCardData {

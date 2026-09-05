@@ -99,8 +99,8 @@ function ProfilePage() {
   const [isAdmin, setIsAdmin] = useState(false);
   const avatarRef = useRef<HTMLInputElement>(null);
 
-  // Guest profile card state
-  const [guestProfile, setProfileCardData] = useState<ProfileCardData | null>(null);
+  // Profile card card state
+  const [profileCard, setProfileCardData] = useState<ProfileCardData | null>(null);
   const [profileLoading, setProfileLoading] = useState(true);
 
   useEffect(() => {
@@ -117,7 +117,7 @@ function ProfilePage() {
       .then(({ data }) => setIsAdmin(!!data));
   }, [user]);
 
-  // Load guest profile for the card
+  // Load profile card for the card
   useEffect(() => {
     if (!user) {
       setProfileLoading(false);
@@ -145,7 +145,7 @@ function ProfilePage() {
         }
       })
       .catch((err) => {
-        console.error("Failed to load guest profile:", err);
+        console.error("Failed to load profile card:", err);
         setProfileCardData(null);
       })
       .finally(() => {
@@ -153,7 +153,7 @@ function ProfilePage() {
       });
   }, [user?.id]);
 
-  // Load additional profile data (for fields not in guest profile)
+  // Load additional profile data (for fields not in profile card)
   useEffect(() => {
     if (!user) return;
     supabase
@@ -165,8 +165,8 @@ function ProfilePage() {
       .maybeSingle()
       .then(async ({ data }) => {
         if (!data) return;
-        // Only update if we haven't loaded from guest profile yet
-        if (!guestProfile) {
+        // Only update if we haven't loaded from profile card yet
+        if (!profileCard) {
           setDisplayName(data.display_name ?? "");
           setBio(data.bio ?? "");
           setDob(((data as { date_of_birth?: string | null }).date_of_birth ?? "") as string);
@@ -194,7 +194,7 @@ function ProfilePage() {
           setGatheringTypes(Array.isArray(prefsData.gathering_types) ? (prefsData.gathering_types as string[]) : []);
         }
       });
-  }, [user, guestProfile]);
+  }, [user, profileCard]);
 
   async function handleSignOut() {
     await qc.cancelQueries();
@@ -277,7 +277,7 @@ function ProfilePage() {
       if (prefsError) throw prefsError;
       
       toast.success(t("profile.saved"));
-      // Refresh guest profile after save
+      // Refresh profile card after save
       loadProfileCard(user.id).then(setProfileCardData);
     } catch (err) {
       toast.error(err instanceof Error ? err.message : t("auth.generic"));
@@ -307,7 +307,7 @@ function ProfilePage() {
       if (error) throw error;
       setAvatarPath(path);
       setAvatarUrl(await signedUrl(path));
-      // Update guest profile avatar
+      // Update profile card avatar
       setProfileCardData(prev => prev ? { ...prev, avatarUrl: path } : null);
       toast.success(t("profile.avatarUpdated"));
     } catch (err) {
@@ -324,13 +324,13 @@ function ProfilePage() {
     <div className="min-h-screen bg-background">
       <SiteHeader />
       <main className="mx-auto max-w-3xl px-4 pb-28 pt-6 sm:pb-16 sm:pt-10">
-        {/* Guest Profile Card - Photo-first phone card (430px) - Dark theme to match image */}
+        {/* Profile Card - Photo-first phone card (430px) - Dark theme to match image */}
         <div className="mb-10">
           {profileLoading ? (
             <ProfileCardSkeleton darkTheme={true} />
           ) : (
             <ProfileCard
-              profile={guestProfile}
+              profile={profileCard}
               darkTheme={true}
               interactive={true}
               isSelf={true}
