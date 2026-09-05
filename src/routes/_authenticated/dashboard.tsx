@@ -163,7 +163,7 @@ function Dashboard() {
   const [fbItem, setFbItem] = useState<PendingFeedback | null>(null);
 
   const { data: profileCard } = useQuery({
-    queryKey: ["guest-profile", user?.id],
+    queryKey: ["profile-card", user?.id],
     enabled: !!user,
     queryFn: async () => {
       const { loadProfileCard } = await import("@/lib/profile-card.functions");

@@ -100,7 +100,7 @@ function ProfilePage() {
   const avatarRef = useRef<HTMLInputElement>(null);
 
   // Profile card card state
-  const [profileCard, setProfileCardData] = useState<ProfileCardData | null>(null);
+  const [profileCard, setProfileCard] = useState<ProfileCardData | null>(null);
   const [profileLoading, setProfileLoading] = useState(true);
 
   useEffect(() => {
@@ -126,7 +126,7 @@ function ProfilePage() {
     setProfileLoading(true);
     loadProfileCard(user.id)
       .then((profile) => {
-        setProfileCardData(profile);
+        setProfileCard(profile);
         // Pre-fill form fields from profile
         if (profile) {
           setDisplayName(profile.displayName ?? "");
@@ -146,7 +146,7 @@ function ProfilePage() {
       })
       .catch((err) => {
         console.error("Failed to load profile card:", err);
-        setProfileCardData(null);
+        setProfileCard(null);
       })
       .finally(() => {
         setProfileLoading(false);
@@ -278,7 +278,7 @@ function ProfilePage() {
       
       toast.success(t("profile.saved"));
       // Refresh profile card after save
-      loadProfileCard(user.id).then(setProfileCardData);
+      loadProfileCard(user.id).then(setProfileCard);
     } catch (err) {
       toast.error(err instanceof Error ? err.message : t("auth.generic"));
     } finally {
@@ -308,7 +308,7 @@ function ProfilePage() {
       setAvatarPath(path);
       setAvatarUrl(await signedUrl(path));
       // Update profile card avatar
-      setProfileCardData(prev => prev ? { ...prev, avatarUrl: path } : null);
+      setProfileCard(prev => prev ? { ...prev, avatarUrl: path } : null);
       toast.success(t("profile.avatarUpdated"));
     } catch (err) {
       toast.error(err instanceof Error ? err.message : t("auth.generic"));
