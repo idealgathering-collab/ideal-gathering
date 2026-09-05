@@ -124,7 +124,7 @@ function ProfilePage() {
       return;
     }
     setProfileLoading(true);
-    loadProfileCardData(user.id)
+    loadProfileCard(user.id)
       .then((profile) => {
         setProfileCardData(profile);
         // Pre-fill form fields from profile
@@ -278,7 +278,7 @@ function ProfilePage() {
       
       toast.success(t("profile.saved"));
       // Refresh guest profile after save
-      loadProfileCardData(user.id).then(setProfileCardData);
+      loadProfileCard(user.id).then(setProfileCardData);
     } catch (err) {
       toast.error(err instanceof Error ? err.message : t("auth.generic"));
     } finally {

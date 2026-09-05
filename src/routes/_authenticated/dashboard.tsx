@@ -167,7 +167,7 @@ function Dashboard() {
     enabled: !!user,
     queryFn: async () => {
       const { loadProfileCardData } = await import("@/lib/profile-card.functions");
-      return await loadProfileCardData(user!.id);
+      return await loadProfileCard(user!.id);
     },
   });
 

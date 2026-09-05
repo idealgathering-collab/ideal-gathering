@@ -49,8 +49,8 @@ function PeopleProfilePage() {
   useEffect(() => {
     setLoading(true);
     Promise.all([
-      loadProfileCardData(userId),
-      user ? loadProfileCardData(user.id) : Promise.resolve(null),
+      loadProfileCard(userId),
+      user ? loadProfileCard(user.id) : Promise.resolve(null),
     ])
       .then(([p, viewerP]) => {
         setProfile(p);

@@ -109,7 +109,7 @@ export function ProfileCard({
   useEffect(() => {
     if (userId && !propProfile && !profile) {
       setLoading(true);
-      loadProfileCardData(userId)
+      loadProfileCard(userId)
         .then((p) => {
           setProfile(p);
           setError(null);

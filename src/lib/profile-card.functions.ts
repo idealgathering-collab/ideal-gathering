@@ -56,7 +56,7 @@ type ProfileSelection = Pick<
  * Load a guest profile by user ID.
  * Used for both self profile (/profile) and other profiles (/people/$id).
  */
-export async function loadProfileCardData(userId: string): Promise<ProfileCardData | null> {
+export async function loadProfileCard(userId: string): Promise<ProfileCardData | null> {
   const { data, error } = await supabase
     .from("profiles")
     .select(PROFILE_COLUMNS)
@@ -82,7 +82,7 @@ export async function loadProfileCardData(userId: string): Promise<ProfileCardDa
 /**
  * Load multiple guest profiles by user IDs (without story data).
  */
-export async function loadProfileCardDatas(userIds: string[]): Promise<ProfileCardData[]> {
+export async function loadProfileCards(userIds: string[]): Promise<ProfileCardData[]> {
   if (userIds.length === 0) return [];
 
   const { data, error } = await supabase
