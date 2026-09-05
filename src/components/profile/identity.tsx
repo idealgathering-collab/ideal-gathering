@@ -2,7 +2,7 @@ import type { ProfileCardIdentity } from "@/lib/profile-card";
 import { getDisplayName, getLocationString } from "@/lib/profile-card.functions";
 import { getPersonaTitle, getPersonaTags, formatPersonaId } from "@/lib/persona";
 import { useT } from "@/i18n";
-import { MapPin } from "lucide-react";
+import { Camera, MapPin } from "lucide-react";
 import { MatchScoreBadge } from "@/components/profile/match-score";
 
 /**
@@ -26,6 +26,14 @@ export interface IdentityProps {
   matchScore?: number | null;
   darkTheme?: boolean;
   className?: string;
+  /**
+   * When true, shows an unobtrusive "Change photo" trigger on the avatar.
+   */
+  isSelf?: boolean;
+  /**
+   * Called when the user taps the avatar change-photo affordance.
+   */
+  onPickAvatar?: () => void;
 }
 
 const FALLBACK_COVER = "https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=800&q=80";
@@ -45,6 +53,8 @@ export function Identity({
   matchScore,
   darkTheme = true,
   className = "",
+  isSelf,
+  onPickAvatar,
 }: IdentityProps) {
   const t = useT();
   
@@ -136,6 +146,19 @@ export function Identity({
                 </div>
               )}
             </div>
+
+            {/* Change photo affordance - only for the viewer's own profile */}
+            {isSelf && onPickAvatar && (
+              <button
+                type="button"
+                onClick={onPickAvatar}
+                className="absolute bottom-0 right-0 z-10 grid h-9 w-9 place-items-center rounded-full bg-primary text-primary-foreground shadow-lg border-2 border-white hover:scale-105 transition-transform"
+                aria-label={t("profile.uploadAvatar")}
+                title={t("profile.uploadAvatar")}
+              >
+                <Camera className="h-4 w-4" />
+              </button>
+            )}
           </div>
         </div>
       </div>
