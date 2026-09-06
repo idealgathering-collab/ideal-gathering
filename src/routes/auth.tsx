@@ -21,6 +21,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 const searchSchema = z.object({
   mode: z.enum(["signin", "signup", "forgot"]).optional().default("signin"),
   redirect: z.string().optional(),
+  invite: z.string().optional(),
 });
 
 export const Route = createFileRoute("/auth")({
