@@ -13,6 +13,7 @@ import { QuizSavedNote } from "@/components/quiz-saved-note";
 
 import { localizedHead } from "@/lib/seo";
 import { homePathForUser } from "@/lib/roles";
+import { checkInvitation, readInvite, rememberInvite, redeemPendingInvite } from "@/lib/access";
 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
