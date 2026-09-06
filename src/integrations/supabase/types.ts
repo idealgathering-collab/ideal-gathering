@@ -14,8 +14,30 @@ export type Database = {
   }
   public: {
     Tables: {
+      app_config: {
+        Row: {
+          beta_launched: boolean
+          id: boolean
+          launched_at: string | null
+          updated_at: string
+        }
+        Insert: {
+          beta_launched?: boolean
+          id?: boolean
+          launched_at?: string | null
+          updated_at?: string
+        }
+        Update: {
+          beta_launched?: boolean
+          id?: boolean
+          launched_at?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       businesses: {
         Row: {
+          access_status: Database["public"]["Enums"]["venue_access_status"]
           address: string
           city: string
           cover_url: string
@@ -34,6 +56,7 @@ export type Database = {
           street_number: string
         }
         Insert: {
+          access_status?: Database["public"]["Enums"]["venue_access_status"]
           address: string
           city: string
           cover_url: string
@@ -52,6 +75,7 @@ export type Database = {
           street_number?: string
         }
         Update: {
+          access_status?: Database["public"]["Enums"]["venue_access_status"]
           address?: string
           city?: string
           cover_url?: string
@@ -333,6 +357,48 @@ export type Database = {
           },
         ]
       }
+      invitations: {
+        Row: {
+          code: string
+          created_at: string
+          created_by: string | null
+          email: string | null
+          expires_at: string | null
+          id: string
+          note: string | null
+          redeemed_at: string | null
+          redeemed_by: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          created_by?: string | null
+          email?: string | null
+          expires_at?: string | null
+          id?: string
+          note?: string | null
+          redeemed_at?: string | null
+          redeemed_by?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          created_by?: string | null
+          email?: string | null
+          expires_at?: string | null
+          id?: string
+          note?: string | null
+          redeemed_at?: string | null
+          redeemed_by?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       menu_items: {
         Row: {
           business_id: string
@@ -415,6 +481,7 @@ export type Database = {
       }
       profiles: {
         Row: {
+          access_status: Database["public"]["Enums"]["user_access_status"]
           avatar_url: string | null
           bio: string | null
           city: string | null
@@ -444,6 +511,7 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          access_status?: Database["public"]["Enums"]["user_access_status"]
           avatar_url?: string | null
           bio?: string | null
           city?: string | null
@@ -473,6 +541,7 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          access_status?: Database["public"]["Enums"]["user_access_status"]
           avatar_url?: string | null
           bio?: string | null
           city?: string | null
@@ -754,7 +823,9 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      check_invitation: { Args: { _code: string }; Returns: boolean }
+      is_beta_launched: { Args: never; Returns: boolean }
+      redeem_invitation: { Args: { _code: string }; Returns: boolean }
     }
     Enums: {
       app_role: "admin" | "business_owner" | "user" | "venue"
@@ -762,6 +833,18 @@ export type Database = {
       gathering_status: "proposed" | "approved" | "cancelled" | "rejected"
       report_status: "open" | "resolved" | "dismissed"
       report_target: "user" | "gathering"
+      user_access_status:
+        | "waitlisted"
+        | "invited"
+        | "registered"
+        | "onboarded"
+        | "active"
+      venue_access_status:
+        | "pending"
+        | "approved"
+        | "invited"
+        | "registered"
+        | "active"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -894,6 +977,20 @@ export const Constants = {
       gathering_status: ["proposed", "approved", "cancelled", "rejected"],
       report_status: ["open", "resolved", "dismissed"],
       report_target: ["user", "gathering"],
+      user_access_status: [
+        "waitlisted",
+        "invited",
+        "registered",
+        "onboarded",
+        "active",
+      ],
+      venue_access_status: [
+        "pending",
+        "approved",
+        "invited",
+        "registered",
+        "active",
+      ],
     },
   },
 } as const

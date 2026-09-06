@@ -98,6 +98,18 @@ function VenueDashboard() {
 
   });
 
+  // Private beta: venue tools stay closed until launch (admins excepted).
+  const { data: access, isLoading: accessLoading } = useQuery({
+    queryKey: ["access-state", user?.id],
+    enabled: !!user && roleChecked,
+    queryFn: async () => {
+      const { fetchAccessState } = await import("@/lib/access");
+      return await fetchAccessState(user!.id);
+    },
+  });
+  const betaOpen = !!access?.hasVenueAccess;
+
+
   async function signOut() {
     await qc.cancelQueries();
     qc.clear();
@@ -153,7 +165,14 @@ function VenueDashboard() {
           </div>
         )}
 
-        {bizLoading ? (
+        {!betaOpen && (
+          <div className="mb-6 rounded-2xl border border-primary/30 bg-primary/10 px-4 py-3 text-sm">
+            <p className="font-medium">{t("beta.venue.lockedTitle")}</p>
+            <p className="mt-1 text-muted-foreground">{t("beta.venue.lockedBody")}</p>
+          </div>
+        )}
+
+        {bizLoading || accessLoading ? (
           <div className="py-16 text-center text-muted-foreground">{t("common.loading")}</div>
         ) : biz ? (
           <>
@@ -168,8 +187,12 @@ function VenueDashboard() {
               </div>
             )}
             <BusinessForm business={biz} userId={user!.id} onSaved={() => qc.invalidateQueries({ queryKey: ["venue-biz", user!.id] })} />
-            <TablesSection business={biz} />
-            <MenuSection businessId={biz.id} isOwner={true} />
+            {betaOpen && (
+              <>
+                <TablesSection business={biz} />
+                <MenuSection businessId={biz.id} isOwner={true} />
+              </>
+            )}
           </>
         ) : (
           <BusinessForm business={null} userId={user!.id} onSaved={() => qc.invalidateQueries({ queryKey: ["venue-biz", user!.id] })} />

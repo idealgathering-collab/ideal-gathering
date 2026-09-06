@@ -14,9 +14,12 @@ import { Route as TermsRouteImport } from './routes/terms'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as PreviewRouteImport } from './routes/preview'
+import { Route as PendingRouteImport } from './routes/pending'
 import { Route as PartnershipRouteImport } from './routes/partnership'
 import { Route as OurStoryRouteImport } from './routes/our-story'
 import { Route as McpRouteImport } from './routes/mcp'
+import { Route as InviteRouteImport } from './routes/invite'
 import { Route as ExploreRouteImport } from './routes/explore'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
@@ -65,6 +68,16 @@ const PrivacyRoute = PrivacyRouteImport.update({
   path: '/privacy',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PreviewRoute = PreviewRouteImport.update({
+  id: '/preview',
+  path: '/preview',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PendingRoute = PendingRouteImport.update({
+  id: '/pending',
+  path: '/pending',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PartnershipRoute = PartnershipRouteImport.update({
   id: '/partnership',
   path: '/partnership',
@@ -78,6 +91,11 @@ const OurStoryRoute = OurStoryRouteImport.update({
 const McpRoute = McpRouteImport.update({
   id: '/mcp',
   path: '/mcp',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const InviteRoute = InviteRouteImport.update({
+  id: '/invite',
+  path: '/invite',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ExploreRoute = ExploreRouteImport.update({
@@ -200,9 +218,12 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/explore': typeof ExploreRoute
+  '/invite': typeof InviteRoute
   '/mcp': typeof McpRoute
   '/our-story': typeof OurStoryRoute
   '/partnership': typeof PartnershipRoute
+  '/pending': typeof PendingRoute
+  '/preview': typeof PreviewRoute
   '/privacy': typeof PrivacyRoute
   '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -231,9 +252,12 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/explore': typeof ExploreRoute
+  '/invite': typeof InviteRoute
   '/mcp': typeof McpRoute
   '/our-story': typeof OurStoryRoute
   '/partnership': typeof PartnershipRoute
+  '/pending': typeof PendingRoute
+  '/preview': typeof PreviewRoute
   '/privacy': typeof PrivacyRoute
   '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -264,9 +288,12 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
   '/explore': typeof ExploreRoute
+  '/invite': typeof InviteRoute
   '/mcp': typeof McpRoute
   '/our-story': typeof OurStoryRoute
   '/partnership': typeof PartnershipRoute
+  '/pending': typeof PendingRoute
+  '/preview': typeof PreviewRoute
   '/privacy': typeof PrivacyRoute
   '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -297,9 +324,12 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/explore'
+    | '/invite'
     | '/mcp'
     | '/our-story'
     | '/partnership'
+    | '/pending'
+    | '/preview'
     | '/privacy'
     | '/reset-password'
     | '/sitemap.xml'
@@ -328,9 +358,12 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/explore'
+    | '/invite'
     | '/mcp'
     | '/our-story'
     | '/partnership'
+    | '/pending'
+    | '/preview'
     | '/privacy'
     | '/reset-password'
     | '/sitemap.xml'
@@ -360,9 +393,12 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/auth'
     | '/explore'
+    | '/invite'
     | '/mcp'
     | '/our-story'
     | '/partnership'
+    | '/pending'
+    | '/preview'
     | '/privacy'
     | '/reset-password'
     | '/sitemap.xml'
@@ -393,9 +429,12 @@ export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
   ExploreRoute: typeof ExploreRoute
+  InviteRoute: typeof InviteRoute
   McpRoute: typeof McpRoute
   OurStoryRoute: typeof OurStoryRoute
   PartnershipRoute: typeof PartnershipRoute
+  PendingRoute: typeof PendingRoute
+  PreviewRoute: typeof PreviewRoute
   PrivacyRoute: typeof PrivacyRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
@@ -448,6 +487,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrivacyRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/preview': {
+      id: '/preview'
+      path: '/preview'
+      fullPath: '/preview'
+      preLoaderRoute: typeof PreviewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pending': {
+      id: '/pending'
+      path: '/pending'
+      fullPath: '/pending'
+      preLoaderRoute: typeof PendingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/partnership': {
       id: '/partnership'
       path: '/partnership'
@@ -467,6 +520,13 @@ declare module '@tanstack/react-router' {
       path: '/mcp'
       fullPath: '/mcp'
       preLoaderRoute: typeof McpRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/invite': {
+      id: '/invite'
+      path: '/invite'
+      fullPath: '/invite'
+      preLoaderRoute: typeof InviteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/explore': {
@@ -660,9 +720,12 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
   ExploreRoute: ExploreRoute,
+  InviteRoute: InviteRoute,
   McpRoute: McpRoute,
   OurStoryRoute: OurStoryRoute,
   PartnershipRoute: PartnershipRoute,
+  PendingRoute: PendingRoute,
+  PreviewRoute: PreviewRoute,
   PrivacyRoute: PrivacyRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,

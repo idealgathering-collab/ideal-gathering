@@ -8,6 +8,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useSession } from "@/hooks/use-session";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { BetaSection } from "@/components/admin/beta-section";
 import { listReports, setReportStatus, type AdminReportRow } from "@/lib/moderation.functions";
 import { useI18n, useT } from "@/i18n";
 import { formatDateTime } from "@/lib/gatherings";
@@ -116,6 +117,7 @@ function AdminPage() {
             <TabsTrigger value="locations">{t("admin.section.savedLocations")}</TabsTrigger>
             <TabsTrigger value="users">{t("admin.section.users")}</TabsTrigger>
             <TabsTrigger value="reports">{t("admin.section.reports")}</TabsTrigger>
+            <TabsTrigger value="beta">{t("admin.section.beta")}</TabsTrigger>
           </TabsList>
           <TabsContent value="venues" className="mt-6">
             <VenuesSection />
@@ -131,6 +133,9 @@ function AdminPage() {
           </TabsContent>
           <TabsContent value="reports" className="mt-6">
             <ReportsSection />
+          </TabsContent>
+          <TabsContent value="beta" className="mt-6">
+            <BetaSection />
           </TabsContent>
         </Tabs>
       </main>

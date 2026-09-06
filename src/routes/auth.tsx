@@ -13,6 +13,7 @@ import { QuizSavedNote } from "@/components/quiz-saved-note";
 
 import { localizedHead } from "@/lib/seo";
 import { homePathForUser } from "@/lib/roles";
+import { checkInvitation, readInvite, rememberInvite, redeemPendingInvite } from "@/lib/access";
 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -21,6 +22,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 const searchSchema = z.object({
   mode: z.enum(["signin", "signup", "forgot"]).optional().default("signin"),
   redirect: z.string().optional(),
+  invite: z.string().optional(),
 });
 
 export const Route = createFileRoute("/auth")({
@@ -36,7 +38,7 @@ const nameSchema = z.string().trim().min(1, "Enter your name").max(80);
 type Mode = "signin" | "signup" | "forgot";
 
 function AuthPage() {
-  const { mode, redirect } = Route.useSearch();
+  const { mode, redirect, invite } = Route.useSearch();
   const navigate = useNavigate();
   const [current, setCurrent] = useState<Mode>(mode);
   const [email, setEmail] = useState("");
@@ -48,14 +50,21 @@ function AuthPage() {
 
   useEffect(() => setCurrent(mode), [mode]);
 
+  // Keep a validated invitation across the sign-up round trip.
+  useEffect(() => {
+    if (invite) rememberInvite(invite);
+  }, [invite]);
+
   useEffect(() => {
     if (current === "forgot") return;
     supabase.auth.getSession().then(async ({ data }) => {
       if (!data.session) return;
+      await redeemPendingInvite();
       const to = await homePathForUser(data.session.user.id, redirect);
       navigate({ to });
     });
   }, [navigate, redirect, current]);
+
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -79,6 +88,14 @@ function AuthPage() {
           toast.error(t("consent.required"));
           return;
         }
+        // Private beta: new accounts need a working invitation.
+        const code = invite ?? readInvite();
+        if (!code || !(await checkInvitation(code))) {
+          toast.error(t("beta.needInvite"));
+          navigate({ to: "/invite" });
+          return;
+        }
+        rememberInvite(code);
         const nm = nameSchema.parse(name);
         const { error } = await supabase.auth.signUp({
           email: em,
@@ -95,11 +112,13 @@ function AuthPage() {
         if (error) throw error;
         toast.success(t("auth.welcomeBack"));
       }
+      await redeemPendingInvite();
       const {
         data: { user },
       } = await supabase.auth.getUser();
       const to = user ? await homePathForUser(user.id, redirect) : (redirect ?? "/dashboard");
       navigate({ to });
+
     } catch (err) {
       const msg = err instanceof Error ? err.message : t("auth.generic");
       toast.error(msg);
@@ -167,10 +186,12 @@ function AuthPage() {
                     });
                     if (result.error) throw result.error;
                     if (result.redirected) return;
+                    await redeemPendingInvite();
                     const {
                       data: { user },
                     } = await supabase.auth.getUser();
                     const to = user ? await homePathForUser(user.id, redirect) : (redirect ?? "/dashboard");
+
                     navigate({ to });
                   } catch (err) {
                     const msg = err instanceof Error ? err.message : t("auth.googleFailed");
@@ -195,6 +216,20 @@ function AuthPage() {
             </>
           )}
 
+          {isSignup && !isForgot && (
+            <div className="mb-4 rounded-2xl border border-border bg-muted/40 px-4 py-3 text-xs text-muted-foreground">
+              {invite ?? readInvite() ? (
+                <span>{t("beta.inviteApplied")}</span>
+              ) : (
+                <span>
+                  {t("beta.needInvite")}{" "}
+                  <Link to="/invite" className="text-primary hover:underline">
+                    {t("beta.cta.invite")}
+                  </Link>
+                </span>
+              )}
+            </div>
+          )}
           {isSignup && !isForgot && <QuizSavedNote />}
 
           <form onSubmit={handleSubmit} className="grid gap-4">

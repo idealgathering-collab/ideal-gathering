@@ -1,6 +1,7 @@
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
 import { fetchRoles, isAdminPreview } from "@/lib/roles";
+import { fetchAccessState } from "@/lib/access";
 
 export const Route = createFileRoute("/_authenticated")({
   ssr: false,
@@ -25,6 +26,15 @@ export const Route = createFileRoute("/_authenticated")({
     const onOwnerSurface = path === "/admin" || path.startsWith("/admin/");
     if (isAdmin && !isAdminPreview() && !onOwnerSurface) {
       throw redirect({ to: "/admin", replace: true });
+    }
+    if (!isAdmin) {
+      // Private beta: the product stays closed until launch, and only for
+      // members who finished setting up. Onboarding itself stays reachable.
+      const access = await fetchAccessState(data.user.id);
+      const onOnboarding = path === "/onboarding" || path.startsWith("/onboarding/");
+      if (!access.hasProductAccess && !onOnboarding) {
+        throw redirect({ to: "/pending", replace: true });
+      }
     }
     return { user: data.user };
   },
