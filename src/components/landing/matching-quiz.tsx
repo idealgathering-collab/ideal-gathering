@@ -102,7 +102,7 @@ function MatchBar({
   );
 }
 
-export function MatchingQuiz() {
+export function MatchingQuiz({ betaCta = false }: { betaCta?: boolean } = {}) {
   const t = useT();
   const reduced = useReducedMotion();
   const { user } = useSession();
@@ -402,14 +402,24 @@ export function MatchingQuiz() {
                     .replace("{total}", String(result.total))}
                 </p>
               )}
-              <Link
-                to="/auth"
-                search={{ mode: "signup" }}
-                className="cosmic-cta inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-semibold text-white"
-              >
-                {t("landing.v3.matching.match.cta")}
-                <ArrowRight className="h-4 w-4 rtl:rotate-180" />
-              </Link>
+              {betaCta ? (
+                <Link
+                  to="/waitlist"
+                  className="cosmic-cta inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-semibold text-white"
+                >
+                  {t("landing.v3.matching.match.cta")}
+                  <ArrowRight className="h-4 w-4 rtl:rotate-180" />
+                </Link>
+              ) : (
+                <Link
+                  to="/auth"
+                  search={{ mode: "signup" }}
+                  className="cosmic-cta inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-semibold text-white"
+                >
+                  {t("landing.v3.matching.match.cta")}
+                  <ArrowRight className="h-4 w-4 rtl:rotate-180" />
+                </Link>
+              )}
               <p className="mt-3 text-xs text-[rgba(196,181,253,0.6)]">
                 {t("landing.v3.matching.match.saved")}
               </p>

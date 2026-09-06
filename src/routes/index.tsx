@@ -13,6 +13,16 @@ import { useSession } from "@/hooks/use-session";
 import { homePathForUser } from "@/lib/roles";
 import { CosmicBackdrop } from "@/components/cosmic-backdrop";
 import { Reveal } from "@/components/landing/reveal";
+import {
+  CategoriesSection,
+  DemoSection,
+  DiffSection,
+  HowSection,
+  MatchingSection,
+  SafetySection,
+  VenuesSection,
+  VisionSection,
+} from "@/components/landing/sections";
 import { SiteFooter } from "@/components/site-footer";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import constellationAsset from "@/assets/constellation-people.png.asset.json";
@@ -93,7 +103,8 @@ function Home() {
         </div>
       </header>
 
-      <main className="relative z-10 mx-auto flex w-full max-w-5xl flex-col items-center px-4 pb-20 pt-6 text-center sm:pt-12">
+      <main>
+      <div className="relative z-10 mx-auto flex w-full max-w-5xl flex-col items-center px-4 pb-20 pt-6 text-center sm:pt-12">
         <Reveal>
           <div className="inline-flex items-center gap-2 rounded-full border border-white/12 bg-white/5 px-3 py-1.5 text-[11px] font-medium uppercase tracking-[0.18em] text-[rgba(196,181,253,0.85)]">
             <Sparkles className="h-3 w-3 text-sunshine" />
@@ -166,6 +177,16 @@ function Home() {
             {t("beta.hero.note")}
           </p>
         </Reveal>
+      </div>
+
+        <HowSection />
+        <CategoriesSection />
+        <DiffSection />
+        <MatchingSection betaCta />
+        <DemoSection betaCta />
+        <SafetySection />
+        <VenuesSection />
+        <VisionSection />
       </main>
 
       <div className="relative z-20">

@@ -12,3 +12,4 @@
 - [x] Admin panel: Beta tab (launch switch, invitations, invite from waiting list)
 - [x] EN / RU / FA copy
 - [x] Typecheck, 161 unit tests, page checks
+- [x] Restore selected storytelling sections beneath the private-beta homepage hero

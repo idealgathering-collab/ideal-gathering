@@ -51,7 +51,7 @@ const TABLES: DemoTable[] = [
   },
 ];
 
-export function TableDemo() {
+export function TableDemo({ betaCta = false }: { betaCta?: boolean } = {}) {
   const t = useT();
   const [previewId, setPreviewId] = useState<string | null>(null);
   const preview = TABLES.find((tbl) => tbl.id === previewId) ?? null;
@@ -144,13 +144,22 @@ export function TableDemo() {
             >
               {t("landing.v3.demo.modal.dismiss")}
             </button>
-            <Link
-              to="/auth"
-              search={{ mode: "signup" }}
-              className="inline-flex items-center justify-center rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground"
-            >
-              {t("landing.v3.demo.modal.cta")}
-            </Link>
+            {betaCta ? (
+              <Link
+                to="/waitlist"
+                className="inline-flex items-center justify-center rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground"
+              >
+                {t("landing.v3.demo.modal.cta")}
+              </Link>
+            ) : (
+              <Link
+                to="/auth"
+                search={{ mode: "signup" }}
+                className="inline-flex items-center justify-center rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground"
+              >
+                {t("landing.v3.demo.modal.cta")}
+              </Link>
+            )}
           </DialogFooter>
         </DialogContent>
       </Dialog>

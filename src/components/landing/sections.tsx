@@ -46,7 +46,7 @@ function SectionTitle({ children }: { children: React.ReactNode }) {
 
 /* ---------------- Demo ---------------- */
 
-export function DemoSection() {
+export function DemoSection({ betaCta = false }: { betaCta?: boolean } = {}) {
   const t = useT();
   return (
     <section id="demo" className="relative z-20 px-4 py-20 sm:py-28">
@@ -59,7 +59,7 @@ export function DemoSection() {
           </p>
         </Reveal>
         <Reveal delay={80} className="mt-10">
-          <TableDemo />
+          <TableDemo betaCta={betaCta} />
         </Reveal>
         <Reveal delay={140}>
           <p className="mt-6 text-xs text-[rgba(196,181,253,0.55)]">
@@ -269,7 +269,7 @@ const CHIPS: { icon: ComponentType<{ className?: string }>; k: string }[] = [
   { icon: Clock, k: "chip3" },
 ];
 
-export function MatchingSection() {
+export function MatchingSection({ betaCta = false }: { betaCta?: boolean } = {}) {
   const t = useT();
   return (
     <section id="matching" className="relative z-20 scroll-mt-20 px-4 py-20 sm:py-28">
@@ -283,7 +283,7 @@ export function MatchingSection() {
         </Reveal>
 
         <Reveal delay={70}>
-          <MatchingQuiz />
+          <MatchingQuiz betaCta={betaCta} />
         </Reveal>
 
         <Reveal delay={210}>
