@@ -8,6 +8,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useSession } from "@/hooks/use-session";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { BetaSection } from "@/components/admin/beta-section";
 import { listReports, setReportStatus, type AdminReportRow } from "@/lib/moderation.functions";
 import { useI18n, useT } from "@/i18n";
 import { formatDateTime } from "@/lib/gatherings";
