@@ -1,10 +1,14 @@
-# Private Beta rollout
+# Roadmap — Private Beta
 
-- [ ] DB: app_config (beta launch switch), invitations, access statuses, access helper functions, RLS write enforcement
-- [ ] Server functions: access state, invitation check/redeem, admin beta + invite controls
-- [ ] Routes: /invite, /pending, new short homepage, /preview (old marketing page)
-- [ ] Gates: _authenticated route + venue dashboard, admin bypass
-- [ ] Auth flows: signup requires invitation, venue registration lands pending, onboarding status
-- [ ] Admin panel: launch switch, invite create/revoke, invite from waitlist
-- [ ] EN/RU/FA strings
-- [ ] Verify: typecheck, tests, key flows
+- [x] Beta launch switch (`app_config`) + admin-only update
+- [x] Access statuses on people and venues, with safe backfill
+- [x] Invitation table + server-side validate/redeem functions
+- [x] Database rules: creating, joining and messaging require beta access
+- [x] Access helpers (`src/lib/access.ts`, `src/lib/beta-admin.ts`)
+- [x] Gate on member routes + venue portal (admin bypass)
+- [x] Sign-up requires a working invitation
+- [x] `/invite`, `/pending` pages
+- [x] Short private-beta homepage; full marketing page parked at `/preview`
+- [x] Admin panel: Beta tab (launch switch, invitations, invite from waiting list)
+- [x] EN / RU / FA copy
+- [x] Typecheck, 161 unit tests, page checks
