@@ -37,7 +37,7 @@ const nameSchema = z.string().trim().min(1, "Enter your name").max(80);
 type Mode = "signin" | "signup" | "forgot";
 
 function AuthPage() {
-  const { mode, redirect } = Route.useSearch();
+  const { mode, redirect, invite } = Route.useSearch();
   const navigate = useNavigate();
   const [current, setCurrent] = useState<Mode>(mode);
   const [email, setEmail] = useState("");
@@ -49,14 +49,21 @@ function AuthPage() {
 
   useEffect(() => setCurrent(mode), [mode]);
 
+  // Keep a validated invitation across the sign-up round trip.
+  useEffect(() => {
+    if (invite) rememberInvite(invite);
+  }, [invite]);
+
   useEffect(() => {
     if (current === "forgot") return;
     supabase.auth.getSession().then(async ({ data }) => {
       if (!data.session) return;
+      await redeemPendingInvite();
       const to = await homePathForUser(data.session.user.id, redirect);
       navigate({ to });
     });
   }, [navigate, redirect, current]);
+
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
