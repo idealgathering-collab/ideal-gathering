@@ -216,6 +216,20 @@ function AuthPage() {
             </>
           )}
 
+          {isSignup && !isForgot && (
+            <div className="mb-4 rounded-2xl border border-border bg-muted/40 px-4 py-3 text-xs text-muted-foreground">
+              {invite ?? readInvite() ? (
+                <span>{t("beta.inviteApplied")}</span>
+              ) : (
+                <span>
+                  {t("beta.needInvite")}{" "}
+                  <Link to="/invite" className="text-primary hover:underline">
+                    {t("beta.cta.invite")}
+                  </Link>
+                </span>
+              )}
+            </div>
+          )}
           {isSignup && !isForgot && <QuizSavedNote />}
 
           <form onSubmit={handleSubmit} className="grid gap-4">

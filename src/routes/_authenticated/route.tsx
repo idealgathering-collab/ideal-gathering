@@ -27,6 +27,15 @@ export const Route = createFileRoute("/_authenticated")({
     if (isAdmin && !isAdminPreview() && !onOwnerSurface) {
       throw redirect({ to: "/admin", replace: true });
     }
+    if (!isAdmin) {
+      // Private beta: the product stays closed until launch, and only for
+      // members who finished setting up. Onboarding itself stays reachable.
+      const access = await fetchAccessState(data.user.id);
+      const onOnboarding = path === "/onboarding" || path.startsWith("/onboarding/");
+      if (!access.hasProductAccess && !onOnboarding) {
+        throw redirect({ to: "/pending", replace: true });
+      }
+    }
     return { user: data.user };
   },
   component: () => <Outlet />,
