@@ -1,69 +1,81 @@
-# Private Beta — controlled access architecture
+# Private-beta audit — read-only report (no files changed)
 
-Goal: turn the live product into an invite-controlled private beta without rebuilding anything. Everything existing stays: data, approved users, venue system, design language, components.
+## Health checks
 
-## What I found in the current app
+| Check | Result |
+| --- | --- |
+| TypeScript (`tsgo --noEmit`) | Clean, 0 errors |
+| Unit tests | 161/161 passing, 14 files |
+| Page loads | `/` `/waitlist` `/invite` `/pending` `/preview` `/explore` `/dashboard` all 200; `/auth` 307 → `/auth?mode=signin` (expected default-search redirect) |
+| Browser console | No errors captured |
 
-- Sign-up is fully open: `/auth` (people) and `/venue/auth` (venues) create accounts instantly, and a database trigger immediately grants the `user` or `venue` role. Nothing stands between "sign up" and "use the product".
-- After sign-in, `homePathForUser` sends people to `/dashboard`, venues to `/venue/dashboard`, admins to `/admin`. The signed-in area is guarded by one gate (`src/routes/_authenticated/route.tsx`); the venue dashboard has **no** gate at all beyond being a normal page.
-- The waiting list already exists (`/waitlist` + `waitlist` table, 4 entries) but is a dead end — it is not connected to accounts or invitations.
-- Venue applications already have pending/approved/rejected states on `businesses`, and only admins can change that status. Today there are 0 venues registered, 3 venue accounts, 14 people (10 onboarded), 2 admins, 0 gatherings.
-- Approved gatherings and approved venues are currently readable by anyone, even signed out (used by the public gathering pages and search-engine listings).
-- The homepage is the long marketing page with ~13 sections.
+`/waitlist` is confirmed a real route (`src/routes/waitlist.tsx`) and is linked correctly from the hero, `/invite`, `/preview`, the demo and quiz sections.
 
-Good news: the pieces to build on are already there (roles, venue approval, waiting list, an admin area). The gap is that there is no "may this person use the product yet?" concept anywhere.
+---
 
-## The access model I propose
+## HIGH
 
-One rule, checked in the database, used everywhere:
+### H-A — Many CTAs still send people into open signup, which now always rejects them
+`/auth?mode=signup` requires a valid invitation (`src/routes/auth.tsx:90-96`): with no code it toasts "need invite" and bounces to `/invite`. These links still promise signup:
 
-```text
-person can use the product   = admin
-                             OR (their status is ONBOARDED/ACTIVE  AND  beta is launched)
-venue can use the dashboard  = admin
-                             OR (their venue is APPROVED            AND  beta is launched)
-```
+- `src/components/site-header.tsx:186` ("Join")
+- `src/components/landing/public-header.tsx:118` and `:166`
+- `src/components/landing/sections.tsx:509`
+- `src/components/landing/table-demo.tsx:156`
+- `src/components/landing/matching-quiz.tsx:415`
+- `src/routes/our-story.tsx:92`
+- `src/routes/waitlist.tsx:220` ("already have an account? sign up")
+- `src/routes/gatherings.$id.tsx:76` (join flow for signed-out visitors)
 
-Statuses stored per person: WAITLISTED → INVITED → REGISTERED → ONBOARDED → ACTIVE.
-Statuses stored per venue: PENDING → APPROVED → INVITED → REGISTERED → ACTIVE.
-One launch switch lives in a config table only admins can change, so before launch nobody but admins gets in — even if someone has a valid invitation.
+Public pages that still show these: `/our-story`, `/partnership`, `/explore`, `/gatherings/$id`, `/waitlist`, `/preview`. Every one is a dead end during beta. Fix direction: point at `/waitlist` (or `/invite`), matching the hero.
 
-## The three front doors
+### H-B — `/explore` and `/gatherings/$id` are outside the gate
+The access check lives only in `src/routes/_authenticated/route.tsx` and `venue.dashboard.tsx`. `/explore` and `/gatherings/$id` are top-level public routes, so a signed-out visitor — or a waitlisted/`/pending` account — can still browse the full gathering catalogue during the closed beta. Writes are blocked by RLS, so this is exposure, not a data-integrity problem, but it contradicts "no product access before launch". Decide whether these stay public (SEO) or move behind the gate.
 
-1. **Join the Waiting List** — existing `/waitlist` form, kept and restyled to the new page. Result: a friendly "you're on the list" state. No account, no access.
-2. **I Have an Invitation** — new `/invite` page. The code is checked by the server (codes are never listed or exposed to the browser, so they can't be guessed or scraped). A valid code unlocks the existing sign-up form, then the normal onboarding runs. After onboarding, the person waits on a "you're in, we open soon" screen until launch.
-3. **Register Your Venue** — existing venue sign-up, but registering now creates a **pending application** and lands on the same waiting screen instead of the dashboard.
+---
 
-Admins keep full access at all times, exactly as today.
+## MEDIUM
 
-## Homepage
+### M-A — Mobile tab bar shows on the pending/beta screens
+`src/components/mobile-tab-bar.tsx:18-23` hides only `/`, `/auth*`, `/admin*`, `/venue*`, `/onboarding*`. A signed-in but not-yet-approved user sitting on `/pending` (or `/invite`, `/waitlist`, `/preview`) sees the five product tabs; tapping any of them bounces straight back to `/pending`.
 
-`src/routes/index.tsx` becomes a short private-beta page in the current cosmic/purple style: headline "No one should be alone.", the sub-line about the right people / right gathering / right moment, a "PRIVATE BETA — we're inviting our first community gradually" badge, and three buttons (Join the Waiting List · I Have an Invitation · Register Your Venue), plus footer.
+### M-B — Venue dashboard gate is client-side only
+`src/routes/venue.dashboard.tsx:69-88` does the role check in a `useEffect` after mount (no `beforeLoad`), so the venue shell flashes before redirect. Access state itself is queried correctly (`hasVenueAccess`), and the tools are hidden pre-launch, so this is cosmetic/pattern inconsistency, not a leak.
 
-Nothing is deleted: all existing marketing sections stay in `src/components/landing/sections.tsx` and are re-mounted on a `/preview` page (hidden from search engines) so they can come straight back at launch by swapping one import.
+---
 
-## Files and database changes
+## LOW
 
-**Database (one migration, additive only):**
-- `app_config` — single row with `beta_launched` and launch date; admins read/write; a small security-definer function exposes only the on/off flag to the app.
-- `invitations` — code, optional email, status, who invited, who redeemed, expiry. No direct read access for anyone but admins; two security-definer functions handle "check this code" and "redeem this code for me".
-- `profiles.access_status` (new enum column) with backfill: the 10 already-onboarded people become ACTIVE, the rest REGISTERED — nobody currently in the product gets locked out.
-- `businesses.access_status` (new enum column) backfilled from the existing pending/approved status.
-- `private.has_beta_access(uid)` / `private.venue_has_beta_access(uid)` helper functions, added to the write rules for creating gatherings, joining gatherings, sending messages, and creating a venue, so access is enforced at the data layer, not just in the interface.
+- `/preview` is reachable but linked from nowhere in the app — intentional per your instruction, just noting it is orphaned (and `noindex`).
+- `src/routes/invite.tsx:122` offers "sign in" but no path back to `/waitlist` from the failure state other than line 117 — fine, just noting the flow.
+- Landing hero only exposes `mode: "signin"` for `/auth`, which is correct; no other pre-launch entry point bypasses the invite check.
 
-**App:**
-- `src/routes/index.tsx` (new short page), new `src/routes/preview.tsx` (old marketing page), new `src/routes/invite.tsx`, new `src/routes/pending.tsx` (status screen for people and venues).
-- `src/routes/_authenticated/route.tsx` and `src/routes/venue.dashboard.tsx` — send anyone without beta access to `/pending`.
-- `src/lib/roles.ts` / `homePathForUser` — route by status, not just role.
-- `src/routes/auth.tsx` — sign-up requires a validated invitation; sign-in still works for everyone.
-- `src/routes/venue.auth.tsx` — after registering, land on `/pending`.
-- `src/routes/_authenticated/onboarding.tsx` — completing onboarding moves the person to ONBOARDED.
-- `src/routes/_authenticated/admin.tsx` — new panel: launch switch, invitation codes (create/revoke), waiting list → invite in one click, venue approvals.
-- New server-side access functions in `src/lib/access.functions.ts`; translations EN/RU/FA; `public/robots.txt` + sitemap trimmed for the beta.
+---
 
-## Risks worth deciding before I build
+## Gate coverage (verified)
 
-1. **Public gathering pages.** Approved gatherings are readable by signed-out visitors today, which is what makes shareable gathering links and search listings work. Closing that during beta is the strictest option but removes those public pages. My recommendation: keep them public (they contain no private data) and gate only participation. Tell me if you want them fully closed.
-2. **Existing accounts.** Backfill keeps all 10 onboarded people active; the 4 not-yet-onboarded accounts will see the waiting screen until they finish onboarding. If you'd rather activate all 14, say so.
-3. **Ordering.** The migration is additive and reversible; the write-rule tightening is the only part that could block someone, so I'll verify with the existing database test suite before finishing.
-4. Existing legal, profile, chat, matching, attendance and venue features are untouched.
+| Route | Covered by | Signed-out behaviour |
+| --- | --- | --- |
+| `/dashboard`, `/explore` (auth features), `/my-gatherings`, `/chat`, `/profile`, `/settings`, `/create-gathering`, `/people/$id`, `/businesses/$id` | `_authenticated/route.tsx` beforeLoad → `fetchAccessState`, `/pending` redirect | redirect to `/auth?redirect=…&mode=signin` |
+| `/onboarding` | same gate, explicitly exempted from the `/pending` bounce | redirect to `/auth` |
+| `/admin` | same gate, admin bypass | redirect to `/admin/auth` |
+| `/venue/dashboard` | own role check + `hasVenueAccess` | redirect to `/venue/auth` |
+
+`homePathForUser` (`src/lib/roles.ts:22-29`) routes correctly: admin → `/admin`, venue → `/venue/dashboard`, no product access → `/pending` (or `/onboarding` if not yet onboarded). No blank pages observed; `_authenticated` is `ssr: false`, so the redirect happens client-side after a brief spinner.
+
+---
+
+## Regressions from earlier audit — all still fixed
+
+- **C1 profile RLS** — `people/$id` → `loadProfileCard` → `loadPublicProfile` server function (`src/lib/public-profile.functions.ts`), safe projection with birth date coarsened to year. Intact.
+- **C2 `gathering_ratings.reasons`** — persisted via `parseReasons` at `src/lib/feedback.functions.ts:151`. Intact.
+- **H1 onboarding loop** — `src/routes/_authenticated/onboarding.tsx:99-108` now checks the update result and refuses to navigate on failure. Intact.
+- **H4 realtime notifications** — `notifications` added to `supabase_realtime` in migration `20260828010926_*.sql`. Intact.
+
+---
+
+## Suggested fix order (when you want it)
+
+1. H-A — repoint the eight signup CTAs (pure link change).
+2. H-B — decide the public/gated status of `/explore` and `/gatherings/$id`.
+3. M-A, M-B.
