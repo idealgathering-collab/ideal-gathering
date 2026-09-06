@@ -88,6 +88,14 @@ function AuthPage() {
           toast.error(t("consent.required"));
           return;
         }
+        // Private beta: new accounts need a working invitation.
+        const code = invite ?? readInvite();
+        if (!code || !(await checkInvitation(code))) {
+          toast.error(t("beta.needInvite"));
+          navigate({ to: "/invite" });
+          return;
+        }
+        rememberInvite(code);
         const nm = nameSchema.parse(name);
         const { error } = await supabase.auth.signUp({
           email: em,
@@ -104,11 +112,13 @@ function AuthPage() {
         if (error) throw error;
         toast.success(t("auth.welcomeBack"));
       }
+      await redeemPendingInvite();
       const {
         data: { user },
       } = await supabase.auth.getUser();
       const to = user ? await homePathForUser(user.id, redirect) : (redirect ?? "/dashboard");
       navigate({ to });
+
     } catch (err) {
       const msg = err instanceof Error ? err.message : t("auth.generic");
       toast.error(msg);
