@@ -20,9 +20,11 @@ export async function fetchRoles(userId: string): Promise<Set<string>> {
 
 /** Default home for this account. Admins land on /admin unless they opted into guest preview. */
 export async function homePathForUser(userId: string, redirect?: string): Promise<string> {
-  const roles = await fetchRoles(userId);
-  if (roles.has("admin") && !isAdminPreview()) return "/admin";
-  if (roles.has("venue") && !roles.has("admin")) return "/venue/dashboard";
+  const { fetchAccessState } = await import("@/lib/access");
+  const access = await fetchAccessState(userId);
+  if (access.isAdmin && !isAdminPreview()) return "/admin";
+  if (access.isVenue && !access.isAdmin) return "/venue/dashboard";
+  if (!access.hasProductAccess) return access.onboarded ? "/pending" : "/onboarding";
   if (redirect && redirect.startsWith("/") && !redirect.startsWith("//")) return redirect;
   return "/dashboard";
 }
