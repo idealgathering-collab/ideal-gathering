@@ -186,10 +186,12 @@ function AuthPage() {
                     });
                     if (result.error) throw result.error;
                     if (result.redirected) return;
+                    await redeemPendingInvite();
                     const {
                       data: { user },
                     } = await supabase.auth.getUser();
                     const to = user ? await homePathForUser(user.id, redirect) : (redirect ?? "/dashboard");
+
                     navigate({ to });
                   } catch (err) {
                     const msg = err instanceof Error ? err.message : t("auth.googleFailed");
