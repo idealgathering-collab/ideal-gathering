@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -27,9 +27,12 @@ import { VerifyEmailBanner } from "@/components/verify-email-banner";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { NotificationsBell } from "@/components/notifications-bell";
 import { useT } from "@/i18n";
+import { requireVenueAccess } from "@/lib/beta-gate";
 import logoAsset from "@/assets/ideal-gathering-logo.png.asset.json";
 
 export const Route = createFileRoute("/venue/dashboard")({
+  ssr: false,
+  beforeLoad: () => requireVenueAccess(),
   head: () => ({
     meta: [
       { title: "Venue portal — Ideal Gathering" },
@@ -43,6 +46,7 @@ export const Route = createFileRoute("/venue/dashboard")({
   }),
   component: VenueDashboard,
 });
+
 
 const bizSchema = z.object({
   name: z.string().trim().min(2).max(120),
