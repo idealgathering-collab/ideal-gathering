@@ -73,7 +73,7 @@ function GatheringDetail() {
 
   async function join() {
     if (!user) {
-      navigate({ to: "/auth", search: { mode: "signup", redirect: `/gatherings/${id}` } });
+      navigate({ to: "/auth", search: { mode: "signin", redirect: `/gatherings/${id}` } });
       return;
     }
     if (!user.email_confirmed_at) {

@@ -412,8 +412,7 @@ export function MatchingQuiz({ betaCta = false }: { betaCta?: boolean } = {}) {
                 </Link>
               ) : (
                 <Link
-                  to="/auth"
-                  search={{ mode: "signup" }}
+                  to="/waitlist"
                   className="cosmic-cta inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-semibold text-white"
                 >
                   {t("landing.v3.matching.match.cta")}

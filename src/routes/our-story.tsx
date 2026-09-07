@@ -89,8 +89,7 @@ function OurStoryPage() {
           </p>
           <div className="mt-10">
             <Link
-              to="/auth"
-              search={{ mode: "signup" }}
+              to="/waitlist"
               className="cosmic-cta inline-flex items-center justify-center rounded-full px-7 py-3.5 text-sm font-semibold text-white"
             >
               {t("ourStory.cta")}
