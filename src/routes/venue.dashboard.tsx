@@ -1,5 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
+
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -27,9 +28,12 @@ import { VerifyEmailBanner } from "@/components/verify-email-banner";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { NotificationsBell } from "@/components/notifications-bell";
 import { useT } from "@/i18n";
+import { requireVenueAccess } from "@/lib/beta-gate";
 import logoAsset from "@/assets/ideal-gathering-logo.png.asset.json";
 
 export const Route = createFileRoute("/venue/dashboard")({
+  ssr: false,
+  beforeLoad: () => requireVenueAccess(),
   head: () => ({
     meta: [
       { title: "Venue portal — Ideal Gathering" },
@@ -43,6 +47,7 @@ export const Route = createFileRoute("/venue/dashboard")({
   }),
   component: VenueDashboard,
 });
+
 
 const bizSchema = z.object({
   name: z.string().trim().min(2).max(120),
@@ -64,33 +69,10 @@ function VenueDashboard() {
   const navigate = useNavigate();
   const qc = useQueryClient();
   const t = useT();
-  const [roleChecked, setRoleChecked] = useState(false);
-
-  // gate: venue role required (admins may also view the venue portal)
-  useEffect(() => {
-    if (sessLoading) return;
-    if (!user) {
-      navigate({ to: "/venue/auth" });
-      return;
-    }
-    supabase
-      .from("user_roles")
-      .select("role")
-      .eq("user_id", user.id)
-      .in("role", ["venue", "admin"])
-      .then(({ data }) => {
-        if (!data || data.length === 0) {
-          toast.error(t("venueAuth.notVenue"));
-          navigate({ to: "/" });
-        } else {
-          setRoleChecked(true);
-        }
-      });
-  }, [user, sessLoading, navigate, t]);
 
   const { data: biz, isLoading: bizLoading } = useQuery({
     queryKey: ["venue-biz", user?.id],
-    enabled: !!user && roleChecked,
+    enabled: !!user,
     queryFn: async () => {
       const { getMyBusiness } = await import("@/lib/business.functions");
       return await getMyBusiness();
@@ -101,7 +83,7 @@ function VenueDashboard() {
   // Private beta: venue tools stay closed until launch (admins excepted).
   const { data: access, isLoading: accessLoading } = useQuery({
     queryKey: ["access-state", user?.id],
-    enabled: !!user && roleChecked,
+    enabled: !!user,
     queryFn: async () => {
       const { fetchAccessState } = await import("@/lib/access");
       return await fetchAccessState(user!.id);
@@ -117,13 +99,14 @@ function VenueDashboard() {
     navigate({ to: "/venue/auth", replace: true });
   }
 
-  if (!roleChecked || sessLoading) {
+  if (sessLoading) {
     return (
       <div className="grid min-h-screen place-items-center bg-background text-muted-foreground">
         <Loader2 className="h-6 w-6 animate-spin" />
       </div>
     );
   }
+
 
   return (
     <div className="min-h-screen bg-background">

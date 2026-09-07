@@ -1,6 +1,7 @@
 import { redirect } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
 import { fetchAccessState } from "@/lib/access";
+import { fetchRoles } from "@/lib/roles";
 
 /**
  * Shared closed-beta gate for member surfaces that live outside the
@@ -26,3 +27,21 @@ export async function requireProductAccess(location: { pathname: string; href: s
   }
   return { user: data.user };
 }
+
+/**
+ * Gate for the venue dashboard. Only signed-in users with the venue or admin
+ * role may enter; everyone else is sent to the venue auth page before render.
+ */
+export async function requireVenueAccess() {
+  const { data, error } = await supabase.auth.getUser();
+  if (error || !data.user) {
+    throw redirect({ to: "/venue/auth" });
+  }
+
+  const roles = await fetchRoles(data.user.id);
+  if (!roles.has("venue") && !roles.has("admin")) {
+    throw redirect({ to: "/" });
+  }
+  return { user: data.user };
+}
+
