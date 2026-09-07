@@ -217,7 +217,7 @@ function WaitlistPage() {
 
           <div className="mt-6 border-t border-border pt-4 text-center text-xs text-muted-foreground">
             <p>
-              <Link to="/auth" search={{ mode: "signin" }} className="text-primary hover:underline">
+              <Link to="/invite" className="text-primary hover:underline">
                 {t("wait.createAccount")}
               </Link>
             </p>
