@@ -13,3 +13,6 @@
 - [x] EN / RU / FA copy
 - [x] Typecheck, 161 unit tests, page checks
 - [x] Restore selected storytelling sections beneath the private-beta homepage hero
+- [x] Beta CTAs point to the waiting list (no dead-end sign-up)
+- [x] Browse + gathering detail behind the same access gate
+- [ ] Later: hide mobile tabs on pending screens; move venue portal gate to route level
