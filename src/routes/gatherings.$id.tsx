@@ -15,6 +15,7 @@ import { fetchGathering, formatDateTime } from "@/lib/gatherings";
 import { useI18n, useT } from "@/i18n";
 import { gatheringHead, type SeoLang } from "@/lib/seo";
 import { getPublicGathering } from "@/lib/public-data.functions";
+import { requireProductAccess } from "@/lib/beta-gate";
 import { getTableFit } from "@/lib/matching.functions";
 import { TableFitChip, TakeQuizNudge } from "@/components/table-fit";
 import { ReportDialog, type ReportTarget } from "@/components/report-dialog";
@@ -25,6 +26,8 @@ import { useState } from "react";
 
 
 export const Route = createFileRoute("/gatherings/$id")({
+  ssr: false,
+  beforeLoad: async ({ location }) => requireProductAccess(location),
   component: GatheringDetail,
   validateSearch: (search: Record<string, unknown>): { lang?: SeoLang } =>
     search.lang === "ru" || search.lang === "fa" ? { lang: search.lang } : {},
@@ -73,7 +76,7 @@ function GatheringDetail() {
 
   async function join() {
     if (!user) {
-      navigate({ to: "/auth", search: { mode: "signup", redirect: `/gatherings/${id}` } });
+      navigate({ to: "/auth", search: { mode: "signin", redirect: `/gatherings/${id}` } });
       return;
     }
     if (!user.email_confirmed_at) {

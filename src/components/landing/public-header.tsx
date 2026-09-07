@@ -115,8 +115,7 @@ export function PublicHeader({
                 {t("landing.v3.nav.login")}
               </Link>
               <Link
-                to="/auth"
-                search={{ mode: "signup" }}
+                to="/waitlist"
                 className="cosmic-cta hidden rounded-full px-4 py-2 text-sm font-semibold text-white sm:inline-flex"
               >
                 {t("landing.v3.nav.cta")}
@@ -163,8 +162,7 @@ export function PublicHeader({
                   {t("landing.v3.nav.login")}
                 </Link>
                 <Link
-                  to="/auth"
-                  search={{ mode: "signup" }}
+                  to="/waitlist"
                   onClick={() => setOpen(false)}
                   className="cosmic-cta mt-2 inline-flex items-center justify-center rounded-full px-4 py-3 text-sm font-semibold text-white"
                 >

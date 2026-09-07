@@ -24,11 +24,14 @@ import { supabase } from "@/integrations/supabase/client";
 import { useSession } from "@/hooks/use-session";
 import { useI18n, useT } from "@/i18n";
 import { localizedHead, jsonLdGatheringList, type SeoLang } from "@/lib/seo";
+import { requireProductAccess } from "@/lib/beta-gate";
 import { JsonLd } from "@/components/json-ld";
 
 type ExploreSearch = { lang?: SeoLang; city?: string; area?: string; sort?: SortMode; type?: GatheringType };
 
 export const Route = createFileRoute("/explore")({
+  ssr: false,
+  beforeLoad: async ({ location }) => requireProductAccess(location),
   component: Explore,
   validateSearch: (search: Record<string, unknown>): ExploreSearch => ({
     ...(search.lang === "ru" || search.lang === "fa" ? { lang: search.lang } : {}),

@@ -183,7 +183,7 @@ export function SiteHeader() {
                 <Link to="/partnership">{t("nav.partnership")}</Link>
               </Button>
               <Button asChild size="sm" className="rounded-full">
-                <Link to="/auth" search={{ mode: "signup" }}>{t("nav.join")}</Link>
+                <Link to="/waitlist">{t("nav.join")}</Link>
               </Button>
 
             </>

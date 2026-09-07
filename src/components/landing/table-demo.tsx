@@ -153,8 +153,7 @@ export function TableDemo({ betaCta = false }: { betaCta?: boolean } = {}) {
               </Link>
             ) : (
               <Link
-                to="/auth"
-                search={{ mode: "signup" }}
+                to="/waitlist"
                 className="inline-flex items-center justify-center rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground"
               >
                 {t("landing.v3.demo.modal.cta")}
