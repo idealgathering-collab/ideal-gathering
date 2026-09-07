@@ -17,10 +17,15 @@ export function MobileTabBar() {
   // venue/admin users straight back out again.
   const hidden =
     pathname === "/" ||
+    pathname === "/waitlist" ||
+    pathname === "/invite" ||
+    pathname === "/pending" ||
+    pathname === "/preview" ||
     pathname.startsWith("/auth") ||
     pathname.startsWith("/admin") ||
     pathname.startsWith("/venue") ||
     pathname.startsWith("/onboarding");
+
   if (hidden) return null;
 
   const tabs: Tab[] = [
