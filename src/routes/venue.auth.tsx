@@ -11,7 +11,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { useT } from "@/i18n";
 import { localizedHead } from "@/lib/seo";
 import { LanguageSwitcher } from "@/components/language-switcher";
-
+import { fetchAccessState } from "@/lib/access";
 
 export const Route = createFileRoute("/venue/auth")({
   component: VenueAuth,
@@ -21,6 +21,13 @@ export const Route = createFileRoute("/venue/auth")({
 const emailSchema = z.string().trim().email().max(255);
 const passwordSchema = z.string().min(6).max(72);
 const nameSchema = z.string().trim().min(1).max(120);
+
+async function destinationForVenue(userId: string) {
+  const access = await fetchAccessState(userId);
+  if (access.hasVenueAccess) return "/venue/dashboard" as const;
+  if (access.hasBusiness) return "/pending" as const;
+  return "/venue/register" as const;
+}
 
 function VenueAuth() {
   const navigate = useNavigate();
@@ -41,7 +48,9 @@ function VenueAuth() {
         .eq("user_id", data.session.user.id)
         .eq("role", "venue")
         .maybeSingle();
-      if (role) navigate({ to: "/venue/dashboard" });
+      if (!role) return;
+      const to = await destinationForVenue(data.session.user.id);
+      navigate(to === "/pending" ? { to, search: { as: "venue" } } : { to });
     });
   }, [navigate]);
 
@@ -58,37 +67,43 @@ function VenueAuth() {
           return;
         }
         const nm = nameSchema.parse(businessName);
-        const { error } = await supabase.auth.signUp({
+        const { data, error } = await supabase.auth.signUp({
           email: em,
           password: pw,
           options: {
-            emailRedirectTo: `${window.location.origin}/venue/dashboard`,
+            emailRedirectTo: `${window.location.origin}/venue/register`,
             data: { display_name: nm, account_type: "venue" },
           },
         });
         if (error) throw error;
         toast.success(t("venueAuth.welcome"));
-      } else {
-        const { error } = await supabase.auth.signInWithPassword({ email: em, password: pw });
-        if (error) throw error;
-        const {
-          data: { user },
-        } = await supabase.auth.getUser();
-        if (user) {
-          const { data: role } = await supabase
-            .from("user_roles")
-            .select("role")
-            .eq("user_id", user.id)
-            .eq("role", "venue")
-            .maybeSingle();
-          if (!role) {
-            await supabase.auth.signOut();
-            throw new Error(t("venueAuth.notVenue"));
-          }
+        if (data.user && data.session) {
+          navigate({ to: "/venue/register" });
         }
-        toast.success(t("auth.welcomeBack"));
+        return;
       }
-      navigate({ to: "/venue/dashboard" });
+
+      const { error } = await supabase.auth.signInWithPassword({ email: em, password: pw });
+      if (error) throw error;
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (!user) throw new Error(t("auth.generic"));
+
+      const { data: role } = await supabase
+        .from("user_roles")
+        .select("role")
+        .eq("user_id", user.id)
+        .eq("role", "venue")
+        .maybeSingle();
+      if (!role) {
+        await supabase.auth.signOut();
+        throw new Error(t("venueAuth.notVenue"));
+      }
+
+      toast.success(t("auth.welcomeBack"));
+      const to = await destinationForVenue(user.id);
+      navigate(to === "/pending" ? { to, search: { as: "venue" } } : { to });
     } catch (err) {
       toast.error(err instanceof Error ? err.message : t("auth.generic"));
     } finally {
@@ -126,7 +141,6 @@ function VenueAuth() {
             <LanguageSwitcher />
           </div>
         </div>
-
 
         <div className="form-panel p-8">
           <h1 className="font-display text-3xl">
