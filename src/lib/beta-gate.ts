@@ -29,9 +29,10 @@ export async function requireProductAccess(location: { pathname: string; href: s
 }
 
 /**
- * Gate for the venue dashboard. The dashboard remains part of the product,
- * but before launch a venue that has already registered its business must
- * stay on the pending screen. Admins can always enter.
+ * Gate for the venue dashboard. Before launch, an unregistered venue may
+ * enter only so it can submit its first business registration. Once a
+ * business exists, the venue stays on the pending screen until venue access
+ * opens. Admins can always enter.
  */
 export async function requireVenueAccess() {
   const { data, error } = await supabase.auth.getUser();
@@ -46,37 +47,8 @@ export async function requireVenueAccess() {
   if (roles.has("admin")) return { user: data.user };
 
   const access = await fetchAccessState(data.user.id);
-  if (!access.hasVenueAccess) {
+  if (access.hasBusiness && !access.hasVenueAccess) {
     throw redirect({ to: "/pending", search: { as: "venue" }, replace: true });
-  }
-
-  return { user: data.user };
-}
-
-/**
- * Pre-launch venue registration gate. A venue may enter this page only until
- * its first business registration is submitted. After that it stays pending
- * until venue access opens. Admins can always enter for testing.
- */
-export async function requireVenueRegistrationAccess() {
-  const { data, error } = await supabase.auth.getUser();
-  if (error || !data.user) {
-    throw redirect({ to: "/venue/auth" });
-  }
-
-  const roles = await fetchRoles(data.user.id);
-  if (!roles.has("venue") && !roles.has("admin")) {
-    throw redirect({ to: "/" });
-  }
-  if (roles.has("admin")) return { user: data.user };
-
-  const access = await fetchAccessState(data.user.id);
-  if (access.hasBusiness) {
-    throw redirect({
-      to: access.hasVenueAccess ? "/venue/dashboard" : "/pending",
-      search: access.hasVenueAccess ? undefined : { as: "venue" },
-      replace: true,
-    });
   }
 
   return { user: data.user };
