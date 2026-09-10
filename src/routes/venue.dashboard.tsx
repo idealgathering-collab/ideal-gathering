@@ -1,10 +1,12 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { z } from "zod";
 import {
+  ArrowLeft,
+  Crown,
   Store,
   Plus,
   Trash2,
@@ -48,7 +50,6 @@ export const Route = createFileRoute("/venue/dashboard")({
   component: VenueDashboard,
 });
 
-
 const bizSchema = z.object({
   name: z.string().trim().min(2).max(120),
   description: z.string().trim().min(10).max(1200),
@@ -69,18 +70,24 @@ function VenueDashboard() {
   const navigate = useNavigate();
   const qc = useQueryClient();
   const t = useT();
+  const ownerPreviewId = typeof window !== "undefined"
+    ? new URLSearchParams(window.location.search).get("ownerPreview")
+    : null;
+  const isOwnerPreview = !!ownerPreviewId;
 
-  const { data: biz, isLoading: bizLoading } = useQuery({
-    queryKey: ["venue-biz", user?.id],
+  const { data: biz, isLoading: bizLoading, error: bizError } = useQuery({
+    queryKey: ["venue-biz", user?.id, ownerPreviewId],
     enabled: !!user,
     queryFn: async () => {
+      if (ownerPreviewId) {
+        const { getOwnerVenuePreview } = await import("@/lib/owner-venue.functions");
+        return await getOwnerVenuePreview({ data: { id: ownerPreviewId } });
+      }
       const { getMyBusiness } = await import("@/lib/business.functions");
       return await getMyBusiness();
     },
-
   });
 
-  // Private beta: venue tools stay closed until launch (admins excepted).
   const { data: access, isLoading: accessLoading } = useQuery({
     queryKey: ["access-state", user?.id],
     enabled: !!user,
@@ -89,8 +96,7 @@ function VenueDashboard() {
       return await fetchAccessState(user!.id);
     },
   });
-  const betaOpen = !!access?.hasVenueAccess;
-
+  const betaOpen = isOwnerPreview || !!access?.hasVenueAccess;
 
   async function signOut() {
     await qc.cancelQueries();
@@ -107,12 +113,24 @@ function VenueDashboard() {
     );
   }
 
-
   return (
     <div className="min-h-screen bg-background">
-      <header className="sticky top-0 z-40 w-full border-b border-border/60 bg-background/85 backdrop-blur-xl">
+      {isOwnerPreview && (
+        <div className="sticky top-0 z-50 border-b border-primary/30 bg-primary px-4 py-2 text-primary-foreground">
+          <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-2 text-sm">
+            <div className="flex items-center gap-2 font-medium">
+              <Crown className="h-4 w-4" /> Owner Preview · Viewing {biz?.name ?? "venue"}
+            </div>
+            <Button asChild size="sm" variant="secondary" className="rounded-full">
+              <Link to="/owner"><ArrowLeft className="me-1.5 h-4 w-4" />Exit venue view</Link>
+            </Button>
+          </div>
+        </div>
+      )}
+
+      <header className={`${isOwnerPreview ? "top-10" : "top-0"} sticky z-40 w-full border-b border-border/60 bg-background/85 backdrop-blur-xl`}>
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-3 px-4">
-          <Link to="/" className="flex items-center gap-2">
+          <Link to={isOwnerPreview ? "/owner" : "/"} className="flex items-center gap-2">
             <img src={logoAsset.url} alt="" className="h-9 w-9 rounded-full object-contain animate-logo-spin" />
             <span className="font-display text-lg">
               Ideal <span className="italic text-primary">Gathering</span>
@@ -121,20 +139,27 @@ function VenueDashboard() {
           </Link>
           <div className="flex items-center gap-2">
             <LanguageSwitcher />
-            {user && <NotificationsBell />}
-            <Button variant="ghost" size="icon" onClick={signOut} aria-label={t("nav.signOut")} className="rounded-full">
-              <LogOut className="h-4 w-4" />
-            </Button>
+            {!isOwnerPreview && user && <NotificationsBell />}
+            {!isOwnerPreview && (
+              <Button variant="ghost" size="icon" onClick={signOut} aria-label={t("nav.signOut")} className="rounded-full">
+                <LogOut className="h-4 w-4" />
+              </Button>
+            )}
           </div>
         </div>
       </header>
 
       <main className="mx-auto max-w-4xl px-4 py-8 pb-24">
+        {isOwnerPreview && (
+          <div className="mb-6 rounded-2xl border border-primary/30 bg-primary/10 px-4 py-3 text-sm">
+            <p className="font-medium">Read-only owner preview</p>
+            <p className="mt-1 text-muted-foreground">This is the real venue dashboard layout. Editing, table changes and gathering activation are disabled while previewing.</p>
+          </div>
+        )}
+
         <div className="mb-6">
           <p className="text-xs uppercase tracking-wide text-muted-foreground">{t("venueDash.eyebrow")}</p>
-          <h1 className="font-display text-3xl sm:text-4xl">
-            {biz?.name ?? t("venueDash.newVenue")}
-          </h1>
+          <h1 className="font-display text-3xl sm:text-4xl">{biz?.name ?? t("venueDash.newVenue")}</h1>
           {biz && (
             <div className="mt-2 flex items-center gap-2">
               <StatusBadge status={biz.status} />
@@ -142,43 +167,48 @@ function VenueDashboard() {
           )}
         </div>
 
-        {user && !user.email_confirmed_at && (
-          <div className="mb-6">
-            <VerifyEmailBanner email={user.email} />
-          </div>
+        {!isOwnerPreview && user && !user.email_confirmed_at && (
+          <div className="mb-6"><VerifyEmailBanner email={user.email} /></div>
         )}
 
-        {!betaOpen && (
+        {!betaOpen && !isOwnerPreview && (
           <div className="mb-6 rounded-2xl border border-primary/30 bg-primary/10 px-4 py-3 text-sm">
             <p className="font-medium">{t("beta.venue.lockedTitle")}</p>
             <p className="mt-1 text-muted-foreground">{t("beta.venue.lockedBody")}</p>
           </div>
         )}
 
-        {bizLoading || accessLoading ? (
+        {bizError && isOwnerPreview ? (
+          <div className="rounded-2xl border border-destructive/30 bg-destructive/10 p-6 text-sm text-destructive">
+            {bizError instanceof Error ? bizError.message : "Could not open this venue."}
+          </div>
+        ) : bizLoading || accessLoading ? (
           <div className="py-16 text-center text-muted-foreground">{t("common.loading")}</div>
         ) : biz ? (
           <>
             {biz.status === "pending" && (
-              <div className="mb-6 rounded-2xl border border-sunshine/60 bg-sunshine/20 px-4 py-3 text-sm">
-                {t("venueDash.pendingNote")}
-              </div>
+              <div className="mb-6 rounded-2xl border border-sunshine/60 bg-sunshine/20 px-4 py-3 text-sm">{t("venueDash.pendingNote")}</div>
             )}
             {biz.status === "rejected" && (
-              <div className="mb-6 rounded-2xl border border-destructive/40 bg-destructive/10 px-4 py-3 text-sm">
-                {t("venueDash.rejectedNote")}
-              </div>
+              <div className="mb-6 rounded-2xl border border-destructive/40 bg-destructive/10 px-4 py-3 text-sm">{t("venueDash.rejectedNote")}</div>
             )}
-            <BusinessForm business={biz} userId={user!.id} onSaved={() => qc.invalidateQueries({ queryKey: ["venue-biz", user!.id] })} />
+            <BusinessForm
+              business={biz as BizRow}
+              userId={(biz as BizRow).owner_id ?? user!.id}
+              readOnly={isOwnerPreview}
+              onSaved={() => qc.invalidateQueries({ queryKey: ["venue-biz"] })}
+            />
             {betaOpen && (
               <>
-                <TablesSection business={biz} />
-                <MenuSection businessId={biz.id} isOwner={true} />
+                <TablesSection business={biz as BizRow} readOnly={isOwnerPreview} />
+                <MenuSection businessId={biz.id} isOwner={!isOwnerPreview} />
               </>
             )}
           </>
+        ) : isOwnerPreview ? (
+          <div className="rounded-2xl border border-dashed border-border p-10 text-center text-sm text-muted-foreground">Venue not found.</div>
         ) : (
-          <BusinessForm business={null} userId={user!.id} onSaved={() => qc.invalidateQueries({ queryKey: ["venue-biz", user!.id] })} />
+          <BusinessForm business={null} userId={user!.id} readOnly={false} onSaved={() => qc.invalidateQueries({ queryKey: ["venue-biz", user!.id] })} />
         )}
       </main>
     </div>
@@ -187,19 +217,18 @@ function VenueDashboard() {
 
 function StatusBadge({ status }: { status: string }) {
   const t = useT();
-  const cls =
-    status === "approved"
-      ? "bg-primary text-primary-foreground"
-      : status === "rejected"
+  const cls = status === "approved"
+    ? "bg-primary text-primary-foreground"
+    : status === "rejected"
       ? "bg-destructive text-destructive-foreground"
       : "bg-sunshine text-sunshine-foreground";
-  const label =
-    status === "approved" ? t("venueDash.approved") : status === "rejected" ? t("venueDash.rejected") : t("venueDash.pending");
+  const label = status === "approved" ? t("venueDash.approved") : status === "rejected" ? t("venueDash.rejected") : t("venueDash.pending");
   return <Badge className={`${cls} rounded-full`}>{label}</Badge>;
 }
 
 type BizRow = {
   id: string;
+  owner_id?: string;
   name: string;
   description: string;
   address: string;
@@ -220,10 +249,12 @@ function BusinessForm({
   business,
   userId,
   onSaved,
+  readOnly,
 }: {
   business: BizRow | null;
   userId: string;
   onSaved: () => void;
+  readOnly: boolean;
 }) {
   const t = useT();
   const [form, setForm] = useState({
@@ -257,6 +288,7 @@ function BusinessForm({
   const [uploading, setUploading] = useState(false);
 
   async function handleUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    if (readOnly) return;
     const file = e.target.files?.[0];
     if (!file) return;
     if (file.size > 5 * 1024 * 1024) return toast.error(t("venueDash.imageTooLarge"));
@@ -266,8 +298,6 @@ function BusinessForm({
       const path = `${userId}/business-${Date.now()}.${ext}`;
       const { error: upErr } = await supabase.storage.from("avatars").upload(path, file, { upsert: true });
       if (upErr) throw upErr;
-      // Cover images are public content stored in a private bucket and the URL is
-      // persisted on the business row (also used as og:image), so it must be long-lived.
       const TEN_YEARS = 60 * 60 * 24 * 365 * 10;
       const { data: signed } = await supabase.storage.from("avatars").createSignedUrl(path, TEN_YEARS);
       if (!signed?.signedUrl) throw new Error("signed url failed");
@@ -282,17 +312,11 @@ function BusinessForm({
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
+    if (readOnly) return;
     try {
-      const v = bizSchema.parse({
-        ...form,
-        menu_link: form.menu_link || "",
-      });
+      const v = bizSchema.parse({ ...form, menu_link: form.menu_link || "" });
       setSaving(true);
-      const payload = {
-        ...v,
-        menu_link: v.menu_link || null,
-        owner_id: userId,
-      };
+      const payload = { ...v, menu_link: v.menu_link || null, owner_id: userId };
       if (business) {
         const { error } = await supabase.from("businesses").update(payload).eq("id", business.id);
         if (error) throw error;
@@ -314,107 +338,97 @@ function BusinessForm({
       <div className="mb-4 flex items-center gap-2">
         <Store className="h-5 w-5 text-primary" />
         <h2 className="font-display text-2xl">{business ? t("venueDash.editBusiness") : t("venueDash.registerBusiness")}</h2>
+        {readOnly && <Badge variant="outline" className="ms-auto rounded-full">Preview</Badge>}
       </div>
 
-      <form onSubmit={submit} className="grid gap-4">
-        <div className="grid gap-2">
-          <Label>{t("venueDash.profilePic")} *</Label>
-          <div className="flex items-center gap-4">
-            {form.cover_url ? (
-              <img src={form.cover_url} alt="" className="h-20 w-20 rounded-2xl object-cover" />
-            ) : (
-              <div className="grid h-20 w-20 place-items-center rounded-2xl bg-muted text-muted-foreground">
-                <Store className="h-6 w-6" />
-              </div>
-            )}
-            <label className="cursor-pointer">
-              <input type="file" accept="image/*" className="hidden" onChange={handleUpload} disabled={uploading} />
-              <span className="inline-flex h-10 items-center gap-1.5 rounded-full border border-border bg-background px-4 text-sm hover:bg-muted">
-                {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
-                {uploading ? t("common.loading") : t("venueDash.uploadImage")}
-              </span>
-            </label>
-          </div>
-        </div>
-
-        <div className="grid gap-2">
-          <Label htmlFor="name">{t("venueDash.name")} *</Label>
-          <Input id="name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required maxLength={120} />
-        </div>
-
-        <div className="grid gap-2">
-          <Label htmlFor="desc">{t("venueDash.description")} *</Label>
-          <Textarea
-            id="desc"
-            value={form.description}
-            onChange={(e) => setForm({ ...form, description: e.target.value })}
-            required
-            minLength={10}
-            maxLength={1200}
-            rows={4}
-          />
-        </div>
-
-
-        <div className="grid gap-2">
-          <Label>{t("venueDash.address")} *</Label>
-          <ClientOnly fallback={<div className="h-72 rounded-2xl border border-border bg-muted/30" />}>
-            <LocationMapPicker
-              value={picked}
-              onChange={(v) => {
-                setPicked(v);
-                if (v) {
-                  setForm((f) => ({
-                    ...f,
-                    address: v.address,
-                    city: v.city || f.city,
-                    lat: v.lat,
-                    lng: v.lng,
-                    street_number: v.street_number,
-                    description_extra: v.description,
-                  }));
-                }
-              }}
-              countryCode="tr"
-            />
-          </ClientOnly>
-        </div>
-
-        <div className="grid gap-4 sm:grid-cols-2">
+      <form onSubmit={submit}>
+        <fieldset disabled={readOnly} className="grid gap-4 disabled:opacity-80">
           <div className="grid gap-2">
-            <Label htmlFor="city">{t("venueDash.city")} *</Label>
-            <Input id="city" value={form.city} onChange={(e) => setForm({ ...form, city: e.target.value })} required maxLength={120} />
+            <Label>{t("venueDash.profilePic")} *</Label>
+            <div className="flex items-center gap-4">
+              {form.cover_url ? (
+                <img src={form.cover_url} alt="" className="h-20 w-20 rounded-2xl object-cover" />
+              ) : (
+                <div className="grid h-20 w-20 place-items-center rounded-2xl bg-muted text-muted-foreground"><Store className="h-6 w-6" /></div>
+              )}
+              {!readOnly && (
+                <label className="cursor-pointer">
+                  <input type="file" accept="image/*" className="hidden" onChange={handleUpload} disabled={uploading} />
+                  <span className="inline-flex h-10 items-center gap-1.5 rounded-full border border-border bg-background px-4 text-sm hover:bg-muted">
+                    {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
+                    {uploading ? t("common.loading") : t("venueDash.uploadImage")}
+                  </span>
+                </label>
+              )}
+            </div>
           </div>
-          <div className="grid gap-2">
-            <Label htmlFor="phone">{t("venueDash.phone")} *</Label>
-            <Input id="phone" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} required maxLength={40} />
-          </div>
-          <div className="grid gap-2">
-            <Label htmlFor="mobile">{t("venueDash.mobile")} *</Label>
-            <Input id="mobile" value={form.mobile} onChange={(e) => setForm({ ...form, mobile: e.target.value })} required maxLength={40} />
-          </div>
-          <div className="grid gap-2">
-            <Label htmlFor="menu_link">{t("venueDash.menuLink")}</Label>
-            <Input
-              id="menu_link"
-              type="url"
-              value={form.menu_link}
-              onChange={(e) => setForm({ ...form, menu_link: e.target.value })}
-              placeholder="https://…"
-              maxLength={600}
-            />
-          </div>
-        </div>
 
-        <Button type="submit" disabled={saving} className="mt-2 h-11 rounded-full">
-          {saving ? t("common.loading") : business ? t("venueDash.saveChanges") : t("venueDash.registerBusiness")}
-        </Button>
+          <div className="grid gap-2">
+            <Label htmlFor="name">{t("venueDash.name")} *</Label>
+            <Input id="name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required maxLength={120} />
+          </div>
+
+          <div className="grid gap-2">
+            <Label htmlFor="desc">{t("venueDash.description")} *</Label>
+            <Textarea id="desc" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} required minLength={10} maxLength={1200} rows={4} />
+          </div>
+
+          <div className="grid gap-2">
+            <Label>{t("venueDash.address")} *</Label>
+            <ClientOnly fallback={<div className="h-72 rounded-2xl border border-border bg-muted/30" />}>
+              <LocationMapPicker
+                value={picked}
+                onChange={(v) => {
+                  if (readOnly) return;
+                  setPicked(v);
+                  if (v) {
+                    setForm((f) => ({
+                      ...f,
+                      address: v.address,
+                      city: v.city || f.city,
+                      lat: v.lat,
+                      lng: v.lng,
+                      street_number: v.street_number,
+                      description_extra: v.description,
+                    }));
+                  }
+                }}
+                countryCode="tr"
+              />
+            </ClientOnly>
+          </div>
+
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className="grid gap-2">
+              <Label htmlFor="city">{t("venueDash.city")} *</Label>
+              <Input id="city" value={form.city} onChange={(e) => setForm({ ...form, city: e.target.value })} required maxLength={120} />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="phone">{t("venueDash.phone")} *</Label>
+              <Input id="phone" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} required maxLength={40} />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="mobile">{t("venueDash.mobile")} *</Label>
+              <Input id="mobile" value={form.mobile} onChange={(e) => setForm({ ...form, mobile: e.target.value })} required maxLength={40} />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="menu_link">{t("venueDash.menuLink")}</Label>
+              <Input id="menu_link" type="url" value={form.menu_link} onChange={(e) => setForm({ ...form, menu_link: e.target.value })} placeholder="https://…" maxLength={600} />
+            </div>
+          </div>
+
+          {!readOnly && (
+            <Button type="submit" disabled={saving} className="mt-2 h-11 rounded-full">
+              {saving ? t("common.loading") : business ? t("venueDash.saveChanges") : t("venueDash.registerBusiness")}
+            </Button>
+          )}
+        </fieldset>
       </form>
     </section>
   );
 }
 
-function TablesSection({ business }: { business: BizRow }) {
+function TablesSection({ business, readOnly }: { business: BizRow; readOnly: boolean }) {
   const t = useT();
   const qc = useQueryClient();
   const [label, setLabel] = useState("");
@@ -423,11 +437,10 @@ function TablesSection({ business }: { business: BizRow }) {
 
   async function add(e: React.FormEvent) {
     e.preventDefault();
+    if (readOnly) return;
     const next = label.trim().slice(0, 20);
     if (!next) return;
-    const dup = (business.venue_tables ?? []).some(
-      (tbl) => tbl.label.trim().toLowerCase() === next.toLowerCase(),
-    );
+    const dup = (business.venue_tables ?? []).some((tbl) => tbl.label.trim().toLowerCase() === next.toLowerCase());
     if (dup) return toast.error(t("biz.duplicateLabel"));
 
     const { error } = await supabase.from("venue_tables").insert({
@@ -436,33 +449,34 @@ function TablesSection({ business }: { business: BizRow }) {
       capacity: Math.max(1, Math.min(30, cap)),
     });
     if (error) {
-      const isDup =
-        (error as { code?: string }).code === "23505" ||
-        error.message.includes("venue_tables_business_label_ci_uidx");
+      const isDup = (error as { code?: string }).code === "23505" || error.message.includes("venue_tables_business_label_ci_uidx");
       return toast.error(isDup ? t("biz.duplicateLabel") : error.message);
     }
     setLabel("");
     toast.success(t("biz.tableAdded"));
     qc.invalidateQueries({ queryKey: ["venue-biz"] });
   }
+
   async function remove(id: string, tableLabel: string) {
+    if (readOnly) return;
     const { error } = await supabase.from("venue_tables").delete().eq("id", id);
     if (error) {
       const locked = /TABLE_LOCKED:\s*(.*)$/s.exec(error.message);
-      if (locked) {
-        return toast.error(`${t("biz.tableLocked")} ${tableLabel} — ${locked[1]?.trim()}`);
-      }
+      if (locked) return toast.error(`${t("biz.tableLocked")} ${tableLabel} — ${locked[1]?.trim()}`);
       return toast.error(error.message);
     }
     toast.success(t("biz.tableRemoved"));
     qc.invalidateQueries({ queryKey: ["venue-biz"] });
   }
 
-  const canActivate = business.status === "approved";
+  const canActivate = business.status === "approved" && !readOnly;
 
   return (
     <section className="mt-8 rounded-3xl border border-border bg-card p-6 shadow-soft">
-      <h2 className="font-display text-2xl">{t("biz.tables")}</h2>
+      <div className="flex items-center justify-between gap-3">
+        <h2 className="font-display text-2xl">{t("biz.tables")}</h2>
+        {readOnly && <Badge variant="outline" className="rounded-full">Preview</Badge>}
+      </div>
       <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {(business.venue_tables ?? []).map((tbl) => (
           <div key={tbl.id} className="rounded-2xl border border-border bg-background p-4">
@@ -471,43 +485,38 @@ function TablesSection({ business }: { business: BizRow }) {
                 <div className="font-display text-xl">{t("biz.tableLabel")} {tbl.label}</div>
                 <div className="text-xs text-muted-foreground">{tbl.capacity} {t("biz.tableSeats")}</div>
               </div>
-              <Button size="icon" variant="ghost" onClick={() => remove(tbl.id, tbl.label)} aria-label={t("biz.removeTable")}>
-                <Trash2 className="h-4 w-4" />
-              </Button>
+              {!readOnly && (
+                <Button size="icon" variant="ghost" onClick={() => remove(tbl.id, tbl.label)} aria-label={t("biz.removeTable")}>
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              )}
             </div>
-            <Button
-              size="sm"
-              className="mt-3 w-full rounded-full"
-              onClick={() => setActivateFor({ id: tbl.id, label: tbl.label })}
-              disabled={!canActivate}
-              title={!canActivate ? t("venueDash.activateNeedsApproval") : undefined}
-            >
-              <Zap className="me-1 h-4 w-4" /> {t("venueDash.activate")}
-            </Button>
+            {!readOnly && (
+              <Button size="sm" className="mt-3 w-full rounded-full" onClick={() => setActivateFor({ id: tbl.id, label: tbl.label })} disabled={!canActivate} title={!canActivate ? t("venueDash.activateNeedsApproval") : undefined}>
+                <Zap className="me-1 h-4 w-4" /> {t("venueDash.activate")}
+              </Button>
+            )}
           </div>
         ))}
       </div>
 
-      <form onSubmit={add} className="mt-4 flex flex-wrap items-end gap-2 rounded-2xl border border-dashed border-border bg-muted/40 p-4">
-        <div className="grid gap-1">
-          <label className="text-xs text-muted-foreground">{t("biz.newLabel")}</label>
-          <Input value={label} onChange={(e) => setLabel(e.target.value)} maxLength={20} placeholder={t("biz.newLabelPh")} className="w-32" />
-        </div>
-        <div className="grid gap-1">
-          <label className="text-xs text-muted-foreground">{t("biz.newCapacity")}</label>
-          <Input type="number" min={1} max={30} value={cap} onChange={(e) => setCap(Number(e.target.value))} className="w-24" />
-        </div>
-        <Button type="submit" className="rounded-full">
-          <Plus className="me-1 h-4 w-4" /> {t("biz.addTable")}
-        </Button>
-      </form>
+      {!readOnly && (
+        <form onSubmit={add} className="mt-4 flex flex-wrap items-end gap-2 rounded-2xl border border-dashed border-border bg-muted/40 p-4">
+          <div className="grid gap-1">
+            <label className="text-xs text-muted-foreground">{t("biz.newLabel")}</label>
+            <Input value={label} onChange={(e) => setLabel(e.target.value)} maxLength={20} placeholder={t("biz.newLabelPh")} className="w-32" />
+          </div>
+          <div className="grid gap-1">
+            <label className="text-xs text-muted-foreground">{t("biz.newCapacity")}</label>
+            <Input type="number" min={1} max={30} value={cap} onChange={(e) => setCap(Number(e.target.value))} className="w-24" />
+          </div>
+          <Button type="submit" className="rounded-full"><Plus className="me-1 h-4 w-4" /> {t("biz.addTable")}</Button>
+        </form>
+      )}
 
-      <ActivateDialog
-        table={activateFor}
-        businessId={business.id}
-        userId={business.venue_tables ? undefined : undefined}
-        onClose={() => setActivateFor(null)}
-      />
+      {!readOnly && (
+        <ActivateDialog table={activateFor} businessId={business.id} userId={undefined} onClose={() => setActivateFor(null)} />
+      )}
     </section>
   );
 }
@@ -545,7 +554,7 @@ function ActivateDialog({
       setSaving(true);
       const iso = startsAt ? new Date(startsAt).toISOString() : new Date().toISOString();
       const ends = new Date(new Date(iso).getTime() + 2 * 60 * 60 * 1000).toISOString();
-      const { data, error } = await supabase
+      const { error } = await supabase
         .from("gatherings")
         .insert({
           business_id: businessId,
@@ -576,11 +585,7 @@ function ActivateDialog({
   return (
     <Dialog open={!!table} onOpenChange={(o) => !o && onClose()}>
       <DialogContent>
-        <DialogHeader>
-          <DialogTitle>
-            {t("venueDash.activateTitle")} {table?.label}
-          </DialogTitle>
-        </DialogHeader>
+        <DialogHeader><DialogTitle>{t("venueDash.activateTitle")} {table?.label}</DialogTitle></DialogHeader>
         <form onSubmit={submit} className="grid gap-4">
           <div className="grid gap-2">
             <Label htmlFor="subj">{t("create.subject")} *</Label>
