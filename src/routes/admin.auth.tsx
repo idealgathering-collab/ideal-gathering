@@ -36,9 +36,9 @@ function AdminAuth() {
     supabase.auth.getSession().then(async ({ data }) => {
       if (!data.session) return;
       const roles = await fetchRoles(data.session.user.id);
-      if (roles.has("admin")) {
+      if (roles.has("owner") || roles.has("admin")) {
         setAdminPreview(false);
-        navigate({ to: "/admin", replace: true });
+        navigate({ to: roles.has("owner") ? "/owner" : "/admin", replace: true });
       }
     });
   }, [navigate]);
@@ -67,13 +67,13 @@ function AdminAuth() {
       } = await supabase.auth.getUser();
       if (!user) throw new Error(t("auth.generic"));
       const roles = await fetchRoles(user.id);
-      if (!roles.has("admin")) {
+      if (!roles.has("owner") && !roles.has("admin")) {
         await supabase.auth.signOut();
         throw new Error(t("adminAuth.notAdmin"));
       }
       setAdminPreview(false);
       toast.success(t("auth.welcomeBack"));
-      navigate({ to: "/admin", replace: true });
+      navigate({ to: roles.has("owner") ? "/owner" : "/admin", replace: true });
     } catch (err) {
       toast.error(err instanceof Error ? err.message : t("auth.generic"));
     } finally {
