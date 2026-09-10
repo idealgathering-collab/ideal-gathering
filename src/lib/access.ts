@@ -5,6 +5,7 @@ export type BusinessStatus = "pending" | "approved" | "rejected";
 
 export type AccessState = {
   betaLaunched: boolean;
+  isOwner: boolean;
   isAdmin: boolean;
   isVenue: boolean;
   userStatus: UserAccessStatus | null;
@@ -80,6 +81,7 @@ export async function fetchAccessState(userId: string): Promise<AccessState> {
 
   const betaLaunched = launchedRes.data === true;
   const roles = new Set((rolesRes.data ?? []).map((r) => r.role as string));
+  const isOwner = roles.has("owner");
   const isAdmin = roles.has("admin");
   const isVenue = roles.has("venue");
   const userStatus = (profileRes.data?.access_status as UserAccessStatus | undefined) ?? null;
@@ -87,16 +89,18 @@ export async function fetchAccessState(userId: string): Promise<AccessState> {
   const business = (bizRes.data ?? [])[0] as { status: BusinessStatus } | undefined;
 
   const memberReady = userStatus === "onboarded" || userStatus === "active";
+  const privileged = isOwner || isAdmin;
 
   return {
     betaLaunched,
+    isOwner,
     isAdmin,
     isVenue,
     userStatus,
     onboarded,
     hasBusiness: !!business,
     businessStatus: business?.status ?? null,
-    hasProductAccess: isAdmin || (betaLaunched && memberReady),
-    hasVenueAccess: isAdmin || (betaLaunched && business?.status === "approved"),
+    hasProductAccess: privileged || (betaLaunched && memberReady),
+    hasVenueAccess: privileged || (betaLaunched && business?.status === "approved"),
   };
 }
