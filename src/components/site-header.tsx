@@ -1,5 +1,5 @@
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
-import { ArrowLeft, LogOut, Settings, Shield, Sparkles } from "lucide-react";
+import { ArrowLeft, Crown, LogOut, Settings, Shield, Sparkles } from "lucide-react";
 import { NotificationsBell } from "@/components/notifications-bell";
 import { useEffect, useState, type ComponentProps } from "react";
 import logoAsset from "@/assets/ideal-gathering-logo.png.asset.json";
@@ -11,7 +11,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useQueryClient } from "@tanstack/react-query";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { useT } from "@/i18n";
-import { setAdminPreview } from "@/lib/roles";
+import { fetchRoles, setAdminPreview } from "@/lib/roles";
 import { getMostIncompleteSection, getCompletionLevel, getCompletionColor, parseActionUrl } from "@/lib/profile-completion";
 import type { ProfileCardData } from "@/lib/profile-card";
 
@@ -25,25 +25,23 @@ export function SiteHeader() {
   const showBack = !topLevelNavPaths.includes(pathname);
 
   const [isAdmin, setIsAdmin] = useState(false);
+  const [isOwner, setIsOwner] = useState(false);
   const [completionPercent, setCompletionPercent] = useState<number | null>(null);
   const [incompleteSection, setIncompleteSection] = useState<ReturnType<typeof getMostIncompleteSection> | null>(null);
 
   useEffect(() => {
     if (!user) {
       setIsAdmin(false);
+      setIsOwner(false);
       setCompletionPercent(null);
       setIncompleteSection(null);
       return;
     }
-    
-    // Load admin status
-    supabase
-      .from("user_roles")
-      .select("role")
-      .eq("user_id", user.id)
-      .eq("role", "admin")
-      .maybeSingle()
-      .then(({ data }) => setIsAdmin(!!data));
+
+    fetchRoles(user.id).then((roles) => {
+      setIsAdmin(roles.has("admin"));
+      setIsOwner(roles.has("owner"));
+    });
     
     // Load profile completion
     const currentUser = user;
@@ -73,13 +71,15 @@ export function SiteHeader() {
     navigate({ to: "/", replace: true });
   }
 
+  const privilegedHome = isOwner ? "/owner" : "/admin";
+
   return (
     <header className="glass-card sticky top-0 z-40 w-full text-dark-secondary">
-      {isAdmin && (
+      {(isOwner || isAdmin) && (
         <div className="border-b border-border/60 bg-muted/40 px-4 py-1.5 text-center text-xs text-muted-foreground">
           {t("adminAuth.previewBanner")}{" "}
           <Link
-            to="/admin"
+            to={privilegedHome as never}
             className="font-medium text-primary hover:underline"
             onClick={() => setAdminPreview(false)}
           >
@@ -140,11 +140,11 @@ export function SiteHeader() {
                 </Button>
               )}
 
-              {isAdmin && (
+              {(isOwner || isAdmin) && (
                 <Button asChild variant="ghost" size="sm" className="hidden rounded-full sm:inline-flex">
-                  <Link to="/admin" onClick={() => setAdminPreview(false)}>
-                    <Shield className="me-1 h-3.5 w-3.5" />
-                    {t("nav.admin")}
+                  <Link to={privilegedHome as never} onClick={() => setAdminPreview(false)}>
+                    {isOwner ? <Crown className="me-1 h-3.5 w-3.5" /> : <Shield className="me-1 h-3.5 w-3.5" />}
+                    {isOwner ? "Owner" : t("nav.admin")}
                   </Link>
                 </Button>
               )}
