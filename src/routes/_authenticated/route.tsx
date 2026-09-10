@@ -9,25 +9,36 @@ export const Route = createFileRoute("/_authenticated")({
     const { data, error } = await supabase.auth.getUser();
     if (error || !data.user) {
       const path = location.pathname;
-      if (path === "/admin" || path.startsWith("/admin/")) {
+      if (path === "/admin" || path.startsWith("/admin/") || path === "/owner" || path.startsWith("/owner/")) {
         throw redirect({ to: "/admin/auth" });
       }
       throw redirect({ to: "/auth", search: { redirect: location.href, mode: "signin" } });
     }
-    // Venue accounts stay in the venue portal.
-    // Admins default to /admin (see dashboard beforeLoad); they may preview the guest app.
+
     const roles = await fetchRoles(data.user.id);
+    const isOwner = roles.has("owner");
     const isAdmin = roles.has("admin");
     const isVenue = roles.has("venue");
-    if (isVenue && !isAdmin) {
+    const privileged = isOwner || isAdmin;
+    const path = location.pathname;
+    const onPrivilegedSurface =
+      path === "/admin" ||
+      path.startsWith("/admin/") ||
+      path === "/owner" ||
+      path.startsWith("/owner/");
+
+    // Venue accounts stay in their own portal unless they are privileged.
+    if (isVenue && !privileged) {
       throw redirect({ to: "/venue/dashboard" });
     }
-    const path = location.pathname;
-    const onOwnerSurface = path === "/admin" || path.startsWith("/admin/");
-    if (isAdmin && !isAdminPreview() && !onOwnerSurface) {
-      throw redirect({ to: "/admin", replace: true });
+
+    // Owner is the highest-level home; admin remains the staff console.
+    if (!isAdminPreview() && !onPrivilegedSurface) {
+      if (isOwner) throw redirect({ to: "/owner", replace: true });
+      if (isAdmin) throw redirect({ to: "/admin", replace: true });
     }
-    if (!isAdmin) {
+
+    if (!privileged) {
       // Private beta: the product stays closed until launch, and only for
       // members who finished setting up. Onboarding itself stays reachable.
       const access = await fetchAccessState(data.user.id);
