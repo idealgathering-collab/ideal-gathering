@@ -23,7 +23,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { BetaSection } from "@/components/admin/beta-section";
 import { supabase } from "@/integrations/supabase/client";
 import { claimInitialOwner, fetchRoles, setAdminPreview } from "@/lib/roles";
-import { getOwnerSnapshot } from "@/lib/owner.functions";
+import { getOwnerSnapshot, type OwnerDirectorySection } from "@/lib/owner.functions";
 import { useSession } from "@/hooks/use-session";
 import logoAsset from "@/assets/ideal-gathering-logo.png.asset.json";
 
@@ -95,8 +95,7 @@ function OwnerPage() {
               This is a one-time bootstrap. Only an existing admin can claim ownership, and it works only while the platform has no owner.
             </p>
             <Button className="mt-6 rounded-full" onClick={activateOwner}>
-              <Crown className="me-2 h-4 w-4" />
-              Activate Owner Access
+              <Crown className="me-2 h-4 w-4" /> Activate Owner Access
             </Button>
           </section>
         </main>
@@ -105,13 +104,19 @@ function OwnerPage() {
   }
 
   const data = snapshot.data;
-  const cards = [
-    { label: "Waiting list", value: data?.waitlist ?? 0, icon: Users },
-    { label: "Registered venues", value: data?.registeredVenues ?? 0, icon: Building2 },
-    { label: "Pending venues", value: data?.pendingVenues ?? 0, icon: UserRoundCheck },
-    { label: "Member accounts", value: data?.users ?? 0, icon: Users },
-    { label: "Invitations", value: data?.invitations ?? 0, icon: Ticket },
-    { label: "Gatherings today", value: data?.gatheringsToday ?? 0, icon: CalendarDays },
+  const cards: Array<{
+    label: string;
+    value: number;
+    icon: typeof Users;
+    section: OwnerDirectorySection;
+    hint: string;
+  }> = [
+    { label: "Waiting list", value: data?.waitlist ?? 0, icon: Users, section: "waitlist", hint: "Open people waiting for access" },
+    { label: "Registered venues", value: data?.registeredVenues ?? 0, icon: Building2, section: "venues", hint: "Review every café and venue" },
+    { label: "Pending venues", value: data?.pendingVenues ?? 0, icon: UserRoundCheck, section: "venues", hint: "Approve or reject registrations" },
+    { label: "Member accounts", value: data?.users ?? 0, icon: Users, section: "users", hint: "Inspect member accounts" },
+    { label: "Invitations", value: data?.invitations ?? 0, icon: Ticket, section: "invitations", hint: "Manage invite codes" },
+    { label: "Gatherings today", value: data?.gatheringsToday ?? 0, icon: CalendarDays, section: "gatherings", hint: "Open platform gatherings" },
   ];
 
   return (
@@ -124,79 +129,63 @@ function OwnerPage() {
               <Crown className="h-3.5 w-3.5 text-primary" /> Owner
             </div>
             <h1 className="mt-2 font-display text-4xl sm:text-5xl">Command Center</h1>
-            <p className="mt-2 text-sm text-muted-foreground">
-              Monitor and control Ideal Gathering from one place.
-            </p>
+            <p className="mt-2 text-sm text-muted-foreground">See what needs attention, then act directly.</p>
           </div>
           <div className="flex flex-wrap gap-2">
             <Button variant="outline" className="rounded-full" disabled={snapshot.isFetching} onClick={() => snapshot.refetch()}>
               <RefreshCw className={`me-2 h-4 w-4 ${snapshot.isFetching ? "animate-spin" : ""}`} /> Refresh
             </Button>
             <Button asChild variant="outline" className="rounded-full">
+              <Link to="/owner/activity"><Activity className="me-2 h-4 w-4" /> Activity</Link>
+            </Button>
+            <Button asChild variant="outline" className="rounded-full">
               <Link to="/admin"><Shield className="me-2 h-4 w-4" /> Staff Admin</Link>
             </Button>
             <Button asChild variant="outline" className="rounded-full">
-              <Link to="/owner/venue-preview"><Store className="me-2 h-4 w-4" /> Preview Venue</Link>
+              <Link to="/owner/venue-preview"><Store className="me-2 h-4 w-4" /> View as Venue</Link>
             </Button>
             <Button className="rounded-full" onClick={() => { setAdminPreview(true); navigate({ to: "/explore" }); }}>
-              <Eye className="me-2 h-4 w-4" /> Preview Member App
+              <Eye className="me-2 h-4 w-4" /> View as Member
             </Button>
           </div>
         </div>
 
-        <Tabs defaultValue="overview" className="mt-8">
+        <section className="mt-8 flex items-center justify-between rounded-2xl border border-border bg-card px-4 py-3">
+          <div className="flex items-center gap-3">
+            <span className={`h-2.5 w-2.5 rounded-full ${data?.betaLaunched ? "bg-primary" : "bg-muted-foreground/50"}`} />
+            <div>
+              <p className="text-sm font-medium">Beta access</p>
+              <p className="text-xs text-muted-foreground">Owner bypasses this gate. Use Beta Control below to open or close access.</p>
+            </div>
+          </div>
+          <Badge variant={data?.betaLaunched ? "default" : "secondary"} className="rounded-full">
+            {data?.betaLaunched ? "OPEN" : "CLOSED"}
+          </Badge>
+        </section>
+
+        <section className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {cards.map(({ label, value, icon: Icon, section, hint }) => (
+            <Link
+              key={label}
+              to="/owner/$section"
+              params={{ section }}
+              className="group rounded-3xl border border-border bg-card p-5 shadow-soft transition hover:border-primary/40 hover:-translate-y-0.5"
+            >
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-muted-foreground">{label}</span>
+                <Icon className="h-4 w-4 text-primary" />
+              </div>
+              <div className="mt-3 font-display text-4xl">{snapshot.isLoading ? "—" : value.toLocaleString()}</div>
+              <p className="mt-3 text-xs text-muted-foreground group-hover:text-foreground">{hint} →</p>
+            </Link>
+          ))}
+        </section>
+
+        <Tabs defaultValue="venues" className="mt-10">
           <TabsList className="flex h-auto flex-wrap justify-start gap-1">
-            <TabsTrigger value="overview">Overview</TabsTrigger>
-            <TabsTrigger value="venues">Venue control</TabsTrigger>
-            <TabsTrigger value="beta">Beta & invitations</TabsTrigger>
+            <TabsTrigger value="venues">Needs attention</TabsTrigger>
+            <TabsTrigger value="beta">Beta control</TabsTrigger>
           </TabsList>
-
-          <TabsContent value="overview" className="mt-6">
-            <section className="flex items-center justify-between rounded-2xl border border-border bg-card px-4 py-3">
-              <div className="flex items-center gap-3">
-                <span className={`h-2.5 w-2.5 rounded-full ${data?.betaLaunched ? "bg-primary" : "bg-muted-foreground/50"}`} />
-                <div>
-                  <p className="text-sm font-medium">Beta access</p>
-                  <p className="text-xs text-muted-foreground">Owner access bypasses this setting.</p>
-                </div>
-              </div>
-              <Badge variant={data?.betaLaunched ? "default" : "secondary"} className="rounded-full">
-                {data?.betaLaunched ? "OPEN" : "CLOSED"}
-              </Badge>
-            </section>
-
-            <section className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-              {cards.map(({ label, value, icon: Icon }) => (
-                <div key={label} className="rounded-3xl border border-border bg-card p-5 shadow-soft">
-                  <div className="flex items-center justify-between"><span className="text-sm text-muted-foreground">{label}</span><Icon className="h-4 w-4 text-primary" /></div>
-                  <div className="mt-3 font-display text-4xl">{snapshot.isLoading ? "—" : value.toLocaleString()}</div>
-                </div>
-              ))}
-            </section>
-
-            <section className="mt-8 rounded-3xl border border-border bg-card p-6 shadow-soft">
-              <div className="flex items-center justify-between gap-3">
-                <div>
-                  <h2 className="font-display flex items-center gap-2 text-2xl"><Activity className="h-5 w-5 text-primary" /> Live Activity</h2>
-                  <p className="mt-1 text-sm text-muted-foreground">Newest registrations, invitations and gatherings.</p>
-                </div>
-                <Badge variant="outline" className="rounded-full">Auto · 10s</Badge>
-              </div>
-              <div className="mt-5 divide-y divide-border">
-                {snapshot.isLoading && <p className="py-8 text-center text-sm text-muted-foreground">Loading activity…</p>}
-                {!snapshot.isLoading && (data?.recentActivity.length ?? 0) === 0 && <p className="py-8 text-center text-sm text-muted-foreground">No activity yet.</p>}
-                {(data?.recentActivity ?? []).map((item, index) => (
-                  <div key={`${item.type}-${item.created_at}-${index}`} className="flex gap-4 py-4">
-                    <div className="mt-1 h-2 w-2 shrink-0 rounded-full bg-primary" />
-                    <div className="min-w-0 flex-1">
-                      <div className="flex flex-wrap items-center justify-between gap-2"><p className="text-sm font-medium">{item.title}</p><time className="text-xs text-muted-foreground">{formatActivityTime(item.created_at)}</time></div>
-                      {item.detail && <p className="mt-1 truncate text-xs text-muted-foreground">{item.detail}</p>}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </section>
-          </TabsContent>
 
           <TabsContent value="venues" className="mt-6">
             <OwnerVenueControl onChanged={() => snapshot.refetch()} />
@@ -238,42 +227,41 @@ function OwnerVenueControl({ onChanged }: { onChanged: () => void }) {
   }
 
   const pending = (venues.data ?? []).filter((v) => v.status === "pending");
-  const other = (venues.data ?? []).filter((v) => v.status !== "pending");
 
   return (
-    <div className="grid gap-6">
-      <section className="rounded-3xl border border-border bg-card p-6 shadow-soft">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <div><h2 className="font-display text-2xl">Venue approvals</h2><p className="mt-1 text-sm text-muted-foreground">Review and act on new café and venue registrations without leaving Owner.</p></div>
-          <Button asChild variant="outline" className="rounded-full"><Link to="/owner/venue-preview"><Eye className="me-2 h-4 w-4" />Preview venues</Link></Button>
+    <section className="rounded-3xl border border-border bg-card p-6 shadow-soft">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <h2 className="font-display text-2xl">Needs attention</h2>
+          <p className="mt-1 text-sm text-muted-foreground">Pending venue registrations you can act on immediately.</p>
         </div>
-        <div className="mt-5 grid gap-3">
-          {venues.isLoading && <p className="py-8 text-center text-sm text-muted-foreground">Loading venues…</p>}
-          {!venues.isLoading && pending.length === 0 && <p className="py-8 text-center text-sm text-muted-foreground">No venues waiting for approval.</p>}
-          {pending.map((v) => (
-            <div key={v.id} className="flex flex-wrap items-center gap-3 rounded-2xl border border-border p-4">
-              <Store className="h-5 w-5 text-primary" />
-              <div className="min-w-0 flex-1"><p className="font-medium">{v.name}</p><p className="truncate text-xs text-muted-foreground">{[v.city, v.address].filter(Boolean).join(" · ") || "No location"}</p></div>
-              <Button size="sm" className="rounded-full" onClick={() => setStatus(v.id, "approved")}><Check className="me-1 h-4 w-4" />Approve</Button>
-              <Button size="sm" variant="outline" className="rounded-full" onClick={() => setStatus(v.id, "rejected")}><X className="me-1 h-4 w-4" />Reject</Button>
+        <Button asChild variant="outline" className="rounded-full">
+          <Link to="/owner/$section" params={{ section: "venues" }}>Open all venues</Link>
+        </Button>
+      </div>
+      <div className="mt-5 grid gap-3">
+        {venues.isLoading && <p className="py-8 text-center text-sm text-muted-foreground">Loading venues…</p>}
+        {!venues.isLoading && pending.length === 0 && <p className="py-8 text-center text-sm text-muted-foreground">Nothing needs attention right now.</p>}
+        {pending.map((v) => (
+          <div key={v.id} className="flex flex-wrap items-center gap-3 rounded-2xl border border-border p-4">
+            <Store className="h-5 w-5 text-primary" />
+            <div className="min-w-0 flex-1">
+              <p className="font-medium">{v.name}</p>
+              <p className="truncate text-xs text-muted-foreground">{[v.city, v.address].filter(Boolean).join(" · ") || "No location"}</p>
             </div>
-          ))}
-        </div>
-      </section>
-
-      <section className="rounded-3xl border border-border bg-card p-6 shadow-soft">
-        <h2 className="font-display text-xl">All venues</h2>
-        <div className="mt-4 grid gap-2">
-          {other.slice(0, 20).map((v) => (
-            <div key={v.id} className="flex items-center gap-3 rounded-2xl border border-border/70 px-4 py-3">
-              <span className="min-w-0 flex-1 truncate text-sm font-medium">{v.name}</span>
-              <span className="text-xs text-muted-foreground">{v.city ?? "—"}</span>
-              <Badge variant={v.status === "approved" ? "default" : "secondary"} className="rounded-full">{v.status}</Badge>
-            </div>
-          ))}
-        </div>
-      </section>
-    </div>
+            <Button asChild size="sm" variant="outline" className="rounded-full">
+              <Link to="/owner/venue-preview">View</Link>
+            </Button>
+            <Button size="sm" className="rounded-full" onClick={() => setStatus(v.id, "approved")}>
+              <Check className="me-1 h-4 w-4" />Approve
+            </Button>
+            <Button size="sm" variant="outline" className="rounded-full" onClick={() => setStatus(v.id, "rejected")}>
+              <X className="me-1 h-4 w-4" />Reject
+            </Button>
+          </div>
+        ))}
+      </div>
+    </section>
   );
 }
 
@@ -286,14 +274,10 @@ function OwnerHeader({ onSignOut }: { onSignOut: () => void }) {
           <span className="font-display text-lg">Ideal <span className="italic text-primary">Gathering</span></span>
           <Badge variant="outline" className="ms-1 rounded-full"><Crown className="me-1 h-3 w-3" />Owner</Badge>
         </Link>
-        <Button variant="ghost" size="icon" className="rounded-full" onClick={onSignOut} aria-label="Sign out"><LogOut className="h-4 w-4" /></Button>
+        <Button variant="ghost" size="icon" className="rounded-full" onClick={onSignOut} aria-label="Sign out">
+          <LogOut className="h-4 w-4" />
+        </Button>
       </div>
     </header>
   );
-}
-
-function formatActivityTime(value: string) {
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return value;
-  return new Intl.DateTimeFormat(undefined, { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" }).format(date);
 }
