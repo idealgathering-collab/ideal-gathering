@@ -51,7 +51,6 @@ function PendingPage() {
     navigate({ to: "/", replace: true });
   }
 
-  // As soon as access opens up, let people through.
   if (access?.hasProductAccess && !isVenue) {
     void navigate({ to: "/dashboard", replace: true });
   }
@@ -137,7 +136,7 @@ function PendingPage() {
             )}
             {isVenue && !access?.hasBusiness && (
               <Button asChild className="h-11 rounded-full">
-                <Link to="/venue/dashboard">{t("pending.action.venue")}</Link>
+                <Link to="/venue/register">{t("pending.action.venue")}</Link>
               </Button>
             )}
             <Button
