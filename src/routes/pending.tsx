@@ -135,7 +135,7 @@ function PendingPage() {
                 </Link>
               </Button>
             )}
-            {isVenue && (
+            {isVenue && !access?.hasBusiness && (
               <Button asChild className="h-11 rounded-full">
                 <Link to="/venue/dashboard">{t("pending.action.venue")}</Link>
               </Button>
