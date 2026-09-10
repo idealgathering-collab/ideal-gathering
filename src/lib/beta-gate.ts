@@ -14,7 +14,7 @@ export async function requireProductAccess(location: { pathname: string; href: s
   }
 
   const access = await fetchAccessState(data.user.id);
-  if (access.isAdmin) return { user: data.user };
+  if (access.isOwner || access.isAdmin) return { user: data.user };
   if (access.isVenue) {
     throw redirect({ to: "/pending", search: { as: "venue" }, replace: true });
   }
@@ -24,7 +24,7 @@ export async function requireProductAccess(location: { pathname: string; href: s
   return { user: data.user };
 }
 
-/** Venue dashboard is a post-launch surface. Admins can always enter. */
+/** Venue dashboard is a post-launch surface. Owners/admins can always enter. */
 export async function requireVenueAccess() {
   const { data, error } = await supabase.auth.getUser();
   if (error || !data.user) {
@@ -32,10 +32,11 @@ export async function requireVenueAccess() {
   }
 
   const roles = await fetchRoles(data.user.id);
-  if (!roles.has("venue") && !roles.has("admin")) {
+  const privileged = roles.has("owner") || roles.has("admin");
+  if (!roles.has("venue") && !privileged) {
     throw redirect({ to: "/" });
   }
-  if (roles.has("admin")) return { user: data.user };
+  if (privileged) return { user: data.user };
 
   const access = await fetchAccessState(data.user.id);
   if (!access.hasVenueAccess) {
@@ -53,10 +54,11 @@ export async function requireVenueRegistrationAccess() {
   }
 
   const roles = await fetchRoles(data.user.id);
-  if (!roles.has("venue") && !roles.has("admin")) {
+  const privileged = roles.has("owner") || roles.has("admin");
+  if (!roles.has("venue") && !privileged) {
     throw redirect({ to: "/" });
   }
-  if (roles.has("admin")) return { user: data.user };
+  if (privileged) return { user: data.user };
 
   const access = await fetchAccessState(data.user.id);
   if (access.hasBusiness) {
