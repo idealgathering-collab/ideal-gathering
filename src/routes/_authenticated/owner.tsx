@@ -9,6 +9,7 @@ import {
   LogOut,
   RefreshCw,
   Shield,
+  Store,
   Ticket,
   UserRoundCheck,
   Users,
@@ -138,6 +139,11 @@ function OwnerPage() {
                 <Shield className="me-2 h-4 w-4" /> Admin Console
               </Link>
             </Button>
+            <Button asChild variant="outline" className="rounded-full">
+              <Link to="/owner/venue-preview">
+                <Store className="me-2 h-4 w-4" /> Preview Venue
+              </Link>
+            </Button>
             <Button
               className="rounded-full"
               onClick={() => {
@@ -212,13 +218,11 @@ function OwnerPage() {
             <h3 className="mt-3 font-display text-xl">Review & Moderate</h3>
             <p className="mt-1 text-sm text-muted-foreground">Venues, users, gatherings, reports, invitations and beta controls.</p>
           </Link>
-          <div className="rounded-3xl border border-border bg-card p-5">
-            <Building2 className="h-5 w-5 text-primary" />
-            <h3 className="mt-3 font-display text-xl">Venue Pipeline</h3>
-            <p className="mt-1 text-sm text-muted-foreground">
-              {data?.pendingVenues ?? 0} pending · {data?.approvedVenues ?? 0} approved
-            </p>
-          </div>
+          <Link to="/owner/venue-preview" className="rounded-3xl border border-border bg-card p-5 transition hover:border-primary/40">
+            <Store className="h-5 w-5 text-primary" />
+            <h3 className="mt-3 font-display text-xl">Venue Preview</h3>
+            <p className="mt-1 text-sm text-muted-foreground">Open any registered venue in a safe read-only owner view.</p>
+          </Link>
           <div className="rounded-3xl border border-border bg-card p-5">
             <Ticket className="h-5 w-5 text-primary" />
             <h3 className="mt-3 font-display text-xl">Beta Funnel</h3>
