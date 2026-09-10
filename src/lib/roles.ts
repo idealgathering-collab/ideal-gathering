@@ -18,12 +18,19 @@ export async function fetchRoles(userId: string): Promise<Set<string>> {
   return new Set((data ?? []).map((r) => r.role as string));
 }
 
-/** Default home for this account. Admins land on /admin unless they opted into guest preview. */
+export async function claimInitialOwner(): Promise<boolean> {
+  const { data, error } = await (supabase as any).rpc("claim_initial_owner");
+  if (error) throw new Error(error.message);
+  return data === true;
+}
+
+/** Default home for this account. Owners land on /owner, admins on /admin. */
 export async function homePathForUser(userId: string, redirect?: string): Promise<string> {
   const { fetchAccessState } = await import("@/lib/access");
   const access = await fetchAccessState(userId);
+  if (access.isOwner && !isAdminPreview()) return "/owner";
   if (access.isAdmin && !isAdminPreview()) return "/admin";
-  if (access.isVenue && !access.isAdmin) return "/venue/dashboard";
+  if (access.isVenue && !access.isAdmin && !access.isOwner) return "/venue/dashboard";
   if (!access.hasProductAccess) return access.onboarded ? "/pending" : "/onboarding";
   if (redirect && redirect.startsWith("/") && !redirect.startsWith("//")) return redirect;
   return "/dashboard";
