@@ -58,6 +58,7 @@ export type StylePrefs = {
   groupSize: string | null;
   talkStyle: string | null;
   newPeople: string | null;
+  spontaneity: string | null;
 };
 
 const EMPTY_STYLE: StylePrefs = {
@@ -65,9 +66,9 @@ const EMPTY_STYLE: StylePrefs = {
   groupSize: null,
   talkStyle: null,
   newPeople: null,
+  spontaneity: null,
 };
 
-/** Map the numeric preferred_group_size (3/4/5) onto the card's string buckets. */
 function groupSizeBucket(size: number | null | undefined): string | null {
   if (size === null || size === undefined) return null;
   if (size <= 3) return "intimate";
@@ -78,7 +79,7 @@ function groupSizeBucket(size: number | null | undefined): string | null {
 async function loadStylePrefs(userId: string): Promise<StylePrefs> {
   const { data, error } = await supabase
     .from("user_gathering_preferences")
-    .select("social_energy, conversation_style, stranger_comfort, preferred_group_size")
+    .select("social_energy, conversation_style, stranger_comfort, preferred_group_size, spontaneity")
     .eq("user_id", userId)
     .maybeSingle();
 
@@ -89,13 +90,10 @@ async function loadStylePrefs(userId: string): Promise<StylePrefs> {
     groupSize: groupSizeBucket(data.preferred_group_size),
     talkStyle: data.conversation_style ?? null,
     newPeople: data.stranger_comfort ?? null,
+    spontaneity: data.spontaneity ?? null,
   };
 }
 
-/**
- * Load a profile card by user ID.
- * Used for both self profile (/profile) and other profiles (/people/$id).
- */
 export async function loadProfileCard(userId: string): Promise<ProfileCardData | null> {
   const { data, error } = await supabase
     .from("profiles")
@@ -104,8 +102,6 @@ export async function loadProfileCard(userId: string): Promise<ProfileCardData |
     .maybeSingle();
 
   if (error || !data) {
-    // RLS only exposes the viewer's own row, so any other member's profile has to
-    // come back through the server function with a redacted public projection.
     const { loadPublicProfile } = await import("./public-profile.functions");
     const publicRow = await loadPublicProfile({ data: { userId } });
     if (!publicRow) {
@@ -119,9 +115,6 @@ export async function loadProfileCard(userId: string): Promise<ProfileCardData |
   return transformProfileData(data as ProfileSelection, story, style);
 }
 
-/**
- * Load multiple profile cards by user IDs (without story data).
- */
 export async function loadProfileCards(userIds: string[]): Promise<ProfileCardData[]> {
   if (userIds.length === 0) return [];
 
@@ -137,7 +130,7 @@ export async function loadProfileCards(userIds: string[]): Promise<ProfileCardDa
 
   const { data: prefRows } = await supabase
     .from("user_gathering_preferences")
-    .select("user_id, social_energy, conversation_style, stranger_comfort, preferred_group_size")
+    .select("user_id, social_energy, conversation_style, stranger_comfort, preferred_group_size, spontaneity")
     .in("user_id", userIds);
 
   const styleByUser = new Map<string, StylePrefs>(
@@ -148,6 +141,7 @@ export async function loadProfileCards(userIds: string[]): Promise<ProfileCardDa
         groupSize: groupSizeBucket(row.preferred_group_size),
         talkStyle: row.conversation_style ?? null,
         newPeople: row.stranger_comfort ?? null,
+        spontaneity: row.spontaneity ?? null,
       },
     ]),
   );
@@ -157,11 +151,6 @@ export async function loadProfileCards(userIds: string[]): Promise<ProfileCardDa
   );
 }
 
-
-
-/**
- * Load past gatherings the user attended, as visual story items.
- */
 async function loadStoryItems(userId: string): Promise<ProfileCardStoryItem[]> {
   const { data, error } = await supabase
     .from("gathering_attendees")
@@ -203,10 +192,6 @@ function asStringArray(value: unknown): string[] {
   return Array.isArray(value) ? value.filter((v): v is string => typeof v === "string") : [];
 }
 
-/**
- * Transform database profile data into the ProfileCardData format.
- * Style fields come from user_gathering_preferences, not from profiles.
- */
 function transformProfileData(
   data: ProfileSelection,
   story: ProfileCardStoryItem[],
@@ -231,6 +216,7 @@ function transformProfileData(
     groupSize: style.groupSize,
     talkStyle: style.talkStyle,
     newPeople: style.newPeople,
+    spontaneity: style.spontaneity,
     interests: asStringArray(data.interests),
     intentions: asStringArray(data.intentions),
     story,
@@ -239,10 +225,6 @@ function transformProfileData(
   };
 }
 
-/**
- * Get the display name for a profile.
- * Falls back to the email local-part, then a neutral label — never "Guest".
- */
 export function getDisplayName(
   profile: { displayName: string | null; email?: string | null } | null,
 ): string {
@@ -253,10 +235,6 @@ export function getDisplayName(
   return "New member";
 }
 
-
-/**
- * Get the location string for a profile.
- */
 export function getLocationString(profile: {
   neighborhood: string | null;
   city: string | null;
@@ -266,27 +244,22 @@ export function getLocationString(profile: {
   return parts.length > 0 ? parts.join(", ") : null;
 }
 
-/**
- * Check if a profile has completed the quiz (has aura data).
- */
 export function hasAuraData(profile: ProfileCardData): boolean {
   return (
     profile.personaColor !== null ||
-    (profile.traitSpark !== null ||
-      profile.traitCuriosity !== null ||
-      profile.traitWarmth !== null ||
-      profile.traitDepth !== null)
+    profile.traitSpark !== null ||
+    profile.traitCuriosity !== null ||
+    profile.traitWarmth !== null ||
+    profile.traitDepth !== null
   );
 }
 
-/**
- * Check if a profile has style preferences.
- */
 export function hasStyleData(profile: ProfileCardData): boolean {
   return (
     profile.energyLevel !== null ||
     profile.groupSize !== null ||
     profile.talkStyle !== null ||
-    profile.newPeople !== null
+    profile.newPeople !== null ||
+    profile.spontaneity !== null
   );
 }
