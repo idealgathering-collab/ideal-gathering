@@ -1,16 +1,8 @@
+import { hasPlatformOperations } from "@/lib/platform-authorization";
 import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { z } from "zod";
 
-async function isAdmin(context: any): Promise<boolean> {
-  const { data } = await context.supabase
-    .from("user_roles")
-    .select("role")
-    .eq("user_id", context.userId)
-    .eq("role", "admin")
-    .maybeSingle();
-  return !!data;
-}
 
 /** Owner-only: full row (incl. phone/mobile/owner_id) for the caller's own venue. */
 export const getMyBusiness = createServerFn({ method: "GET" })
@@ -44,7 +36,7 @@ export const isBusinessOwner = createServerFn({ method: "GET" })
 export const listAdminBusinesses = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }): Promise<any[]> => {
-    if (!(await isAdmin(context))) throw new Error("Forbidden");
+    if (!(await hasPlatformOperations(context))) throw new Error("Forbidden");
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { data, error } = await supabaseAdmin
       .from("businesses")
@@ -59,7 +51,7 @@ export const getAdminBusiness = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: unknown) => z.object({ id: z.string().uuid() }).parse(d))
   .handler(async ({ data, context }): Promise<any | null> => {
-    if (!(await isAdmin(context))) throw new Error("Forbidden");
+    if (!(await hasPlatformOperations(context))) throw new Error("Forbidden");
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { data: row, error } = await supabaseAdmin
       .from("businesses")

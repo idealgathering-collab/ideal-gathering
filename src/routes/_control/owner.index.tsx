@@ -1,3 +1,4 @@
+import { AdminAccessPanel } from "@/components/admin-access-panel";
 import { createFileRoute, Link, redirect, useNavigate } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
@@ -22,15 +23,15 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { BetaSection } from "@/components/admin/beta-section";
 import { supabase } from "@/integrations/supabase/client";
-import { claimInitialOwner, fetchRoles, setAdminPreview } from "@/lib/roles";
+import { fetchRoles, setAdminPreview } from "@/lib/roles";
 import { getOwnerSnapshot, type OwnerDirectorySection } from "@/lib/owner.functions";
 import { useSession } from "@/hooks/use-session";
 import logoAsset from "@/assets/ideal-gathering-logo.png.asset.json";
 
-export const Route = createFileRoute("/_authenticated/owner")({
+export const Route = createFileRoute("/_control/owner/")({
   beforeLoad: async ({ context }) => {
     const roles = await fetchRoles(context.user.id);
-    if (!roles.has("owner") && !roles.has("admin")) {
+    if (!roles.has("owner")) {
       throw redirect({ to: "/dashboard", replace: true });
     }
   },
@@ -63,17 +64,6 @@ function OwnerPage() {
     refetchInterval: 10_000,
   });
 
-  async function activateOwner() {
-    try {
-      const ok = await claimInitialOwner();
-      if (!ok) throw new Error("Owner access is already assigned to another account.");
-      await rolesQuery.refetch();
-      toast.success("Owner access activated.");
-    } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Could not activate owner access.");
-    }
-  }
-
   async function signOut() {
     setAdminPreview(false);
     qc.clear();
@@ -81,27 +71,7 @@ function OwnerPage() {
     navigate({ to: "/admin/auth", replace: true });
   }
 
-  if (!isOwner && !rolesQuery.isLoading) {
-    return (
-      <div className="min-h-screen bg-background">
-        <OwnerHeader onSignOut={signOut} />
-        <main className="mx-auto max-w-xl px-4 py-20">
-          <section className="rounded-3xl border border-primary/20 bg-card p-8 shadow-soft">
-            <div className="grid h-12 w-12 place-items-center rounded-2xl bg-primary/10">
-              <Crown className="h-6 w-6 text-primary" />
-            </div>
-            <h1 className="mt-5 font-display text-3xl">Activate Owner Access</h1>
-            <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-              This is a one-time bootstrap. Only an existing admin can claim ownership, and it works only while the platform has no owner.
-            </p>
-            <Button className="mt-6 rounded-full" onClick={activateOwner}>
-              <Crown className="me-2 h-4 w-4" /> Activate Owner Access
-            </Button>
-          </section>
-        </main>
-      </div>
-    );
-  }
+  if (!isOwner) return <p role="status" className="p-8">Verifying Owner access...</p>;
 
   const data = snapshot.data;
   const cards: Array<{
@@ -185,11 +155,14 @@ function OwnerPage() {
           <TabsList className="flex h-auto flex-wrap justify-start gap-1">
             <TabsTrigger value="venues">Needs attention</TabsTrigger>
             <TabsTrigger value="beta">Beta control</TabsTrigger>
+            <TabsTrigger value="admins">Admin access</TabsTrigger>
           </TabsList>
 
           <TabsContent value="venues" className="mt-6">
             <OwnerVenueControl onChanged={() => snapshot.refetch()} />
           </TabsContent>
+
+          <TabsContent value="admins" className="mt-6"><AdminAccessPanel /></TabsContent>
 
           <TabsContent value="beta" className="mt-6">
             <BetaSection />

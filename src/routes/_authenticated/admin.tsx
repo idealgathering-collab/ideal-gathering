@@ -26,7 +26,7 @@ export const Route = createFileRoute("/_authenticated/admin")({
   // admin shell (or its title) before the client-side check catches up.
   beforeLoad: async ({ context }) => {
     const roles = await fetchRoles(context.user.id);
-    if (!roles.has("admin")) throw redirect({ to: "/dashboard", replace: true });
+    if (!roles.has("admin") && !roles.has("owner")) throw redirect({ to: "/dashboard", replace: true });
   },
   head: () => ({
     meta: [
@@ -68,13 +68,8 @@ function AdminPage() {
 
   useEffect(() => {
     if (loading || !user) return;
-    supabase
-      .from("user_roles")
-      .select("role")
-      .eq("user_id", user.id)
-      .eq("role", "admin")
-      .maybeSingle()
-      .then(({ data }) => setAllowed(!!data));
+    supabase.rpc("has_platform_permission", { _permission: "platform_operations" })
+      .then(({ data, error }) => setAllowed(!error && data === true));
   }, [user, loading]);
 
   if (loading || allowed === null) {

@@ -1,16 +1,7 @@
+import { assertOwner } from "@/lib/platform-authorization";
 import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
-async function assertOwner(context: any) {
-  const { data, error } = await context.supabase
-    .from("user_roles")
-    .select("role")
-    .eq("user_id", context.userId)
-    .eq("role", "owner")
-    .maybeSingle();
-  if (error) throw new Error(error.message);
-  if (!data) throw new Error("Forbidden");
-}
 
 export type OwnerVenuePreview = {
   id: string;

@@ -1,3 +1,4 @@
+import { hasPlatformOperations } from "@/lib/platform-authorization";
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
@@ -50,13 +51,7 @@ export const listAttendance = createServerFn({ method: "POST" })
     if (gErr) throw new Error(gErr.message);
     if (!g) throw new Error("Not found");
 
-    const { data: adminRow } = await context.supabase
-      .from("user_roles")
-      .select("role")
-      .eq("user_id", context.userId)
-      .eq("role", "admin")
-      .maybeSingle();
-    const isAdmin = !!adminRow;
+    const isAdmin = await hasPlatformOperations(context);
     const isHost = g.host_id === context.userId;
     if (!isHost && !isAdmin) throw new Error("Forbidden");
 

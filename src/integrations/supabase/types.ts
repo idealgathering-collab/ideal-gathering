@@ -14,6 +14,18 @@ export type Database = {
   }
   public: {
     Tables: {
+      admin_permissions: {
+        Row: { user_id: string; permission: string }
+        Insert: { user_id: string; permission: string }
+        Update: { user_id?: string; permission?: string }
+        Relationships: []
+      }
+      admin_access_audit: {
+        Row: { id: number; actor_id: string; target_id: string; action: string; created_at: string }
+        Insert: { id?: never; actor_id: string; target_id: string; action: string; created_at?: string }
+        Update: { id?: never; actor_id?: string; target_id?: string; action?: string; created_at?: string }
+        Relationships: []
+      }
       app_config: {
         Row: {
           beta_launched: boolean
@@ -823,12 +835,17 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      is_owner: { Args: { _user_id: string }; Returns: boolean }
+      claim_initial_owner: { Args: never; Returns: boolean }
+      has_platform_permission: { Args: { _permission: string }; Returns: boolean }
+      manage_admin_access: { Args: { _user_id: string; _action: string }; Returns: undefined }
+      list_admin_access: { Args: never; Returns: { user_id: string; permissions: string[]; is_owner: boolean }[] }
       check_invitation: { Args: { _code: string }; Returns: boolean }
       is_beta_launched: { Args: never; Returns: boolean }
       redeem_invitation: { Args: { _code: string }; Returns: boolean }
     }
     Enums: {
-      app_role: "admin" | "business_owner" | "user" | "venue"
+      app_role: "admin" | "business_owner" | "user" | "venue" | "owner"
       business_status: "pending" | "approved" | "rejected"
       gathering_status: "proposed" | "approved" | "cancelled" | "rejected"
       report_status: "open" | "resolved" | "dismissed"
@@ -972,7 +989,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      app_role: ["admin", "business_owner", "user", "venue"],
+      app_role: ["admin", "business_owner", "user", "venue", "owner"],
       business_status: ["pending", "approved", "rejected"],
       gathering_status: ["proposed", "approved", "cancelled", "rejected"],
       report_status: ["open", "resolved", "dismissed"],
