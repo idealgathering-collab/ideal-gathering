@@ -18,6 +18,7 @@ Initial accepted decisions below come from the user's workflow brief and referen
 | IG-D012 | Accepted | Use safe incremental migrations, protect secrets, run relevant checks and report failures/remaining issues. |
 | IG-D013 | Accepted | Group quality outranks simple similarity; current deterministic Cell is distinct from future Brain research. |
 | IG-D014 | Accepted | Incremental saved checkpoints make interrupted work resumable; reinspection is required, not a restart from zero. |
+| IG-D015 | Accepted | Owner is a distinct highest-trust role. Admin operational authority requires an Owner-controlled permission grant enforced by server functions and database policy helpers. Owner control routes remain separate from member, venue and Admin navigation. Initial Owner provisioning is a trusted operator action. Source: approved IG-001. |
 
 ## Observations awaiting decisions
 - Creation form 2–30, original database check 1–50, versus typical 2–5 product direction.

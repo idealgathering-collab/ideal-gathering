@@ -1,19 +1,7 @@
+import { assertOwner } from "@/lib/platform-authorization";
 import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
-async function assertOwner(context: {
-  supabase: Awaited<ReturnType<typeof import("@supabase/supabase-js").createClient>>;
-  userId: string;
-}) {
-  const { data, error } = await (context.supabase as any)
-    .from("user_roles")
-    .select("role")
-    .eq("user_id", context.userId)
-    .eq("role", "owner")
-    .maybeSingle();
-  if (error) throw new Error(error.message);
-  if (!data) throw new Error("Forbidden");
-}
 
 export type OwnerActivity = {
   type: "waitlist" | "venue" | "user" | "gathering" | "invite";
@@ -84,7 +72,7 @@ async function buildActivity(supabaseAdmin: any, limit = 100): Promise<OwnerActi
 export const getOwnerSnapshot = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }): Promise<OwnerSnapshot> => {
-    await assertOwner(context as any);
+    await assertOwner(context);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
     const start = new Date();
@@ -127,7 +115,7 @@ export const getOwnerSnapshot = createServerFn({ method: "GET" })
 export const getOwnerActivity = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }): Promise<OwnerActivity[]> => {
-    await assertOwner(context as any);
+    await assertOwner(context);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     return buildActivity(supabaseAdmin, 150);
   });
@@ -144,7 +132,7 @@ export const getOwnerDirectory = createServerFn({ method: "GET" })
   })
   .middleware([requireSupabaseAuth])
   .handler(async ({ data, context }): Promise<any[]> => {
-    await assertOwner(context as any);
+    await assertOwner(context);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
     if (data.section === "waitlist") {

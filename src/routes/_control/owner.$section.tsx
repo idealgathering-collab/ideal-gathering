@@ -24,7 +24,7 @@ import logoAsset from "@/assets/ideal-gathering-logo.png.asset.json";
 
 const ALLOWED = new Set<OwnerDirectorySection>(["waitlist", "users", "venues", "invitations", "gatherings"]);
 
-export const Route = createFileRoute("/_authenticated/owner/$section")({
+export const Route = createFileRoute("/_control/owner/$section")({
   beforeLoad: async ({ context, params }) => {
     const roles = await fetchRoles(context.user.id);
     if (!roles.has("owner")) throw redirect({ to: "/admin", replace: true });
@@ -223,7 +223,7 @@ function InvitationRows({ rows, onChanged }: { rows: any[]; onChanged: () => voi
 
 function GatheringRows({ rows, onChanged }: { rows: any[]; onChanged: () => void }) {
   const setStatus = useMutation({
-    mutationFn: async ({ id, status }: { id: string; status: string }) => {
+    mutationFn: async ({ id, status }: { id: string; status: "approved" | "rejected" | "cancelled" }) => {
       const { error } = await supabase.from("gatherings").update({ status }).eq("id", id);
       if (error) throw new Error(error.message);
     },

@@ -1,3 +1,4 @@
+import { hasPlatformOperations } from "@/lib/platform-authorization";
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
@@ -166,13 +167,8 @@ export const listReports = createServerFn({ method: "POST" })
     z.object({ status: z.enum(["open", "resolved", "dismissed"]) }).parse(d),
   )
   .handler(async ({ data, context }): Promise<AdminReportRow[]> => {
-    const { data: adminRow } = await context.supabase
-      .from("user_roles")
-      .select("role")
-      .eq("user_id", context.userId)
-      .eq("role", "admin")
-      .maybeSingle();
-    if (!adminRow) throw new Error("Forbidden");
+    const isAdmin = await hasPlatformOperations(context);
+    if (!isAdmin) throw new Error("Forbidden");
 
     const { data: rows, error } = await context.supabase
       .from("reports")
@@ -223,13 +219,8 @@ export const setReportStatus = createServerFn({ method: "POST" })
       .parse(d),
   )
   .handler(async ({ data, context }) => {
-    const { data: adminRow } = await context.supabase
-      .from("user_roles")
-      .select("role")
-      .eq("user_id", context.userId)
-      .eq("role", "admin")
-      .maybeSingle();
-    if (!adminRow) throw new Error("Forbidden");
+    const isAdmin = await hasPlatformOperations(context);
+    if (!isAdmin) throw new Error("Forbidden");
     const { error } = await context.supabase
       .from("reports")
       .update({

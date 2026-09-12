@@ -7,7 +7,7 @@ import { fetchRoles } from "@/lib/roles";
 import { getOwnerActivity } from "@/lib/owner.functions";
 import logoAsset from "@/assets/ideal-gathering-logo.png.asset.json";
 
-export const Route = createFileRoute("/_authenticated/owner/activity")({
+export const Route = createFileRoute("/_control/owner/activity")({
   beforeLoad: async ({ context }) => {
     const roles = await fetchRoles(context.user.id);
     if (!roles.has("owner")) throw redirect({ to: "/admin", replace: true });

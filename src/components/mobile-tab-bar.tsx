@@ -23,6 +23,7 @@ export function MobileTabBar() {
     pathname === "/preview" ||
     pathname.startsWith("/auth") ||
     pathname.startsWith("/admin") ||
+    pathname === "/owner" || pathname.startsWith("/owner/") ||
     pathname.startsWith("/venue") ||
     pathname.startsWith("/onboarding");
 

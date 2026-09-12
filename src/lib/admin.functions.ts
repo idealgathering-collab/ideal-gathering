@@ -1,19 +1,7 @@
+import { assertPlatformOperations } from "@/lib/platform-authorization";
 import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
-async function assertAdmin(context: {
-  supabase: Awaited<ReturnType<typeof import("@supabase/supabase-js").createClient>>;
-  userId: string;
-}) {
-  const { data, error } = await (context.supabase as any)
-    .from("user_roles")
-    .select("role")
-    .eq("user_id", context.userId)
-    .eq("role", "admin")
-    .maybeSingle();
-  if (error) throw new Error(error.message);
-  if (!data) throw new Error("Forbidden");
-}
 
 export type AdminUserRow = {
   id: string;
@@ -28,7 +16,7 @@ export type AdminUserRow = {
 export const listAdminUsers = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }): Promise<AdminUserRow[]> => {
-    await assertAdmin(context as any);
+    await assertPlatformOperations(context);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
     const perPage = 200;
@@ -89,7 +77,7 @@ export const getAdminUser = createServerFn({ method: "GET" })
   })
   .middleware([requireSupabaseAuth])
   .handler(async ({ data, context }): Promise<AdminUserDetail | null> => {
-    await assertAdmin(context as any);
+    await assertPlatformOperations(context);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
     const { data: userRes, error: uErr } = await supabaseAdmin.auth.admin.getUserById(data.id);
@@ -142,7 +130,7 @@ export const updateAdminUser = createServerFn({ method: "POST" })
   })
   .middleware([requireSupabaseAuth])
   .handler(async ({ data, context }) => {
-    await assertAdmin(context as any);
+    await assertPlatformOperations(context);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const patch: {
       display_name?: string | null;
@@ -178,7 +166,7 @@ export type PendingGatheringRow = {
 export const listPendingGatherings = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }): Promise<PendingGatheringRow[]> => {
-    await assertAdmin(context as any);
+    await assertPlatformOperations(context);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { data, error } = await supabaseAdmin
       .from("gatherings")
@@ -229,7 +217,7 @@ export const setGatheringStatus = createServerFn({ method: "POST" })
   })
   .middleware([requireSupabaseAuth])
   .handler(async ({ data, context }) => {
-    await assertAdmin(context as any);
+    await assertPlatformOperations(context);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { data: gathering, error: gErr } = await supabaseAdmin
       .from("gatherings")

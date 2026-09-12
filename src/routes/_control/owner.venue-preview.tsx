@@ -9,7 +9,7 @@ import { fetchRoles } from "@/lib/roles";
 import { listOwnerVenuePreviews } from "@/lib/owner-venue.functions";
 import logoAsset from "@/assets/ideal-gathering-logo.png.asset.json";
 
-export const Route = createFileRoute("/_authenticated/owner/venue-preview")({
+export const Route = createFileRoute("/_control/owner/venue-preview")({
   beforeLoad: async ({ context }) => {
     const roles = await fetchRoles(context.user.id);
     if (!roles.has("owner")) throw redirect({ to: "/admin", replace: true });
