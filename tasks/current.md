@@ -1,10 +1,11 @@
 # Current task
 
-IG-001: [Owner Control Center foundation](IG-001-owner-control-center.md).
-Approved by Farzin's explicit Codex request on 2026-09-11.
-Branch: codex/ig-001-owner-control-center. Baseline: 4cee6c5.
-Checkpoint: inspection and approved bounded spec complete. Checks not yet run.
-Next: additive DB boundary, shared server guards, independent Owner routes and Admin access panel; then tests and completion evidence.
-No migration applied, merge or deployment. Schema replay hazards remain in docs/DATABASE.md.
+No implementation task is active.
 
-Checkpoint 2: additive migration and server guards implemented; Owner routes moved to independent _control layout, Admin access panel added. 41 disposable PostgreSQL checks passed. Existing 161 unit tests passed before new guard tests. Baseline build reproduces Lovable Windows path error; baseline lint has 37,521 errors / 14 warnings. Route tree regenerated using installed TanStack generator (also resolves existing missing venue registration route types). Fixing an existing status type error in moved Owner directory. Next: finish unit/handler checks, final typecheck/lint, docs and PR. No live DB changes.
+Completed: [IG-001 Owner Control Center foundation](completed/IG-001-owner-control-center.md) on branch `codex/ig-001-owner-control-center`, based on `4cee6c5`.
+
+Outcome: distinct Owner control routes and server boundary; Owner-managed revocable Admin platform access; direct role/grant escalation and legacy Owner self-bootstrap blocked. Migration is committed and locally validated but unapplied. No merge or deployment has occurred.
+
+Checks: 169 unit tests passed; TypeScript passed; targeted new-file lint passed; 41 disposable PostgreSQL authorization checks passed. Full lint remains blocked by pre-existing repository-wide formatting errors. Normal Windows build remains blocked by the existing Lovable MCP path-separator bug; application build succeeds when that plugin alone is disabled locally.
+
+Recommended next discussion: IG-002 Admin dashboard UI cleanup. Preserve the IG-001 permission boundary. Any split into finer Admin permissions should be a separate access-control task after mapping affected server handlers, RLS policies and triggers.

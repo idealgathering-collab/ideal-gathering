@@ -46,3 +46,6 @@ The existing MCP tool routes expose gathering operations and must retain their a
 
 ## PROPOSED operating direction
 Keep this architecture and reuse its components. GitHub is authoritative, Codex implements approved specs, ChatGPT supports decisions/review, and Lovable primarily handles infrastructure/deployment. No framework migration, backend replacement or speculative Brain service is approved.
+
+## IG-001 control boundary
+The Owner control surface lives under the pathless `_control` route layout, separate from member and venue access gates while retaining the existing `/owner` URLs. Its layout verifies Owner status through an authenticated server function. Admin operations use a caller-scoped database permission check before any service-role query. The database's shared Admin role helper applies the same permission to existing RLS policies and triggers, so route visibility is not the security boundary.

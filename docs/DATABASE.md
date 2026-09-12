@@ -68,6 +68,11 @@ Account deletion has an edge-function implementation at `supabase/functions/dele
 - Any seat-limit, profile data ownership, retention or privacy changes require their own approved requirements.
 No new tables, migrations or database changes are part of this workflow setup.
 
+## IG-001 implementation — pending rollout
+Branch `codex/ig-001-owner-control-center` adds an unapplied ordered migration for an Owner-controlled Admin permission boundary. Existing Admins are backfilled with `platform_operations`; revoking it changes the shared `private.has_role(..., 'admin')` decision used by existing RLS policies and triggers. Owner always satisfies this platform permission without needing an Admin role. The migration also adds Owner-only management/list RPCs and access audit rows, revokes direct role/grant writes and disables the broken self-service Owner bootstrap.
+
+The migration passed 41 authorization checks in disposable local PostgreSQL, including Owner, active/restricted Admin, member, venue and escalation attempts. This is not proof of the hosted migration ledger or production behavior. Before rollout, confirm an Owner exists (or provision one using a trusted database operator), back up affected role data, apply through the normal Supabase/Lovable process and run the opt-in hosted DB suite against a designated test project.
+
 ## Migration operating procedure
 Inspect current SQL and live migration state when access is available; document differences. Add a new ordered migration with explicit grants/RLS/constraints and safe backfill/recovery. Test empty and representative existing data on a disposable database; separate enum commits before use. Regenerate types from verified schema, run relevant DB tests, and record application/rollout status. Never copy secret values into docs or use real user data as fixtures.
 
