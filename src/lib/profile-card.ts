@@ -14,37 +14,35 @@ export interface ProfileCardData {
   country: string | null;
   bio: string | null;
   dateOfBirth: string | null;
-  
+
   // Aura data (from quiz)
   personaColor: string | null;
   traitSpark: number | null;
   traitCuriosity: number | null;
   traitWarmth: number | null;
   traitDepth: number | null;
-  
+
   // Style preferences
-  energyLevel: string | null; // e.g., "high", "medium", "low"
-  groupSize: string | null; // e.g., "intimate", "small", "large"
-  talkStyle: string | null; // e.g., "listener", "balanced", "talker"
-  newPeople: string | null; // e.g., "love", "neutral", "avoid"
-  
+  energyLevel: string | null;
+  groupSize: string | null;
+  talkStyle: string | null;
+  newPeople: string | null;
+  spontaneity: string | null;
+
   // Loves = interests with photos
   interests: string[];
-  
-  // Here = intentions with photos
+
+  // Here = intentions
   intentions: string[];
-  
+
   // Story = past approved tables (visual filmstrip)
   story: ProfileCardStoryItem[];
-  
+
   // Metadata
   createdAt: string;
   updatedAt: string;
 }
 
-/**
- * A story item representing a past approved gathering/table.
- */
 export interface ProfileCardStoryItem {
   id: string;
   gatheringId: string;
@@ -56,9 +54,6 @@ export interface ProfileCardStoryItem {
   hostName: string;
 }
 
-/**
- * Minimal profile for displaying in the card header.
- */
 export interface ProfileCardIdentity {
   id: string;
   displayName: string | null;
@@ -70,9 +65,6 @@ export interface ProfileCardIdentity {
   personaColor: string | null;
 }
 
-/**
- * Aura sector data.
- */
 export interface ProfileCardAura {
   personaColor: string | null;
   traitSpark: number | null;
@@ -81,38 +73,24 @@ export interface ProfileCardAura {
   traitDepth: number | null;
 }
 
-/**
- * Style sector data.
- */
 export interface ProfileCardStyle {
   energyLevel: string | null;
   groupSize: string | null;
   talkStyle: string | null;
   newPeople: string | null;
+  spontaneity: string | null;
 }
 
-/**
- * Loves sector data (interests with visuals).
- */
 export interface ProfileCardLoves {
   interests: string[];
 }
 
-/**
- * Here sector data (intentions with visuals).
- */
 export interface ProfileCardHere {
   intentions: string[];
 }
 
-/**
- * Story sector data.
- */
 export interface ProfileCardStory {
   items: ProfileCardStoryItem[];
 }
 
-/**
- * Database row type for profiles.
- */
 export type ProfileRow = Database["public"]["Tables"]["profiles"]["Row"];

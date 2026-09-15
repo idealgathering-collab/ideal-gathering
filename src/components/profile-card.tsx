@@ -13,13 +13,6 @@ import { MatchCompatibility } from "@/components/profile/match-score";
 import { getProfileCompletion, getSectionCompletion } from "@/lib/profile-completion";
 import { calculateUserMatch } from "@/lib/user-match";
 
-/**
- * Profile Card - EXACT match to image design
- * Photo-first phone card (430px column)
- * Sectors: aura → style → loves → here → story
- * Trust is OFF - not included
- * Dark theme with purple/black background
- */
 export interface ProfileCardProps {
   userId?: string;
   profile?: ProfileCardData | null;
@@ -29,32 +22,14 @@ export interface ProfileCardProps {
   interactive?: boolean;
   onStoryItemClick?: (item: ProfileCardData["story"][0]) => void;
   className?: string;
-  /**
-   * Whether this is the viewer's own profile.
-   * Used to show completion prompts.
-   */
   isSelf?: boolean;
-  /**
-   * Click handler for completion prompts.
-   */
   onComplete?: () => void;
-  /**
-   * Viewer's profile (for calculating match score between viewer and profile).
-   */
   viewerProfile?: ProfileCardData | null;
-  /**
-   * Viewer's date of birth (for age compatibility).
-   */
   viewerDob?: string | null;
-  /**
-   * Whether to show match breakdown.
-   */
   showMatchBreakdown?: boolean;
+  onPickAvatar?: () => void;
 }
 
-/**
- * Skeleton loader - EXACT match to image
- */
 export function ProfileCardSkeleton({
   darkTheme = true,
   className = "",
@@ -65,7 +40,6 @@ export function ProfileCardSkeleton({
   return (
     <div className={`w-full max-w-[430px] mx-auto ${className}`}>
       <IdentitySkeleton darkTheme={darkTheme} />
-      
       <div className="-mt-6 px-4 pb-4">
         <div className="rounded-3xl bg-gray-900/80 backdrop-blur-lg border border-white/10 p-4 space-y-6">
           {PROFILE_SECTORS.map((sector) => (
@@ -101,6 +75,7 @@ export function ProfileCard({
   viewerProfile,
   viewerDob,
   showMatchBreakdown,
+  onPickAvatar,
 }: ProfileCardProps) {
   const [profile, setProfile] = useState<ProfileCardData | null>(propProfile ?? null);
   const [loading, setLoading] = useState(propLoading ?? !propProfile);
@@ -118,27 +93,20 @@ export function ProfileCard({
           setError(err instanceof Error ? err : new Error("Failed to load profile"));
           setProfile(null);
         })
-        .finally(() => {
-          setLoading(false);
-        });
+        .finally(() => setLoading(false));
     }
   }, [userId, propProfile, profile]);
 
   useEffect(() => {
-    if (propProfile !== undefined) {
-      setProfile(propProfile);
-    }
+    if (propProfile !== undefined) setProfile(propProfile);
   }, [propProfile]);
 
-  // Calculate match score if we have a viewer profile (hook must run before early returns)
   const matchResult = useMemo(() => {
     if (!viewerProfile || !profile || isSelf) return null;
     return calculateUserMatch(viewerProfile, profile, viewerDob ?? null, profile.dateOfBirth ?? null);
   }, [viewerProfile, profile, viewerDob, isSelf]);
 
-  if (loading) {
-    return <ProfileCardSkeleton darkTheme={darkTheme} className={className} />;
-  }
+  if (loading) return <ProfileCardSkeleton darkTheme={darkTheme} className={className} />;
 
   if (error) {
     return (
@@ -161,7 +129,6 @@ export function ProfileCard({
     );
   }
 
-  // Extract sector data
   const identity = {
     id: profile.id,
     displayName: profile.displayName,
@@ -199,21 +166,9 @@ export function ProfileCard({
     groupSize: profile.groupSize,
     talkStyle: profile.talkStyle,
     newPeople: profile.newPeople,
+    spontaneity: profile.spontaneity,
   };
 
-  const loves = {
-    interests: profile.interests,
-  };
-
-  const here = {
-    intentions: profile.intentions,
-  };
-
-  const story = {
-    items: profile.story,
-  };
-
-  // Calculate completion
   const isSelfProfile = isSelf ?? false;
   const completion = getProfileCompletion(profile, isSelfProfile);
   const sectionCompletions = {
@@ -224,12 +179,10 @@ export function ProfileCard({
     story: getSectionCompletion("story", profile, isSelfProfile),
   };
 
-  // Use provided matchScore or calculated one
   const displayMatchScore = matchScore ?? matchResult?.score ?? null;
 
   return (
     <div className={`w-full max-w-[430px] mx-auto ${className}`}>
-      {/* Identity header - EXACT from image */}
       <Identity
         identity={identity}
         scores={scores}
@@ -237,16 +190,16 @@ export function ProfileCard({
         intentions={profile.intentions}
         matchScore={displayMatchScore}
         darkTheme={darkTheme}
+        isSelf={isSelfProfile}
+        onPickAvatar={onPickAvatar}
       />
-      
-      {/* Match compatibility breakdown (only for other users) */}
+
       {!isSelfProfile && matchResult && showMatchBreakdown && (
         <div className="px-4 mt-2">
           <MatchCompatibility matchResult={matchResult} />
         </div>
       )}
 
-      {/* Profile completion card (only for self) */}
       {isSelfProfile && !completion.isComplete && (
         <div className="mt-4 px-4">
           <ProfileCompletionCard
@@ -259,32 +212,14 @@ export function ProfileCard({
         </div>
       )}
 
-      {/* Sectors container - EXACT from image: rounded container with sectors */}
       <div className="-mt-6 px-4 pb-4">
         <div className="rounded-3xl bg-gray-900/90 backdrop-blur-lg border border-white/10 p-4 space-y-6">
-          {/* Sectors: aura → style → loves → here → story */}
-          <Aura 
-            aura={aura} 
-            completion={sectionCompletions.aura}
-            isSelf={isSelfProfile}
-          />
-          <Style 
-            style={styleData} 
-            completion={sectionCompletions.style}
-            isSelf={isSelfProfile}
-          />
-          <Loves 
-            loves={loves} 
-            completion={sectionCompletions.loves}
-            isSelf={isSelfProfile}
-          />
-          <Here 
-            here={here} 
-            completion={sectionCompletions.here}
-            isSelf={isSelfProfile}
-          />
+          <Aura aura={aura} completion={sectionCompletions.aura} isSelf={isSelfProfile} />
+          <Style style={styleData} completion={sectionCompletions.style} isSelf={isSelfProfile} />
+          <Loves loves={{ interests: profile.interests }} completion={sectionCompletions.loves} isSelf={isSelfProfile} />
+          <Here here={{ intentions: profile.intentions }} completion={sectionCompletions.here} isSelf={isSelfProfile} />
           <Story
-            story={story}
+            story={{ items: profile.story }}
             interactive={interactive}
             onItemClick={onStoryItemClick}
             showViewAll={false}
@@ -297,9 +232,6 @@ export function ProfileCard({
   );
 }
 
-/**
- * Compact version for lists/grids
- */
 export function ProfileCardCompact({
   profile,
   onClick,
@@ -313,9 +245,7 @@ export function ProfileCardCompact({
   darkTheme?: boolean;
   className?: string;
 }) {
-  if (!profile) {
-    return <ProfileCardSkeleton darkTheme={darkTheme} className={className} />;
-  }
+  if (!profile) return <ProfileCardSkeleton darkTheme={darkTheme} className={className} />;
 
   const identity = {
     id: profile.id,
@@ -342,11 +272,7 @@ export function ProfileCardCompact({
   };
 
   return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={`w-full text-start ${className}`}
-    >
+    <button type="button" onClick={onClick} className={`w-full text-start ${className}`}>
       <Identity
         identity={identity}
         scores={scores}

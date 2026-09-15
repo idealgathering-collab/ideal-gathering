@@ -3,10 +3,6 @@ import type { ProfileCardStyle } from "@/lib/profile-card";
 import { Sector, type SectorProps } from "@/components/profile/sector";
 import { useT } from "@/i18n";
 
-/**
- * Style component - EXACT match to image design
- * Shows icon tiles in a row for: energy / size / talk / new people
- */
 export interface StyleProps extends Omit<SectorProps, "sector" | "hasData" | "children"> {
   style: ProfileCardStyle | null;
   completion?: SectionCompletion;
@@ -14,7 +10,7 @@ export interface StyleProps extends Omit<SectorProps, "sector" | "hasData" | "ch
   children?: React.ReactNode;
 }
 
-const STYLE_ICONS: Record<string, { icon: string; labelKey: string; color: string }> = {
+const STYLE_ICONS: Record<string, { icon: string; labelKey?: string; label?: string; color: string }> = {
   high: { icon: "⚡", labelKey: "profile.style.energyHigh", color: "#EF4444" },
   medium: { icon: "⚡", labelKey: "profile.style.energyMedium", color: "#F59E0B" },
   low: { icon: "⚡", labelKey: "profile.style.energyLow", color: "#10B981" },
@@ -27,109 +23,56 @@ const STYLE_ICONS: Record<string, { icon: string; labelKey: string; color: strin
   love: { icon: "❤️", labelKey: "profile.style.newPeopleLove", color: "#EF4444" },
   neutral: { icon: "😐", labelKey: "profile.style.newPeopleNeutral", color: "#6B7280" },
   avoid: { icon: "🚫", labelKey: "profile.style.newPeopleAvoid", color: "#374151" },
+  spontaneous: { icon: "✨", label: "Spontaneous", color: "#A855F7" },
+  balanced_spontaneity: { icon: "🌓", label: "Flexible", color: "#6366F1" },
+  planned: { icon: "🗓️", label: "Planned", color: "#0EA5E9" },
 };
 
-/**
- * Style tile - EXACT from image: square tile with icon and label
- */
-function StyleTile({
-  icon,
-  label,
-  subtitle,
-  color,
-}: {
-  icon: string;
-  label: string;
-  subtitle?: string;
-  color: string;
-}) {
+function StyleTile({ icon, label, subtitle, color }: { icon: string; label: string; subtitle?: string; color: string }) {
   return (
-    <div
-      className="flex flex-col items-center gap-1 p-2.5 text-center rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 min-w-[80px]"
-      style={{ color }}
-    >
+    <div className="flex min-w-[84px] flex-1 flex-col items-center gap-1 rounded-2xl border border-white/10 bg-white/5 p-3 text-center backdrop-blur-sm">
       <span className="text-xl" style={{ color }}>{icon}</span>
-      <span className="text-xs font-medium text-white truncate">{label}</span>
-      {subtitle && <span className="text-xs text-white/60">{subtitle}</span>}
+      <span className="max-w-[100px] truncate text-xs font-semibold text-white">{label}</span>
+      {subtitle && <span className="text-[11px] text-white/50">{subtitle}</span>}
     </div>
   );
 }
 
 export function Style({ style, children, ...props }: StyleProps) {
   const t = useT();
-  
   const hasStyle = style && (
     style.energyLevel !== null ||
     style.groupSize !== null ||
     style.talkStyle !== null ||
-    style.newPeople !== null
+    style.newPeople !== null ||
+    style.spontaneity !== null
   );
 
-  if (!hasStyle) {
-    return null;
-  }
+  if (!hasStyle) return null;
 
-  const energyConfig = style.energyLevel ? STYLE_ICONS[style.energyLevel] : null;
-  const sizeConfig = style.groupSize ? STYLE_ICONS[style.groupSize] : null;
-  const talkConfig = style.talkStyle ? STYLE_ICONS[style.talkStyle] : null;
-  const newPeopleConfig = style.newPeople ? STYLE_ICONS[style.newPeople] : null;
+  const entries = [
+    [style.energyLevel, t("profile.style.energy")],
+    [style.groupSize, t("profile.style.groupSize")],
+    [style.talkStyle, t("profile.style.talkStyle")],
+    [style.newPeople, t("profile.style.newPeople")],
+    [style.spontaneity, "Planning"],
+  ] as const;
 
-  // i18n labels for subtitles
-  const energySubtitle = t("profile.style.energy");
-  const sizeSubtitle = t("profile.style.groupSize");
-  const talkSubtitle = t("profile.style.talkStyle");
-  const newPeopleSubtitle = t("profile.style.newPeople");
+  const tiles = entries.flatMap(([value, subtitle], index) => {
+    if (!value) return [];
+    const config = STYLE_ICONS[value];
+    if (!config) return [];
+    const label = config.label ?? (config.labelKey ? t(config.labelKey) : value.replace(/_/g, " "));
+    return [<StyleTile key={`${index}-${value}`} icon={config.icon} label={label} subtitle={subtitle} color={config.color} />];
+  });
 
-  const tiles = [
-    energyConfig && (
-      <StyleTile
-        key="energy"
-        icon={energyConfig.icon}
-        label={t(energyConfig.labelKey)}
-        subtitle={energySubtitle}
-        color={energyConfig.color}
-      />
-    ),
-    sizeConfig && (
-      <StyleTile
-        key="size"
-        icon={sizeConfig.icon}
-        label={t(sizeConfig.labelKey)}
-        subtitle={sizeSubtitle}
-        color={sizeConfig.color}
-      />
-    ),
-    talkConfig && (
-      <StyleTile
-        key="talk"
-        icon={talkConfig.icon}
-        label={t(talkConfig.labelKey)}
-        subtitle={talkSubtitle}
-        color={talkConfig.color}
-      />
-    ),
-    newPeopleConfig && (
-      <StyleTile
-        key="newPeople"
-        icon={newPeopleConfig.icon}
-        label={t(newPeopleConfig.labelKey)}
-        subtitle={newPeopleSubtitle}
-        color={newPeopleConfig.color}
-      />
-    ),
-  ].filter(Boolean);
-
-  if (tiles.length === 0) {
-    return null;
-  }
+  if (tiles.length === 0) return null;
 
   return (
-    <Sector 
-      sector="style" 
-      hasData={true}
-      {...props}
-    >
-      {tiles}
+    <Sector sector="style" hasData={true} {...props}>
+      <div className="grid w-full grid-cols-2 gap-2 sm:grid-cols-3">
+        {tiles}
+      </div>
       {children}
     </Sector>
   );
