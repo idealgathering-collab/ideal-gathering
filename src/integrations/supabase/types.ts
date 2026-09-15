@@ -828,7 +828,7 @@ export type Database = {
       redeem_invitation: { Args: { _code: string }; Returns: boolean }
     }
     Enums: {
-      app_role: "admin" | "business_owner" | "user" | "venue"
+      app_role: "admin" | "business_owner" | "user" | "venue" | "owner"
       business_status: "pending" | "approved" | "rejected"
       gathering_status: "proposed" | "approved" | "cancelled" | "rejected"
       report_status: "open" | "resolved" | "dismissed"
@@ -972,7 +972,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      app_role: ["admin", "business_owner", "user", "venue"],
+      app_role: ["admin", "business_owner", "user", "venue", "owner"],
       business_status: ["pending", "approved", "rejected"],
       gathering_status: ["proposed", "approved", "cancelled", "rejected"],
       report_status: ["open", "resolved", "dismissed"],
