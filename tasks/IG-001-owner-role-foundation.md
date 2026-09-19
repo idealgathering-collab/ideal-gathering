@@ -1,7 +1,11 @@
 # IG-001 — Owner Role Foundation
 
 ## Status
-Approved for implementation planning.
+Implementation prepared on `codex/ig-001-owner-role-foundation` (2026-09-19).
+Verification checkpoint: unit/local database checks pass; hosted validation and
+clean build remain outstanding. See [verification report](IG-001-verification.md).
+Keep this spec active until the outstanding checks/review are resolved, then move
+it and its report to `tasks/completed/` and update the queue links.
 
 ## Goal
 Make the existing owner system technically reliable before further product development.

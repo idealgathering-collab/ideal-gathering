@@ -13,6 +13,20 @@ compatibility scoring, preference ranking, and feedback eligibility.
 
 ## Database integration (opt-in)
 
+### Isolated owner-bootstrap regression
+
+`node tests/owner-bootstrap.local.mjs <absolute path to @electric-sql/pglite/dist/index.js>`
+executes the committed owner migrations and private role helper in a disposable,
+in-memory PostgreSQL engine. Supply PGlite from a scratch installation; it is not
+an application dependency. No `.env` or hosted credentials are read. The fixture
+covers only owner-role prerequisites, grants and own-role RLS, not full migration
+replay, real Supabase authentication or concurrent database connections. Verify
+two simultaneous admin claims on a designated disposable Supabase/PostgreSQL
+target before rollout: exactly one succeeds, the other returns false, both retain
+admin, and one owner row remains. Never clear existing owners on a live target.
+
+### Hosted suite safeguards
+
 These tests run against the real hosted database, so they are **not** part of
 `bun run test`. They skip themselves unless the project credentials are set:
 

@@ -19,7 +19,7 @@ export async function fetchRoles(userId: string): Promise<Set<string>> {
 }
 
 export async function claimInitialOwner(): Promise<boolean> {
-  const { data, error } = await (supabase as any).rpc("claim_initial_owner");
+  const { data, error } = await supabase.rpc("claim_initial_owner");
   if (error) throw new Error(error.message);
   return data === true;
 }

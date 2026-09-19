@@ -1,7 +1,9 @@
+import type { SupabaseClient } from "@supabase/supabase-js";
+import type { Database } from "@/integrations/supabase/types";
 import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
-async function assertOwner(context: any) {
+async function assertOwner(context: { supabase: SupabaseClient<Database>; userId: string }) {
   const { data, error } = await context.supabase
     .from("user_roles")
     .select("role")
@@ -38,7 +40,7 @@ const PREVIEW_SELECT =
 export const listOwnerVenuePreviews = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }): Promise<OwnerVenuePreview[]> => {
-    await assertOwner(context as any);
+    await assertOwner(context);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { data, error } = await supabaseAdmin
       .from("businesses")
@@ -56,7 +58,7 @@ export const getOwnerVenuePreview = createServerFn({ method: "GET" })
   })
   .middleware([requireSupabaseAuth])
   .handler(async ({ data, context }): Promise<OwnerVenuePreview | null> => {
-    await assertOwner(context as any);
+    await assertOwner(context);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { data: row, error } = await supabaseAdmin
       .from("businesses")

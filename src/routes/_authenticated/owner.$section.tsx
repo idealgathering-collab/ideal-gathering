@@ -20,6 +20,7 @@ import { fetchRoles } from "@/lib/roles";
 import { getOwnerDirectory, type OwnerDirectorySection } from "@/lib/owner.functions";
 import { createInvitation, revokeInvitation } from "@/lib/beta-admin";
 import { supabase } from "@/integrations/supabase/client";
+import type { Database } from "@/integrations/supabase/types";
 import logoAsset from "@/assets/ideal-gathering-logo.png.asset.json";
 
 const ALLOWED = new Set<OwnerDirectorySection>(["waitlist", "users", "venues", "invitations", "gatherings"]);
@@ -223,7 +224,7 @@ function InvitationRows({ rows, onChanged }: { rows: any[]; onChanged: () => voi
 
 function GatheringRows({ rows, onChanged }: { rows: any[]; onChanged: () => void }) {
   const setStatus = useMutation({
-    mutationFn: async ({ id, status }: { id: string; status: string }) => {
+    mutationFn: async ({ id, status }: { id: string; status: Database["public"]["Enums"]["gathering_status"] }) => {
       const { error } = await supabase.from("gatherings").update({ status }).eq("id", id);
       if (error) throw new Error(error.message);
     },
