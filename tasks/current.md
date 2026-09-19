@@ -40,6 +40,8 @@ Temporary local PostgreSQL/PostgREST services are stopped.
 
 [Completed spec](completed/IG-002-profile-data-ownership.md) and
 [exact final verification](completed/IG-002-verification.md) are archived.
+Implementation checkpoint `a0f72aa` is pushed and ready for review in
+[PR #6](https://github.com/idealgathering-collab/ideal-gathering/pull/6).
 The review branch stacks on IG-001 [PR #5](https://github.com/idealgathering-collab/ideal-gathering/pull/5),
 which is still unmerged; preserve dependency order. Review/merge and production
 rollout remain separate. Apply the additive migration before new RPC clients,

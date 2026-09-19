@@ -3,6 +3,9 @@
 Date: 2026-09-19. Status: **complete for the approved implementation scope**.
 Branch: `codex/ig-002-profile-data-ownership`, based on IG-001 completion
 `c78968c`. Review/merge and production rollout are separate; nothing deployed.
+Implementation checkpoint `a0f72aa` is pushed in ready-for-review
+[PR #6](https://github.com/idealgathering-collab/ideal-gathering/pull/6), stacked
+on IG-001 PR #5. The follow-up documentation commit records this review link.
 
 ## Outcome and changed files
 
