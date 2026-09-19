@@ -1,7 +1,10 @@
 # IG-002 — Profile Data Ownership Cleanup
 
 ## Status
-Approved for implementation planning.
+Complete — 2026-09-19, within the user-approved implementation scope.
+See [verification](IG-002-verification.md) and
+[field ownership](../../docs/PROFILE_DATA_OWNERSHIP.md). Review/merge and deployment
+remain separate; IG-003 is the next task.
 
 ## Goal
 Define one reliable source of truth for each profile and gathering-preference field before expanding Profile into the Life Profile.

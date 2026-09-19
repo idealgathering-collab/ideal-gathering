@@ -16,12 +16,7 @@ const PROFILE_COLUMNS = `
   trait_curiosity,
   trait_warmth,
   trait_depth,
-  energy_level,
-  group_size,
-  talk_style,
-  new_people_pref,
   interests,
-  intentions,
   created_at,
   updated_at
 `;
@@ -42,18 +37,14 @@ type ProfileSelection = Pick<
   | "trait_curiosity"
   | "trait_warmth"
   | "trait_depth"
-  | "energy_level"
-  | "group_size"
-  | "talk_style"
-  | "new_people_pref"
   | "interests"
-  | "intentions"
   | "created_at"
   | "updated_at"
 >;
 
 /** Style preferences live in user_gathering_preferences, the table onboarding writes to. */
 export type StylePrefs = {
+  intentions: string[];
   energyLevel: string | null;
   groupSize: string | null;
   talkStyle: string | null;
@@ -61,6 +52,7 @@ export type StylePrefs = {
 };
 
 const EMPTY_STYLE: StylePrefs = {
+  intentions: [],
   energyLevel: null,
   groupSize: null,
   talkStyle: null,
@@ -78,13 +70,15 @@ function groupSizeBucket(size: number | null | undefined): string | null {
 async function loadStylePrefs(userId: string): Promise<StylePrefs> {
   const { data, error } = await supabase
     .from("user_gathering_preferences")
-    .select("social_energy, conversation_style, stranger_comfort, preferred_group_size")
+    .select("intentions, social_energy, conversation_style, stranger_comfort, preferred_group_size")
     .eq("user_id", userId)
     .maybeSingle();
 
-  if (error || !data) return EMPTY_STYLE;
+  if (error) throw error;
+  if (!data) return EMPTY_STYLE;
 
   return {
+    intentions: asStringArray(data.intentions),
     energyLevel: data.social_energy ?? null,
     groupSize: groupSizeBucket(data.preferred_group_size),
     talkStyle: data.conversation_style ?? null,
@@ -112,7 +106,10 @@ export async function loadProfileCard(userId: string): Promise<ProfileCardData |
       if (error) console.error("Error loading profile card:", error);
       return null;
     }
-    return transformProfileData(publicRow as unknown as ProfileSelection, [], EMPTY_STYLE);
+    return transformProfileData(publicRow as unknown as ProfileSelection, [], {
+      ...EMPTY_STYLE,
+      intentions: publicRow.intentions,
+    });
   }
 
   const [story, style] = await Promise.all([loadStoryItems(userId), loadStylePrefs(userId)]);
@@ -125,25 +122,26 @@ export async function loadProfileCard(userId: string): Promise<ProfileCardData |
 export async function loadProfileCards(userIds: string[]): Promise<ProfileCardData[]> {
   if (userIds.length === 0) return [];
 
-  const { data, error } = await supabase
-    .from("profiles")
-    .select(PROFILE_COLUMNS)
-    .in("id", userIds);
+  const { data, error } = await supabase.from("profiles").select(PROFILE_COLUMNS).in("id", userIds);
 
   if (error || !data) {
     if (error) console.error("Error loading profile cards:", error);
     return [];
   }
 
-  const { data: prefRows } = await supabase
+  const { data: prefRows, error: prefError } = await supabase
     .from("user_gathering_preferences")
-    .select("user_id, social_energy, conversation_style, stranger_comfort, preferred_group_size")
+    .select(
+      "user_id, intentions, social_energy, conversation_style, stranger_comfort, preferred_group_size",
+    )
     .in("user_id", userIds);
 
+  if (prefError) throw prefError;
   const styleByUser = new Map<string, StylePrefs>(
     (prefRows ?? []).map((row) => [
       row.user_id,
       {
+        intentions: asStringArray(row.intentions),
         energyLevel: row.social_energy ?? null,
         groupSize: groupSizeBucket(row.preferred_group_size),
         talkStyle: row.conversation_style ?? null,
@@ -156,8 +154,6 @@ export async function loadProfileCards(userIds: string[]): Promise<ProfileCardDa
     transformProfileData(row, [], styleByUser.get(row.id) ?? EMPTY_STYLE),
   );
 }
-
-
 
 /**
  * Load past gatherings the user attended, as visual story items.
@@ -187,16 +183,18 @@ async function loadStoryItems(userId: string): Promise<ProfileCardStoryItem[]> {
     .filter((g) => new Date(g.starts_at).getTime() < now)
     .sort((a, b) => new Date(b.starts_at).getTime() - new Date(a.starts_at).getTime())
     .slice(0, 4)
-    .map((g): ProfileCardStoryItem => ({
-      id: g.id,
-      gatheringId: g.id,
-      venueId: g.business?.id ?? "",
-      venueName: g.business?.name ?? g.venue_name ?? "",
-      coverUrl: g.business?.cover_url ?? null,
-      title: g.subject,
-      date: g.starts_at,
-      hostName: "",
-    }));
+    .map(
+      (g): ProfileCardStoryItem => ({
+        id: g.id,
+        gatheringId: g.id,
+        venueId: g.business?.id ?? "",
+        venueName: g.business?.name ?? g.venue_name ?? "",
+        coverUrl: g.business?.cover_url ?? null,
+        title: g.subject,
+        date: g.starts_at,
+        hostName: "",
+      }),
+    );
 }
 
 function asStringArray(value: unknown): string[] {
@@ -232,7 +230,7 @@ function transformProfileData(
     talkStyle: style.talkStyle,
     newPeople: style.newPeople,
     interests: asStringArray(data.interests),
-    intentions: asStringArray(data.intentions),
+    intentions: style.intentions,
     story,
     createdAt: data.created_at,
     updatedAt: data.updated_at,
@@ -253,7 +251,6 @@ export function getDisplayName(
   return "New member";
 }
 
-
 /**
  * Get the location string for a profile.
  */
@@ -272,10 +269,10 @@ export function getLocationString(profile: {
 export function hasAuraData(profile: ProfileCardData): boolean {
   return (
     profile.personaColor !== null ||
-    (profile.traitSpark !== null ||
-      profile.traitCuriosity !== null ||
-      profile.traitWarmth !== null ||
-      profile.traitDepth !== null)
+    profile.traitSpark !== null ||
+    profile.traitCuriosity !== null ||
+    profile.traitWarmth !== null ||
+    profile.traitDepth !== null
   );
 }
 

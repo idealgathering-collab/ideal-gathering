@@ -22,8 +22,8 @@ Support a calm path from “I would like company” to a small real gathering. M
 Reuse existing flows; do not impose a new onboarding or profile design without a spec. Treat preferences/personality as helpful signals, not labels of human worth.
 
 ## Known gaps and questions for specifications
-- Onboarding intentionally catches quiz/preference save failures as non-blocking while still attempting completion. Discuss whether users need explicit partial-save/retry feedback; no change is approved.
-- Multiple profile/preference representations exist; define which field each editor owns before changing saves.
+- IG-002 resolves swallowed onboarding save failures: preferences, quiz and completion save atomically; failure keeps the user in the existing flow with an error. Editors wait for successful initialization and offer load retry.
+- IG-002 defines [profile/preference ownership](PROFILE_DATA_OWNERSHIP.md). Existing screens remain in place; changed-field saves preserve unrelated edits from the other flow.
 - Typical group size is 2–5 but the creation validator permits 2–30. Decide policy before altering limits.
 - Existing beta roadmap still lists pending-screen mobile tabs and route-level venue gating as unfinished; preserve those as candidates, not newly verified defects.
 - Distinguish direct joining of approved gatherings from any future host-reviewed join-request workflow; do not invent a request table or claim one exists.

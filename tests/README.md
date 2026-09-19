@@ -54,7 +54,32 @@ creates `ig001_disposable` and refuses to overwrite an existing database.
 Recorded environment, commands, scaffolding limits and results are in
 [IG-001 verification](../tasks/completed/IG-001-verification.md).
 
-### Existing hosted suite
+### Native profile ownership verification (IG-002)
+
+Reuse the marked disposable native cluster described above; no hosted
+credentials are read. Install pg/typegen only in the scratch runtime. The script
+refuses databases without the disposable marker and retains synthetic fixtures.
+
+1. `node tests/profile-postgres.verify.mjs <runtime>` applies the IG-002 migration
+   and checks backfill, existing-row precedence, RLS, atomic saves and rollback.
+   The first run on the IG-001 checkpoint tested creation with the table absent;
+   subsequent runs test compatibility with an existing table and new fixtures.
+2. Refresh the local PostgREST cache. On this Windows runtime always use
+   `<runtime>/Start-PostgREST.ps1 -Restart`, which supplies its native DLL PATH,
+   checks readiness and confines process replacement to this runtime. A newly
+   provisioned runtime needs its equivalent launcher/libraries. Never launch the
+   bare executable without those dependencies.
+3. Set `IG002_RUNTIME=<runtime>` and run
+   `node node_modules/vitest/vitest.mjs run --config vitest.profile.config.ts`.
+   This confirms RPC schema-cache resolution, real HTTP/RLS saves and profile,
+   public-card, matching and recommendation readers. Run step 1 again before
+   rerunning this stateful suite. Only framework dispatch/auth middleware is
+   bypassed; actual clients, SQL/RPC, role grants and policies execute.
+4. `node tests/owner-postgres.types.mjs <runtime>` regenerates public types into
+   scratch. Review only schema-derived changes. Run unit/type/lint checks and
+   stop temporary services when finished. No browser E2E or hosted Auth claim.
+
+### Existing hosted suite (opt-in safeguards)
 
 These tests run against the real hosted database, so they are **not** part of
 `bun run test`. They skip themselves unless the project credentials are set:

@@ -1,5 +1,13 @@
 # Matching — current Cell and future Brain
 
+IG-002 source audit: matching.functions already reads quiz/DOB/interests from
+profiles and viewer/attendee/history energy from
+user_gathering_preferences.social_energy. Explore loads canonical preferences
+for recommend.ts; creation defaults use canonical gathering_types. Scoring and
+weights are unchanged. Database/application tests confirm canonical energy
+controls the viewer signal and saved type/size feeds the existing recommendation
+function. See [ownership](PROFILE_DATA_OWNERSHIP.md).
+
 ## Product principle
 Optimize **group quality**, not simple similarity. A viable small gathering needs compatible intentions, social comfort, logistics, capacity and safety. Shared interests can help; a set of highly similar individuals is not automatically a good group.
 

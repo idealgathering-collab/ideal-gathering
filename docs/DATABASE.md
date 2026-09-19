@@ -1,5 +1,18 @@
 # Database
 
+## IG-002 ownership correction — 2026-09-19
+
+The [field ownership contract](PROFILE_DATA_OWNERSHIP.md) supersedes historical
+profile/preference ambiguity below. Migration
+`20260919150000_profile_preference_ownership.sql` supplies missing preference-table
+creation/RLS evidence, insert-only legacy backfill and transactional self-save
+RPC `save_my_profile_data`. Existing canonical rows and all legacy columns stay
+intact. Identity/quiz traits remain in profiles; gathering preferences come only
+from user_gathering_preferences. No production migration. Public types were
+regenerated from the disposable schema. Adopted the new RPC and the preference
+table's six schema-derived non-null JSON declarations; its remaining contract
+matches. Unrelated generator/version differences were not adopted.
+
 ## IG-001 correction — 2026-09-19
 
 The historical findings below describe their recorded baseline. At `f9c8e3e`,

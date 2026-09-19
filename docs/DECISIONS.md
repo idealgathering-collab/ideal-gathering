@@ -28,4 +28,19 @@ Initial accepted decisions below come from the user's workflow brief and referen
 - Existing chat/check-in/ratings remain; later-phase naming does not authorize deleting them.
 
 ## Adding a decision
+
+### IG-D015 — Accepted: profile and preference ownership (2026-09-19)
+
+Source: user-approved IG-002 implementation. Profile/onboarding previously read
+overlapping fields and could partially save or overwrite unrelated answers.
+Identity and personality belong to profiles; gathering behavior belongs to
+user_gathering_preferences. Both editors use atomic changed-field patches.
+Existing canonical rows win; missing rows receive an insert-only legacy backfill.
+Legacy columns remain archival. This avoids destructive removal and ongoing
+dual-write/fallback ambiguity while preserving private data boundaries.
+Consequences: migrate before shipping the new RPC client; same-field concurrent
+edits remain last-writer-wins. See [ownership map](PROFILE_DATA_OWNERSHIP.md) and
+[IG-002](../tasks/completed/IG-002-profile-data-ownership.md). This resolves the
+preference/overlap observations above; their historical evidence is retained.
+
 Append a stable ID, status (Proposed/Accepted/Superseded/Deferred), source/approval, problem, decision, rationale, alternatives, consequences and affected task/docs. Link superseded entries rather than erasing history.

@@ -27,11 +27,25 @@ export const loadPublicProfile = createServerFn({ method: "GET" })
 
     if (error || !row) return null;
 
+    // Intentions were already part of the public projection. Keep all other
+    // raw preference fields private; canonical storage does not widen exposure.
+    const { data: prefs, error: prefError } = await supabaseAdmin
+      .from("user_gathering_preferences")
+      .select("intentions")
+      .eq("user_id", data.userId)
+      .maybeSingle();
+    if (prefError) throw prefError;
     const r = row as unknown as PublicProfileRow;
     return {
       ...r,
       date_of_birth: coarsenDob(r.date_of_birth),
       interests: Array.isArray(r.interests) ? r.interests.filter((v) => typeof v === "string") : [],
-      intentions: Array.isArray(r.intentions) ? r.intentions.filter((v) => typeof v === "string") : [],
+      energy_level: null,
+      group_size: null,
+      talk_style: null,
+      new_people_pref: null,
+      intentions: Array.isArray(prefs?.intentions)
+        ? prefs.intentions.filter((v): v is string => typeof v === "string")
+        : [],
     };
   });

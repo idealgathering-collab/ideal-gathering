@@ -8,7 +8,7 @@ Execute one bounded spec at a time. Approval of the queue does not authorize unr
 ## Approved implementation queue
 
 1. [IG-001 — Owner Role Foundation — complete](completed/IG-001-owner-role-foundation.md)
-2. [IG-002 — Profile Data Ownership Cleanup](IG-002-profile-data-ownership.md)
+2. [IG-002 — Profile Data Ownership Cleanup — complete](completed/IG-002-profile-data-ownership.md)
 3. [IG-003 — Life Moments Foundation](IG-003-life-moments-foundation.md)
 4. [IG-004 — Completed Gathering to Life Moment](IG-004-gathering-to-life-moment.md)
 5. [IG-005 — Life Profile V1](IG-005-life-profile-v1.md)
@@ -18,10 +18,34 @@ Execute one bounded spec at a time. Approval of the queue does not authorize unr
 
 ## Next implementation task
 
-**IG-002 — Profile Data Ownership Cleanup.** IG-001 is complete for its approved
-scope and ready for review in [PR #5](https://github.com/idealgathering-collab/ideal-gathering/pull/5).
-IG-002 has not been implemented in this task. Read its approved spec and reinspect
-repository state before starting it.
+**IG-003 — Life Moments Foundation.** Read its approved spec and reinspect the
+repository before starting. No IG-003 implementation is included in this task.
+
+### IG-002 verification closure — 2026-09-19
+
+Branch `codex/ig-002-profile-data-ownership`, based on IG-001 completion `c78968c`.
+Implemented canonical preference ownership, additive table/RLS/backfill migration
+and atomic changed-field saves. Profile initialization races and swallowed
+onboarding save failures are corrected. Audited identity/card/public/matching
+readers; documented the ownership map in docs/PROFILE_DATA_OWNERSHIP.md.
+Verification complete: 29 native database checks, 9 real HTTP/application tests,
+42 owner/admin regression tests and 192 unit tests pass. New PostgREST launcher
+confirms current schema cache. Generated preference/RPC types match verified
+schema; typecheck passes. All changed application/test files lint clean except
+760 unchanged generated-type formatting errors (same-file baseline: 875 errors,
+1 warning). Build reproduces the baseline Lovable MCP Windows path failure.
+Hosted suite: 45 skipped, not passes. Browser/hosted Auth/deployed build were not
+verified; no supported Linux runtime available. No production operation or redesign.
+Temporary local PostgreSQL/PostgREST services are stopped.
+
+[Completed spec](completed/IG-002-profile-data-ownership.md) and
+[exact final verification](completed/IG-002-verification.md) are archived.
+Implementation checkpoint `a0f72aa` is pushed and ready for review in
+[PR #6](https://github.com/idealgathering-collab/ideal-gathering/pull/6).
+The review branch stacks on IG-001 [PR #5](https://github.com/idealgathering-collab/ideal-gathering/pull/5),
+which is still unmerged; preserve dependency order. Review/merge and production
+rollout remain separate. Apply the additive migration before new RPC clients,
+inspect target schema/ledger drift and verify staging cache/privacy/save behavior.
 
 ### IG-001 verification closure — 2026-09-19
 
@@ -46,7 +70,8 @@ Continued from `116a53f` on the same branch. No implementation restart.
 - No new application dependencies, dashboard redesign, production migration,
   merge or deployment. Temporary local servers are stopped after verification.
 
-Next action: review PR #5 and proceed with IG-002's bounded scope. Before any
+Historical next action (superseded by IG-002 closure): review PR #5 and proceed
+with IG-002's bounded scope. Before any
 eventual production migration, inspect the real target ledger/roles and follow
 the documented rollout procedure. The known build/lint issues remain documented.
 

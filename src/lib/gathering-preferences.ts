@@ -29,8 +29,18 @@ export const GROUP_SIZE_OPTIONS = [
 
 export const SOCIAL_ENERGY_OPTIONS = ["calm", "mixed", "lively", "depends"] as const;
 export const CONVERSATION_STYLE_OPTIONS = ["light", "mix", "meaningful", "deep", "all"] as const;
-export const SPONTANEITY_OPTIONS = ["spontaneous", "sometimes", "some_planning", "planner"] as const;
-export const STRANGER_COMFORT_OPTIONS = ["love_it", "comfortable", "familiar_face", "warm_up"] as const;
+export const SPONTANEITY_OPTIONS = [
+  "spontaneous",
+  "sometimes",
+  "some_planning",
+  "planner",
+] as const;
+export const STRANGER_COMFORT_OPTIONS = [
+  "love_it",
+  "comfortable",
+  "familiar_face",
+  "warm_up",
+] as const;
 
 export const MAX_INTENTIONS = 3;
 export { MAX_GATHERING_TYPES } from "@/lib/gathering-types";
@@ -60,7 +70,9 @@ function asStringArray(value: unknown): string[] {
 }
 
 /** Load the signed-in user's saved preferences, or null when nothing is stored yet. */
-export async function loadMyGatheringPreferences(userId: string): Promise<GatheringPreferences | null> {
+export async function loadMyGatheringPreferences(
+  userId: string,
+): Promise<GatheringPreferences | null> {
   const { data, error } = await supabase
     .from("user_gathering_preferences")
     .select("*")
@@ -79,7 +91,7 @@ export async function loadMyGatheringPreferences(userId: string): Promise<Gather
   };
 }
 
-/** True when the user answered at least one question — nothing is saved for a fully empty form. */
+/** Whether preferences provide a recommendation signal; empty edits can still be saved. */
 export function hasAnyAnswer(prefs: GatheringPreferences) {
   return (
     prefs.intentions.length > 0 ||
@@ -90,23 +102,4 @@ export function hasAnyAnswer(prefs: GatheringPreferences) {
     Boolean(prefs.spontaneity) ||
     Boolean(prefs.stranger_comfort)
   );
-}
-
-/** Upsert the preferences for the signed-in user (RLS: auth.uid() = user_id). */
-export async function saveMyGatheringPreferences(userId: string, prefs: GatheringPreferences) {
-  const { error } = await supabase.from("user_gathering_preferences").upsert(
-    {
-      user_id: userId,
-      intentions: prefs.intentions,
-      gathering_types: prefs.gathering_types,
-      preferred_group_size: prefs.preferred_group_size,
-      social_energy: prefs.social_energy,
-      conversation_style: prefs.conversation_style,
-      spontaneity: prefs.spontaneity,
-      stranger_comfort: prefs.stranger_comfort,
-      updated_at: new Date().toISOString(),
-    },
-    { onConflict: "user_id" },
-  );
-  if (error) throw error;
 }
