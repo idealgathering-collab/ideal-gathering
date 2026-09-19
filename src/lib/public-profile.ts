@@ -17,12 +17,7 @@ export const PUBLIC_PROFILE_COLUMNS = `
   trait_curiosity,
   trait_warmth,
   trait_depth,
-  energy_level,
-  group_size,
-  talk_style,
-  new_people_pref,
   interests,
-  intentions,
   created_at,
   updated_at
 `;

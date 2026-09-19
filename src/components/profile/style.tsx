@@ -15,6 +15,28 @@ export interface StyleProps extends Omit<SectorProps, "sector" | "hasData" | "ch
 }
 
 const STYLE_ICONS: Record<string, { icon: string; labelKey: string; color: string }> = {
+  // Canonical onboarding values; keep legacy labels below for migrated answers.
+  calm: { icon: "⚡", labelKey: "onboarding.prefs.energy.calm", color: "#10B981" },
+  mixed: { icon: "⚡", labelKey: "onboarding.prefs.energy.mixed", color: "#F59E0B" },
+  lively: { icon: "⚡", labelKey: "onboarding.prefs.energy.lively", color: "#EF4444" },
+  depends: { icon: "⚡", labelKey: "onboarding.prefs.energy.depends", color: "#6B7280" },
+  light: { icon: "🗣️", labelKey: "onboarding.prefs.conversation.light", color: "#10B981" },
+  mix: { icon: "🗣️", labelKey: "onboarding.prefs.conversation.mix", color: "#F59E0B" },
+  meaningful: {
+    icon: "🗣️",
+    labelKey: "onboarding.prefs.conversation.meaningful",
+    color: "#F59E0B",
+  },
+  deep: { icon: "🗣️", labelKey: "onboarding.prefs.conversation.deep", color: "#EF4444" },
+  all: { icon: "🗣️", labelKey: "onboarding.prefs.conversation.all", color: "#6B7280" },
+  love_it: { icon: "❤️", labelKey: "onboarding.prefs.strangers.love_it", color: "#EF4444" },
+  comfortable: { icon: "😐", labelKey: "onboarding.prefs.strangers.comfortable", color: "#6B7280" },
+  familiar_face: {
+    icon: "😐",
+    labelKey: "onboarding.prefs.strangers.familiar_face",
+    color: "#6B7280",
+  },
+  warm_up: { icon: "😐", labelKey: "onboarding.prefs.strangers.warm_up", color: "#6B7280" },
   high: { icon: "⚡", labelKey: "profile.style.energyHigh", color: "#EF4444" },
   medium: { icon: "⚡", labelKey: "profile.style.energyMedium", color: "#F59E0B" },
   low: { icon: "⚡", labelKey: "profile.style.energyLow", color: "#10B981" },
@@ -48,7 +70,9 @@ function StyleTile({
       className="flex flex-col items-center gap-1 p-2.5 text-center rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 min-w-[80px]"
       style={{ color }}
     >
-      <span className="text-xl" style={{ color }}>{icon}</span>
+      <span className="text-xl" style={{ color }}>
+        {icon}
+      </span>
       <span className="text-xs font-medium text-white truncate">{label}</span>
       {subtitle && <span className="text-xs text-white/60">{subtitle}</span>}
     </div>
@@ -57,13 +81,13 @@ function StyleTile({
 
 export function Style({ style, children, ...props }: StyleProps) {
   const t = useT();
-  
-  const hasStyle = style && (
-    style.energyLevel !== null ||
-    style.groupSize !== null ||
-    style.talkStyle !== null ||
-    style.newPeople !== null
-  );
+
+  const hasStyle =
+    style &&
+    (style.energyLevel !== null ||
+      style.groupSize !== null ||
+      style.talkStyle !== null ||
+      style.newPeople !== null);
 
   if (!hasStyle) {
     return null;
@@ -124,11 +148,7 @@ export function Style({ style, children, ...props }: StyleProps) {
   }
 
   return (
-    <Sector 
-      sector="style" 
-      hasData={true}
-      {...props}
-    >
+    <Sector sector="style" hasData={true} {...props}>
       {tiles}
       {children}
     </Sector>

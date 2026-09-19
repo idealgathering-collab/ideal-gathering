@@ -1,25 +1,26 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { z } from "zod";
 import { ArrowRight, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useSession } from "@/hooks/use-session";
 import { useT } from "@/i18n";
-import { saveMyTraits } from "@/lib/profile-traits";
+import { changedFields, completeOnboarding } from "@/lib/profile-data";
 import { type QuizResult } from "@/lib/matching";
 import { OnboardingQuiz, OnboardingQuizResult } from "@/components/onboarding/quiz-steps";
 import { GatheringPreferencesFlow } from "@/components/onboarding/preference-steps";
 import {
-  hasAnyAnswer,
+  EMPTY_PREFERENCES,
   loadMyGatheringPreferences,
-  saveMyGatheringPreferences,
   type GatheringPreferences,
 } from "@/lib/gathering-preferences";
-import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { useQueryClient } from "@tanstack/react-query";
 
 const SEARCH = z.object({
-  step: z.enum(["welcome", "how", "prefs-intro", "prefs", "qintro", "quiz", "quiz-result"]).optional(),
+  step: z
+    .enum(["welcome", "how", "prefs-intro", "prefs", "qintro", "quiz", "quiz-result"])
+    .optional(),
 });
 
 export const Route = createFileRoute("/_authenticated/onboarding")({
@@ -27,9 +28,15 @@ export const Route = createFileRoute("/_authenticated/onboarding")({
   head: () => ({
     meta: [
       { title: "Get started — Ideal Gathering" },
-      { name: "description", content: "Set up your profile and tell us what kind of table you're looking for." },
+      {
+        name: "description",
+        content: "Set up your profile and tell us what kind of table you're looking for.",
+      },
       { property: "og:title", content: "Get started — Ideal Gathering" },
-      { property: "og:description", content: "Set up your profile and tell us what kind of table you're looking for." },
+      {
+        property: "og:description",
+        content: "Set up your profile and tell us what kind of table you're looking for.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "robots", content: "noindex" },
@@ -43,12 +50,18 @@ type Step = z.infer<typeof SEARCH>["step"];
 function Onboarding() {
   const t = useT();
   const navigate = useNavigate();
+  const qc = useQueryClient();
   const { user } = useSession();
+  const userId = user?.id;
   const search = Route.useSearch();
   const [step, setStep] = useState<Step>(search.step ?? "welcome");
   const [quizResult, setQuizResult] = useState<QuizResult | null>(null);
   const [prefs, setPrefs] = useState<GatheringPreferences | null>(null);
   const [saving, setSaving] = useState(false);
+  const [prefsReady, setPrefsReady] = useState(false);
+  const [loadError, setLoadError] = useState(false);
+  const [loadAttempt, setLoadAttempt] = useState(0);
+  const originalPrefs = useRef<GatheringPreferences>(EMPTY_PREFERENCES);
 
   useEffect(() => {
     setStep(search.step ?? "welcome");
@@ -56,19 +69,24 @@ function Onboarding() {
 
   // Load previously saved answers so returning users can edit them.
   useEffect(() => {
-    if (!user) return;
+    if (!userId) return;
     let mounted = true;
-    loadMyGatheringPreferences(user.id)
+    setPrefsReady(false);
+    setLoadError(false);
+    loadMyGatheringPreferences(userId)
       .then((p) => {
-        if (mounted && p) setPrefs(p);
+        if (!mounted) return;
+        originalPrefs.current = p ?? EMPTY_PREFERENCES;
+        setPrefs(p ?? EMPTY_PREFERENCES);
+        setPrefsReady(true);
       })
       .catch(() => {
-        // non-blocking: onboarding still works without prior answers
+        if (mounted) setLoadError(true);
       });
     return () => {
       mounted = false;
     };
-  }, [user]);
+  }, [userId, loadAttempt]);
 
   function go(next: Step) {
     setStep(next);
@@ -77,36 +95,21 @@ function Onboarding() {
 
   async function finish(tookQuiz: boolean) {
     if (!user) return;
-    if (saving) return;
+    if (saving || !prefsReady) return;
     setSaving(true);
     try {
-      if (tookQuiz && quizResult) {
-        try {
-          await saveMyTraits(user.id, quizResult.scores);
-        } catch {
-          // non-blocking: onboarding still completes without the profile write
-        }
-      }
-      if (prefs && hasAnyAnswer(prefs)) {
-        try {
-          await saveMyGatheringPreferences(user.id, prefs);
-        } catch {
-          // non-blocking
-        }
-      }
-      // This write is the only thing that stops /dashboard bouncing back here.
-      // If it fails silently we must NOT navigate, or the user is trapped in a loop.
-      const { data: marked, error: markError } = await supabase
-        .from("profiles")
-        .update({ onboarded_at: new Date().toISOString() })
-        .eq("id", user.id)
-        .select("id")
-        .maybeSingle();
-      if (markError || !marked) {
-        toast.error(t("common.somethingWrong"));
-        return;
-      }
+      await completeOnboarding(
+        prefs ? changedFields(originalPrefs.current, prefs) : {},
+        tookQuiz && quizResult ? quizResult.scores : undefined,
+      );
+      await Promise.all([
+        qc.invalidateQueries({ queryKey: ["profile-card", user.id] }),
+        qc.invalidateQueries({ queryKey: ["profile-taste", user.id] }),
+        qc.invalidateQueries({ queryKey: ["table-fit", user.id] }),
+      ]);
       await navigate({ to: "/dashboard", replace: true });
+    } catch {
+      toast.error(t("common.somethingWrong"));
     } finally {
       setSaving(false);
     }
@@ -131,7 +134,14 @@ function Onboarding() {
           <span className={`h-2 w-2 rounded-full ${dot("quiz")}`} />
         </div>
 
-        <div className="rounded-3xl border border-border bg-card p-6 sm:p-10">
+        {loadError && (
+          <Button onClick={() => setLoadAttempt((n) => n + 1)}>{t("common.tryAgain")}</Button>
+        )}
+        <fieldset
+          disabled={!prefsReady || saving}
+          aria-busy={!prefsReady || saving}
+          className="rounded-3xl border border-border bg-card p-6 sm:p-10"
+        >
           {step === "welcome" && (
             <WelcomeStep name={user?.user_metadata?.display_name ?? ""} onNext={() => go("how")} />
           )}
@@ -139,9 +149,13 @@ function Onboarding() {
             <HowItWorksStep onNext={() => go("prefs-intro")} onBack={() => go("welcome")} />
           )}
           {step === "prefs-intro" && (
-            <PrefsIntroStep onStart={() => go("prefs")} onBack={() => go("how")} onSkip={() => go("qintro")} />
+            <PrefsIntroStep
+              onStart={() => go("prefs")}
+              onBack={() => go("how")}
+              onSkip={() => go("qintro")}
+            />
           )}
-          {step === "prefs" && (
+          {step === "prefs" && prefsReady && (
             <GatheringPreferencesFlow
               initial={prefs}
               onDone={(p) => {
@@ -171,7 +185,7 @@ function Onboarding() {
               onSkip={() => finish(false)}
             />
           )}
-        </div>
+        </fieldset>
       </div>
     </div>
   );
@@ -201,16 +215,19 @@ function HowItWorksStep({ onNext, onBack }: { onNext: () => void; onBack: () => 
   const rows = ["find", "seat", "talk"] as const;
   return (
     <div>
-      <h1 className="font-display text-center text-3xl sm:text-4xl">
-        {t("onboarding.how.title")}
-      </h1>
+      <h1 className="font-display text-center text-3xl sm:text-4xl">{t("onboarding.how.title")}</h1>
       <div className="mt-6 flex flex-col gap-3">
         {rows.map((k) => (
-          <div key={k} className="flex items-start gap-3 rounded-2xl border border-border bg-muted/40 p-4">
+          <div
+            key={k}
+            className="flex items-start gap-3 rounded-2xl border border-border bg-muted/40 p-4"
+          >
             <span className="mt-0.5 h-2.5 w-2.5 shrink-0 rounded-full bg-primary" />
             <div>
               <p className="font-display text-base">{t(`onboarding.how.${k}.title`)}</p>
-              <p className="mt-0.5 text-sm text-muted-foreground">{t(`onboarding.how.${k}.body`)}</p>
+              <p className="mt-0.5 text-sm text-muted-foreground">
+                {t(`onboarding.how.${k}.body`)}
+              </p>
             </div>
           </div>
         ))}
@@ -241,7 +258,9 @@ function PrefsIntroStep({
   return (
     <div className="text-center">
       <Sparkles className="mx-auto h-10 w-10 text-primary" />
-      <h1 className="font-display mt-4 text-3xl sm:text-4xl">{t("onboarding.prefs.intro.title")}</h1>
+      <h1 className="font-display mt-4 text-3xl sm:text-4xl">
+        {t("onboarding.prefs.intro.title")}
+      </h1>
       <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
         {t("onboarding.prefs.intro.body")}
       </p>

@@ -700,8 +700,8 @@ export type Database = {
       user_gathering_preferences: {
         Row: {
           conversation_style: string | null
-          gathering_types: Json
-          intentions: Json
+          gathering_types: NonNullable<Json>
+          intentions: NonNullable<Json>
           preferred_group_size: number | null
           social_energy: string | null
           spontaneity: string | null
@@ -711,8 +711,8 @@ export type Database = {
         }
         Insert: {
           conversation_style?: string | null
-          gathering_types?: Json
-          intentions?: Json
+          gathering_types?: NonNullable<Json>
+          intentions?: NonNullable<Json>
           preferred_group_size?: number | null
           social_energy?: string | null
           spontaneity?: string | null
@@ -722,8 +722,8 @@ export type Database = {
         }
         Update: {
           conversation_style?: string | null
-          gathering_types?: Json
-          intentions?: Json
+          gathering_types?: NonNullable<Json>
+          intentions?: NonNullable<Json>
           preferred_group_size?: number | null
           social_energy?: string | null
           spontaneity?: string | null
@@ -831,6 +831,10 @@ export type Database = {
       is_beta_launched: { Args: never; Returns: boolean }
       is_owner: { Args: { _user_id: string }; Returns: boolean }
       redeem_invitation: { Args: { _code: string }; Returns: boolean }
+      save_my_profile_data: {
+        Args: { _preferences?: Json; _profile?: Json };
+        Returns: boolean;
+      };
     }
     Enums: {
       app_role: "admin" | "business_owner" | "user" | "venue" | "owner"
