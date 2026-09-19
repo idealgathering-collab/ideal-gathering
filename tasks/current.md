@@ -32,6 +32,10 @@ Remaining: finish verification and baseline failure comparison, record rollout/t
 
 Implementation ready for review; validation remains incomplete. See [exact results and rollout/recovery report](IG-001-verification.md).
 
+Saved implementation commit: `7e0793e`. Pushed to `codex/ig-001-owner-role-foundation`;
+[draft PR #5](https://github.com/idealgathering-collab/ideal-gathering/pull/5)
+targets the approved specs branch `docs/ig-001-008-build-specs`. Not merged/deployed.
+
 - Final unit run: 185 tests passed across 16 files; local PostgreSQL fixture: 14 checks passed.
 - Typecheck: exit 0 with local TypeScript binary. `bunx` unavailable; exact substitute recorded in report.
 - New test files lint: exit 0. Full lint: exit 1, 37,510 errors / 14 warnings; unchanged baseline: 37,521 errors / 14 warnings.
