@@ -1,5 +1,32 @@
 # Database
 
+## IG-001 correction — 2026-09-19
+
+The historical findings below describe their recorded baseline. At `f9c8e3e`,
+the generated enum already includes `owner` (updated by `16278cb`/`9e69980`),
+but owner RPC declarations still lag. IG-001 adds their signatures and types the
+call sites. This is a narrow reconciliation against SQL executed in the local
+fixture, not a full regeneration from a hosted schema; no configured generation
+command was found. Full regeneration/diff remains a rollout check.
+
+New migration `20260919120000_fix_owner_bootstrap.sql` replaces only
+`claim_initial_owner`: it calls `private.has_role`, takes a transaction-scoped
+table lock before authorization/check/insert, and revokes anonymous/PUBLIC
+execution. Existing roles, policies and admin compatibility are preserved; there
+is no backfill or new table. The established initial-owner rule is the first
+existing admin while no owner exists, as stated by the existing migration/UI.
+There is no configured designated-account allowlist. Other admins cannot claim
+after an owner exists. Existing owner/admin repeat calls return true.
+
+Final IG-001 verification completed on a disposable native PostgreSQL 17.5 +
+PostgREST 12.2.3 target: all 60 committed migrations applied, 39 database/RPC
+checks passed (including ten separate-connection concurrency rounds), and 42
+handler/route integration tests passed using real role queries. Public types were
+generated from this schema; only the legitimate owner RPC argument shape was
+adopted. The known missing preferences migration and unrelated generator/version
+differences were not used to delete or change existing application types.
+No hosted migration was applied. See [IG-001 final evidence and rollout/recovery](../tasks/completed/IG-001-verification.md).
+
 ## CURRENT — evidence and limits
 Inspected repository commit: `a37898970d63c9358c0592a7c81f07c7cbf2b828`.
 Sources: [generated public schema types](../src/integrations/supabase/types.ts), [migration directory](../supabase/migrations), application queries and [test guidance](../tests/README.md).
