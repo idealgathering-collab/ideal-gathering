@@ -824,7 +824,10 @@ export type Database = {
     }
     Functions: {
       check_invitation: { Args: { _code: string }; Returns: boolean }
-      claim_initial_owner: { Args: never; Returns: boolean }
+      claim_initial_owner: {
+        Args: Record<PropertyKey, never>
+        Returns: boolean
+      }
       is_beta_launched: { Args: never; Returns: boolean }
       is_owner: { Args: { _user_id: string }; Returns: boolean }
       redeem_invitation: { Args: { _code: string }; Returns: boolean }

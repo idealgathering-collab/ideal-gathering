@@ -1,11 +1,11 @@
 # IG-001 — Owner Role Foundation
 
 ## Status
-Implementation prepared on `codex/ig-001-owner-role-foundation` (2026-09-19).
-Verification checkpoint: unit/local database checks pass; hosted validation and
-clean build remain outstanding. See [verification report](IG-001-verification.md).
-Keep this spec active until the outstanding checks/review are resolved, then move
-it and its report to `tasks/completed/` and update the queue links.
+Complete on `codex/ig-001-owner-role-foundation` (2026-09-19); ready for review in PR #5.
+Verified with native PostgreSQL/PostgREST, real concurrent connections and real
+role-query handler/route tests. See [final verification report](IG-001-verification.md)
+for exact results and the accepted baseline lint/Windows build limitations.
+Not merged or deployed. Next task: IG-002 Profile Data Ownership Cleanup.
 
 ## Goal
 Make the existing owner system technically reliable before further product development.

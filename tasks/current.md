@@ -7,7 +7,7 @@ Execute one bounded spec at a time. Approval of the queue does not authorize unr
 
 ## Approved implementation queue
 
-1. [IG-001 — Owner Role Foundation](IG-001-owner-role-foundation.md)
+1. [IG-001 — Owner Role Foundation — complete](completed/IG-001-owner-role-foundation.md)
 2. [IG-002 — Profile Data Ownership Cleanup](IG-002-profile-data-ownership.md)
 3. [IG-003 — Life Moments Foundation](IG-003-life-moments-foundation.md)
 4. [IG-004 — Completed Gathering to Life Moment](IG-004-gathering-to-life-moment.md)
@@ -17,6 +17,40 @@ Execute one bounded spec at a time. Approval of the queue does not authorize unr
 8. [IG-008 — Venue Dashboard Value Layer](IG-008-venue-dashboard-value-layer.md)
 
 ## Next implementation task
+
+**IG-002 — Profile Data Ownership Cleanup.** IG-001 is complete for its approved
+scope and ready for review in [PR #5](https://github.com/idealgathering-collab/ideal-gathering/pull/5).
+IG-002 has not been implemented in this task. Read its approved spec and reinspect
+repository state before starting it.
+
+### IG-001 verification closure — 2026-09-19
+
+Continued from `116a53f` on the same branch. No implementation restart.
+[Final verification report](completed/IG-001-verification.md) and
+[completed spec](completed/IG-001-owner-role-foundation.md) are archived per AGENTS.md.
+
+- New disposable native PostgreSQL 17.5/PostgREST 12.2.3 target; all 60 committed
+  migration files applied without edits or skips using documented platform scaffolding.
+- 39 real database/RPC checks passed, including ten separate-connection lock-wait
+  races, denied normal/venue/revoked-admin claims, retained admin access and real
+  invitation/beta/moderation operations.
+- 42 owner handler/route integration tests and 185 unit tests passed; typecheck passed.
+- Schema types generated and reviewed; adopted only the owner no-argument RPC
+  shape. No preference table removal or unrelated type/version changes.
+- Targeted lint: 1,622 existing errors versus 1,631 baseline; all new tests/config
+  lint clean. Build still fails only at the baseline Lovable MCP Windows path check.
+  No supported Linux/container runtime available; no unrelated tooling workaround.
+- Existing hosted DB suite: 45 skipped, not passes. The equivalent native suite
+  closes IG-001 database acceptance; full hosted Auth/browser/deployment checks
+  remain environment-specific rollout work, not claimed here.
+- No new application dependencies, dashboard redesign, production migration,
+  merge or deployment. Temporary local servers are stopped after verification.
+
+Next action: review PR #5 and proceed with IG-002's bounded scope. Before any
+eventual production migration, inspect the real target ledger/roles and follow
+the documented rollout procedure. The known build/lint issues remain documented.
+
+## Historical IG-001 checkpoints (superseded by closure above)
 
 ### IG-001 checkpoint — 2026-09-19
 
@@ -30,7 +64,7 @@ Remaining: finish verification and baseline failure comparison, record rollout/t
 
 ### IG-001 final implementation checkpoint — 2026-09-19
 
-Implementation ready for review; validation remains incomplete. See [exact results and rollout/recovery report](IG-001-verification.md).
+Implementation ready for review; validation remains incomplete. See [exact results and rollout/recovery report](completed/IG-001-verification.md).
 
 Saved implementation commit: `7e0793e`. Pushed to `codex/ig-001-owner-role-foundation`;
 [draft PR #5](https://github.com/idealgathering-collab/ideal-gathering/pull/5)

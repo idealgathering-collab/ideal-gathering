@@ -25,7 +25,36 @@ two simultaneous admin claims on a designated disposable Supabase/PostgreSQL
 target before rollout: exactly one succeeds, the other returns false, both retain
 admin, and one owner row remains. Never clear existing owners on a live target.
 
-### Hosted suite safeguards
+### Native owner verification (no hosted credentials)
+
+Use a **new disposable local PostgreSQL cluster**, listening only on
+`127.0.0.1:55439`, and PostgREST on `127.0.0.1:55440`. Install `pg` and
+`@supabase/postgrest-typegen` in an external scratch runtime directory; the
+application's dependencies/lockfiles must remain unchanged. The setup script
+creates `ig001_disposable` and refuses to overwrite an existing database.
+
+1. `node tests/owner-postgres.setup.mjs <absolute path to pg/lib/index.js>`
+   installs platform scaffolding plus all committed product migrations. This
+   must NEVER be pointed at an existing or hosted cluster.
+2. Configure PostgREST with database URL
+   `postgres://authenticator@127.0.0.1:55439/ig001_disposable`, public schema,
+   anon role, loopback host, port 55440, and a randomly generated local JWT secret.
+   Save that same secret in `<runtime>/test-jwt-secret`; never commit it.
+3. `node tests/owner-postgres.verify.mjs <runtime>` creates synthetic accounts,
+   checks signed RPC/RLS/admin flows and ten observed concurrent claim waits.
+   It requires no existing owner and retains fixtures for the next step.
+4. Set `IG001_RUNTIME=<runtime>` and run
+   `node node_modules/vitest/vitest.mjs run --config vitest.owner.config.ts`.
+   Framework dispatch is bypassed, but all role and data queries use real HTTP.
+5. `node tests/owner-postgres.types.mjs <runtime>` writes generated public types
+   into scratch for review; it never overwrites application types.
+6. Stop both temporary servers after verification. Re-running setup requires
+   a fresh cluster; scripts do not drop arbitrary databases or owner rows.
+
+Recorded environment, commands, scaffolding limits and results are in
+[IG-001 verification](../tasks/completed/IG-001-verification.md).
+
+### Existing hosted suite
 
 These tests run against the real hosted database, so they are **not** part of
 `bun run test`. They skip themselves unless the project credentials are set:
