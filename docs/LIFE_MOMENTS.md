@@ -1,0 +1,115 @@
+# Life Moments foundation
+
+IG-003, completed 2026-09-20. The Life Profile is the existing Profile. This is
+backend foundation only: no new route, timeline, automatic creation or prompt.
+
+## Model
+
+Migration: `20260919210000_life_moments_foundation.sql`.
+
+| Field | Contract |
+| --- | --- |
+| id | Generated UUID primary key; immutable. |
+| user_id | Required profiles FK; owner fixed at creation; profile deletion cascades. |
+| gathering_id | Optional gatherings FK; immutable to clients; event deletion sets null. |
+| title | Required trimmed personal caption, 1–160 characters. |
+| note | Optional private text, at most 2,000 characters; never in shared projection. |
+| photo_path | Optional private bucket path scoped to owner/moment/random UUID. |
+| happened_at | Finite past/present timestamp. For linked moments, database snapshots gathering.starts_at at insertion and prevents client date changes while linked. |
+| visibility | Checked text: private (default) or profile. No anonymous public state. |
+| created_at / updated_at | Server-stamped timestamps; creation timestamp immutable. |
+
+A partial unique index on (user_id, gathering_id) prevents duplicate linked
+records while allowing multiple manual records. Owner/date and shared/date
+indexes support bounded ordered reads; gathering FK has an index for deletion.
+
+Linked creation requires an approved gathering whose ends_at has passed, using
+starts_at + two hours when ends_at is absent. The owner must be its host or a
+checked-in attendee. Joining alone is insufficient. These checks occur in the
+database even for direct API writes; no automatic completion workflow is added.
+Forged ownership is rejected before looking up hidden gathering/attendance data.
+
+The personal title and snapped date provide useful history without copying
+venue, city, activity, people or coordinates. They do not follow later event
+edits. Event deletion leaves the moment and sets its link null, preserving
+existing event-deletion behavior. Historical attendance changes do not erase
+previously authorized personal records. Future renderers must treat an optional
+live gathering link as current context, not a historical snapshot. IG-004 can
+prefill the title; IG-003 requires it as an explicit input.
+
+## Authorization and privacy
+
+Raw table SELECT/UPDATE/DELETE is owner-only; application admin/owner roles gain
+no special moment access. Column grants forbid caller changes to identity,
+source link and system timestamps. New moments require the existing member role,
+verified email and beta-access helper. Sharing requires that access too; owners
+can still read, hide and delete private records after access closes.
+
+`list_visible_life_moments` is a constrained definer RPC. It verifies the viewer's
+member/email/beta eligibility, excludes blocked pairs in either direction, and
+returns only profile-visible id, user_id, title, happened_at and photo_path.
+The server helper replaces photo_path with a signed URL. It never returns note,
+gathering_id, attendance, participants, city/address or coordinates. No existing
+profile/gathering loader is widened or wired to moments in this task.
+
+## Media
+
+The dedicated life-moment-media bucket is private, limited to 5 MiB and JPEG,
+PNG/WebP MIME types. Paths are `<user UUID>/<moment UUID>/<object UUID>.jpg|png|webp`.
+The record must already exist. Users upload unique paths, then attach a path with
+updateLifeMoment; clearing photo_path detaches it. No arbitrary URL, traversal,
+other owner's path or other moment's path can be attached.
+
+Storage policies allow own read/insert/delete, disallow overwrite/rename, and
+restrict this bucket even if a broad legacy policy exists. Other buckets retain
+their behavior. Shared viewers cannot read/sign objects directly. Only after an
+own-row query or safe shared RPC authorizes a row does a private server helper
+use the server-only signer for a 60-second URL. Owners' upload-token creation
+uses their own JWT and storage INSERT policy, with upsert disabled.
+
+Hiding, blocking or deleting stops new shared reads/signing; already issued
+server URLs can remain valid for their remaining 60-second lifetime. Owners can
+use their own storage permission to create their own links. Deleting a moment
+does not delete bucket bytes: orphaned objects become inaccessible through moment
+policies. A separately authorized storage cleanup/retention process is needed
+before a production media lifecycle rollout; it must not delete unrelated files.
+Actual Storage HTTP upload/signing must also be exercised in staging. Local
+tests execute the SQL policies but simulate the Storage signing transport.
+
+## Server/data API
+
+`src/lib/life-moments.functions.ts` uses the existing auth middleware:
+
+| Helper | Input and result |
+| --- | --- |
+| loadOwnLifeMoments | `{limit?}` (1–100, default 50); own rows, notes and signed photos, ordered newest first. |
+| loadVisibleLifeMoments | `{userId, limit?}`; only the safe shared projection and signed photos. |
+| createLifeMoment | `{title, happened_at, gathering_id?, note?, visibility?}`; derives user_id from auth context. Linked date is replaced by the event's start date in SQL. |
+| updateLifeMoment | `{id, patch}`; patch may contain title, note, happened_at, visibility, photo_path only. Explicit null clears optional values. SQL protects linked dates. |
+| deleteLifeMoment | `{id}`; deletes only caller-owned record; does not erase storage bytes. |
+| createLifeMomentPhotoUpload | `{id, extension}`; existing own moment, unique private path and signed upload token, no overwrite. |
+
+Hide via updateLifeMoment with `{visibility: 'private'}`. Validation is strict;
+unknown fields, empty patches, future dates and invalid media scopes are rejected.
+Missing/foreign mutation targets return the same error. Read failures fail closed.
+The pure schemas/path helpers live in `src/lib/life-moments.ts`.
+
+Generated types include only the schema-derived table and shared RPC additions.
+The generator represents TABLE-return photo_path as string despite runtime null;
+helpers explicitly handle null/empty photos. Grants and check constraints remain
+database enforcement, not a promise encoded by generated Insert/Update types.
+
+## Rollout and recovery
+
+Only the marked disposable PostgreSQL/PostgREST environment was migrated. Before
+any authorized staging/production rollout, inspect the migration ledger and
+storage schema/grants, verify no conflicting bucket/table, and apply this ordered
+migration after IG-001/002. Confirm private bucket limits, auth/email/beta rules,
+block handling, SDK signing/upload and expiration behavior using dedicated users.
+Refresh PostgREST schema cache before using the helpers. No production operation
+is authorized by this foundation checkpoint.
+
+Recover with a forward correction or disabling the new callers. Preserve user
+records/media; do not drop the table/bucket as rollback. IG-004 is the next bounded
+task; automatic conversion, prompts, timeline/profile redesign and summaries are
+not included. See [verification](../tasks/completed/IG-003-verification.md).

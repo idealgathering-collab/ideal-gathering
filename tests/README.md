@@ -79,7 +79,28 @@ refuses databases without the disposable marker and retains synthetic fixtures.
    scratch. Review only schema-derived changes. Run unit/type/lint checks and
    stop temporary services when finished. No browser E2E or hosted Auth claim.
 
-### Existing hosted suite (opt-in safeguards)
+### Native Life Moments verification (IG-003)
+
+Use the marked local runtime described above, never a hosted database. Fresh
+owner-postgres.setup.mjs now includes the minimal storage.buckets catalog needed
+by the new migration. Existing marked runtimes receive that platform scaffold in
+the Life Moments verifier. It applies IG-003 only when life_moments is absent;
+subsequent runs create new synthetic fixtures and test the installed schema.
+
+1. `node tests/life-moments-postgres.verify.mjs <runtime>` tests real constraints,
+   RLS, grants, media policies and concurrent inserts on separate connections.
+   It also exercises existing joins/check-ins, avatars and venue operations.
+2. Use `<runtime>/Start-PostgREST.ps1 -Restart` on Windows; never raw postgrest.exe.
+3. Set `IG003_RUNTIME=<runtime>` and run
+   `node node_modules/vitest/vitest.mjs run --config vitest.moments.config.ts`.
+   SQL/HTTP queries and validators are real. Framework dispatch/auth middleware
+   and Storage HTTP signing are simulated, so this is not hosted Auth/Storage E2E.
+4. Regenerate with `node tests/owner-postgres.types.mjs <runtime>` and selectively
+   review schema additions. Run unit/type/lint and prior profile/owner regressions.
+5. Stop temporary services afterward. Retained fixtures are local synthetic data;
+   no secrets/runtime files belong in Git. See the archived IG-003 report.
+
+### Existing hosted suite (opt-in safeguards, unchanged)
 
 These tests run against the real hosted database, so they are **not** part of
 `bun run test`. They skip themselves unless the project credentials are set:

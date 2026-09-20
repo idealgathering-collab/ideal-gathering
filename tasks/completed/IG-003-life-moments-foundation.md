@@ -1,7 +1,10 @@
 # IG-003 — Life Moments Foundation
 
 ## Status
-Approved for implementation planning.
+Complete — 2026-09-20, within the approved backend/data-foundation scope.
+See [verification](IG-003-verification.md) and
+[model/privacy contract](../../docs/LIFE_MOMENTS.md). Review/merge/deployment are
+separate. IG-004 is the next task and has not started.
 
 ## Goal
 Create the minimum backend structure required for real experiences to become part of the user's Profile.

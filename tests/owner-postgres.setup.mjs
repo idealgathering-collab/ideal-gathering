@@ -36,6 +36,9 @@ try {
     $$;
     GRANT USAGE ON SCHEMA auth TO anon, authenticated, service_role;
     CREATE SCHEMA storage;
+    -- Minimal Storage catalog for private buckets introduced by IG-003.
+    CREATE TABLE storage.buckets (id text PRIMARY KEY, name text NOT NULL, public boolean DEFAULT false,
+      file_size_limit bigint, allowed_mime_types text[]);
     CREATE TABLE storage.objects (id uuid PRIMARY KEY DEFAULT gen_random_uuid(), bucket_id text, name text, owner uuid);
     ALTER TABLE storage.objects ENABLE ROW LEVEL SECURITY;
     CREATE FUNCTION storage.foldername(name text) RETURNS text[] LANGUAGE sql IMMUTABLE AS $$

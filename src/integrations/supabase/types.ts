@@ -399,6 +399,60 @@ export type Database = {
         }
         Relationships: []
       }
+      life_moments: {
+        Row: {
+          created_at: string;
+          gathering_id: string | null;
+          happened_at: string;
+          id: string;
+          note: string | null;
+          photo_path: string | null;
+          title: string;
+          updated_at: string;
+          user_id: string;
+          visibility: string;
+        };
+        Insert: {
+          created_at?: string;
+          gathering_id?: string | null;
+          happened_at: string;
+          id?: string;
+          note?: string | null;
+          photo_path?: string | null;
+          title: string;
+          updated_at?: string;
+          user_id: string;
+          visibility?: string;
+        };
+        Update: {
+          created_at?: string;
+          gathering_id?: string | null;
+          happened_at?: string;
+          id?: string;
+          note?: string | null;
+          photo_path?: string | null;
+          title?: string;
+          updated_at?: string;
+          user_id?: string;
+          visibility?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "life_moments_gathering_id_fkey";
+            columns: ["gathering_id"];
+            isOneToOne: false;
+            referencedRelation: "gatherings";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "life_moments_user_id_fkey";
+            columns: ["user_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       menu_items: {
         Row: {
           business_id: string
@@ -830,6 +884,16 @@ export type Database = {
       }
       is_beta_launched: { Args: never; Returns: boolean }
       is_owner: { Args: { _user_id: string }; Returns: boolean }
+      list_visible_life_moments: {
+        Args: { _limit?: number; _user_id: string };
+        Returns: {
+          happened_at: string;
+          id: string;
+          photo_path: string;
+          title: string;
+          user_id: string;
+        }[];
+      };
       redeem_invitation: { Args: { _code: string }; Returns: boolean }
       save_my_profile_data: {
         Args: { _preferences?: Json; _profile?: Json };

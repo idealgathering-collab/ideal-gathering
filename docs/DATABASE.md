@@ -1,5 +1,15 @@
 # Database
 
+## IG-003 Life Moments foundation — 2026-09-20
+
+The additive `20260919210000_life_moments_foundation.sql` introduces life_moments,
+owner-only raw data, an authorized shared projection, duplicate prevention and
+a private media bucket. No production migration. Schema, eligibility, signed
+media limits and rollout/recovery are documented in [Life Moments](LIFE_MOMENTS.md).
+Historical inventory below predates this twentieth public table. Generated types
+now include the table and list_visible_life_moments RPC from the verified local
+schema; no unrelated type or application-schema rewrite.
+
 ## IG-002 ownership correction — 2026-09-19
 
 The [field ownership contract](PROFILE_DATA_OWNERSHIP.md) supersedes historical

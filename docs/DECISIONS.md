@@ -29,6 +29,22 @@ Initial accepted decisions below come from the user's workflow brief and referen
 
 ## Adding a decision
 
+### IG-D016 — Accepted: minimal personal Life Moments (2026-09-20)
+
+Source: user-approved IG-003 implementation. Use one personal record owned by a
+profile, with an optional gathering FK and unique owner/gathering constraint.
+Keep title/date as minimal history rather than copying location/participants;
+unlink on gathering deletion instead of erasing the personal record or preventing
+event deletion. Validate ended approved gatherings and host/checked-in eligibility
+at insertion. Manual records remain supported without an automatic flow.
+
+Raw rows and notes stay owner-only; a bounded authenticated, block-aware projection
+serves shared metadata. Private media is owner-scoped; shared viewers receive only
+authorized server-signed URLs. No Profile redesign or second profile system.
+Consequences: short-lived issued links persist until expiry, and private orphan
+cleanup plus real Storage transport checks remain rollout work. See
+[contract](LIFE_MOMENTS.md) and [IG-003 verification](../tasks/completed/IG-003-verification.md).
+
 ### IG-D015 — Accepted: profile and preference ownership (2026-09-19)
 
 Source: user-approved IG-002 implementation. Profile/onboarding previously read
