@@ -9,7 +9,7 @@ Execute one bounded spec at a time. Approval of the queue does not authorize unr
 
 1. [IG-001 — Owner Role Foundation — complete](completed/IG-001-owner-role-foundation.md)
 2. [IG-002 — Profile Data Ownership Cleanup — complete](completed/IG-002-profile-data-ownership.md)
-3. [IG-003 — Life Moments Foundation](IG-003-life-moments-foundation.md)
+3. [IG-003 — Life Moments Foundation — complete](completed/IG-003-life-moments-foundation.md)
 4. [IG-004 — Completed Gathering to Life Moment](IG-004-gathering-to-life-moment.md)
 5. [IG-005 — Life Profile V1](IG-005-life-profile-v1.md)
 6. [IG-006 — Public / Other-User Life Profile](IG-006-public-life-profile.md)
@@ -18,8 +18,41 @@ Execute one bounded spec at a time. Approval of the queue does not authorize unr
 
 ## Next implementation task
 
-**IG-003 — Life Moments Foundation.** Read its approved spec and reinspect the
-repository before starting. No IG-003 implementation is included in this task.
+**IG-004 — Completed Gathering to Life Moment.** Not started. Read its approved
+spec and reinspect the repository after the IG-003 checkpoint is pushed and its
+PR is ready for review. No automatic conversion or UI is included in IG-003.
+
+### IG-003 verification closure — 2026-09-20
+
+Branch `codex/ig-003-life-moments-foundation`, based on IG-002 `72b214a` / PR #6.
+Implementation checkpoint `8cdc039` is pushed in ready-for-review
+[PR #7](https://github.com/idealgathering-collab/ideal-gathering/pull/7), stacked
+on [PR #6](https://github.com/idealgathering-collab/ideal-gathering/pull/6).
+Additive model, owner-only raw rows, bounded shared projection, gathering
+eligibility/duplicate rules and private media policies are complete. Historical
+title/date survive event edits/deletion without location/participant copies.
+CRUD/read/hide/upload helpers are tested; no existing UI/navigation redesigned.
+
+- 61 native DB checks and 15 Life Moment API/handler tests pass.
+- 212 unit tests, 29 profile DB regressions, 9 profile/onboarding/matching API
+  regressions and 42 owner/admin regressions pass. Native coverage also exercises
+  existing gathering check-in/out, avatar and venue workflows.
+- Typecheck passes. All new/modified code/test files lint clean except the same
+  760 baseline generated-type formatting errors. Build reproduces the existing
+  Lovable MCP Windows path issue; no unrelated tooling changes.
+- Generated table/RPC signatures match verified schema; six installed function
+  bodies match the final migration. Verified launcher/cache used for PostgREST.
+- Hosted suite: 45 skipped, not passes. Actual Storage HTTP signing/upload,
+  browser/hosted Auth and a supported-platform build remain staging/environment
+  checks. Storage SQL policies execute for real; signing transport is simulated.
+
+[Completed spec](completed/IG-003-life-moments-foundation.md),
+[exact verification](completed/IG-003-verification.md) and
+[model/privacy/rollout contract](../docs/LIFE_MOMENTS.md) record the handoff.
+No production migration, merge or deployment. Shared server photo links expire
+after 60 seconds; private orphan media cleanup remains authorized rollout work.
+Review this branch stacked on PR #6 and preserve dependency order.
+Final cleanup confirmed both disposable test-service ports are closed.
 
 ### IG-002 verification closure — 2026-09-19
 

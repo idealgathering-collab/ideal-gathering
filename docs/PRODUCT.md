@@ -15,6 +15,7 @@ At inspection commit `a37898970d63c9358c0592a7c81f07c7cbf2b828`, routes include 
 Profile and preference fields, deterministic matching, blocking/reporting, attendance and gathering feedback already exist. Presence in code does not certify production behavior.
 
 ## Boundaries and unresolved decisions
+- The Life Profile is the existing Profile. IG-003 adds only the [Life Moments backend foundation](LIFE_MOMENTS.md), prioritizing real gathering participation. No separate /life product, timeline or automatic conversion is shipped by that task.
 - The creation schema currently permits 2–30 seats; the original SQL check permits up to 50. The 2–5 direction does not authorize changing existing gatherings or limits.
 - Existing room chat/checklists/check-in must be preserved. They do not establish completion or approval of the future Live Gathering concept.
 - Live Gathering, Emergency Button, Community Aid and advanced Brain research are later-phase. Do not build speculative infrastructure for them during beta work.
