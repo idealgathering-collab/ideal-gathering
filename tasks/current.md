@@ -25,6 +25,9 @@ PR is ready for review. No automatic conversion or UI is included in IG-003.
 ### IG-003 verification closure — 2026-09-20
 
 Branch `codex/ig-003-life-moments-foundation`, based on IG-002 `72b214a` / PR #6.
+Implementation checkpoint `8cdc039` is pushed in ready-for-review
+[PR #7](https://github.com/idealgathering-collab/ideal-gathering/pull/7), stacked
+on [PR #6](https://github.com/idealgathering-collab/ideal-gathering/pull/6).
 Additive model, owner-only raw rows, bounded shared projection, gathering
 eligibility/duplicate rules and private media policies are complete. Historical
 title/date survive event edits/deletion without location/participant copies.

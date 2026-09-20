@@ -3,6 +3,9 @@
 Completed 2026-09-20 for the approved backend/data-foundation scope.
 Branch: `codex/ig-003-life-moments-foundation`, based on IG-002 `72b214a` / PR #6.
 No production migration, merge or deployment. IG-004 has not started.
+Implementation checkpoint `8cdc039` is pushed in ready-for-review
+[PR #7](https://github.com/idealgathering-collab/ideal-gathering/pull/7), stacked
+on PR #6. A documentation follow-up records this review link.
 
 ## Delivered
 
