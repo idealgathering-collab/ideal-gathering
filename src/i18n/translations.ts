@@ -1,4 +1,5 @@
 import { ru } from "./ru";
+import { lifeProfileCopy } from "./life-profile";
 
 export type Lang = "en" | "ru" | "fa";
 
@@ -12,6 +13,7 @@ type Dict = Record<string, string>;
 
 export const translations: Record<Lang, Dict> = {
   en: {
+    ...lifeProfileCopy.en,
     "moment.remember": "Remember this?",
     "moment.loading": "Loading your moment…",
     "moment.loadError": "Your moment couldn’t load.",
@@ -1601,8 +1603,9 @@ export const translations: Record<Lang, Dict> = {
   },
 
 
-  ru,
+  ru: { ...ru, ...lifeProfileCopy.ru },
   fa: {
+    ...lifeProfileCopy.fa,
     "moment.remember": "این لحظه را به یاد بسپاریم؟",
     "moment.loading": "در حال بارگذاری لحظهٔ شما…",
     "moment.loadError": "لحظهٔ شما بارگذاری نشد.",

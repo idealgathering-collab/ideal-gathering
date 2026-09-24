@@ -32,6 +32,7 @@ import {
   loadGatheringLifeMoment,
 } from "@/lib/life-moments.functions";
 import { MOMENT_PHOTO_TTL_SECONDS, momentPhotoPath } from "@/lib/life-moments";
+import { loadOwnLifeGatherings } from "@/lib/life-profile.functions";
 type Moment = Database["public"]["Tables"]["life_moments"]["Row"];
 let ids: Record<string, string>;
 let secret: string;
@@ -104,6 +105,51 @@ beforeAll(async () => {
   secret = await readFile(resolve(runtime, "test-jwt-secret"), "utf8");
   flow = JSON.parse(await readFile(resolve(runtime, "ig004-fixtures.json"), "utf8"));
   setSigningClient(client(ids.owner, "service_role"));
+});
+
+describe("own Life Profile gathering snapshot", () => {
+  type Rows = Awaited<ReturnType<typeof loadOwnLifeGatherings>>;
+  const load = (id: string) => call<Rows>(loadOwnLifeGatherings, id, {});
+  it("includes eligible hosted history, with a bounded minimal projection", async () => {
+    const rows = await load(ids.owner);
+    expect(rows.some((g) => g.id === flow.events.ended.id)).toBe(true);
+    expect(rows.some((g) => g.id === flow.events.fallbackEnded.id)).toBe(true);
+    expect(rows.length).toBeLessThanOrEqual(24);
+    expect(new Set(rows.map((g) => g.id)).size).toBe(rows.length);
+    for (const row of rows)
+      expect(Object.keys(row).sort()).toEqual(["happened_at", "id", "place", "title"]);
+    expect(rows.map((g) => Date.parse(g.happened_at))).toEqual(
+      rows.map((g) => Date.parse(g.happened_at)).sort((a, b) => b - a),
+    );
+    for (const key of ["future", "cancelled", "fallbackLive"])
+      expect(rows.some((g) => g.id === flow.events[key].id)).toBe(false);
+  });
+  it("includes checked-in participation but not unchecked bookings", async () => {
+    expect((await load(ids.viewer)).some((g) => g.id === flow.events.ended.id)).toBe(true);
+    expect((await load(ids.outsider)).some((g) => g.id === flow.events.ended.id)).toBe(false);
+  });
+  it.each(["unverified", "waitlisted", "venue"])(
+    "does not expose activity to %s accounts",
+    async (kind) => {
+      expect(await load(ids[kind])).toEqual([]);
+    },
+  );
+  it("cannot request another user's history", async () => {
+    await expect(call(loadOwnLifeGatherings, ids.viewer, { userId: ids.owner })).rejects.toThrow();
+  });
+  it.each([false, true])("suppresses a blocked host in either direction (%s)", async (reverse) => {
+    const blocker = reverse ? ids.owner : ids.viewer;
+    const blocked = reverse ? ids.viewer : ids.owner;
+    const actor = client(blocker);
+    expect(
+      (await actor.from("user_blocks").insert({ blocker_id: blocker, blocked_id: blocked })).error,
+    ).toBeNull();
+    try {
+      expect((await load(ids.viewer)).some((g) => g.id === flow.events.ended.id)).toBe(false);
+    } finally {
+      await actor.from("user_blocks").delete().eq("blocker_id", blocker).eq("blocked_id", blocked);
+    }
+  });
 });
 
 describe("completed gathering moment flow", () => {
@@ -388,6 +434,23 @@ describe("life moments application/API foundation", () => {
       await expect(call(loadVisibleLifeMoments, ids.viewer, { userId: ids.owner })).rejects.toThrow(
         "Moment photo unavailable",
       );
+    } finally {
+      failSigning = false;
+    }
+  });
+  it("own timeline keeps private text and controls available when photo signing fails", async () => {
+    await call(updateLifeMoment, ids.owner, { id: own.id, patch: { note: creation.note } });
+    failSigning = true;
+    try {
+      const rows = await call<Array<Moment & { photoUrl: string | null }>>(
+        loadOwnLifeMoments,
+        ids.owner,
+        {},
+      );
+      const row = rows.find((r) => r.id === own.id);
+      expect(row?.photoUrl).toBeNull();
+      expect(row?.note).toBe(creation.note);
+      expect(rows.every((r) => r.user_id === ids.owner)).toBe(true);
     } finally {
       failSigning = false;
     }

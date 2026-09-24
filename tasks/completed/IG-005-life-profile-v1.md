@@ -1,7 +1,8 @@
 # IG-005 — Life Profile V1
 
 ## Status
-Approved for implementation planning.
+Completed 2026-09-24 for the approved local implementation scope. See
+[verification report](IG-005-verification.md) for exact checks and environment limits.
 
 ## Goal
 Transform the current Profile into the main representation of a person's real life while preserving existing identity and matching information.

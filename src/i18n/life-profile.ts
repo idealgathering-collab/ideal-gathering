@@ -1,0 +1,85 @@
+export const lifeProfileCopy = {
+  en: {
+    "life.title": "My Life Profile",
+    "life.summary": "Life at a glance",
+    "life.snapshot": "Small moments, real gatherings. A snapshot of what is shown below.",
+    "life.moments": "Saved moments",
+    "life.completed": "Completed gatherings",
+    "life.bounds":
+      "Up to 100 latest moments; eligible gatherings from your 12 latest hosted and 12 latest joined bookings. These are counts in this view, not lifetime totals.",
+    "life.onlyYou": "Your own view includes private moments. Notes are always private.",
+    "life.emptyMoments": "Your story has room for its first moment.",
+    "life.startMoment": "Open a completed gathering and choose “Remember this?” to save it here.",
+    "life.myGatherings": "My gatherings & upcoming plans",
+    "life.gatherings": "Gatherings",
+    "life.gatheringsHint": "Completed gatherings you hosted or checked in to.",
+    "life.emptyGatherings": "No eligible completed gatherings in this snapshot yet.",
+    "life.places": "Gathering places",
+    "life.placesHint": "Current place details from these gatherings, not a history of visits.",
+    "life.emptyPlaces": "No reliable place details available yet.",
+    "life.loadError": "This section couldn’t load. Please try again.",
+    "life.photoUnavailable":
+      "Photo unavailable. Your saved text is still here; photos refresh automatically.",
+    "life.editProfile": "Edit profile",
+    "life.editHint":
+      "Changes save only when you choose Save. Closing keeps your draft while you stay on this page. Avatar changes save immediately.",
+    "life.notAdded": "Not added yet",
+    "life.preferences": "Complete or update gathering preferences",
+  },
+  ru: {
+    "life.title": "Мой профиль жизни",
+    "life.summary": "Жизнь в деталях",
+    "life.snapshot": "Небольшие моменты, настоящие встречи. Обзор записей ниже.",
+    "life.moments": "Сохранённые моменты",
+    "life.completed": "Завершённые встречи",
+    "life.bounds":
+      "До 100 последних моментов; подходящие встречи из 12 последних организованных вами и 12 последних бронирований участия. Это количество в текущем обзоре, не за всё время.",
+    "life.onlyYou": "Здесь видны и ваши личные моменты. Заметки всегда доступны только вам.",
+    "life.emptyMoments": "Здесь появится ваш первый момент.",
+    "life.startMoment":
+      "Откройте завершённую встречу и выберите «Помните этот момент?», чтобы сохранить его здесь.",
+    "life.myGatherings": "Мои встречи и ближайшие планы",
+    "life.gatherings": "Встречи",
+    "life.gatheringsHint":
+      "Завершённые встречи, которые вы организовали или на которых отметились.",
+    "life.emptyGatherings": "В этом обзоре пока нет подходящих завершённых встреч.",
+    "life.places": "Места встреч",
+    "life.placesHint": "Текущие сведения о местах этих встреч, а не история посещений.",
+    "life.emptyPlaces": "Пока нет надёжных сведений о местах.",
+    "life.loadError": "Не удалось загрузить этот раздел. Попробуйте ещё раз.",
+    "life.photoUnavailable":
+      "Фото недоступно. Текст сохранён; фотографии обновляются автоматически.",
+    "life.editProfile": "Редактировать профиль",
+    "life.editHint":
+      "Изменения сохранятся после нажатия «Сохранить». При закрытии черновик остаётся на этой странице. Аватар сохраняется сразу.",
+    "life.notAdded": "Пока не добавлено",
+    "life.preferences": "Заполнить или изменить предпочтения",
+  },
+  fa: {
+    "life.title": "پروفایل زندگی من",
+    "life.summary": "زندگی در یک نگاه",
+    "life.snapshot": "لحظه‌های کوچک، دورهمی‌های واقعی. نگاهی به موارد زیر.",
+    "life.moments": "لحظه‌های ذخیره‌شده",
+    "life.completed": "دورهمی‌های پایان‌یافته",
+    "life.bounds":
+      "تا ۱۰۰ لحظهٔ اخیر؛ دورهمی‌های واجد شرایط از ۱۲ میزبانی و ۱۲ رزرو اخیر شما. این تعداد مربوط به این نماست، نه کل زندگی.",
+    "life.onlyYou": "در نمای شما لحظه‌های خصوصی هم دیده می‌شوند. یادداشت‌ها همیشه خصوصی هستند.",
+    "life.emptyMoments": "جای اولین لحظهٔ شما اینجاست.",
+    "life.startMoment":
+      "یک دورهمی پایان‌یافته را باز کنید و «این لحظه را به یاد دارید؟» را انتخاب کنید.",
+    "life.myGatherings": "دورهمی‌ها و برنامه‌های آیندهٔ من",
+    "life.gatherings": "دورهمی‌ها",
+    "life.gatheringsHint": "دورهمی‌های پایان‌یافته‌ای که میزبانشان بودید یا حضورتان ثبت شده است.",
+    "life.emptyGatherings": "هنوز دورهمی پایان‌یافتهٔ واجد شرایطی در این نما نیست.",
+    "life.places": "مکان‌های دورهمی",
+    "life.placesHint": "اطلاعات فعلی مکان این دورهمی‌ها، نه تاریخچهٔ بازدیدها.",
+    "life.emptyPlaces": "هنوز اطلاعات قابل اتکایی دربارهٔ مکان‌ها نداریم.",
+    "life.loadError": "این بخش بارگیری نشد. دوباره تلاش کنید.",
+    "life.photoUnavailable": "عکس در دسترس نیست. متن شما محفوظ است؛ عکس‌ها خودکار تازه می‌شوند.",
+    "life.editProfile": "ویرایش پروفایل",
+    "life.editHint":
+      "تغییرات با انتخاب ذخیره ثبت می‌شوند. با بستن، پیش‌نویس در همین صفحه باقی می‌ماند. تغییر عکس پروفایل بلافاصله ذخیره می‌شود.",
+    "life.notAdded": "هنوز اضافه نشده",
+    "life.preferences": "تکمیل یا ویرایش ترجیحات دورهمی",
+  },
+};

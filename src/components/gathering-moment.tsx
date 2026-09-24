@@ -106,14 +106,14 @@ export function GatheringMoment({ gatheringId, userId }: { gatheringId: string; 
   );
 }
 
-function MomentEditor({
+export function MomentEditor({
   gatheringId,
   loaded,
   onBusy,
   onClose,
   onSaved,
 }: {
-  gatheringId: string;
+  gatheringId: string | null;
   loaded: Loaded;
   onBusy: (value: boolean) => void;
   onClose: () => void;

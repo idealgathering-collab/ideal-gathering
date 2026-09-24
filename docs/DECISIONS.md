@@ -29,6 +29,18 @@ Initial accepted decisions below come from the user's workflow brief and referen
 
 ## Adding a decision
 
+### IG-D018 — Accepted: own Life Profile with bounded factual activity (2026-09-24)
+
+Source: user-approved IG-005. Transform `/profile` and retain its existing profile
+editor behind an explicit dialog. Reuse canonical field ownership, existing
+moment helpers/editor and IG-004 gathering eligibility checks. Do not count the
+old card's past bookings as attendance. Label recent snapshot counts and current
+places precisely; no all-time metrics, inferred visits, new tracking or shared
+profile redesign. Consequences: timeline is bounded to 100 moments and gathering
+context to the 12 latest started approved hosted/12 joined candidates; no new
+migration, and older records remain stored. IG-006 will separately address other
+users. See [verification](../tasks/completed/IG-005-verification.md).
+
 ### IG-D016 — Accepted: minimal personal Life Moments (2026-09-20)
 
 Source: user-approved IG-003 implementation. Use one personal record owned by a

@@ -27,6 +27,13 @@ block, capacity or scoring changes.
 
 ## Load and save contract
 
+IG-005 keeps this storage/write contract. `/profile` now presents the own Life
+Profile; the existing complete editor opens in a dialog. Closing retains its
+unsaved draft on the page, while saved identity displays separately. Account-keyed
+remounting discards the prior account's local form state. Avatar edits still save
+immediately. Gathering preferences remain editable through the existing onboarding
+flow, accessible from About. Other-user loaders and matching are unchanged.
+
 Profile waits for its own full identity row, canonical preferences and card;
 private identity fields are never initialized from a public card. Initialization
 failure disables editing and offers retry. Card refreshes never refill edits.
