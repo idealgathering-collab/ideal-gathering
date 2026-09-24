@@ -2,6 +2,9 @@
 
 Completed 2026-09-24 for the approved completed-gathering flow scope.
 Branch: `codex/ig-004-gathering-to-life-moment`, based on IG-003 `7c71e88` / PR #7.
+Implementation checkpoint `bb8d0a7` is pushed in ready-for-review
+[PR #8](https://github.com/idealgathering-collab/ideal-gathering/pull/8), stacked
+on PR #7. A documentation follow-up records this link.
 No merge, production migration or deployment. IG-005 is next and has not started.
 
 ## Delivered and entry point

@@ -25,6 +25,9 @@ current code; do not create a separate `/life` product.
 ### IG-004 verification closure — 2026-09-24
 
 Branch `codex/ig-004-gathering-to-life-moment`, based on IG-003 `7c71e88` / PR #7.
+Implementation checkpoint `bb8d0a7` is pushed in ready-for-review
+[PR #8](https://github.com/idealgathering-collab/ideal-gathering/pull/8), stacked
+on [PR #7](https://github.com/idealgathering-collab/ideal-gathering/pull/7).
 Passive Remember this? card on gathering detail opens a compact optional editor;
 no automatic modal over attendance/safety/feedback. Caller-scoped prefill RPC
 reuses IG-003 access and host/checked-in completed-gathering checks; the existing
