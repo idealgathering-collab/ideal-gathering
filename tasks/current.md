@@ -24,6 +24,9 @@ and reinspect current code in a separate task. Do not create a `/life` route.
 ### IG-005 verification closure — 2026-09-24
 
 Branch `codex/ig-005-life-profile-v1`, based on IG-004 `abafe39` / PR #8.
+Implementation `c5c4d4b` is pushed in draft
+[PR #9](https://github.com/idealgathering-collab/ideal-gathering/pull/9), stacked
+on PR #8. Temporary local services are stopped and browser viewport restored.
 Existing `/profile` now presents identity, a bounded real-data summary, own
 moments timeline, authorized completed gatherings, current places and About.
 Full existing editing is accessible in a responsive dialog; canonical saves,

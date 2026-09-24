@@ -4,6 +4,9 @@ Completed 2026-09-24. Branch `codex/ig-005-life-profile-v1`, based on IG-004
 `abafe39` / [PR #8](https://github.com/idealgathering-collab/ideal-gathering/pull/8).
 IG-004 remains open/unmerged; preserve stacked review order. No merge,
 production data changes, migration or deployment. IG-006 is next, not started.
+Implementation commit `c5c4d4b` is pushed in draft
+[PR #9](https://github.com/idealgathering-collab/ideal-gathering/pull/9), stacked
+on PR #8. A documentation follow-up records this review link.
 
 ## Outcome and changed files
 
@@ -131,3 +134,9 @@ IG-006 — Public / Other-User Life Profile is next and must be a separate task.
 Before rollout: preserve dependency order, verify existing migrations/cache,
 exercise real authenticated route/edit/media behavior and run the unchanged
 build on a supported platform. Roll back the UI if needed; retain user data.
+
+Temporary PostgreSQL, PostgREST and preview services stopped; loopback ports
+55439/55440/55442 confirmed closed and browser viewport reset. Scratch logs stayed
+outside Git. The initial push was blocked by automatic approval review; an
+authenticated repository/PR check confirmed origin and exact base commit, then
+the reviewed push was permitted. No history rewriting or alternative upload.
