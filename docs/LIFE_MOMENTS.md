@@ -1,7 +1,49 @@
 # Life Moments foundation
 
-IG-003, completed 2026-09-20. The Life Profile is the existing Profile. This is
-backend foundation only: no new route, timeline, automatic creation or prompt.
+IG-003 foundation completed 2026-09-20; IG-004 gathering flow completed 2026-09-24.
+The Life Profile is the existing Profile. No new profile route or timeline.
+
+## Completed gathering flow (IG-004)
+
+The existing `/gatherings/$id` page offers a passive **Remember this?** card below
+its attendance/safety actions and above the room. It never opens automatically
+or replaces feedback/rating. Reopening a completed gathering is the entry point;
+while the page stays open, eligibility refreshes every 30 seconds. Not now hides
+the invitation for that visit. There is no new history feed or notification.
+
+A compact responsive dialog prefills the gathering title, date/time and available
+venue/place. Saving needs no typing. One JPEG/PNG/WebP photo (up to 5 MiB), a note
+(up to 2,000 characters), and visibility are optional; private is the default.
+Notes always remain private, including when the moment is shown on a profile.
+English, Russian and Persian copy uses the existing language/RTL system.
+
+Additive migration `20260924120000_gathering_moment_context.sql` exposes the
+authenticated-only `get_gathering_moment_context` RPC. It is SECURITY INVOKER,
+retains source RLS, reuses `private.can_use_life_moments`, and returns only the
+requested eligible gathering's id/title/date/place. Eligibility follows IG-003:
+approved, ended (missing end defaults to start + two hours), and the caller is
+the host or a checked-in attendee. Joining or checking out early is insufficient.
+Blocked host/viewer pairs receive no live context. This read-only prefill does
+not replace the existing insert trigger or unique index as final authority.
+
+`loadGatheringLifeMoment({gatheringId})` performs an exact caller-owned lookup;
+it does not scan a limited timeline or return anyone else's personal data. An
+existing record can be edited, even if its source is no longer eligible for new
+creation. Its historical title/date are retained; place is live authorized
+context only, not a new location snapshot. Photo signing failure leaves the
+saved text editable, with an attached-photo indication.
+
+`createLifeMoment` now also returns `alreadyExists`. A unique-conflict retry
+returns the caller's existing linked record without overwriting note, visibility
+or photo. The editor loads that version and asks the user to edit explicitly.
+The database continues rejecting duplicate direct inserts.
+
+Media uses only the IG-003 signed-upload flow. The record saves first, then a
+unique private object uploads and its scoped path is attached. A photo failure
+keeps the saved record and shows retry/continue-without-photo; it does not create
+a second moment. Existing orphan retention and real Storage staging checks below
+remain required. The dialog preserves a failed-save draft and disables controls
+while saving; background refresh failures do not discard an open editor.
 
 ## Model
 
@@ -84,7 +126,8 @@ tests execute the SQL policies but simulate the Storage signing transport.
 | --- | --- |
 | loadOwnLifeMoments | `{limit?}` (1–100, default 50); own rows, notes and signed photos, ordered newest first. |
 | loadVisibleLifeMoments | `{userId, limit?}`; only the safe shared projection and signed photos. |
-| createLifeMoment | `{title, happened_at, gathering_id?, note?, visibility?}`; derives user_id from auth context. Linked date is replaced by the event's start date in SQL. |
+| createLifeMoment | `{title, happened_at, gathering_id?, note?, visibility?}`; derives user_id from auth context. Linked date is replaced by the event's start date in SQL. Returns the row plus `alreadyExists`; duplicate retries preserve the existing record. |
+| loadGatheringLifeMoment | `{gatheringId}`; `{prefill, moment}` containing authorized live context and an exact own record, each nullable. |
 | updateLifeMoment | `{id, patch}`; patch may contain title, note, happened_at, visibility, photo_path only. Explicit null clears optional values. SQL protects linked dates. |
 | deleteLifeMoment | `{id}`; deletes only caller-owned record; does not erase storage bytes. |
 | createLifeMomentPhotoUpload | `{id, extension}`; existing own moment, unique private path and signed upload token, no overwrite. |
@@ -110,6 +153,10 @@ Refresh PostgREST schema cache before using the helpers. No production operation
 is authorized by this foundation checkpoint.
 
 Recover with a forward correction or disabling the new callers. Preserve user
-records/media; do not drop the table/bucket as rollback. IG-004 is the next bounded
-task; automatic conversion, prompts, timeline/profile redesign and summaries are
-not included. See [verification](../tasks/completed/IG-003-verification.md).
+records/media; do not drop the table/bucket as rollback. Apply the IG-004 RPC
+migration after IG-003 and refresh its schema cache before enabling the card.
+There are no IG-004 backfills or changed write policies. Disable the new card or
+forward-correct the RPC to recover; existing moments remain intact.
+IG-005 is next; timeline/profile redesign and summaries are not included here.
+See [foundation verification](../tasks/completed/IG-003-verification.md) and
+[flow verification](../tasks/completed/IG-004-verification.md).

@@ -59,4 +59,19 @@ edits remain last-writer-wins. See [ownership map](PROFILE_DATA_OWNERSHIP.md) an
 [IG-002](../tasks/completed/IG-002-profile-data-ownership.md). This resolves the
 preference/overlap observations above; their historical evidence is retained.
 
+### IG-D017 — Accepted: passive gathering memory prompt (2026-09-24)
+
+Source: user-approved IG-004. Gathering facts should not require re-entry, and
+memory saving must not interrupt attendance, safety or ratings. Place an optional
+card on completed gathering detail, opening the existing dialog primitive with
+prefilled core facts and optional personal context. Reuse IG-003 create/update and
+private media helpers; retain its trigger and unique index as final authority.
+A small invoker RPC supplies authorized context without widening shared moments.
+Keep venue/place live rather than copying new sensitive historical fields.
+Recover duplicate retries without overwriting the saved personal version.
+Consequence: users reach this flow by reopening gathering detail; no notification,
+new history feed, automatic creation, or Profile redesign. Actual Storage transport
+and application deployment verification remain staging checks. See
+[contract](LIFE_MOMENTS.md) and [IG-004 verification](../tasks/completed/IG-004-verification.md).
+
 Append a stable ID, status (Proposed/Accepted/Superseded/Deferred), source/approval, problem, decision, rationale, alternatives, consequences and affected task/docs. Link superseded entries rather than erasing history.

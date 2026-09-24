@@ -5,6 +5,7 @@ import { CalendarClock, MapPin, Users, ArrowLeft, Coffee, Lock, CalendarPlus, Sh
 import { SiteHeader } from "@/components/site-header";
 import { MenuSection } from "@/components/menu-section";
 import { GatheringChat, GatheringChecklist } from "@/components/gathering-room";
+import { GatheringMoment } from "@/components/gathering-moment";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import { VerifyEmailBanner } from "@/components/verify-email-banner";
@@ -320,6 +321,8 @@ function GatheringDetail() {
             </Button>
           )}
         </div>
+
+        {user && <GatheringMoment key={`${user.id}:${g.id}`} gatheringId={g.id} userId={user.id} />}
 
         {/* Gathering Room */}
         {g.status === "approved" && user && (

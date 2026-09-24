@@ -90,6 +90,9 @@ subsequent runs create new synthetic fixtures and test the installed schema.
 1. `node tests/life-moments-postgres.verify.mjs <runtime>` tests real constraints,
    RLS, grants, media policies and concurrent inserts on separate connections.
    It also exercises existing joins/check-ins, avatars and venue operations.
+   On the IG-004 branch, follow with
+   `node tests/gathering-moment-postgres.verify.mjs <runtime>` to apply/verify the
+   context RPC and create its synthetic API fixtures before running step 3.
 2. Use `<runtime>/Start-PostgREST.ps1 -Restart` on Windows; never raw postgrest.exe.
 3. Set `IG003_RUNTIME=<runtime>` and run
    `node node_modules/vitest/vitest.mjs run --config vitest.moments.config.ts`.
@@ -99,6 +102,24 @@ subsequent runs create new synthetic fixtures and test the installed schema.
    review schema additions. Run unit/type/lint and prior profile/owner regressions.
 5. Stop temporary services afterward. Retained fixtures are local synthetic data;
    no secrets/runtime files belong in Git. See the archived IG-003 report.
+
+### IG-004 flow checks and isolated component preview
+
+The marked native verifier adds caller-RLS/prefill/access/block/time checks and
+rating compatibility. Run it after the IG-003 verifier; both retain fresh fixture
+IDs in the external runtime. The moments API suite now covers both tasks, including
+simultaneous handler retries, exact own lookup and no-overwrite duplicate recovery.
+Its test-only signer alias prevents concurrent dynamic imports resolving a hosted
+service client. It does not change production signing or claim real Storage HTTP.
+
+For a synthetic browser preview of the actual component and design tokens:
+`node node_modules/vite/bin/vite.js --config tests/moments-preview/vite.config.ts`.
+It listens only on `127.0.0.1:55441`, uses no credentials, and keeps records in
+memory. Query switches: `?ineligible`, `?load-error`, `?save-error`, `?photo-error`,
+and `?lang=ru` / `?lang=fa`. Reload resets the fixture. Use normal mobile/desktop
+viewports and keyboard navigation. Stop the preview afterward. This isolated
+component harness is not an application build workaround or hosted/browser E2E.
+The normal Lovable build configuration and dependencies remain unchanged.
 
 ### Existing hosted suite (opt-in safeguards, unchanged)
 
