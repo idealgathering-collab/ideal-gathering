@@ -12,6 +12,31 @@ type Dict = Record<string, string>;
 
 export const translations: Record<Lang, Dict> = {
   en: {
+    "moment.remember": "Remember this?",
+    "moment.loading": "Loading your moment…",
+    "moment.loadError": "Your moment couldn’t load.",
+    "moment.retry": "Try again",
+    "moment.saved": "Moment saved",
+    "moment.optional": "A photo or a few words, only if you like.",
+    "moment.edit": "Edit moment",
+    "moment.save": "Save moment",
+    "moment.notNow": "Not now",
+    "moment.photo": "Add or replace photo",
+    "moment.photoAttached": "A photo is already attached.",
+    "moment.photoLimit": "JPEG, PNG or WebP · up to 5 MB",
+    "moment.skipPhoto": "Continue without this photo",
+    "moment.note": "Short note (optional)",
+    "moment.notePlaceholder": "Add a short note…",
+    "moment.notePrivate": "Your note stays private, even when shown on your profile.",
+    "moment.visibility": "Visibility",
+    "moment.private": "Private",
+    "moment.profile": "Show on profile",
+    "moment.saving": "Saving…",
+    "moment.existing":
+      "This moment was already saved. Your existing version is loaded; you can edit it.",
+    "moment.photoError":
+      "Your moment is saved, but the photo couldn’t be attached. Retry or continue without this photo.",
+    "moment.saveError": "Couldn’t save. Your changes are still here. Please try again.",
     // Nav
     "nav.dashboard": "Dashboard",
     "nav.host": "Host",
@@ -1578,6 +1603,31 @@ export const translations: Record<Lang, Dict> = {
 
   ru,
   fa: {
+    "moment.remember": "این لحظه را به یاد بسپاریم؟",
+    "moment.loading": "در حال بارگذاری لحظهٔ شما…",
+    "moment.loadError": "لحظهٔ شما بارگذاری نشد.",
+    "moment.retry": "تلاش دوباره",
+    "moment.saved": "لحظه ذخیره شد",
+    "moment.optional": "اگر دوست دارید، یک عکس یا چند کلمه اضافه کنید.",
+    "moment.edit": "ویرایش لحظه",
+    "moment.save": "ذخیرهٔ لحظه",
+    "moment.notNow": "فعلاً نه",
+    "moment.photo": "افزودن یا جایگزینی عکس",
+    "moment.photoAttached": "یک عکس از قبل پیوست شده است.",
+    "moment.photoLimit": "JPEG، PNG یا WebP · حداکثر ۵ مگابایت",
+    "moment.skipPhoto": "ادامه بدون این عکس",
+    "moment.note": "یادداشت کوتاه (اختیاری)",
+    "moment.notePlaceholder": "یک یادداشت کوتاه بنویسید…",
+    "moment.notePrivate": "یادداشت شما حتی با نمایش لحظه در پروفایل، خصوصی می‌ماند.",
+    "moment.visibility": "نمایش",
+    "moment.private": "خصوصی",
+    "moment.profile": "نمایش در پروفایل",
+    "moment.saving": "در حال ذخیره…",
+    "moment.existing":
+      "این لحظه قبلاً ذخیره شده است. نسخهٔ موجود بارگذاری شد؛ می‌توانید آن را ویرایش کنید.",
+    "moment.photoError":
+      "لحظهٔ شما ذخیره شد، اما عکس پیوست نشد. دوباره تلاش کنید یا بدون این عکس ادامه دهید.",
+    "moment.saveError": "ذخیره نشد. تغییرات شما هنوز اینجا هستند. دوباره تلاش کنید.",
     // Our Story
     "nav.ourStory": "داستان ما",
     "ourStory.title": "داستان ما",

@@ -1,5 +1,15 @@
 # Database
 
+## IG-004 gathering moment context — 2026-09-24
+
+`20260924120000_gathering_moment_context.sql` adds one authenticated, caller/RLS
+scoped read-only RPC for eligible gathering title/date/place. It reuses IG-003
+access/participation rules and suppresses blocked host/viewer context. Existing
+tables, insert guard, duplicate index, write policies and media grants are unchanged.
+Verified only on the marked disposable target; regenerated RPC types match.
+Apply after IG-003, reload the cache, then ship the caller. No production migration.
+See [contract](LIFE_MOMENTS.md) and [verification](../tasks/completed/IG-004-verification.md).
+
 ## IG-003 Life Moments foundation — 2026-09-20
 
 The additive `20260919210000_life_moments_foundation.sql` introduces life_moments,

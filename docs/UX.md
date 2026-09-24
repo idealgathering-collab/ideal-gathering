@@ -1,5 +1,16 @@
 # UX
 
+## IG-004 completed gathering memory — 2026-09-24
+
+Gathering detail now offers an optional Remember this? card after attendance and
+safety actions, before the existing room. Only an eligible completed gathering
+or the caller's existing saved moment produces a card. A compact dialog prefills
+known facts; private-by-default save works without photo or note. Existing moments
+open for editing, duplicate retries recover the saved version, and photo failures
+retain the text record. No automatic modal interrupts feedback/check-in; their
+flows are unchanged. Supported language copy includes Persian RTL. See the
+[flow contract](LIFE_MOMENTS.md) and [verification](../tasks/completed/IG-004-verification.md).
+
 ## CURRENT flow map
 Evidence baseline: `a37898970d63c9358c0592a7c81f07c7cbf2b828`. Source inspection, not end-to-end validation.
 

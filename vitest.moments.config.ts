@@ -1,7 +1,14 @@
 import { fileURLToPath } from "node:url";
 import { defineConfig } from "vitest/config";
 export default defineConfig({
-  resolve: { alias: { "@": fileURLToPath(new URL("./src", import.meta.url)) } },
+  resolve: {
+    alias: {
+      "@/integrations/supabase/client.server": fileURLToPath(
+        new URL("./tests/moments-integration/signing-stub.ts", import.meta.url),
+      ),
+      "@": fileURLToPath(new URL("./src", import.meta.url)),
+    },
+  },
   test: {
     environment: "node",
     include: ["tests/moments-integration/**/*.test.ts"],

@@ -1,7 +1,9 @@
 # IG-004 — Completed Gathering to Life Moment
 
 ## Status
-Approved for implementation planning.
+Complete — 2026-09-24. Implemented on `codex/ig-004-gathering-to-life-moment`.
+See [verification report](IG-004-verification.md) for exact checks, environment
+limits and rollout requirements. No production migration, merge or deployment.
 
 ## Goal
 Make completed real-world gatherings naturally become part of the user's Profile.

@@ -6,11 +6,7 @@ import { readFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import type { Database } from "@/integrations/supabase/types";
 vi.mock("@/integrations/supabase/auth-middleware", () => ({ requireSupabaseAuth: {} }));
-vi.mock("@/integrations/supabase/client.server", () => ({
-  get supabaseAdmin() {
-    return client(ids.owner, "service_role");
-  },
-}));
+import { setSigningClient } from "./signing-stub";
 vi.mock("@tanstack/react-start", () => ({
   createServerFn: () => {
     let validate = (d: unknown): unknown => d;
@@ -33,11 +29,16 @@ import {
   loadOwnLifeMoments,
   loadVisibleLifeMoments,
   createLifeMomentPhotoUpload,
+  loadGatheringLifeMoment,
 } from "@/lib/life-moments.functions";
 import { MOMENT_PHOTO_TTL_SECONDS, momentPhotoPath } from "@/lib/life-moments";
 type Moment = Database["public"]["Tables"]["life_moments"]["Row"];
 let ids: Record<string, string>;
 let secret: string;
+let flow: {
+  events: Record<string, { id: string; subject: string; starts_at: string }>;
+  existingMoment: string;
+};
 const signedRequests: Array<{
   path: string;
   authenticated: boolean;
@@ -101,6 +102,126 @@ beforeAll(async () => {
   const runtime = resolve(process.env.IG003_RUNTIME);
   ids = JSON.parse(await readFile(resolve(runtime, "ig003-fixtures.json"), "utf8"));
   secret = await readFile(resolve(runtime, "test-jwt-secret"), "utf8");
+  flow = JSON.parse(await readFile(resolve(runtime, "ig004-fixtures.json"), "utf8"));
+  setSigningClient(client(ids.owner, "service_role"));
+});
+
+describe("completed gathering moment flow", () => {
+  type Loaded = Awaited<ReturnType<typeof loadGatheringLifeMoment>>;
+  const load = (user: string, gatheringId: string) =>
+    call<Loaded>(loadGatheringLifeMoment, user, { gatheringId });
+  it("host receives title, date and place without entering facts", async () => {
+    const result = await load(ids.owner, flow.events.ended.id);
+    expect(result.prefill).toEqual({
+      id: flow.events.ended.id,
+      title: flow.events.ended.subject,
+      happened_at: expect.any(String),
+      place: "Test place · Test city",
+    });
+    expect(Date.parse(result.prefill!.happened_at)).toBe(Date.parse(flow.events.ended.starts_at));
+    expect(result.moment).toBeNull();
+  });
+  it("checked-in attendee loads the exact existing moment", async () => {
+    const result = await load(ids.viewer, flow.events.ended.id);
+    expect(result.prefill?.id).toBe(flow.events.ended.id);
+    expect(result.moment).toMatchObject({
+      id: flow.existingMoment,
+      user_id: ids.viewer,
+      note: null,
+      visibility: "profile",
+    });
+  });
+  it("unchecked attendee receives no prefill or another user's memory", async () => {
+    expect(await load(ids.outsider, flow.events.ended.id)).toEqual({ prefill: null, moment: null });
+  });
+  it.each(["future", "cancelled", "fallbackLive"])(
+    "%s gathering cannot prompt or create",
+    async (kind) => {
+      expect((await load(ids.owner, flow.events[kind].id)).prefill).toBeNull();
+      await expect(
+        call(createLifeMoment, ids.owner, { ...creation, gathering_id: flow.events[kind].id }),
+      ).rejects.toThrow("Invalid gathering");
+    },
+  );
+  it.each(["unverified", "waitlisted", "venue"])("%s account gets no context", async (kind) => {
+    expect(await load(ids[kind], flow.events.ended.id)).toEqual({ prefill: null, moment: null });
+  });
+  it("two simultaneous core-only saves recover the same private moment", async () => {
+    const input = {
+      title: flow.events.ended.subject,
+      happened_at: flow.events.ended.starts_at,
+      gathering_id: flow.events.ended.id,
+    };
+    const results = await Promise.all([
+      call<Moment & { alreadyExists: boolean }>(createLifeMoment, ids.owner, input),
+      call<Moment & { alreadyExists: boolean }>(createLifeMoment, ids.owner, input),
+    ]);
+    expect(new Set(results.map((r) => r.id)).size).toBe(1);
+    expect(results.map((r) => r.alreadyExists).sort()).toEqual([false, true]);
+    for (const row of results)
+      expect(row).toMatchObject({ note: null, photo_path: null, visibility: "private" });
+    expect((await load(ids.owner, flow.events.ended.id)).moment?.id).toBe(results[0].id);
+  });
+  it("duplicate retry never overwrites the saved note or visibility", async () => {
+    const existing = (await load(ids.owner, flow.events.ended.id)).moment!;
+    await call(updateLifeMoment, ids.owner, {
+      id: existing.id,
+      patch: { note: "Original personal note", visibility: "profile" },
+    });
+    const retry = await call<Moment & { alreadyExists: boolean }>(createLifeMoment, ids.owner, {
+      ...creation,
+      gathering_id: flow.events.ended.id,
+    });
+    expect(retry).toMatchObject({
+      id: existing.id,
+      note: "Original personal note",
+      visibility: "profile",
+      alreadyExists: true,
+    });
+  });
+  it("blocked participant retains only their own saved record, without live host context", async () => {
+    const c = client(ids.viewer);
+    expect(
+      (await c.from("user_blocks").insert({ blocker_id: ids.viewer, blocked_id: ids.owner })).error,
+    ).toBeNull();
+    try {
+      const result = await load(ids.viewer, flow.events.ended.id);
+      expect(result.prefill).toBeNull();
+      expect(result.moment?.id).toBe(flow.existingMoment);
+      expect(JSON.stringify(result)).not.toContain("Original personal note");
+    } finally {
+      await c.from("user_blocks").delete().eq("blocker_id", ids.viewer).eq("blocked_id", ids.owner);
+    }
+  });
+  it("missing IDs and forged request fields reveal no moment data", async () => {
+    expect(await load(ids.viewer, crypto.randomUUID())).toEqual({ prefill: null, moment: null });
+    await expect(
+      call(loadGatheringLifeMoment, ids.viewer, {
+        gatheringId: flow.events.ended.id,
+        userId: ids.owner,
+      }),
+    ).rejects.toThrow();
+  });
+  it("a failed photo signer does not prevent loading or editing the saved note", async () => {
+    const existing = (await load(ids.owner, flow.events.ended.id)).moment!;
+    const path = momentPhotoPath(ids.owner, existing.id, crypto.randomUUID(), "jpg");
+    await call(updateLifeMoment, ids.owner, { id: existing.id, patch: { photo_path: path } });
+    failSigning = true;
+    try {
+      const result = await load(ids.owner, flow.events.ended.id);
+      expect(result.moment).toMatchObject({
+        id: existing.id,
+        photoUrl: null,
+        note: "Original personal note",
+      });
+      await call(updateLifeMoment, ids.owner, {
+        id: existing.id,
+        patch: { note: null, visibility: "private" },
+      });
+    } finally {
+      failSigning = false;
+    }
+  });
 });
 describe("life moments application/API foundation", () => {
   it("creates a private own manual moment through real HTTP", async () => {
@@ -182,9 +303,12 @@ describe("life moments application/API foundation", () => {
     await expect(
       call(createLifeMoment, ids.outsider, { ...creation, gathering_id: ids.gathering }),
     ).rejects.toThrow("Invalid gathering");
-    await expect(
-      call(createLifeMoment, ids.owner, { ...creation, gathering_id: ids.gathering }),
-    ).rejects.toThrow("duplicate key");
+    const existing = await call<Moment & { alreadyExists: boolean }>(createLifeMoment, ids.owner, {
+      ...creation,
+      gathering_id: ids.gathering,
+    });
+    expect(existing.alreadyExists).toBe(true);
+    expect(existing.note).not.toBe(creation.note);
   });
   it("creates a valid gathering-linked moment with its historical event date", async () => {
     const row = await call<Moment>(createLifeMoment, ids.owner, {

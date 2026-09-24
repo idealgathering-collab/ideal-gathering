@@ -877,6 +877,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      get_gathering_moment_context: {
+        Args: { _gathering_id: string };
+        Returns: { happened_at: string; id: string; place: string; title: string }[];
+      };
       check_invitation: { Args: { _code: string }; Returns: boolean }
       claim_initial_owner: {
         Args: Record<PropertyKey, never>

@@ -10,7 +10,7 @@ Execute one bounded spec at a time. Approval of the queue does not authorize unr
 1. [IG-001 — Owner Role Foundation — complete](completed/IG-001-owner-role-foundation.md)
 2. [IG-002 — Profile Data Ownership Cleanup — complete](completed/IG-002-profile-data-ownership.md)
 3. [IG-003 — Life Moments Foundation — complete](completed/IG-003-life-moments-foundation.md)
-4. [IG-004 — Completed Gathering to Life Moment](IG-004-gathering-to-life-moment.md)
+4. [IG-004 — Completed Gathering to Life Moment — complete](completed/IG-004-gathering-to-life-moment.md)
 5. [IG-005 — Life Profile V1](IG-005-life-profile-v1.md)
 6. [IG-006 — Public / Other-User Life Profile](IG-006-public-life-profile.md)
 7. [IG-007 — Life Summary & Activity Insights V1](IG-007-life-summary-v1.md)
@@ -18,9 +18,41 @@ Execute one bounded spec at a time. Approval of the queue does not authorize unr
 
 ## Next implementation task
 
-**IG-004 — Completed Gathering to Life Moment.** Not started. Read its approved
-spec and reinspect the repository after the IG-003 checkpoint is pushed and its
-PR is ready for review. No automatic conversion or UI is included in IG-003.
+**IG-005 — Life Profile V1.** Not started. Continue only after the IG-004
+checkpoint is pushed and ready for review. Read its approved spec and reinspect
+current code; do not create a separate `/life` product.
+
+### IG-004 verification closure — 2026-09-24
+
+Branch `codex/ig-004-gathering-to-life-moment`, based on IG-003 `7c71e88` / PR #7.
+Implementation checkpoint `bb8d0a7` is pushed in ready-for-review
+[PR #8](https://github.com/idealgathering-collab/ideal-gathering/pull/8), stacked
+on [PR #7](https://github.com/idealgathering-collab/ideal-gathering/pull/7).
+Passive Remember this? card on gathering detail opens a compact optional editor;
+no automatic modal over attendance/safety/feedback. Caller-scoped prefill RPC
+reuses IG-003 access and host/checked-in completed-gathering checks; the existing
+insert trigger/unique index remain authoritative. Exact own lookup, duplicate
+recovery, optional private photo/note, private-default visibility and EN/RU/FA
+copy are complete. No Profile redesign, automatic creation or IG-005 work.
+
+- 61 foundation + 21 new native DB checks, 29 Life Moment API/handler tests,
+  221 unit tests, 29 profile DB checks, 9 profile API regressions and 42 owner/admin
+  regressions passed. Typecheck passes; regenerated RPC signature matches schema.
+- All new files/helper/tests lint clean. Remaining 1,091 formatting findings match
+  the same-file IG-003 baseline exactly, with zero warnings. Normal build still
+  hits the known Lovable MCP Windows path assertion; tooling unchanged.
+- Actual component inspected in synthetic browser preview at mobile/desktop
+  sizes, including saved/edit/error states, keyboard focus and Persian RTL.
+  Actual Storage transport, browser file upload, full hosted Auth/route E2E and a
+  supported-platform build remain staging/environment checks, not claimed passes.
+- New additive migration ran only on the marked disposable database. Verified
+  PostgREST launcher/cache used. No production migration, merge or deployment.
+
+[Completed spec](completed/IG-004-gathering-to-life-moment.md),
+[exact verification](completed/IG-004-verification.md) and
+[flow/privacy/rollout contract](../docs/LIFE_MOMENTS.md) record the handoff.
+Review stacked on PR #7 and preserve the unmerged dependency order.
+Temporary database/API/preview services stopped; browser viewport restored.
 
 ### IG-003 verification closure — 2026-09-20
 
