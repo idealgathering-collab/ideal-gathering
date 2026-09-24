@@ -1,7 +1,30 @@
 # Life Moments foundation
 
 IG-003 foundation completed 2026-09-20; IG-004 gathering flow completed 2026-09-24.
-The Life Profile is the existing Profile. No new profile route or timeline.
+IG-005 turns the existing `/profile` into the own Life Profile; no `/life` route.
+
+## Own Life Profile (IG-005)
+
+The main profile shows identity, a simple recent-activity summary, saved moments,
+eligible completed gatherings, reliable current place labels and About. Editing
+opens in a responsive dialog, preserving the existing canonical profile saves.
+Account/settings/saved locations remain accessible in a disclosure section.
+
+The timeline uses `loadOwnLifeMoments({limit: 100})`, newest first. Private notes
+are only in this own view; visibility/note/photo editing reuses the IG-004 editor,
+including manual/detached records. Failed photo signing no longer hides own text.
+Active views refresh signed photos every 45 seconds; unavailable media gets a
+text fallback. The shared helper's projection and fail-closed behavior are unchanged.
+
+`loadOwnLifeGatherings({})` takes no target-user ID. It uses the authenticated
+client/RLS to get the 12 latest approved started hosted and 12 joined bookings,
+deduplicates, and reuses `get_gathering_moment_context` for each. Only authorized
+ended hosted/checked-in gatherings survive, with account/block checks retained.
+These bounded counts are explicitly labeled as this view, never lifetime totals.
+The old profile card's booking-based story is not used as attendance evidence.
+Place labels are current live context, explicitly not historical visits. Saved
+locations do not contribute. No new schema, metrics, tracking, public-profile
+UI, or matching changes. See [IG-005 verification](../tasks/completed/IG-005-verification.md).
 
 ## Completed gathering flow (IG-004)
 
@@ -157,6 +180,7 @@ records/media; do not drop the table/bucket as rollback. Apply the IG-004 RPC
 migration after IG-003 and refresh its schema cache before enabling the card.
 There are no IG-004 backfills or changed write policies. Disable the new card or
 forward-correct the RPC to recover; existing moments remain intact.
-IG-005 is next; timeline/profile redesign and summaries are not included here.
+IG-005 adds the own-profile view above; IG-006 other-user profiles are next and
+are not implemented. No new IG-005 migration or data backfill is required.
 See [foundation verification](../tasks/completed/IG-003-verification.md) and
 [flow verification](../tasks/completed/IG-004-verification.md).

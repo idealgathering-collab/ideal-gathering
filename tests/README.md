@@ -121,6 +121,23 @@ viewports and keyboard navigation. Stop the preview afterward. This isolated
 component harness is not an application build workaround or hosted/browser E2E.
 The normal Lovable build configuration and dependencies remain unchanged.
 
+### IG-005 own Life Profile checks
+
+Default unit tests now include server-rendered React component checks for loading,
+empty/error states, account-scoped caches, escaped private text, missing photos,
+bounded counts/current places and EN/RU/FA copy. The existing moments API suite
+adds own-history, account/checked-in/block boundaries and photo-failure checks;
+run fresh native IG-003/004 fixtures first as documented above.
+
+For the actual profile route with synthetic data boundaries:
+`node node_modules/vite/bin/vite.js --config tests/life-profile-preview/vite.config.ts`.
+Loopback port 55442; no credentials. Switches: `?empty`, `?loading`, `?load-error`,
+`?profile-error`, `?save-error`, `?photo-error`, `?lang=ru` or `?lang=fa`.
+The route/components/CSS are real; session, data, router, header and saved-location
+boundaries are fixtures. Reload resets data. This does not replace hosted route,
+navigation/Auth/Storage E2E or the normal production build. Stop the service and
+restore browser viewport afterward.
+
 ### Existing hosted suite (opt-in safeguards, unchanged)
 
 These tests run against the real hosted database, so they are **not** part of

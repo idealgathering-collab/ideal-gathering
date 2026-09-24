@@ -11,16 +11,48 @@ Execute one bounded spec at a time. Approval of the queue does not authorize unr
 2. [IG-002 — Profile Data Ownership Cleanup — complete](completed/IG-002-profile-data-ownership.md)
 3. [IG-003 — Life Moments Foundation — complete](completed/IG-003-life-moments-foundation.md)
 4. [IG-004 — Completed Gathering to Life Moment — complete](completed/IG-004-gathering-to-life-moment.md)
-5. [IG-005 — Life Profile V1](IG-005-life-profile-v1.md)
+5. [IG-005 — Life Profile V1 — complete](completed/IG-005-life-profile-v1.md)
 6. [IG-006 — Public / Other-User Life Profile](IG-006-public-life-profile.md)
 7. [IG-007 — Life Summary & Activity Insights V1](IG-007-life-summary-v1.md)
 8. [IG-008 — Venue Dashboard Value Layer](IG-008-venue-dashboard-value-layer.md)
 
 ## Next implementation task
 
-**IG-005 — Life Profile V1.** Not started. Continue only after the IG-004
-checkpoint is pushed and ready for review. Read its approved spec and reinspect
-current code; do not create a separate `/life` product.
+**IG-006 — Public / Other-User Life Profile.** Not started. Read its approved spec
+and reinspect current code in a separate task. Do not create a `/life` route.
+
+### IG-005 verification closure — 2026-09-24
+
+Branch `codex/ig-005-life-profile-v1`, based on IG-004 `abafe39` / PR #8.
+Implementation `c5c4d4b` is pushed in draft
+[PR #9](https://github.com/idealgathering-collab/ideal-gathering/pull/9), stacked
+on PR #8. Temporary local services are stopped and browser viewport restored.
+Existing `/profile` now presents identity, a bounded real-data summary, own
+moments timeline, authorized completed gatherings, current places and About.
+Full existing editing is accessible in a responsive dialog; canonical saves,
+avatar, preferences, traits, account controls and matching behavior are retained.
+Reuses the IG-004 editor and context RPC; no schema or other-user profile changes.
+
+- 227 unit/component tests, 38 moments API tests, 61 Life Moment and 21 gathering
+  flow native DB checks, 29 profile DB checks, 9 profile API and 42 owner/admin
+  regressions passed. Required PostgREST launcher returned HTTP 200.
+- Final typecheck passes. Changed application/test files lint clean; main
+  translations retain exactly the baseline's 200 formatting errors, zero warnings.
+  Normal build reproduces the known Lovable MCP Windows path assertion before
+  compilation. No tooling/dependency workaround; supported-platform build remains.
+- Actual profile route/components inspected with synthetic data at mobile and
+  desktop sizes: profile save/focus return, unlinked moment note/visibility save,
+  failed-save draft retention, loading/empty/errors, Persian RTL and overflow.
+  Real hosted Auth/Storage and full deployed navigation remain staging checks.
+- Summary explicitly limits moments to 100 latest and gathering candidates to
+  12 hosted/12 joined. Counts are not lifetime totals; places are current details,
+  not a visit history. No advanced metrics, IG-006, venue work or new route.
+
+[Completed spec](completed/IG-005-life-profile-v1.md) and
+[exact verification](completed/IG-005-verification.md) record implementation,
+files, all checks and environment limits. No production migration, merge or
+deployment. Preserve the unmerged PR #8 dependency. Exact next step: review
+IG-005, then address IG-006 separately; do not start it in this task.
 
 ### IG-004 verification closure — 2026-09-24
 

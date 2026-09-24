@@ -1,5 +1,18 @@
 # UX
 
+## IG-005 own Life Profile — 2026-09-24
+
+`/profile` now opens on identity, a bounded real-data life summary, private-aware
+moments timeline, eligible completed gatherings, current gathering places and
+About. Mobile stacks sections; desktop expands the activity area to columns.
+Profile editing lives in a responsive dialog with existing fields and saves.
+Account controls remain in a disclosure section; global navigation is unchanged.
+Own timeline editing reuses the optional photo/note/visibility editor, even when
+the source gathering is unavailable. Loading/errors never imply zero activity.
+Counts and places explain their limits; no lifetime statistics or inferred visits.
+EN/RU/FA copy and mobile RTL are supported. Other-user profiles remain unchanged.
+See [contract](LIFE_MOMENTS.md) and [verification](../tasks/completed/IG-005-verification.md).
+
 ## IG-004 completed gathering memory — 2026-09-24
 
 Gathering detail now offers an optional Remember this? card after attendance and

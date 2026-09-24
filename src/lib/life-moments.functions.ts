@@ -39,7 +39,16 @@ export const loadOwnLifeMoments = createServerFn({ method: "GET" })
       .order("id", { ascending: false })
       .limit(data.limit);
     if (error) throw new Error(error.message);
-    return Promise.all((rows ?? []).map(async (row) => ({ ...row, ...(await withPhoto(row)) })));
+    return Promise.all(
+      (rows ?? []).map(async (row) => {
+        // Media outages must not hide saved text or its owner privacy controls.
+        try {
+          return { ...row, ...(await withPhoto(row)) };
+        } catch {
+          return { ...row, photoUrl: null };
+        }
+      }),
+    );
   });
 
 export const loadVisibleLifeMoments = createServerFn({ method: "GET" })
@@ -103,7 +112,9 @@ export const loadGatheringLifeMoment = createServerFn({ method: "GET" })
         /* retry on next open */
       }
     }
-    return { prefill: prefill.data?.[0] ?? null, moment };
+    const contextRow: { id: string; title: string; happened_at: string; place: string } | null =
+      prefill.data?.length ? prefill.data[0] : null;
+    return { prefill: contextRow, moment };
   });
 
 export const updateLifeMoment = createServerFn({ method: "POST" })

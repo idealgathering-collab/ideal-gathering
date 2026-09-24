@@ -35,7 +35,17 @@ import { GATHERING_TYPES, type GatheringType } from "@/lib/gathering-types";
 import { ageFromDob } from "@/lib/age";
 import { useQueryClient } from "@tanstack/react-query";
 import { setAdminPreview } from "@/lib/roles";
-import { ProfileCard, ProfileCardSkeleton } from "@/components/profile-card";
+import { LifeProfileActivity } from "@/components/life-profile";
+import { Aura } from "@/components/profile/aura";
+import { Style } from "@/components/profile/style";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { loadProfileCard } from "@/lib/profile-card.functions";
 import { changedFields, saveProfileData, type ProfileEdit } from "@/lib/profile-data";
 import type { ProfileCardData } from "@/lib/profile-card";
@@ -82,6 +92,11 @@ function GroupHeading({ label, hint }: { label: string; hint?: string }) {
 }
 
 function ProfilePage() {
+  const { user } = useSession();
+  return <ProfileContent key={user?.id ?? "signed-out"} />;
+}
+
+function ProfileContent() {
   const t = useT();
   const { user } = useSession();
   const userId = user?.id;
@@ -109,6 +124,7 @@ function ProfilePage() {
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
 
   const [saving, setSaving] = useState(false);
+  const [editing, setEditing] = useState(false);
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const avatarRef = useRef<HTMLInputElement>(null);
@@ -153,6 +169,7 @@ function ProfilePage() {
     ])
       .then(async ([result, prefs, card]) => {
         if (result.error) throw result.error;
+        if (!card) throw new Error("Profile unavailable");
         const row = result.data;
         const avatar = await signedUrl(row.avatar_url);
         if (!active) return;
@@ -278,6 +295,22 @@ function ProfilePage() {
         changedFields(original.current.preferences, preferences),
       );
       original.current = { profile, preferences };
+      setProfileCard((previous) =>
+        previous
+          ? {
+              ...previous,
+              displayName: profile.display_name ?? null,
+              bio: profile.bio ?? null,
+              dateOfBirth: profile.date_of_birth ?? null,
+              city: profile.city ?? null,
+              neighborhood: profile.neighborhood ?? null,
+              country: profile.country ?? null,
+              interests,
+              intentions,
+            }
+          : previous,
+      );
+      setEditing(false);
       await qc.invalidateQueries({ queryKey: ["profile-taste", user.id] });
       await qc.invalidateQueries({ queryKey: ["profile-card", user.id] });
       await qc.invalidateQueries({ queryKey: ["table-fit"] });
@@ -333,516 +366,616 @@ function ProfilePage() {
   return (
     <div className="min-h-screen bg-background">
       <SiteHeader />
-      <main className="mx-auto max-w-3xl px-4 pb-28 pt-6 sm:pb-16 sm:pt-10">
-        {/* Profile Card - Photo-first phone card (430px) - Dark theme to match image */}
-        <div className="mb-10">
-          {profileLoading ? (
-            <ProfileCardSkeleton darkTheme={true} />
-          ) : (
-            <ProfileCard
-              profile={profileCard}
-              darkTheme={true}
-              interactive={true}
-              isSelf={true}
-              onComplete={() => {
-                // Navigate to onboarding to complete profile
-                navigate({ to: "/onboarding" });
-              }}
-              onStoryItemClick={(item) => {
-                navigate({ to: "/gatherings/$id", params: { id: item.gatheringId } });
-              }}
-            />
-          )}
-        </div>
-
-        {loadError && (
-          <Button onClick={() => setLoadAttempt((n) => n + 1)}>{t("common.tryAgain")}</Button>
+      <main className="mx-auto max-w-6xl px-4 pb-28 pt-6 sm:pb-16 sm:pt-10">
+        {profileLoading && (
+          <div className="mb-6 h-44 animate-pulse rounded-3xl bg-muted p-6" role="status">
+            {t("profile.loading")}
+          </div>
         )}
-        <fieldset
-          disabled={!formReady || saving}
-          aria-busy={!formReady || saving}
-          className="min-w-0"
+        {loadError && (
+          <div className="mb-6" role="status">
+            <p>{t("life.loadError")}</p>
+            <Button onClick={() => setLoadAttempt((n) => n + 1)}>{t("common.tryAgain")}</Button>
+          </div>
+        )}
+        <Dialog
+          open={editing}
+          onOpenChange={(value) => {
+            if (!saving && !uploadingAvatar) setEditing(value);
+          }}
         >
-          {/* Identity header - for editing */}
-          <ProfileHeader
-            displayName={displayName}
-            email={user?.email}
-            avatarUrl={avatarUrl}
-            city={city}
-            neighborhood={neighborhood}
-            country={countryName}
-            interests={interests}
-            uploading={uploadingAvatar}
-            onPickAvatar={() => avatarRef.current?.click()}
-          >
-            <input
-              ref={avatarRef}
-              type="file"
-              accept="image/*"
-              onChange={onAvatarChange}
-              className="hidden"
-            />
-          </ProfileHeader>
-
-          {/* ── Your public info ───────────────────────── */}
-          <div className="mt-10">
-            <GroupHeading label={t("profile.group.public")} hint={t("profile.group.publicHint")} />
-
-            <div className="grid gap-4">
-              {/* About */}
-              <section className={cardClass}>
-                <h2 className="font-display text-xl">{t("profile.about")}</h2>
-                <div className="mt-4 grid gap-4">
-                  <div className="grid gap-2">
-                    <Label htmlFor="dn">{t("profile.displayName")}</Label>
-                    <Input
-                      id="dn"
-                      value={displayName}
-                      maxLength={80}
-                      onChange={(e) => setDisplayName(e.target.value)}
-                    />
-                  </div>
-
-                  <div className="grid gap-4 sm:grid-cols-2">
-                    <div className="grid gap-2">
-                      <Label htmlFor="dob">{t("profile.dob")}</Label>
-                      <Input
-                        id="dob"
-                        type="date"
-                        value={dob}
-                        max={maxDobString()}
-                        onChange={(e) => setDob(e.target.value)}
-                      />
-                      <p className="text-xs text-muted-foreground">
-                        {dob && ageFromDob(dob) !== null
-                          ? `${t("profile.age")} ${ageFromDob(dob)}`
-                          : t("profile.dobHint")}
-                      </p>
-                    </div>
-                    <div className="grid gap-2">
-                      <Label>{t("profile.nationality")}</Label>
-                      <Select
-                        value={nationality || NATIONALITY_NONE}
-                        onValueChange={(v) => setNationality(v === NATIONALITY_NONE ? "" : v)}
-                      >
-                        <SelectTrigger>
-                          <SelectValue placeholder={t("profile.selectNationality")} />
-                        </SelectTrigger>
-                        <SelectContent className="max-h-72">
-                          <SelectItem value={NATIONALITY_NONE}>
-                            {t("profile.nationalityNone")}
-                          </SelectItem>
-                          {ALL_COUNTRIES.map((c) => (
-                            <SelectItem key={c.code} value={c.code}>
-                              {c.name}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div className="grid gap-2">
-                      <Label>{t("profile.gender")}</Label>
-                      <Select value={gender || undefined} onValueChange={setGender}>
-                        <SelectTrigger>
-                          <SelectValue placeholder={t("profile.selectGender")} />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {GENDER_OPTIONS.map((g) => (
-                            <SelectItem key={g} value={g}>
-                              {t(`profile.gender.${g}`)}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-
-                  <div className="grid gap-2">
-                    <Label htmlFor="bio">{t("profile.bio")}</Label>
-                    <Textarea
-                      id="bio"
-                      value={bio}
-                      maxLength={500}
-                      rows={4}
-                      placeholder={t("profile.bioPh")}
-                      onChange={(e) => setBio(e.target.value)}
-                    />
-                    <p className="text-xs text-muted-foreground">{bio.length}/500</p>
-                  </div>
-
-                  <div className="rounded-2xl border border-border/60 bg-muted/20 p-4">
-                    <p className="text-sm font-medium">{t("profile.location")}</p>
-                    <div className="mt-3 grid gap-4 sm:grid-cols-2">
-                      <div className="grid gap-2">
-                        <Label>{t("profile.country")}</Label>
-                        <Select
-                          value={country || undefined}
-                          onValueChange={(v) => {
-                            setCountry(v);
-                            if (!citiesFor(v).includes(city)) {
-                              setCity("");
-                              setNeighborhood("");
-                            }
-                          }}
-                        >
-                          <SelectTrigger>
-                            <SelectValue placeholder={t("profile.selectCountry")} />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {COUNTRIES.map((c) => (
-                              <SelectItem key={c.code} value={c.code}>
-                                {c.name}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      <div className="grid gap-2">
-                        <Label>{t("profile.city")}</Label>
-                        {citiesFor(country).length > 0 ? (
-                          <Select
-                            value={city || undefined}
-                            onValueChange={(v) => {
-                              setCity(v);
-                              if (!neighborhoodsFor(v).includes(neighborhood)) setNeighborhood("");
-                            }}
-                          >
-                            <SelectTrigger>
-                              <SelectValue placeholder={t("profile.selectCity")} />
-                            </SelectTrigger>
-                            <SelectContent>
-                              {citiesFor(country).map((c) => (
-                                <SelectItem key={c} value={c}>
-                                  {c}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        ) : (
-                          <Input
-                            value={city}
-                            maxLength={120}
-                            placeholder={t("profile.cityPh")}
-                            onChange={(e) => {
-                              setCity(e.target.value);
-                              setNeighborhood("");
-                            }}
-                          />
-                        )}
-                      </div>
-                      <div className="grid gap-2 sm:col-span-2">
-                        <Label>{t("profile.neighborhood")}</Label>
-                        {neighborhoodsFor(city).length > 0 ? (
-                          <Select value={neighborhood || undefined} onValueChange={setNeighborhood}>
-                            <SelectTrigger>
-                              <SelectValue placeholder={t("profile.selectNeighborhood")} />
-                            </SelectTrigger>
-                            <SelectContent>
-                              {neighborhoodsFor(city).map((n) => (
-                                <SelectItem key={n} value={n}>
-                                  {n}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        ) : (
-                          <Input
-                            value={neighborhood}
-                            maxLength={120}
-                            placeholder={t("profile.neighborhoodPh")}
-                            onChange={(e) => setNeighborhood(e.target.value)}
-                          />
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </section>
-
-              {/* Interests */}
-              <section className={cardClass}>
-                <h2 className="font-display text-xl">{t("profile.interests")}</h2>
-                <p className="mt-1 text-sm text-muted-foreground">{t("profile.interests.hint")}</p>
-                {interests.length > 0 && (
-                  <div className="mt-4 flex flex-wrap gap-2">
-                    {interests.map((tag) => (
-                      <span
-                        key={tag}
-                        className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-3 py-1 text-sm text-primary"
-                      >
-                        {interestLabel(t, tag)}
-                        <button
-                          type="button"
-                          onClick={() => removeInterest(tag)}
-                          className="ms-1 rounded-full hover:bg-primary/20"
-                          aria-label={t("profile.interests.remove")}
-                        >
-                          <X className="h-3.5 w-3.5" />
-                        </button>
-                      </span>
-                    ))}
+          {formReady && profileCard && (
+            <section className="mb-6 rounded-3xl border border-border/60 bg-card p-5 sm:p-8">
+              <div className="flex flex-wrap items-center gap-4">
+                {avatarUrl ? (
+                  <img src={avatarUrl} alt="" className="h-20 w-20 rounded-full object-cover" />
+                ) : (
+                  <div className="grid h-20 w-20 place-items-center rounded-full bg-primary/15 text-3xl">
+                    {(profileCard.displayName || "?").slice(0, 1)}
                   </div>
                 )}
-                <div className="mt-5 space-y-4">
-                  {INTEREST_CATEGORIES.map((cat) => (
-                    <div key={cat.id}>
-                      <h3 className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                        {t(`interest.cat.${cat.id}`)}
-                      </h3>
-                      <div className="mt-2 flex flex-wrap gap-2">
-                        {cat.tags.map((tag) => {
-                          const active = interests.includes(tag);
+                <div className="min-w-0 flex-1 basis-40">
+                  <p className="text-xs font-medium uppercase tracking-wider text-primary">
+                    {t("life.title")}
+                  </p>
+                  <h1 className="break-words font-display text-3xl">
+                    {profileCard.displayName || t("profile.title")}
+                  </h1>
+                  <p className="mt-1 break-words text-sm text-muted-foreground">
+                    {[
+                      profileCard.neighborhood,
+                      profileCard.city,
+                      COUNTRIES.find((c) => c.code === profileCard.country)?.name,
+                    ]
+                      .filter(Boolean)
+                      .join(" · ")}
+                  </p>
+                </div>
+                <DialogTrigger asChild>
+                  <Button variant="outline" className="min-h-11 rounded-full">
+                    {t("life.editProfile")}
+                  </Button>
+                </DialogTrigger>
+              </div>
+              {profileCard.bio && (
+                <p className="mt-4 max-w-3xl whitespace-pre-wrap break-words text-sm">
+                  {profileCard.bio}
+                </p>
+              )}
+            </section>
+          )}
+          <DialogContent className="max-h-[92dvh] w-[calc(100%-1rem)] max-w-3xl overflow-y-auto rounded-3xl p-4 sm:rounded-3xl sm:p-6">
+            <DialogHeader>
+              <DialogTitle>{t("life.editProfile")}</DialogTitle>
+              <DialogDescription>{t("life.editHint")}</DialogDescription>
+            </DialogHeader>
+            <fieldset
+              disabled={!formReady || saving}
+              aria-busy={!formReady || saving}
+              className="min-w-0"
+            >
+              {/* Identity header - for editing */}
+              <ProfileHeader
+                displayName={displayName}
+                email={user?.email}
+                avatarUrl={avatarUrl}
+                city={city}
+                neighborhood={neighborhood}
+                country={countryName}
+                interests={interests}
+                uploading={uploadingAvatar}
+                onPickAvatar={() => avatarRef.current?.click()}
+              >
+                <input
+                  ref={avatarRef}
+                  type="file"
+                  accept="image/*"
+                  onChange={onAvatarChange}
+                  className="hidden"
+                />
+              </ProfileHeader>
+
+              {/* ── Your public info ───────────────────────── */}
+              <div className="mt-10">
+                <GroupHeading
+                  label={t("profile.group.public")}
+                  hint={t("profile.group.publicHint")}
+                />
+
+                <div className="grid gap-4">
+                  {/* About */}
+                  <section className={cardClass}>
+                    <h2 className="font-display text-xl">{t("profile.about")}</h2>
+                    <div className="mt-4 grid gap-4">
+                      <div className="grid gap-2">
+                        <Label htmlFor="dn">{t("profile.displayName")}</Label>
+                        <Input
+                          id="dn"
+                          value={displayName}
+                          maxLength={80}
+                          onChange={(e) => setDisplayName(e.target.value)}
+                        />
+                      </div>
+
+                      <div className="grid gap-4 sm:grid-cols-2">
+                        <div className="grid gap-2">
+                          <Label htmlFor="dob">{t("profile.dob")}</Label>
+                          <Input
+                            id="dob"
+                            type="date"
+                            value={dob}
+                            max={maxDobString()}
+                            onChange={(e) => setDob(e.target.value)}
+                          />
+                          <p className="text-xs text-muted-foreground">
+                            {dob && ageFromDob(dob) !== null
+                              ? `${t("profile.age")} ${ageFromDob(dob)}`
+                              : t("profile.dobHint")}
+                          </p>
+                        </div>
+                        <div className="grid gap-2">
+                          <Label>{t("profile.nationality")}</Label>
+                          <Select
+                            value={nationality || NATIONALITY_NONE}
+                            onValueChange={(v) => setNationality(v === NATIONALITY_NONE ? "" : v)}
+                          >
+                            <SelectTrigger>
+                              <SelectValue placeholder={t("profile.selectNationality")} />
+                            </SelectTrigger>
+                            <SelectContent className="max-h-72">
+                              <SelectItem value={NATIONALITY_NONE}>
+                                {t("profile.nationalityNone")}
+                              </SelectItem>
+                              {ALL_COUNTRIES.map((c) => (
+                                <SelectItem key={c.code} value={c.code}>
+                                  {c.name}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div className="grid gap-2">
+                          <Label>{t("profile.gender")}</Label>
+                          <Select value={gender || undefined} onValueChange={setGender}>
+                            <SelectTrigger>
+                              <SelectValue placeholder={t("profile.selectGender")} />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {GENDER_OPTIONS.map((g) => (
+                                <SelectItem key={g} value={g}>
+                                  {t(`profile.gender.${g}`)}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </div>
+
+                      <div className="grid gap-2">
+                        <Label htmlFor="bio">{t("profile.bio")}</Label>
+                        <Textarea
+                          id="bio"
+                          value={bio}
+                          maxLength={500}
+                          rows={4}
+                          placeholder={t("profile.bioPh")}
+                          onChange={(e) => setBio(e.target.value)}
+                        />
+                        <p className="text-xs text-muted-foreground">{bio.length}/500</p>
+                      </div>
+
+                      <div className="rounded-2xl border border-border/60 bg-muted/20 p-4">
+                        <p className="text-sm font-medium">{t("profile.location")}</p>
+                        <div className="mt-3 grid gap-4 sm:grid-cols-2">
+                          <div className="grid gap-2">
+                            <Label>{t("profile.country")}</Label>
+                            <Select
+                              value={country || undefined}
+                              onValueChange={(v) => {
+                                setCountry(v);
+                                if (!citiesFor(v).includes(city)) {
+                                  setCity("");
+                                  setNeighborhood("");
+                                }
+                              }}
+                            >
+                              <SelectTrigger>
+                                <SelectValue placeholder={t("profile.selectCountry")} />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {COUNTRIES.map((c) => (
+                                  <SelectItem key={c.code} value={c.code}>
+                                    {c.name}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </div>
+                          <div className="grid gap-2">
+                            <Label>{t("profile.city")}</Label>
+                            {citiesFor(country).length > 0 ? (
+                              <Select
+                                value={city || undefined}
+                                onValueChange={(v) => {
+                                  setCity(v);
+                                  if (!neighborhoodsFor(v).includes(neighborhood))
+                                    setNeighborhood("");
+                                }}
+                              >
+                                <SelectTrigger>
+                                  <SelectValue placeholder={t("profile.selectCity")} />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  {citiesFor(country).map((c) => (
+                                    <SelectItem key={c} value={c}>
+                                      {c}
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                            ) : (
+                              <Input
+                                value={city}
+                                maxLength={120}
+                                placeholder={t("profile.cityPh")}
+                                onChange={(e) => {
+                                  setCity(e.target.value);
+                                  setNeighborhood("");
+                                }}
+                              />
+                            )}
+                          </div>
+                          <div className="grid gap-2 sm:col-span-2">
+                            <Label>{t("profile.neighborhood")}</Label>
+                            {neighborhoodsFor(city).length > 0 ? (
+                              <Select
+                                value={neighborhood || undefined}
+                                onValueChange={setNeighborhood}
+                              >
+                                <SelectTrigger>
+                                  <SelectValue placeholder={t("profile.selectNeighborhood")} />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  {neighborhoodsFor(city).map((n) => (
+                                    <SelectItem key={n} value={n}>
+                                      {n}
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                            ) : (
+                              <Input
+                                value={neighborhood}
+                                maxLength={120}
+                                placeholder={t("profile.neighborhoodPh")}
+                                onChange={(e) => setNeighborhood(e.target.value)}
+                              />
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </section>
+
+                  {/* Interests */}
+                  <section className={cardClass}>
+                    <h2 className="font-display text-xl">{t("profile.interests")}</h2>
+                    <p className="mt-1 text-sm text-muted-foreground">
+                      {t("profile.interests.hint")}
+                    </p>
+                    {interests.length > 0 && (
+                      <div className="mt-4 flex flex-wrap gap-2">
+                        {interests.map((tag) => (
+                          <span
+                            key={tag}
+                            className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-3 py-1 text-sm text-primary"
+                          >
+                            {interestLabel(t, tag)}
+                            <button
+                              type="button"
+                              onClick={() => removeInterest(tag)}
+                              className="ms-1 rounded-full hover:bg-primary/20"
+                              aria-label={t("profile.interests.remove")}
+                            >
+                              <X className="h-3.5 w-3.5" />
+                            </button>
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                    <div className="mt-5 space-y-4">
+                      {INTEREST_CATEGORIES.map((cat) => (
+                        <div key={cat.id}>
+                          <h3 className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                            {t(`interest.cat.${cat.id}`)}
+                          </h3>
+                          <div className="mt-2 flex flex-wrap gap-2">
+                            {cat.tags.map((tag) => {
+                              const active = interests.includes(tag);
+                              return (
+                                <button
+                                  key={tag}
+                                  type="button"
+                                  aria-pressed={active}
+                                  onClick={() => toggleInterest(tag)}
+                                  className={
+                                    active
+                                      ? "rounded-full border border-primary bg-primary px-3 py-1 text-sm text-primary-foreground"
+                                      : "rounded-full border border-border px-3 py-1 text-sm text-muted-foreground transition-colors hover:border-primary/50 hover:text-foreground"
+                                  }
+                                >
+                                  {t(`interest.${tag}`)}
+                                </button>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+
+                  {/* Intentions */}
+                  <section className={cardClass}>
+                    <h2 className="font-display text-xl">{t("profile.intentions")}</h2>
+                    <p className="mt-1 text-sm text-muted-foreground">
+                      {t("profile.intentions.hint")}
+                    </p>
+                    {intentions.length > 0 && (
+                      <div className="mt-4 flex flex-wrap gap-2">
+                        {intentions.map((intention) => (
+                          <span
+                            key={intention}
+                            className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-3 py-1 text-sm text-primary"
+                          >
+                            {t(`onboarding.prefs.intentions.${intention}`)}
+                            <button
+                              type="button"
+                              onClick={() => toggleIntention(intention)}
+                              className="ms-1 rounded-full hover:bg-primary/20"
+                              aria-label={t("common.remove")}
+                            >
+                              <X className="h-3.5 w-3.5" />
+                            </button>
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                    <div className="mt-5 flex flex-wrap gap-2">
+                      {INTENTION_OPTIONS.map((intention) => {
+                        const active = intentions.includes(intention);
+                        return (
+                          <button
+                            key={intention}
+                            type="button"
+                            aria-pressed={active}
+                            onClick={() => toggleIntention(intention)}
+                            className={
+                              active
+                                ? "rounded-full border border-primary bg-primary px-3 py-1 text-sm text-primary-foreground"
+                                : "rounded-full border border-border px-3 py-1 text-sm text-muted-foreground transition-colors hover:border-primary/50 hover:text-foreground"
+                            }
+                          >
+                            {t(`onboarding.prefs.intentions.${intention}`)}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </section>
+
+                  <div className="grid gap-4 lg:grid-cols-2">
+                    {/* Gathering Types */}
+                    <section className={cardClass}>
+                      <h2 className="font-display text-xl">{t("profile.gatheringTypes")}</h2>
+                      <p className="mt-1 text-sm text-muted-foreground">
+                        {t("profile.gatheringTypes.hint")}
+                      </p>
+                      {gatheringTypes.length > 0 && (
+                        <div className="mt-4 flex flex-wrap gap-2">
+                          {gatheringTypes.map((type) => (
+                            <span
+                              key={type}
+                              className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-3 py-1 text-sm text-primary"
+                            >
+                              {t(`gatheringType.${type}`)}
+                              <button
+                                type="button"
+                                onClick={() => toggleGatheringType(type)}
+                                className="ms-1 rounded-full hover:bg-primary/20"
+                                aria-label={t("common.remove")}
+                              >
+                                <X className="h-3.5 w-3.5" />
+                              </button>
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                      <div className="mt-5 flex flex-wrap gap-2">
+                        {GATHERING_TYPES.map((type: GatheringType) => {
+                          const active = gatheringTypes.includes(type);
                           return (
                             <button
-                              key={tag}
+                              key={type}
                               type="button"
                               aria-pressed={active}
-                              onClick={() => toggleInterest(tag)}
+                              onClick={() => toggleGatheringType(type)}
                               className={
                                 active
                                   ? "rounded-full border border-primary bg-primary px-3 py-1 text-sm text-primary-foreground"
                                   : "rounded-full border border-border px-3 py-1 text-sm text-muted-foreground transition-colors hover:border-primary/50 hover:text-foreground"
                               }
                             >
-                              {t(`interest.${tag}`)}
+                              {t(`gatheringType.${type}`)}
                             </button>
                           );
                         })}
                       </div>
-                    </div>
-                  ))}
-                </div>
-              </section>
+                    </section>
 
-              {/* Intentions */}
-              <section className={cardClass}>
-                <h2 className="font-display text-xl">{t("profile.intentions")}</h2>
-                <p className="mt-1 text-sm text-muted-foreground">{t("profile.intentions.hint")}</p>
-                {intentions.length > 0 && (
-                  <div className="mt-4 flex flex-wrap gap-2">
-                    {intentions.map((intention) => (
-                      <span
-                        key={intention}
-                        className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-3 py-1 text-sm text-primary"
-                      >
-                        {t(`onboarding.prefs.intentions.${intention}`)}
-                        <button
-                          type="button"
-                          onClick={() => toggleIntention(intention)}
-                          className="ms-1 rounded-full hover:bg-primary/20"
-                          aria-label={t("common.remove")}
-                        >
-                          <X className="h-3.5 w-3.5" />
-                        </button>
-                      </span>
-                    ))}
-                  </div>
-                )}
-                <div className="mt-5 flex flex-wrap gap-2">
-                  {INTENTION_OPTIONS.map((intention) => {
-                    const active = intentions.includes(intention);
-                    return (
-                      <button
-                        key={intention}
-                        type="button"
-                        aria-pressed={active}
-                        onClick={() => toggleIntention(intention)}
-                        className={
-                          active
-                            ? "rounded-full border border-primary bg-primary px-3 py-1 text-sm text-primary-foreground"
-                            : "rounded-full border border-border px-3 py-1 text-sm text-muted-foreground transition-colors hover:border-primary/50 hover:text-foreground"
-                        }
-                      >
-                        {t(`onboarding.prefs.intentions.${intention}`)}
-                      </button>
-                    );
-                  })}
-                </div>
-              </section>
+                    {/* Trait Scores / Personality */}
+                    <section className={cardClass}>
+                      <h2 className="font-display text-xl">{t("profile.personality")}</h2>
+                      <p className="mt-1 text-sm text-muted-foreground">
+                        {t("profile.personality.hint")}
+                      </p>
 
-              <div className="grid gap-4 lg:grid-cols-2">
-                {/* Gathering Types */}
-                <section className={cardClass}>
-                  <h2 className="font-display text-xl">{t("profile.gatheringTypes")}</h2>
-                  <p className="mt-1 text-sm text-muted-foreground">
-                    {t("profile.gatheringTypes.hint")}
-                  </p>
-                  {gatheringTypes.length > 0 && (
-                    <div className="mt-4 flex flex-wrap gap-2">
-                      {gatheringTypes.map((type) => (
-                        <span
-                          key={type}
-                          className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-3 py-1 text-sm text-primary"
-                        >
-                          {t(`gatheringType.${type}`)}
-                          <button
-                            type="button"
-                            onClick={() => toggleGatheringType(type)}
-                            className="ms-1 rounded-full hover:bg-primary/20"
-                            aria-label={t("common.remove")}
-                          >
-                            <X className="h-3.5 w-3.5" />
-                          </button>
-                        </span>
-                      ))}
-                    </div>
-                  )}
-                  <div className="mt-5 flex flex-wrap gap-2">
-                    {GATHERING_TYPES.map((type: GatheringType) => {
-                      const active = gatheringTypes.includes(type);
-                      return (
-                        <button
-                          key={type}
-                          type="button"
-                          aria-pressed={active}
-                          onClick={() => toggleGatheringType(type)}
-                          className={
-                            active
-                              ? "rounded-full border border-primary bg-primary px-3 py-1 text-sm text-primary-foreground"
-                              : "rounded-full border border-border px-3 py-1 text-sm text-muted-foreground transition-colors hover:border-primary/50 hover:text-foreground"
+                      <div className="mt-4 grid grid-cols-2 gap-4">
+                        {[
+                          {
+                            key: "spark",
+                            label: t("profile.aura.spark"),
+                            value: traitSpark,
+                            color: "#8B5CF6",
+                          },
+                          {
+                            key: "curiosity",
+                            label: t("profile.aura.curiosity"),
+                            value: traitCuriosity,
+                            color: "#F59E0B",
+                          },
+                          {
+                            key: "warmth",
+                            label: t("profile.aura.warmth"),
+                            value: traitWarmth,
+                            color: "#10B981",
+                          },
+                          {
+                            key: "depth",
+                            label: t("profile.aura.depth"),
+                            value: traitDepth,
+                            color: "#3B82F6",
+                          },
+                        ].map((trait) => (
+                          <div key={trait.key} className="flex items-center gap-3">
+                            <span className="text-xl" style={{ color: trait.color }}>
+                              ✨
+                            </span>
+                            <div className="flex-1">
+                              <div className="flex justify-between items-center mb-1">
+                                <span className="text-sm font-medium">{trait.label}</span>
+                                <span className="text-sm font-bold">{trait.value ?? 0}%</span>
+                              </div>
+                              <div className="h-1.5 rounded-full bg-muted overflow-hidden">
+                                <div
+                                  className="h-full rounded-full"
+                                  style={{
+                                    width: `${trait.value ?? 0}%`,
+                                    backgroundColor: trait.color,
+                                  }}
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+
+                      <div className="mt-4">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="w-full rounded-full"
+                          onClick={() =>
+                            navigate({ to: "/onboarding", search: { step: "qintro" } })
                           }
                         >
-                          {t(`gatheringType.${type}`)}
-                        </button>
-                      );
-                    })}
-                  </div>
-                </section>
-
-                {/* Trait Scores / Personality */}
-                <section className={cardClass}>
-                  <h2 className="font-display text-xl">{t("profile.personality")}</h2>
-                  <p className="mt-1 text-sm text-muted-foreground">
-                    {t("profile.personality.hint")}
-                  </p>
-
-                  <div className="mt-4 grid grid-cols-2 gap-4">
-                    {[
-                      {
-                        key: "spark",
-                        label: t("profile.aura.spark"),
-                        value: traitSpark,
-                        color: "#8B5CF6",
-                      },
-                      {
-                        key: "curiosity",
-                        label: t("profile.aura.curiosity"),
-                        value: traitCuriosity,
-                        color: "#F59E0B",
-                      },
-                      {
-                        key: "warmth",
-                        label: t("profile.aura.warmth"),
-                        value: traitWarmth,
-                        color: "#10B981",
-                      },
-                      {
-                        key: "depth",
-                        label: t("profile.aura.depth"),
-                        value: traitDepth,
-                        color: "#3B82F6",
-                      },
-                    ].map((trait) => (
-                      <div key={trait.key} className="flex items-center gap-3">
-                        <span className="text-xl" style={{ color: trait.color }}>
-                          ✨
-                        </span>
-                        <div className="flex-1">
-                          <div className="flex justify-between items-center mb-1">
-                            <span className="text-sm font-medium">{trait.label}</span>
-                            <span className="text-sm font-bold">{trait.value ?? 0}%</span>
-                          </div>
-                          <div className="h-1.5 rounded-full bg-muted overflow-hidden">
-                            <div
-                              className="h-full rounded-full"
-                              style={{
-                                width: `${trait.value ?? 0}%`,
-                                backgroundColor: trait.color,
-                              }}
-                            />
-                          </div>
-                        </div>
+                          {t("profile.retakeQuiz")}
+                        </Button>
                       </div>
-                    ))}
+                    </section>
                   </div>
 
-                  <div className="mt-4">
+                  {/* Social links */}
+                  <section className={cardClass}>
+                    <h2 className="font-display text-xl">{t("profile.social")}</h2>
+                    <div className="mt-4 grid gap-4">
+                      <div className="grid gap-2">
+                        <Label htmlFor="ig">Instagram</Label>
+                        <Input
+                          id="ig"
+                          value={social.instagram ?? ""}
+                          placeholder="@username"
+                          maxLength={200}
+                          onChange={(e) => setSocial({ ...social, instagram: e.target.value })}
+                        />
+                      </div>
+                      <div className="grid gap-2">
+                        <Label htmlFor="li">LinkedIn</Label>
+                        <Input
+                          id="li"
+                          value={social.linkedin ?? ""}
+                          placeholder="linkedin.com/in/…"
+                          maxLength={200}
+                          onChange={(e) => setSocial({ ...social, linkedin: e.target.value })}
+                        />
+                      </div>
+                      <div className="grid gap-2">
+                        <Label htmlFor="tw">X / Twitter</Label>
+                        <Input
+                          id="tw"
+                          value={social.twitter ?? ""}
+                          placeholder="@username"
+                          maxLength={200}
+                          onChange={(e) => setSocial({ ...social, twitter: e.target.value })}
+                        />
+                      </div>
+                      <div className="grid gap-2">
+                        <Label htmlFor="ws">{t("profile.website")}</Label>
+                        <Input
+                          id="ws"
+                          type="url"
+                          value={social.website ?? ""}
+                          placeholder="https://…"
+                          maxLength={300}
+                          onChange={(e) => setSocial({ ...social, website: e.target.value })}
+                        />
+                      </div>
+                    </div>
+                  </section>
+
+                  <div className="flex justify-stretch sm:justify-end">
                     <Button
-                      variant="outline"
-                      size="sm"
-                      className="w-full rounded-full"
-                      onClick={() => navigate({ to: "/onboarding", search: { step: "qintro" } })}
+                      onClick={saveProfile}
+                      disabled={saving || !formReady}
+                      size="lg"
+                      className="w-full rounded-full sm:w-auto"
                     >
-                      {t("profile.retakeQuiz")}
+                      {saving ? "…" : t("profile.save")}
                     </Button>
                   </div>
-                </section>
-              </div>
-
-              {/* Social links */}
-              <section className={cardClass}>
-                <h2 className="font-display text-xl">{t("profile.social")}</h2>
-                <div className="mt-4 grid gap-4">
-                  <div className="grid gap-2">
-                    <Label htmlFor="ig">Instagram</Label>
-                    <Input
-                      id="ig"
-                      value={social.instagram ?? ""}
-                      placeholder="@username"
-                      maxLength={200}
-                      onChange={(e) => setSocial({ ...social, instagram: e.target.value })}
-                    />
-                  </div>
-                  <div className="grid gap-2">
-                    <Label htmlFor="li">LinkedIn</Label>
-                    <Input
-                      id="li"
-                      value={social.linkedin ?? ""}
-                      placeholder="linkedin.com/in/…"
-                      maxLength={200}
-                      onChange={(e) => setSocial({ ...social, linkedin: e.target.value })}
-                    />
-                  </div>
-                  <div className="grid gap-2">
-                    <Label htmlFor="tw">X / Twitter</Label>
-                    <Input
-                      id="tw"
-                      value={social.twitter ?? ""}
-                      placeholder="@username"
-                      maxLength={200}
-                      onChange={(e) => setSocial({ ...social, twitter: e.target.value })}
-                    />
-                  </div>
-                  <div className="grid gap-2">
-                    <Label htmlFor="ws">{t("profile.website")}</Label>
-                    <Input
-                      id="ws"
-                      type="url"
-                      value={social.website ?? ""}
-                      placeholder="https://…"
-                      maxLength={300}
-                      onChange={(e) => setSocial({ ...social, website: e.target.value })}
-                    />
-                  </div>
                 </div>
-              </section>
+              </div>
+            </fieldset>
+          </DialogContent>
+        </Dialog>
 
-              <div className="flex justify-stretch sm:justify-end">
-                <Button
-                  onClick={saveProfile}
-                  disabled={saving || !formReady}
-                  size="lg"
-                  className="w-full rounded-full sm:w-auto"
-                >
-                  {saving ? "…" : t("profile.save")}
+        {userId && <LifeProfileActivity key={userId} userId={userId} />}
+
+        {formReady && profileCard && (
+          <section className={`${cardClass} mt-6`}>
+            <h2 className="font-display text-xl">{t("profile.about")}</h2>
+            <div className="mt-4 grid min-w-0 gap-6 md:grid-cols-2">
+              <div className="min-w-0 space-y-4">
+                <div>
+                  <h3 className="text-sm font-medium">{t("profile.interests")}</h3>
+                  <p className="mt-2 break-words text-sm text-muted-foreground">
+                    {profileCard.interests.map((tag) => interestLabel(t, tag)).join(" · ") ||
+                      t("life.notAdded")}
+                  </p>
+                </div>
+                <div>
+                  <h3 className="text-sm font-medium">{t("profile.intentions")}</h3>
+                  <p className="mt-2 break-words text-sm text-muted-foreground">
+                    {profileCard.intentions
+                      .map((value) => t(`onboarding.prefs.intentions.${value}`))
+                      .join(" · ") || t("life.notAdded")}
+                  </p>
+                </div>
+                <div>
+                  <h3 className="text-sm font-medium">{t("profile.gatheringTypes")}</h3>
+                  <p className="mt-2 break-words text-sm text-muted-foreground">
+                    {original.current?.preferences.gathering_types
+                      .map((value) => t(`gatheringType.${value}`))
+                      .join(" · ") || t("life.notAdded")}
+                  </p>
+                </div>
+                <Button asChild variant="outline" className="min-h-11 whitespace-normal">
+                  <Link to="/onboarding" search={{ step: "prefs" }}>
+                    {t("life.preferences")}
+                  </Link>
                 </Button>
               </div>
+              <div className="min-w-0 space-y-4">
+                <Style style={profileCard} isSelf />
+                <Aura aura={profileCard} isSelf />
+              </div>
             </div>
-          </div>
-        </fieldset>
+          </section>
+        )}
 
         {/* ── Your account ───────────────────────────── */}
-        <div className="mt-12">
+        <details className="mt-6 rounded-3xl border border-border/60 p-4 sm:p-6">
+          <summary className="min-h-11 cursor-pointer font-medium">
+            {t("profile.group.account")}
+          </summary>
           <GroupHeading label={t("profile.group.account")} hint={t("profile.group.accountHint")} />
 
           <div className="rounded-3xl bg-muted/30 p-3 sm:p-4">
@@ -912,7 +1045,7 @@ function ProfilePage() {
               </section>
             </div>
           </div>
-        </div>
+        </details>
       </main>
     </div>
   );
