@@ -167,3 +167,26 @@ Safeguards:
 - Teardown runs in `afterAll`/`finally`, children before parents, and a global
   sweep removes any `[test-` rows older than one hour left by a crashed run.
 - Files run serially so the seat-capacity trigger is not raced.
+
+### IG-006 member-profile verification
+
+After native IG-003/004 and IG-002 fixtures, run
+`node tests/member-profile-postgres.verify.mjs <runtime>` against the same marked
+loopback database. This applies the additive IG-006 migration transactionally and
+creates synthetic member relationships, moments, blocks and canonical-profile
+compatibility fixtures. Then use the verified `Start-PostgREST.ps1 -Restart`.
+On this Windows host, invoke that unchanged launcher with Windows PowerShell 5.1:
+PowerShell 7's Start-Process child failed DLL loading, while the 5.1 launcher
+returned HTTP 200. Never start the raw PostgREST executable.
+
+Run the existing moments, profile and owner API configs with their runtime
+variables. Moments now includes member access, minimum projection, shared reads,
+both block/unblock directions and report ownership. API tests simulate framework
+Auth dispatch and Storage signing, and exercise real SQL/PostgREST/RLS.
+
+Synthetic actual-route preview:
+`node node_modules/vite/bin/vite.js --config tests/member-profile-preview/vite.config.ts`
+on loopback 55443. Switches: `?empty`, `?loading`, `?unavailable`, `?error`, `?self`,
+`?block-error`, `?report-error`, plus `lang=en|ru|fa`. Data is synthetic in memory;
+no hosted requests or credentials. This is UI verification, not a production build
+workaround. Stop temporary services and reset the browser viewport afterward.

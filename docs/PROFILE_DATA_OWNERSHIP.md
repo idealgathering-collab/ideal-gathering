@@ -7,7 +7,7 @@ IG-002, approved 2026-09-19. Implemented contract, audited from IG-001 completio
 
 | Source | Fields | Writers/readers |
 | --- | --- | --- |
-| `profiles` identity | `display_name`, `bio`, `date_of_birth`, `nationality`, `gender` | Profile editor; identity/card readers. Existing admin patch permits only display name, bio, city and country. Public projection excludes exact DOB/nationality/gender. |
+| `profiles` identity | `display_name`, `bio`, `date_of_birth`, `nationality`, `gender` | Profile editor; identity/card readers. Existing admin patch permits only display name, bio, city and country. Member projection excludes all DOB/nationality/gender. |
 | `profiles` location | `city`, `country`, `neighborhood` | Profile editor; card, Explore, location picker, admin/owner identity views. |
 | `profiles` media | `avatar_url`, `cover_url` | Existing own avatar upload writes avatar_url after storage upload; cards read both. No active cover editor found; no new writer. |
 | `profiles` signals | `interests`, `social_links` | Profile editor. Matching/recommendations use interests. Raw social links remain outside the public loader. |
@@ -32,7 +32,7 @@ Profile; the existing complete editor opens in a dialog. Closing retains its
 unsaved draft on the page, while saved identity displays separately. Account-keyed
 remounting discards the prior account's local form state. Avatar edits still save
 immediately. Gathering preferences remain editable through the existing onboarding
-flow, accessible from About. Other-user loaders and matching are unchanged.
+flow, accessible from About. Matching is unchanged; IG-006 gates member reads below.
 
 Profile waits for its own full identity row, canonical preferences and card;
 private identity fields are never initialized from a public card. Initialization
@@ -49,10 +49,9 @@ are saved, including clearing all answers. Intentional concurrent changes to
 the same field remain last-writer-wins; this is not a revision system.
 
 Missing preference rows mean unanswered; query failures do not mean empty.
-Authenticated public profiles return canonical intentions and coarse birth year,
-not raw preference rows/private identity. Legacy-named public style slots now
-return null; the existing public card already discarded these slots. Self cards
-render current and legacy option labels using existing translations.
+IG-006 member reads return canonical intentions/social style under the relationship
+gate, with no DOB or raw preference row. Self cards continue rendering current
+and legacy option labels using existing translations.
 
 ## Migration and compatibility
 
@@ -85,3 +84,15 @@ Use a forward corrective migration for recovery. Do not copy archival values
 over canonical rows or drop canonical data. Assess older clients' stale dual-save
 behavior before application rollback. Exact local evidence and environment
 limits are in the completed IG-002 verification report.
+
+## IG-006 member-read contract — 2026-09-26
+
+The earlier IG-002 public/coarse-birth-year description is superseded for member
+reads. `loadPublicProfile` keeps its compatibility name but uses the caller's
+`get_member_profile` RPC, with the relationship and bidirectional block rule in
+[LIFE_MOMENTS](LIFE_MOMENTS.md#in-app-member-profile-ig-006). It no longer queries
+arbitrary profiles with the service role. DOB, detailed location, timestamps and
+traits are absent. Canonical intentions and social style are explicitly allowed;
+no archival duplicate fallback is used. The card compatibility adapter supplies
+neutral absent fields and no other-user story. Own profile writes, full private
+editing, canonical preferences, matching and staff-only tools are unchanged.

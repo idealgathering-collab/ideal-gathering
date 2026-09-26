@@ -184,3 +184,42 @@ IG-005 adds the own-profile view above; IG-006 other-user profiles are next and
 are not implemented. No new IG-005 migration or data backfill is required.
 See [foundation verification](../tasks/completed/IG-003-verification.md) and
 [flow verification](../tasks/completed/IG-004-verification.md).
+
+## In-app Member Profile (IG-006)
+
+`/people/$id` is a relationship-gated member view, not a public internet profile.
+Self links return to `/profile`. Both accounts must have the user role, verified
+email and existing beta access. An approved common gathering authorizes access:
+hosts count directly; registered participants count while upcoming/in progress,
+and after the end (start + two hours when absent) they must have checked in.
+Neither member may block the other, nor may either be blocked with that event's
+host. Cancelled, deleted and unrelated events do not authorize access. No new
+join-request or mutual-friend model is inferred. Staff have no special bypass
+through this member RPC; existing staff tools retain their own authorization.
+
+Migration `20260925120000_member_profile_privacy.sql` adds the minimal
+`get_member_profile` RPC and private relationship helper, and tightens the existing
+`life_moment_profile_visible` predicate. Direct `list_visible_life_moments` calls
+therefore obey the same rule. Owner CRUD/RLS and shared visibility selection stay
+unchanged. No profile/private preference table grants are widened. The UI shows
+up to 12 recent explicitly profile-visible moments, using the existing signer;
+no notes, gathering IDs, locations or attendance rows enter that projection.
+Its existing moment/owner keys support rendering, not private source history.
+A generic common-gathering sentence replaces a list of anyone else's attendance.
+
+Member identity is name, signed avatar, city, bio and interests. Canonical
+intentions/social style are permitted; the UI currently renders energy, group
+size, conversation and comfort with new people. No DOB (including birth year),
+neighborhood/country, contact info, ownership, ratings, saved locations or internal
+metadata is serialized by the member loader. Avatar paths must match the target's
+own standard avatar object before server signing; unsupported legacy URLs use an
+initial. Avatar signing failure leaves identity usable. Moment signing retains its
+existing fail-closed behavior. Media URLs expire after 60 seconds; they cannot
+revoke bytes already downloaded. Active views recheck every 45 seconds and on
+focus; a local successful block clears its query immediately. Existing displayed
+content can persist until refresh after a remote block; every new read is gated.
+
+Only the marked disposable database was migrated. Deploy the migration before
+the client/server changes, refresh PostgREST and test staging Auth/Storage before
+release. Recovery should be a forward corrective migration; do not restore the
+old broad privileged loader or shared predicate. No production rollout occurred.

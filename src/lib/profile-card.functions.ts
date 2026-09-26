@@ -106,10 +106,31 @@ export async function loadProfileCard(userId: string): Promise<ProfileCardData |
       if (error) console.error("Error loading profile card:", error);
       return null;
     }
-    return transformProfileData(publicRow as unknown as ProfileSelection, [], {
-      ...EMPTY_STYLE,
-      intentions: publicRow.intentions,
-    });
+    return transformProfileData(
+      {
+        ...publicRow,
+        id: userId,
+        cover_url: null,
+        neighborhood: null,
+        country: null,
+        date_of_birth: null,
+        persona_color: null,
+        trait_spark: null,
+        trait_curiosity: null,
+        trait_warmth: null,
+        trait_depth: null,
+        created_at: "",
+        updated_at: "",
+      },
+      [],
+      {
+        intentions: publicRow.intentions,
+        energyLevel: publicRow.energy_level,
+        groupSize: publicRow.group_size,
+        talkStyle: publicRow.talk_style,
+        newPeople: publicRow.new_people_pref,
+      },
+    );
   }
 
   const [story, style] = await Promise.all([loadStoryItems(userId), loadStylePrefs(userId)]);

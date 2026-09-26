@@ -12,14 +12,36 @@ Execute one bounded spec at a time. Approval of the queue does not authorize unr
 3. [IG-003 — Life Moments Foundation — complete](completed/IG-003-life-moments-foundation.md)
 4. [IG-004 — Completed Gathering to Life Moment — complete](completed/IG-004-gathering-to-life-moment.md)
 5. [IG-005 — Life Profile V1 — complete](completed/IG-005-life-profile-v1.md)
-6. [IG-006 — Public / Other-User Life Profile](IG-006-public-life-profile.md)
+6. [IG-006 — Other-User Member Profile + Privacy — complete](completed/IG-006-public-life-profile.md)
 7. [IG-007 — Life Summary & Activity Insights V1](IG-007-life-summary-v1.md)
 8. [IG-008 — Venue Dashboard Value Layer](IG-008-venue-dashboard-value-layer.md)
 
 ## Next implementation task
 
-**IG-006 — Public / Other-User Life Profile.** Not started. Read its approved spec
-and reinspect current code in a separate task. Do not create a `/life` route.
+**IG-007 — Life Summary & Activity Insights V1.** Not started. Read its spec and
+reinspect the implementation before any new work. IG-006 did not add its metrics.
+
+### IG-006 verification closure — 2026-09-26
+
+Complete on `codex/ig-006-member-profile-privacy`, based on IG-005 `d840b37`.
+Existing people route is now an in-app member view with relationship and both-way
+block enforcement at the database/shared-moment layer. No DOB/private notes or
+fine location; own links use IG-005. Report/block, mobile/desktop/RTL and focus
+behavior verified. No public social metadata, new feed or /life route.
+
+- 233 unit/component, 47 moments/member API, 9 profile API, 42 owner/admin tests
+  passed; native DB: 61 Life Moments, 21 gathering flow, 29 profile, 34 member.
+- Typecheck and targeted application/test lint pass. Translation formatting debt
+  is 199 vs baseline 200; generated types match baseline 760 formatting errors.
+- Verified PostgREST launcher under Windows PowerShell 5.1 returned HTTP 200.
+- Normal build remains blocked before compilation by the known Lovable Windows
+  routesDir assertion. Supported-platform build and hosted staging checks remain.
+- Migration applied only to the marked disposable database; no merge/deployment.
+
+[Archived spec](completed/IG-006-public-life-profile.md) and
+[verification report](completed/IG-006-verification.md) record exact rules, files,
+commands, recovered failures and rollout limits. Next: review IG-006, then implement
+IG-007 as a separate task. Preserve the unmerged IG-005 dependency.
 
 ### IG-005 verification closure — 2026-09-24
 
