@@ -13,13 +13,39 @@ Execute one bounded spec at a time. Approval of the queue does not authorize unr
 4. [IG-004 — Completed Gathering to Life Moment — complete](completed/IG-004-gathering-to-life-moment.md)
 5. [IG-005 — Life Profile V1 — complete](completed/IG-005-life-profile-v1.md)
 6. [IG-006 — Other-User Member Profile + Privacy — complete](completed/IG-006-public-life-profile.md)
-7. [IG-007 — Life Summary & Activity Insights V1](IG-007-life-summary-v1.md)
+7. [IG-007 — Life Summary & Activity Insights V1 — complete](completed/IG-007-life-summary-v1.md)
 8. [IG-008 — Venue Dashboard Value Layer](IG-008-venue-dashboard-value-layer.md)
 
 ## Next implementation task
 
-**IG-007 — Life Summary & Activity Insights V1.** Not started. Read its spec and
-reinspect the implementation before any new work. IG-006 did not add its metrics.
+**IG-008 — Venue Dashboard Value Layer.** Next; not started in this task.
+Reinspect its approved spec and current implementation before beginning.
+
+### IG-007 verification closure — 2026-09-26
+
+Complete on `codex/ig-007-life-summary-v1`, based on IG-006 `65f9286`.
+Own profile shows full rolling-30-day counts of completed eligible gatherings and
+saved moments, persisted categories and three 10-day gathering counts. Read-only
+caller-scoped invoker RPC retains RLS/access/block rules; no target parameter or
+other-user metrics. People/place/first-time counts deliberately omitted for lack
+of reliable evidence. Existing editing, matching and IG-006 remain unchanged.
+
+- 240 unit/component tests; 53 moments/member/summary API, 9 profile API and 42
+  owner/admin tests pass. Native DB: 26 summary + 61 moments + 21 gathering flow
+  + 29 profile + 34 member checks pass. Post-fix affected component tests: 13 pass.
+- Typecheck and targeted application/test lint pass. Translation/generated
+  formatting debt matches baseline: 199 / 760 errors.
+- Synthetic actual-route browser checks pass for 320px Persian RTL, 375px English,
+  1280px desktop, Russian, loading/empty/error/retry and counting disclosure.
+- Verified PostgREST launcher (Windows PowerShell 5.1) returned HTTP 200.
+- Normal build remains blocked before compilation by the known Lovable Windows
+  routesDir assertion. Supported-platform build and hosted staging remain.
+- Migration applied only to marked disposable database. No merge/deployment.
+
+[Archived spec](completed/IG-007-life-summary-v1.md) and
+[exact verification report](completed/IG-007-verification.md) document rules,
+files, commands, recovered failures and rollout limits. IG-006 PR #10 remains an
+unmerged dependency. Finish review handoff; IG-008 stays a separate task.
 
 ### IG-006 verification closure — 2026-09-26
 

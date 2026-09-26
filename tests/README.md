@@ -190,3 +190,22 @@ on loopback 55443. Switches: `?empty`, `?loading`, `?unavailable`, `?error`, `?s
 `?block-error`, `?report-error`, plus `lang=en|ru|fa`. Data is synthetic in memory;
 no hosted requests or credentials. This is UI verification, not a production build
 workaround. Stop temporary services and reset the browser viewport afterward.
+
+### IG-007 own-summary verification
+
+Run `node tests/life-summary-postgres.verify.mjs <runtime>` against the same marked
+loopback database after the prerequisite migrations. It applies the additive RPC
+if absent and creates isolated synthetic summary fixtures. It verifies the
+720-hour cutoff, bucket boundaries, host/check-in deduplication, exclusions,
+categories, both block directions, access gates, minimum output and counts above
+the 100-moment/24-gathering history caps. To seed an old immutable saved timestamp,
+only this disposable fixture briefly disables guard_life_moment inside a transaction,
+then reenables it before commit. The real timestamp guard is unchanged.
+
+Refresh native IG-003/004, profile and member fixtures before repeating their
+mutating API suites. Use the verified PostgREST launcher and existing moments
+config with IG003_RUNTIME; its six new summary cases use ig007-fixtures.json.
+Default unit tests include summary states, privacy/cache isolation and shape checks.
+The IG-005 actual-route preview at 55442 now includes synthetic summary data and
+its existing empty/loading/load-error/language switches. These preview counts are
+deliberately independent of capped history and are never production data.

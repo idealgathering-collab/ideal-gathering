@@ -70,3 +70,14 @@ and failed loads use the same generic unavailable state. Report/block reuse the
 existing actions and dialogs; closing restores focus, and a successful block
 removes the viewed profile. Metadata has no public-social description and uses
 noindex/nofollow/noarchive. These are authenticated application pages.
+
+## IG-007 own recent-life summary — 2026-09-26
+
+The own profile shows completed gatherings and saved moments in the last 30 days,
+persisted activity categories and three simple 10-day gathering counts. It replaces
+the old list-length snapshot, leaving identity/editing and history cards intact.
+The private label and expandable counting explanation distinguish complete period
+totals from the capped history below. Empty is a warm invitation with the existing
+My Gatherings link; loading and retryable errors never imply zero activity.
+Mobile stacks the periods; desktop uses three columns. EN/RU/FA labels, dates,
+numbers and RTL are supported. No people/place estimates, scores or comparisons.

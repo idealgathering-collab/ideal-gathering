@@ -223,3 +223,44 @@ Only the marked disposable database was migrated. Deploy the migration before
 the client/server changes, refresh PostgREST and test staging Auth/Storage before
 release. Recovery should be a forward corrective migration; do not restore the
 old broad privileged loader or shared predicate. No production rollout occurred.
+
+## Own Life Summary (IG-007)
+
+The own `/profile` summary replaces the IG-005 list-length snapshot with complete
+counts in a rolling 720-hour window. `get_my_life_summary()` is a stable, read-only
+SECURITY INVOKER RPC with no target/date arguments, a fixed empty search path and
+authenticated-only execution. It retains caller RLS and the existing verified,
+beta-eligible user gate. There is no service-role reader or analytics copy.
+
+- Completed gatherings come from approved `gatherings` with starts_at in the
+  window and ends_at at/before now (existing start + two-hour fallback). Caller
+  must be host or have a `gathering_attendees.checked_in_at`; either-direction
+  caller/host blocks exclude that gathering. Host plus attendee counts once.
+- Saved moments come from caller-owned `life_moments.created_at`, whose save
+  timestamp is database-protected. Private/manual moments and older memories
+  saved recently count. Editing happened_at does not move the save date.
+- Categories use persisted gathering_type, the existing eleven-category allowlist,
+  and Other / uncategorized for legacy values. Ordering is count descending then
+  C-collated category; no title/free-text inference.
+- Three consecutive 240-hour buckets partition gathering starts, oldest first.
+  Intervals are half-open, except the final endpoint includes now. Local date
+  labels can share boundaries; the disclosure gives the exact window timestamps.
+
+The aggregate returns only period bounds, two counts, category/count pairs and
+three dated gathering counts. No identities, raw rows, notes or locations.
+People-met is omitted because recorded co-attendance does not prove interpersonal
+contact. Place visits lack a reliable historical snapshot; first-time experiences
+have no explicit field. Saved locations/profile city/browsing are never evidence.
+Current IG-005 place cards are retained and explicitly are not visit history.
+
+The own account keys its cache, removes it on unmount, refreshes on focus/every
+60 seconds and invalidates after timeline saves. Failed refreshes hide stale
+totals. Nothing is added to IG-006. Existing bounded timeline/history lists remain
+separately labeled; neither they nor this period summary claim lifetime totals.
+
+Migration `20260926160000_own_life_summary.sql` adds only the RPC and an owner/save
+date index. Applied only to the marked local disposable database. Before release,
+inspect target schema/ledger, apply after its prerequisites, refresh PostgREST,
+then deploy clients and verify staging Auth/privacy. Recovery: forward corrective
+migration; an app rollback may safely leave the unused RPC/index installed.
+No production changes occurred. See [verification](../tasks/completed/IG-007-verification.md).

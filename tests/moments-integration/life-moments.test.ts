@@ -608,3 +608,41 @@ describe("IG-006 member profile and safety API", () => {
     }
   });
 });
+
+import { loadOwnLifeSummary } from "@/lib/life-summary.functions";
+import type { LifeSummary } from "@/lib/life-summary";
+describe("IG-007 private activity summary API", () => {
+  let summaryIds: Record<string, string>;
+  beforeAll(async () => {
+    summaryIds = JSON.parse(
+      await readFile(resolve(process.env.IG003_RUNTIME!, "ig007-fixtures.json"), "utf8"),
+    );
+  });
+  it("returns complete period aggregates without row limits or identities", async () => {
+    const result = await call<LifeSummary>(loadOwnLifeSummary, summaryIds.owner, {});
+    expect(result.gatherings).toBe(28);
+    expect(result.moments).toBe(103);
+    expect(result.categories.reduce((n, c) => n + c.count, 0)).toBe(result.gatherings);
+    expect(result.periods.reduce((n, p) => n + p.gatherings, 0)).toBe(result.gatherings);
+    expect(JSON.stringify(result)).not.toContain(summaryIds.owner);
+    expect(JSON.stringify(result)).not.toContain("PRIVATE");
+    for (const field of ["people", "places", "user_id", "note", "lat", "lng"])
+      expect(result).not.toHaveProperty(field);
+  });
+  it("another account receives only its own empty summary", async () => {
+    const result = await call<LifeSummary>(loadOwnLifeSummary, summaryIds.empty, {});
+    expect(result).toMatchObject({ gatherings: 0, moments: 0, categories: [] });
+  });
+  it("cannot select a target or arbitrary window", async () => {
+    await expect(
+      call(loadOwnLifeSummary, summaryIds.empty, { userId: summaryIds.owner }),
+    ).rejects.toThrow();
+    await expect(call(loadOwnLifeSummary, summaryIds.owner, { days: 365 })).rejects.toThrow();
+  });
+  for (const kind of ["unverified", "waitlisted", "venue"])
+    it(`rejects ${kind} summary access`, async () => {
+      await expect(call(loadOwnLifeSummary, summaryIds[kind], {})).rejects.toThrow(
+        "Summary unavailable",
+      );
+    });
+});

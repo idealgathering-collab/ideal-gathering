@@ -1,3 +1,4 @@
+vi.mock("@/lib/life-summary.functions", () => ({ loadOwnLifeSummary: vi.fn() }));
 import { describe, expect, it, vi } from "vitest";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";

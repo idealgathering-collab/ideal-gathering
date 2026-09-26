@@ -101,3 +101,16 @@ No DOB, fine location, contact details or private notes; no public discovery or
 social metadata. The cost is intentionally unavailable profiles before any real
 in-app connection, and no unsupported join-request context. See LIFE_MOMENTS.md.
 IG-007 remains a separate task and is not implemented here.
+
+### IG-D019 — Accepted: private deterministic recent-life counts (2026-09-26)
+
+Source: explicit IG-007 request permits fewer trustworthy metrics and a simple
+recent period. Replace capped list lengths with server aggregation over 720 hours,
+using existing host/check-in/block rules and immutable moment save dates. Return
+only owner-scoped counts, allowlisted categories and three 240-hour buckets.
+Keep caller RLS with an invoker RPC, no target argument, no privileged client.
+Omit people met, historical place visits and first-time counts because current
+records do not establish those outcomes reliably. No activity warehouse or public
+metrics. Consequences: the owner sees full period counts independently of history
+limits; counts reflect current eligibility and can change after cancellation,
+deletion or blocking. See the IG-007 contract in LIFE_MOMENTS.md.

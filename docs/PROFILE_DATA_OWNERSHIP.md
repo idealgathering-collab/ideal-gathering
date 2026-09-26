@@ -96,3 +96,10 @@ traits are absent. Canonical intentions and social style are explicitly allowed;
 no archival duplicate fallback is used. The card compatibility adapter supplies
 neutral absent fields and no other-user story. Own profile writes, full private
 editing, canonical preferences, matching and staff-only tools are unchanged.
+
+## IG-007 own summary — 2026-09-26
+
+The read-only caller-scoped summary aggregates existing gathering participation
+and own Life Moment save dates; it does not write identity, preferences, matching
+signals or duplicate activity records. Its private aggregate is not part of the
+member projection. See [counting contract](LIFE_MOMENTS.md#own-life-summary-ig-007).
