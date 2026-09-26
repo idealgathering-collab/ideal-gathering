@@ -3,6 +3,9 @@
 Completed 2026-09-26 on `codex/ig-007-life-summary-v1`, based on IG-006 `65f9286`.
 The implementation is complete within the accepted V1 scope. IG-008 is next and
 has not started. Branch work is not merged or deployed.
+Implementation `e601443` is pushed in draft [PR #11](https://github.com/idealgathering-collab/ideal-gathering/pull/11),
+stacked on PR #10. Temporary PostgreSQL/PostgREST/preview services stopped;
+browser viewport restored. Synthetic desktop screenshot saved outside the repo.
 
 ## Outcome and exact data
 

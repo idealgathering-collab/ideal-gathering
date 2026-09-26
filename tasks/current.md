@@ -24,6 +24,8 @@ Reinspect its approved spec and current implementation before beginning.
 ### IG-007 verification closure — 2026-09-26
 
 Complete on `codex/ig-007-life-summary-v1`, based on IG-006 `65f9286`.
+Implementation `e601443` is pushed in draft [PR #11](https://github.com/idealgathering-collab/ideal-gathering/pull/11),
+stacked on PR #10. Temporary local services are stopped and viewport restored.
 Own profile shows full rolling-30-day counts of completed eligible gatherings and
 saved moments, persisted categories and three 10-day gathering counts. Read-only
 caller-scoped invoker RPC retains RLS/access/block rules; no target parameter or
@@ -45,7 +47,7 @@ of reliable evidence. Existing editing, matching and IG-006 remain unchanged.
 [Archived spec](completed/IG-007-life-summary-v1.md) and
 [exact verification report](completed/IG-007-verification.md) document rules,
 files, commands, recovered failures and rollout limits. IG-006 PR #10 remains an
-unmerged dependency. Finish review handoff; IG-008 stays a separate task.
+unmerged dependency. Review the stacked PR; IG-008 stays a separate task.
 
 ### IG-006 verification closure — 2026-09-26
 
