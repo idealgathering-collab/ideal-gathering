@@ -87,3 +87,17 @@ and application deployment verification remain staging checks. See
 [contract](LIFE_MOMENTS.md) and [IG-004 verification](../tasks/completed/IG-004-verification.md).
 
 Append a stable ID, status (Proposed/Accepted/Superseded/Deferred), source/approval, problem, decision, rationale, alternatives, consequences and affected task/docs. Link superseded entries rather than erasing history.
+
+### IG-D018 — Accepted: relationship-gated member profiles (2026-09-26)
+
+Source: explicit user IG-006 request supersedes the older public-profile wording.
+The old privileged loader exposed a card for any requested signed-in target.
+Use an authenticated minimal RPC with verified/beta member eligibility and a
+common approved gathering. Past bookings require host/check-in evidence; blocks
+in either direction and host blocks invalidate the relevant connection. Reuse
+this gate in the existing shared-moment predicate, rather than another sharing
+system. A generic connection label avoids exposing hidden attendance/history.
+No DOB, fine location, contact details or private notes; no public discovery or
+social metadata. The cost is intentionally unavailable profiles before any real
+in-app connection, and no unsupported join-request context. See LIFE_MOMENTS.md.
+IG-007 remains a separate task and is not implemented here.

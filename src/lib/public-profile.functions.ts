@@ -2,50 +2,46 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import type { PublicProfileRow } from "./public-profile";
-import { PUBLIC_PROFILE_COLUMNS, coarsenDob } from "./public-profile";
 
-/**
- * Reads another member's profile.
- *
- * `profiles` RLS only lets a user read their OWN row (plus admins), so the
- * browser client returns null for anyone else. Signed-in members still need to
- * see each other's public card, so this runs server-side with an explicit
- * safe-column projection: no email, no nationality, no gender, and the exact
- * birthday coarsened to the birth year.
- */
+/** Compatibility name: this is a relationship-gated member read, never public. */
 export const loadPublicProfile = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d: unknown) => z.object({ userId: z.string().uuid() }).parse(d))
-  .handler(async ({ data }): Promise<PublicProfileRow | null> => {
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-
-    const { data: row, error } = await supabaseAdmin
-      .from("profiles")
-      .select(PUBLIC_PROFILE_COLUMNS)
-      .eq("id", data.userId)
-      .maybeSingle();
-
-    if (error || !row) return null;
-
-    // Intentions were already part of the public projection. Keep all other
-    // raw preference fields private; canonical storage does not widen exposure.
-    const { data: prefs, error: prefError } = await supabaseAdmin
-      .from("user_gathering_preferences")
-      .select("intentions")
-      .eq("user_id", data.userId)
-      .maybeSingle();
-    if (prefError) throw prefError;
-    const r = row as unknown as PublicProfileRow;
+  .inputValidator((d: unknown) => z.object({ userId: z.string().uuid() }).strict().parse(d))
+  .handler(async ({ data, context }): Promise<PublicProfileRow | null> => {
+    const { data: rows, error } = await context.supabase.rpc("get_member_profile", {
+      _user_id: data.userId,
+    });
+    if (error) throw new Error("Member profile unavailable");
+    const row = rows?.[0];
+    if (!row) return null;
+    let avatar: string | null = null;
+    // Only sign the target's avatar; never load arbitrary remote tracking URLs.
+    const avatarPattern = new RegExp(`^${data.userId}/avatar\\.(?:jpg|jpeg|png|webp)$`, "i");
+    if (row.avatar_url && avatarPattern.test(row.avatar_url)) {
+      try {
+        const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+        const result = await supabaseAdmin.storage
+          .from("avatars")
+          .createSignedUrl(row.avatar_url, 60);
+        if (!result.error) avatar = result.data.signedUrl;
+      } catch {
+        // Identity remains useful during a media outage.
+      }
+    }
     return {
-      ...r,
-      date_of_birth: coarsenDob(r.date_of_birth),
-      interests: Array.isArray(r.interests) ? r.interests.filter((v) => typeof v === "string") : [],
-      energy_level: null,
-      group_size: null,
-      talk_style: null,
-      new_people_pref: null,
-      intentions: Array.isArray(prefs?.intentions)
-        ? prefs.intentions.filter((v): v is string => typeof v === "string")
-        : [],
+      display_name: row.display_name,
+      avatar_url: avatar,
+      city: row.city,
+      bio: row.bio,
+      interests: strings(row.interests),
+      intentions: strings(row.intentions),
+      energy_level: row.energy_level,
+      group_size: row.group_size,
+      talk_style: row.talk_style,
+      new_people_pref: row.new_people_pref,
     };
   });
+
+function strings(value: unknown): string[] {
+  return Array.isArray(value) ? value.filter((v): v is string => typeof v === "string") : [];
+}

@@ -10,7 +10,8 @@ Account controls remain in a disclosure section; global navigation is unchanged.
 Own timeline editing reuses the optional photo/note/visibility editor, even when
 the source gathering is unavailable. Loading/errors never imply zero activity.
 Counts and places explain their limits; no lifetime statistics or inferred visits.
-EN/RU/FA copy and mobile RTL are supported. Other-user profiles remain unchanged.
+EN/RU/FA copy and mobile RTL are supported. The separate IG-006 member view is
+documented below.
 See [contract](LIFE_MOMENTS.md) and [verification](../tasks/completed/IG-005-verification.md).
 
 ## IG-004 completed gathering memory — 2026-09-24
@@ -57,3 +58,15 @@ Reuse existing flows; do not impose a new onboarding or profile design without a
 Specify loading, empty, validation, permission-denied, partial-save, retry and success states; accessible labels and keyboard/focus; mobile layout; translations/RTL; and private/public field visibility.
 Exact date of birth, raw private ratings and location coordinates require explicit visibility decisions. Avoid exposing another person's private signals through matching explanations.
 Future Live Gathering, Emergency Button and Community Aid require separate research/specifications. Existing chat/check-in stays intact.
+
+## IG-006 in-app Member Profile — 2026-09-26
+
+The existing people route now shows identity, interests/compact social style,
+a generic shared-gathering context, up to 12 shared moments and About. It uses the
+IG-005 card tokens and mobile stack/desktop columns, with EN/RU/FA copy. No editing,
+match score or message shortcut is presented. Self routes return to IG-005.
+Loading is distinct from an empty shared timeline. Missing, blocked, unrelated
+and failed loads use the same generic unavailable state. Report/block reuse the
+existing actions and dialogs; closing restores focus, and a successful block
+removes the viewed profile. Metadata has no public-social description and uses
+noindex/nofollow/noarchive. These are authenticated application pages.

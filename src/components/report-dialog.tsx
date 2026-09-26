@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, type RefObject } from "react";
 import { toast } from "sonner";
 import {
   Dialog,
@@ -26,9 +26,11 @@ export type ReportTarget = {
 export function ReportDialog({
   target,
   onOpenChange,
+  returnFocusRef,
 }: {
   target: ReportTarget | null;
   onOpenChange: (open: boolean) => void;
+  returnFocusRef?: RefObject<HTMLButtonElement | null>;
 }) {
   const t = useT();
   const [reason, setReason] = useState<(typeof REPORT_REASONS)[number]>("harassment");
@@ -62,7 +64,15 @@ export function ReportDialog({
 
   return (
     <Dialog open={!!target} onOpenChange={onOpenChange}>
-      <DialogContent>
+      <DialogContent
+        className="max-h-[90dvh] overflow-y-auto"
+        onCloseAutoFocus={(event) => {
+          if (returnFocusRef?.current) {
+            event.preventDefault();
+            returnFocusRef.current.focus();
+          }
+        }}
+      >
         <DialogHeader>
           <DialogTitle>{t("mod.report.title")}</DialogTitle>
           <DialogDescription>
@@ -70,7 +80,11 @@ export function ReportDialog({
           </DialogDescription>
         </DialogHeader>
 
-        <RadioGroup value={reason} onValueChange={(v) => setReason(v as typeof reason)} className="gap-2">
+        <RadioGroup
+          value={reason}
+          onValueChange={(v) => setReason(v as typeof reason)}
+          className="gap-2"
+        >
           {REPORT_REASONS.map((r) => (
             <div key={r} className="flex items-center gap-2">
               <RadioGroupItem value={r} id={`reason-${r}`} />

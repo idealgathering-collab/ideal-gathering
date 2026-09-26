@@ -12,6 +12,7 @@ export interface StyleProps extends Omit<SectorProps, "sector" | "hasData" | "ch
   completion?: SectionCompletion;
   isSelf?: boolean;
   children?: React.ReactNode;
+  compact?: boolean;
 }
 
 const STYLE_ICONS: Record<string, { icon: string; labelKey: string; color: string }> = {
@@ -79,7 +80,7 @@ function StyleTile({
   );
 }
 
-export function Style({ style, children, ...props }: StyleProps) {
+export function Style({ style, children, compact = false, ...props }: StyleProps) {
   const t = useT();
 
   const hasStyle =
@@ -103,6 +104,28 @@ export function Style({ style, children, ...props }: StyleProps) {
   const sizeSubtitle = t("profile.style.groupSize");
   const talkSubtitle = t("profile.style.talkStyle");
   const newPeopleSubtitle = t("profile.style.newPeople");
+
+  if (compact) {
+    const entries = [
+      { config: energyConfig, label: energySubtitle },
+      { config: sizeConfig, label: sizeSubtitle },
+      { config: talkConfig, label: talkSubtitle },
+      { config: newPeopleConfig, label: newPeopleSubtitle },
+    ];
+    return (
+      <dl className="grid gap-3 sm:grid-cols-2">
+        {entries.map(
+          ({ config, label }) =>
+            config && (
+              <div key={label} className="min-w-0 rounded-2xl bg-muted/40 p-3">
+                <dt className="text-xs text-muted-foreground">{label}</dt>
+                <dd className="mt-1 break-words text-sm">{t(config.labelKey)}</dd>
+              </div>
+            ),
+        )}
+      </dl>
+    );
+  }
 
   const tiles = [
     energyConfig && (

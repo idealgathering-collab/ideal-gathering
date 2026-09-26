@@ -461,3 +461,150 @@ describe("life moments application/API foundation", () => {
     expect(rows.some((r) => r.id === own.id)).toBe(false);
   });
 });
+import { loadPublicProfile } from "@/lib/public-profile.functions";
+import { blockUser, unblockUser, submitReport } from "@/lib/moderation.functions";
+
+describe("IG-006 member profile and safety API", () => {
+  let member: Record<string, string>;
+  type Profile = Awaited<ReturnType<typeof loadPublicProfile>>;
+  const load = (viewer: string, target: string) =>
+    call<Profile>(loadPublicProfile, viewer, { userId: target });
+  beforeAll(async () => {
+    member = JSON.parse(
+      await readFile(resolve(process.env.IG003_RUNTIME!, "ig006-fixtures.json"), "utf8"),
+    );
+  });
+  it("authorized member sees only the safe canonical projection", async () => {
+    const row = await load(member.viewer, member.owner);
+    expect(row).toMatchObject({
+      display_name: "[test-IG006] owner",
+      city: "Member city",
+      energy_level: "calm",
+      talk_style: "deep",
+      group_size: "small",
+      intentions: ["make_friends"],
+    });
+    expect(Object.keys(row!).sort()).toEqual(
+      [
+        "display_name",
+        "avatar_url",
+        "city",
+        "bio",
+        "interests",
+        "intentions",
+        "energy_level",
+        "group_size",
+        "talk_style",
+        "new_people_pref",
+      ].sort(),
+    );
+    for (const value of [
+      "PRIVATE NOTE",
+      "PRIVATE AREA",
+      "PRIVATE VENUE",
+      "1990-05-18",
+      "example.invalid",
+    ])
+      expect(JSON.stringify(row)).not.toContain(value);
+  });
+  it("unrelated and missing targets have the same result", async () => {
+    expect(await load(member.outsider, member.owner)).toBeNull();
+    expect(await load(member.viewer, "00000000-0000-4000-8000-000000000001")).toBeNull();
+  });
+  it("shared moments use the existing gated projection without private notes", async () => {
+    const rows = await call<Array<Record<string, unknown>>>(loadVisibleLifeMoments, member.viewer, {
+      userId: member.owner,
+      limit: 12,
+    });
+    expect(rows.map((r) => r.title)).toEqual(["Shared memory"]);
+    for (const r of rows)
+      for (const field of ["note", "gathering_id", "photo_path", "lat", "lng"])
+        expect(r).not.toHaveProperty(field);
+    expect(
+      await call(loadVisibleLifeMoments, member.outsider, { userId: member.owner, limit: 12 }),
+    ).toEqual([]);
+  });
+  for (const reverse of [false, true])
+    it(`existing block/unblock actions gate profile and moments (reverse=${reverse})`, async () => {
+      const blocker = reverse ? member.owner : member.viewer,
+        blocked = reverse ? member.viewer : member.owner;
+      try {
+        expect(await call(blockUser, blocker, { userId: blocked })).toEqual({ ok: true });
+        expect(await load(member.viewer, member.owner)).toBeNull();
+        expect(
+          await call(loadVisibleLifeMoments, member.viewer, { userId: member.owner, limit: 12 }),
+        ).toEqual([]);
+      } finally {
+        await call(unblockUser, blocker, { userId: blocked });
+      }
+      expect(await load(member.viewer, member.owner)).not.toBeNull();
+    });
+  it("existing report action saves caller ownership and target", async () => {
+    expect(
+      await call(submitReport, member.viewer, {
+        targetType: "user",
+        targetId: member.owner,
+        targetUserId: member.owner,
+        reason: "other",
+        details: "[test-IG006] safety report",
+      }),
+    ).toEqual({ ok: true });
+    const { data, error } = await client(member.viewer)
+      .from("reports")
+      .select("reporter_id,target_user_id,details")
+      .eq("target_user_id", member.owner);
+    expect(error).toBeNull();
+    expect(data).toEqual([
+      {
+        reporter_id: member.viewer,
+        target_user_id: member.owner,
+        details: "[test-IG006] safety report",
+      },
+    ]);
+  });
+  it("self-block/report protections remain", async () => {
+    await expect(call(blockUser, member.viewer, { userId: member.viewer })).rejects.toThrow();
+    await expect(
+      call(submitReport, member.viewer, {
+        targetType: "user",
+        targetId: member.viewer,
+        targetUserId: member.viewer,
+        reason: "other",
+      }),
+    ).rejects.toThrow();
+  });
+  it("rejects invalid and extra profile input", async () => {
+    await expect(call(loadPublicProfile, member.viewer, { userId: "invalid" })).rejects.toThrow();
+    await expect(
+      call(loadPublicProfile, member.viewer, { userId: member.owner, includePrivate: true }),
+    ).rejects.toThrow();
+  });
+  it("signs only an authorized target avatar and strips its stored path", async () => {
+    const path = `${member.owner}/avatar.png`;
+    const setAvatar = async (value: string | null) => {
+      const { error } = await client(member.owner)
+        .from("profiles")
+        .update({ avatar_url: value })
+        .eq("id", member.owner);
+      expect(error).toBeNull();
+    };
+    try {
+      await setAvatar(path);
+      const before = signedRequests.length;
+      expect(await load(member.outsider, member.owner)).toBeNull();
+      expect(signedRequests).toHaveLength(before);
+      const row = await load(member.viewer, member.owner);
+      expect(row?.avatar_url).toContain("/object/sign/test");
+      expect(JSON.stringify(row)).not.toContain(path);
+      expect(signedRequests.at(-1)?.body).toEqual({ expiresIn: 60 });
+      for (const unsafe of [`${member.viewer}/avatar.png`, "https://example.invalid/tracker"]) {
+        await setAvatar(unsafe);
+        const count = signedRequests.length;
+        expect((await load(member.viewer, member.owner))?.avatar_url).toBeNull();
+        expect(signedRequests).toHaveLength(count);
+      }
+    } finally {
+      await setAvatar(null);
+    }
+  });
+});

@@ -886,6 +886,21 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: boolean
       }
+      get_member_profile: {
+        Args: { _user_id: string };
+        Returns: {
+          avatar_url: string;
+          bio: string;
+          city: string;
+          display_name: string;
+          energy_level: string;
+          group_size: string;
+          intentions: Json;
+          interests: Json;
+          new_people_pref: string;
+          talk_style: string;
+        }[];
+      };
       is_beta_launched: { Args: never; Returns: boolean }
       is_owner: { Args: { _user_id: string }; Returns: boolean }
       list_visible_life_moments: {

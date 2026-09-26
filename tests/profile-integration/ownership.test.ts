@@ -25,7 +25,8 @@ vi.mock("@tanstack/react-start", () => ({
     const builder = {
       middleware: () => builder,
       inputValidator: () => builder,
-      handler: (fn: (args: unknown) => unknown) => fn,
+      handler: (fn: (args: unknown) => unknown) => (args: { context?: unknown }) =>
+        fn({ context: { supabase: state.client }, ...args }),
     };
     return builder;
   },
@@ -89,13 +90,15 @@ describe("canonical profile ownership via real database", () => {
     const row = await loadPublicProfile({ data: { userId: ids.legacy } });
     expect(row).toMatchObject({
       intentions: ["make_friends"],
-      date_of_birth: "1990-01-01",
-      energy_level: null,
-      talk_style: null,
-      new_people_pref: null,
-      group_size: null,
+      energy_level: "lively",
+      talk_style: "deep",
+      new_people_pref: "warm_up",
+      group_size: "large",
     });
     for (const field of [
+      "date_of_birth",
+      "neighborhood",
+      "country",
       "nationality",
       "gender",
       "social_links",
@@ -107,8 +110,8 @@ describe("canonical profile ownership via real database", () => {
     const card = await loadProfileCard(ids.legacy);
     expect(card).toMatchObject({
       intentions: ["make_friends"],
-      dateOfBirth: "1990-01-01",
-      energyLevel: null,
+      dateOfBirth: null,
+      energyLevel: "lively",
     });
     state.client = client(ids.legacy);
   });
