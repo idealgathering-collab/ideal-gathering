@@ -184,3 +184,26 @@ export const supabase = {
     from: () => ({ uploadToSignedUrl: async () => ({ error: Error("Synthetic upload failure") }) }),
   },
 };
+
+export async function loadOwnLifeSummary() {
+  await delay();
+  if (params.has("load-error")) throw Error("Synthetic summary failure");
+  const empty = params.has("empty");
+  return {
+    period_start: "2026-08-27T12:00:00Z",
+    period_end: "2026-09-26T12:00:00Z",
+    gatherings: empty ? 0 : 6,
+    moments: empty ? 0 : 4,
+    categories: empty
+      ? []
+      : [
+          { category: "coffee", count: 4 },
+          { category: "city", count: 2 },
+        ],
+    periods: [
+      { start: "2026-08-27T12:00:00Z", end: "2026-09-06T12:00:00Z", gatherings: empty ? 0 : 1 },
+      { start: "2026-09-06T12:00:00Z", end: "2026-09-16T12:00:00Z", gatherings: empty ? 0 : 3 },
+      { start: "2026-09-16T12:00:00Z", end: "2026-09-26T12:00:00Z", gatherings: empty ? 0 : 2 },
+    ],
+  };
+}

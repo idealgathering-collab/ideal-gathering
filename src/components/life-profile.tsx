@@ -1,3 +1,4 @@
+import { LifeSummarySection } from "@/components/life-summary";
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
@@ -42,28 +43,8 @@ export function LifeProfileActivity({ userId }: { userId: string }) {
   const places = [...new Set((gatherings.data ?? []).map((g) => g.place?.trim()).filter(Boolean))];
   return (
     <div className="space-y-6">
-      <section className={panel} aria-labelledby="life-summary">
-        <h2 id="life-summary" className="font-display text-xl">
-          {t("life.summary")}
-        </h2>
-        <p className="mt-1 text-sm text-muted-foreground">{t("life.snapshot")}</p>
-        <dl className="mt-4 grid grid-cols-2 gap-3">
-          {[
-            { label: t("life.moments"), value: moments.data?.length, unavailable: moments.isError },
-            {
-              label: t("life.completed"),
-              value: gatherings.data?.length,
-              unavailable: gatherings.isError,
-            },
-          ].map(({ label, value, unavailable }) => (
-            <div key={label} className="rounded-2xl bg-muted/40 p-4">
-              <dt className="text-sm text-muted-foreground">{label}</dt>
-              <dd className="mt-1 text-3xl font-semibold">{unavailable ? "—" : (value ?? "…")}</dd>
-            </div>
-          ))}
-        </dl>
-        <p className="mt-3 text-xs text-muted-foreground">{t("life.bounds")}</p>
-      </section>
+      <LifeSummarySection userId={userId} />
+      <p className="text-xs text-muted-foreground">{t("summary.history")}</p>
       <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)]">
         <section className={panel} aria-labelledby="life-moments">
           <h2 id="life-moments" className="flex items-center gap-2 font-display text-xl">
@@ -234,6 +215,7 @@ function TimelineEditor({ moment, userId }: { moment: Moment; userId: string }) 
             onClose={() => setOpen(false)}
             onSaved={() => {
               void qc.invalidateQueries({ queryKey: ["life-profile-moments", userId] });
+              void qc.invalidateQueries({ queryKey: ["life-summary", userId] });
               if (moment.gathering_id)
                 void qc.invalidateQueries({
                   queryKey: ["gathering-moment", userId, moment.gathering_id],

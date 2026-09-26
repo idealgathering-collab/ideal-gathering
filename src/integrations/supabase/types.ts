@@ -901,6 +901,7 @@ export type Database = {
           talk_style: string;
         }[];
       };
+      get_my_life_summary: { Args: Record<PropertyKey, never>; Returns: Json };
       is_beta_launched: { Args: never; Returns: boolean }
       is_owner: { Args: { _user_id: string }; Returns: boolean }
       list_visible_life_moments: {

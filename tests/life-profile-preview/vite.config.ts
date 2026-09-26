@@ -11,6 +11,7 @@ export default defineConfig({
   resolve: {
     alias: {
       "@/lib/life-moments.functions": path("./fixtures.tsx"),
+      "@/lib/life-summary.functions": path("./fixtures.tsx"),
       "@/lib/life-profile.functions": path("./fixtures.tsx"),
       "@/lib/profile-card.functions": path("./fixtures.tsx"),
       "@/integrations/supabase/client": path("./fixtures.tsx"),

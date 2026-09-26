@@ -1,5 +1,11 @@
 # Database
 
+IG-007 adds the own-only `get_my_life_summary()` invoker RPC and
+`life_moments_owner_saved_at` index in `20260926160000_own_life_summary.sql`.
+No table, RLS policy, profile writer or other-user projection changes.
+See [counting/privacy/rollout contract](LIFE_MOMENTS.md#own-life-summary-ig-007)
+and [local verification](../tasks/completed/IG-007-verification.md).
+
 ## IG-004 gathering moment context — 2026-09-24
 
 `20260924120000_gathering_moment_context.sql` adds one authenticated, caller/RLS
