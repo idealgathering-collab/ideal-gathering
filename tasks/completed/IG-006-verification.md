@@ -109,3 +109,10 @@ clears immediately. No real lifetime counts, attendance lists or place history.
 Use forward corrective migrations for recovery; do not restore unrestricted
 profile reads. IG-006 is complete for the bounded implementation with these
 release limits. IG-007 is the next task and was not started.
+
+Review handoff: implementation `ac493ee` is pushed in draft
+[PR #10](https://github.com/idealgathering-collab/ideal-gathering/pull/10), stacked
+on [PR #9](https://github.com/idealgathering-collab/ideal-gathering/pull/9).
+Base: `codex/ig-005-life-profile-v1`; head: `codex/ig-006-member-profile-privacy`.
+The 2026-09-26 resume finalized archival and publishing only; completed tests were
+not rerun. No IG-007 work, merge or deployment.

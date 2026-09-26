@@ -24,6 +24,7 @@ reinspect the implementation before any new work. IG-006 did not add its metrics
 ### IG-006 verification closure — 2026-09-26
 
 Complete on `codex/ig-006-member-profile-privacy`, based on IG-005 `d840b37`.
+Implementation `ac493ee` is pushed in draft [PR #10](https://github.com/idealgathering-collab/ideal-gathering/pull/10), stacked on PR #9.
 Existing people route is now an in-app member view with relationship and both-way
 block enforcement at the database/shared-moment layer. No DOB/private notes or
 fine location; own links use IG-005. Report/block, mobile/desktop/RTL and focus
