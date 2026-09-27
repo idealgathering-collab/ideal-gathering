@@ -8,6 +8,14 @@ beta-eligible venue ownership. Owner preview uses the same components read-only.
 Existing registration, moderation, profile fields, menu links and activation are
 retained. Table labels/capacities and menu items can now be edited.
 
+Registration and profile editing inherit the shared Armenia search/Yerevan fallback.
+Venue activation creates gatherings of 2–5 people, independently of physical table
+capacity. `20260927080000_venue_activation_small_groups.sql` enforces this bound on
+venue-origin inserts/updates, including direct API writes. Consumer capacity rules
+are unchanged. Its NOT VALID constraint preserves historical bookings but requires
+any updated violating row to be corrected; audit exceptions before validating it.
+See the [corrective checkpoint](../tasks/completed/IG-008-verification.md#corrective-checkpoint--2026-09-27).
+
 ## Evidence and counting
 
 All attribution uses existing `gatherings.business_id`, never venue-name matching.

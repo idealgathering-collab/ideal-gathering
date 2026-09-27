@@ -213,10 +213,12 @@ deliberately independent of capped history and are never production data.
 ### IG-008 venue verification
 
 Run `node tests/venue-value-postgres.verify.mjs <runtime>` on the existing marked
-loopback disposable database after prerequisites. It applies the two additive
+loopback disposable database after prerequisites. It applies the three additive
 migrations if absent and writes synthetic ig008-fixtures.json. Native coverage
 includes access, counting boundaries, operational writes and an observed concurrent
 attribution/check-in lock wait. Never point this harness at a hosted database.
+The corrective capacity checks enforce 2–5 seats for venue activations, including
+direct API inserts/updates and origin changes, while preserving consumer capacity.
 Use the unchanged verified PostgREST launcher under explicit Windows PowerShell
 5.1, then set IG008_RUNTIME and run Vitest with `--config vitest.venue.config.ts`.
 Existing moments/profile/owner configs retain their documented runtime variables.

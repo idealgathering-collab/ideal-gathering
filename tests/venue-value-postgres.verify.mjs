@@ -94,6 +94,22 @@ try {
         "utf8",
       ),
     );
+  if (
+    !(
+      await db.query(
+        "SELECT 1 FROM pg_constraint WHERE conrelid='public.gatherings'::regclass AND conname='gatherings_venue_activation_seats_check'",
+      )
+    ).rowCount
+  )
+    await db.query(
+      await readFile(
+        new URL(
+          "../supabase/migrations/20260927080000_venue_activation_small_groups.sql",
+          import.meta.url,
+        ),
+        "utf8",
+      ),
+    );
   for (const [kind, id] of Object.entries(ids)) {
     const venue = ["venue", "otherVenue", "pending", "rejected", "unverified"].includes(kind);
     await db.query(
@@ -425,6 +441,18 @@ try {
     0,
   );
   // Existing activation is reused, including table association and removal lock.
+  for (const seats of [1, 6, 30]) {
+    await denied(
+      "venue activation rejects " + seats + " seats",
+      () =>
+        actor(
+          ids.venue,
+          "INSERT INTO public.gatherings(host_id,business_id,table_id,subject,starts_at,ends_at,seats,status,origin,venue_name,neighborhood) VALUES($1,$2,$3,'[test-IG008] Invalid capacity',now()+interval '5 days',now()+interval '5 days 2 hours',$4,'approved','venue_activated','','')",
+          [ids.venue, businesses.venue, table, seats],
+        ),
+      /gatherings_venue_activation_seats_check/,
+    );
+  }
   const activation = (
     await actor(
       ids.venue,
@@ -432,6 +460,19 @@ try {
       [ids.venue, businesses.venue, table],
     )
   ).rows[0].id;
+  for (const seats of [2, 5]) {
+    const result = await actor(
+      ids.venue,
+      "UPDATE public.gatherings SET seats=$2 WHERE id=$1 RETURNING seats",
+      [activation, seats],
+    );
+    check("venue activation accepts boundary " + seats, result.rows[0].seats, seats);
+  }
+  await denied(
+    "venue activation cannot expand above five",
+    () => actor(ids.venue, "UPDATE public.gatherings SET seats=6 WHERE id=$1", [activation]),
+    /gatherings_venue_activation_seats_check/,
+  );
   check(
     "venue activation appears",
     (await summary(ids.venue)).upcoming.some((g) => g.id === activation && g.venue_hosted),
@@ -443,6 +484,25 @@ try {
     /TABLE_LOCKED/,
   );
   await actor(ids.venue, "DELETE FROM public.gatherings WHERE id=$1", [activation]);
+  // The new bound is origin-specific; consumer gathering rules are unchanged.
+  const consumerLarge = await event(-200);
+  await actor(ids.consumer, "UPDATE public.gatherings SET seats=6 WHERE id=$1", [consumerLarge]);
+  check(
+    "consumer capacity outside venue path unchanged",
+    (await db.query("SELECT seats FROM public.gatherings WHERE id=$1", [consumerLarge])).rows[0]
+      .seats,
+    6,
+  );
+  await denied(
+    "changing origin cannot bypass venue bound",
+    () =>
+      db.query("UPDATE public.gatherings SET origin='venue_activated',table_id=$2 WHERE id=$1", [
+        consumerLarge,
+        table,
+      ]),
+    /gatherings_venue_activation_seats_check/,
+  );
+  await db.query("DELETE FROM public.gatherings WHERE id=$1", [consumerLarge]);
   // Fixed transaction clock proves cutoff inclusion and disjoint bucket boundaries.
   await db.query("BEGIN");
   for (const hours of [720, 480, 240]) {

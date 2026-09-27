@@ -55,6 +55,58 @@ beforeAll(async () => {
   secret = await readFile(resolve(runtime, "test-jwt-secret"), "utf8");
 });
 describe("venue dashboard over real SQL/PostgREST", () => {
+  for (const seats of [1, 6, 30]) {
+    it("direct activation API rejects " + seats + " seats", async () => {
+      const { error } = await client(ids.venue).from("gatherings").insert({
+        host_id: ids.venue,
+        business_id: ids.businesses.venue,
+        table_id: ids.table,
+        subject: "[test-IG008] Invalid API activation",
+        starts_at: "2090-01-01T10:00:00Z",
+        ends_at: "2090-01-01T12:00:00Z",
+        seats,
+        status: "approved",
+        origin: "venue_activated",
+        venue_name: "",
+        neighborhood: "",
+      });
+      expect(error?.code).toBe("23514");
+      expect(error?.message).toContain("gatherings_venue_activation_seats_check");
+    });
+  }
+  for (const seats of [2, 5]) {
+    it("direct activation API accepts " + seats + " seats and rejects expansion", async () => {
+      const api = client(ids.venue);
+      const { data, error } = await api
+        .from("gatherings")
+        .insert({
+          host_id: ids.venue,
+          business_id: ids.businesses.venue,
+          table_id: ids.table,
+          subject: "[test-IG008] API activation boundary",
+          starts_at: "2090-01-01T10:00:00Z",
+          ends_at: "2090-01-01T12:00:00Z",
+          seats,
+          status: "approved",
+          origin: "venue_activated",
+          venue_name: "",
+          neighborhood: "",
+        })
+        .select("id,seats")
+        .single();
+      expect(error).toBeNull();
+      expect(data?.seats).toBe(seats);
+      try {
+        const result = await api.from("gatherings").update({ seats: 6 }).eq("id", data!.id);
+        expect(result.error?.code).toBe("23514");
+        const saved = await api.from("gatherings").select("seats").eq("id", data!.id).single();
+        expect(saved.data?.seats).toBe(seats);
+      } finally {
+        const cleanup = await api.from("gatherings").delete().eq("id", data!.id);
+        expect(cleanup.error).toBeNull();
+      }
+    });
+  }
   it("own verified counts and minimal projection", async () => {
     const data = await call(ids.venue);
     expect(data).toMatchObject({

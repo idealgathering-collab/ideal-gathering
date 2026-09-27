@@ -23,6 +23,32 @@ No next product feature is authorized automatically. Next: review the stacked PR
 complete supported-platform build and hosted staging validation, then plan release.
 Completion here does not mean merged, deployed or production-beta validated.
 
+### IG-008 corrective checkpoint — 2026-09-27
+
+User-authorized follow-up on `codex/ig-008-venue-value-layer`, starting at
+`14d9330`, in existing draft PR #12, still stacked on IG-007 PR #11.
+Both registration and dashboard profile pickers now inherit shared Armenia/Yerevan
+behavior. Venue activation has integer 2–5 form bounds, defensive payload clamping,
+and an origin-specific database CHECK for direct inserts/updates. Physical table
+capacity and consumer gathering capacity rules remain unchanged.
+
+- 266 unit/component tests pass, including 16 focused correction tests.
+- 120 API tests pass: 16 venue, 53 moments/member/summary, 9 profile, 42 owner/admin.
+- 236 native DB checks pass: 65 venue, 61 moments, 21 gathering, 29 profile,
+  34 member, 26 summary. Includes consumer capacity preservation and origin-change rejection.
+- Typecheck and targeted lint pass; registration retains 14 baseline formatting
+  findings (zero warnings), and passes with only the formatting rule disabled.
+- Normal build reproduces the existing Lovable Windows routesDir assertion.
+- New migration `20260927080000_venue_activation_small_groups.sql` applied only to
+  the marked disposable database. NOT VALID preserves historical rows; all new
+  inserts/updates are enforced. Historical exceptions need audit before validation;
+  editing an existing oversized venue gathering requires correcting its seats.
+
+Exact commands, evidence and rollout limits are in the
+[corrective verification](completed/IG-008-verification.md#corrective-checkpoint--2026-09-27).
+Next: review this correction in PR #12, then supported-platform build and staging
+validation in dependency order. No IG-009, merge, deployment or production mutation.
+
 ### IG-008 verification closure — 2026-09-27
 
 Complete on `codex/ig-008-venue-value-layer`, based on IG-007 `d56c413` (PR #11).

@@ -132,3 +132,83 @@ ledger review, refresh PostgREST, verify hosted Auth/approval/beta/Owner/admin a
 actual attendance/venue management workflows, then decide production rollout.
 Use forward corrective migrations for recovery; do not weaken attendance guards.
 The next task is review/staging validation, not another product implementation.
+
+## Corrective checkpoint — 2026-09-27
+
+Authorized scope: the two reviewed beta blockers only, on the existing
+`codex/ig-008-venue-value-layer` branch from `14d9330`. PR #12 remains draft/open,
+stacked on `codex/ig-007-life-summary-v1` (PR #11, `d56c413`). No IG-009.
+
+Changes:
+- Removed the Turkey override from both `src/routes/venue.register.tsx` and
+  `src/routes/venue.dashboard.tsx`. Their real shared LocationMapPicker now passes
+  `am` to search and retains its existing Yerevan fallback center. Existing pins,
+  profile-city/device-center behavior and business editing are preserved.
+- Dashboard activation uses 2–5 integer native input bounds and
+  `src/lib/venue-activation.ts` for defensive payload clamping. Nonfinite values
+  fall back to four; finite fractional values truncate before clamping.
+- Activation writes directly through Supabase, with no separate server handler.
+  New ordered migration `20260927080000_venue_activation_small_groups.sql` adds
+  `gatherings_venue_activation_seats_check`, limited to `origin='venue_activated'`.
+  It enforces inserts, updates and changes into that origin through direct SQL/API.
+  Physical table capacities and consumer gathering rules are untouched.
+- Focused tests render both actual route forms with the real picker and a mocked
+  autocomplete boundary (approved/pending/rejected editing included), exercise
+  clamp boundaries/invalid numbers, and check activation form wiring. Native and
+  HTTP tests prove invalid writes are rejected and valid 2/5 boundaries work.
+  These are not live map-provider or browser-native validation E2E tests.
+
+### Fresh verification
+
+Bun remains unavailable; existing Node entry points were used. `<runtime>` is the
+absolute path resolved from `../ig001-verification-runtime`. All database work
+used its verified marker and only `127.0.0.1:55439/ig001_disposable`. API tests use
+local PostgREST on 55440 with synthetic claims; no hosted credentials were read.
+
+| Exact command / setting | Result |
+| --- | --- |
+| `node node_modules/vitest/vitest.mjs run tests/unit/venue-beta-corrections.test.ts` | 16 pass |
+| `node node_modules/vitest/vitest.mjs run` | 266 tests, 24 files pass; includes those 16 |
+| `node tests/venue-value-postgres.verify.mjs <runtime>` | Final 65 pass; earlier 63 pass before adding consumer/origin compatibility cases |
+| `node tests/life-moments-postgres.verify.mjs <runtime>` | 61 pass |
+| `node tests/gathering-moment-postgres.verify.mjs <runtime>` | 21 pass |
+| `node tests/profile-postgres.verify.mjs <runtime>` | 29 pass |
+| `node tests/member-profile-postgres.verify.mjs <runtime>` | 34 pass |
+| `node tests/life-summary-postgres.verify.mjs <runtime>` | 26 pass |
+| `C:/Windows/System32/WindowsPowerShell/v1.0/powershell.exe -NoProfile -ExecutionPolicy Bypass -File <runtime>/Start-PostgREST.ps1 -Restart` | Unchanged verified launcher; HTTP 200 |
+| `IG008_RUNTIME=<runtime>`; `node node_modules/vitest/vitest.mjs run --config vitest.venue.config.ts` | 16 pass |
+| `IG003_RUNTIME=<runtime>`; `node node_modules/vitest/vitest.mjs run --config vitest.moments.config.ts` | 53 pass |
+| `IG002_RUNTIME=<runtime>`; `node node_modules/vitest/vitest.mjs run --config vitest.profile.config.ts` | 9 pass |
+| `IG001_RUNTIME=<runtime>`; `node node_modules/vitest/vitest.mjs run --config vitest.owner.config.ts` | 42 pass |
+| `node node_modules/typescript/bin/tsc --noEmit` | Exit 0 |
+| `node node_modules/eslint/bin/eslint.js src/routes/venue.dashboard.tsx src/lib/venue-activation.ts tests/unit/venue-beta-corrections.test.ts tests/venue-integration/venue-value.test.ts tests/venue-value-postgres.verify.mjs` | Exit 0 |
+| `node node_modules/eslint/bin/eslint.js src/routes/venue.register.tsx` | 14 existing formatting errors, zero warnings after LF normalization; same 14 as `git show HEAD:src/routes/venue.register.tsx` at 14d9330, compared through ESLint.lintText with the same filePath |
+| `node node_modules/eslint/bin/eslint.js src/routes/venue.register.tsx --rule 'prettier/prettier: off'` | Exit 0; no non-format findings |
+| `node node_modules/vite/bin/vite.js build` | Exit 1: previously documented Lovable MCP Windows routesDir containment assertion before compilation |
+| `git diff --check` | Pass |
+
+Recovered environment issues: initial PostgreSQL launch argument assembly failed
+before startup; corrected argument list started the same marked cluster. Initial
+PowerShell 5.1 launcher call was blocked by execution policy; process-local Bypass
+ran the existing verified script, without changing system policy. Initial lint
+reported 231 registration findings with CRLF; normalizing line endings exposed
+exactly the 14 pre-existing formatting findings. No broad formatting, dependency,
+lockfile, generated route, or build-wrapper changes.
+
+### Migration and handoff limits
+
+The additive CHECK is NOT VALID to avoid rewriting historical bookings or blocking
+migration on pre-existing oversized venue rows. PostgreSQL still enforces it on
+all new inserts and updates immediately. Existing violating rows are retained;
+updates to them must also correct seats to 2–5. Before release, audit historical
+exceptions and decide how to resolve bookings, then validate the constraint in a
+separately authorized rollout. Do not silently clamp existing booked gatherings.
+No table/column/RPC signatures changed, so no generated TypeScript change is needed.
+
+Applied only to the disposable local database. Deployment must include this
+migration for the direct-write boundary to be enforced remotely. Supported-platform
+build, actual hosted map/Auth journeys and historical audit remain outstanding.
+Review the correction on PR #12 in IG-007 dependency order; no merge, deployment,
+production migration or next feature was performed.
+
+Temporary PostgreSQL/PostgREST services stopped; ports 55439 and 55440 confirmed closed.

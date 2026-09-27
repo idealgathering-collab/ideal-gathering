@@ -1,5 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
+import { clampVenueSeats, VENUE_MIN_SEATS, VENUE_MAX_SEATS } from "@/lib/venue-activation";
 
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
@@ -512,7 +513,6 @@ function BusinessForm({
                     }));
                   }
                 }}
-                countryCode="tr"
               />
             </ClientOnly>
           </div>
@@ -830,7 +830,7 @@ function ActivateDialog({
           subject: subject.trim().slice(0, 120),
           starts_at: iso,
           ends_at: ends,
-          seats: Math.max(2, Math.min(30, seats)),
+          seats: clampVenueSeats(seats),
           status: "approved",
           origin: "venue_activated",
           venue_name: "",
@@ -887,8 +887,10 @@ function ActivateDialog({
               <Input
                 id="seats"
                 type="number"
-                min={2}
-                max={30}
+                min={VENUE_MIN_SEATS}
+                max={VENUE_MAX_SEATS}
+                step={1}
+                required
                 value={seats}
                 onChange={(e) => setSeats(Number(e.target.value))}
               />
