@@ -902,6 +902,10 @@ export type Database = {
         }[];
       };
       get_my_life_summary: { Args: Record<PropertyKey, never>; Returns: Json };
+      get_venue_dashboard: {
+        Args: { _business_id?: string; _upcoming_page?: number; _completed_page?: number };
+        Returns: Json;
+      };
       is_beta_launched: { Args: never; Returns: boolean }
       is_owner: { Args: { _user_id: string }; Returns: boolean }
       list_visible_life_moments: {

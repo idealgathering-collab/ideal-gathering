@@ -209,3 +209,22 @@ Default unit tests include summary states, privacy/cache isolation and shape che
 The IG-005 actual-route preview at 55442 now includes synthetic summary data and
 its existing empty/loading/load-error/language switches. These preview counts are
 deliberately independent of capped history and are never production data.
+
+### IG-008 venue verification
+
+Run `node tests/venue-value-postgres.verify.mjs <runtime>` on the existing marked
+loopback disposable database after prerequisites. It applies the two additive
+migrations if absent and writes synthetic ig008-fixtures.json. Native coverage
+includes access, counting boundaries, operational writes and an observed concurrent
+attribution/check-in lock wait. Never point this harness at a hosted database.
+Use the unchanged verified PostgREST launcher under explicit Windows PowerShell
+5.1, then set IG008_RUNTIME and run Vitest with `--config vitest.venue.config.ts`.
+Existing moments/profile/owner configs retain their documented runtime variables.
+
+Synthetic actual-route preview:
+`node node_modules/vite/bin/vite.js --config tests/venue-dashboard-preview/vite.config.ts`
+on loopback 55444. Switches: lang=en|ru|fa, empty, loading, error, business-error,
+save-error, pending, rejected, unverified, locked and ownerPreview with the fixture
+business UUID. Synthetic in-memory editing only; no hosted services/credentials.
+It is not a production build workaround. Stop services and reset viewport afterward.
+See [exact results](../tasks/completed/IG-008-verification.md).

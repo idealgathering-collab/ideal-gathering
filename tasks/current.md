@@ -14,12 +14,36 @@ Execute one bounded spec at a time. Approval of the queue does not authorize unr
 5. [IG-005 — Life Profile V1 — complete](completed/IG-005-life-profile-v1.md)
 6. [IG-006 — Other-User Member Profile + Privacy — complete](completed/IG-006-public-life-profile.md)
 7. [IG-007 — Life Summary & Activity Insights V1 — complete](completed/IG-007-life-summary-v1.md)
-8. [IG-008 — Venue Dashboard Value Layer](IG-008-venue-dashboard-value-layer.md)
+8. [IG-008 — Venue Dashboard Value Layer — complete](completed/IG-008-venue-dashboard-value-layer.md)
 
-## Next implementation task
+## Implementation queue complete
 
-**IG-008 — Venue Dashboard Value Layer.** Next; not started in this task.
-Reinspect its approved spec and current implementation before beginning.
+IG-001 through IG-008 are complete within their accepted implementation scopes.
+No next product feature is authorized automatically. Next: review the stacked PRs,
+complete supported-platform build and hosted staging validation, then plan release.
+Completion here does not mean merged, deployed or production-beta validated.
+
+### IG-008 verification closure — 2026-09-27
+
+Complete on `codex/ig-008-venue-value-layer`, based on IG-007 `d56c413` (PR #11).
+Six-section venue dashboard, real verified visitor aggregates, profile/table/menu
+editing and read-only Owner preview. Pending/beta-wait profile corrections remain
+available. Two additive migrations close attendance forgery/attribution races and
+restrict operational writes; applied only to the marked disposable database.
+
+- Native DB: 57 venue + 61 moments + 21 gathering + 29 profile + 34 member + 26 summary pass.
+- 250 unit/component tests; API 11 venue + 53 moments/member/summary + 9 profile + 42 owner/admin pass.
+- Final affected 10 tests, typecheck and targeted lint pass. Translation/generated
+  formatting debt remains 199 / 760 errors, matching baseline.
+- Actual-route synthetic mobile 375px, Persian RTL 320px, desktop 1280px, Russian,
+  editing, Owner read-only, empty/loading/error/retry and access gates checked.
+- Normal build blocked by existing Lovable Windows routesDir assertion. Hosted
+  Auth/storage/map/complete deployed journey and historical attendance audit remain.
+- No merge, deployment, production migration or unrelated feature work.
+
+[Archived spec](completed/IG-008-venue-dashboard-value-layer.md),
+[verification report](completed/IG-008-verification.md), and
+[counting/privacy contract](../docs/VENUE_DASHBOARD.md).
 
 ### IG-007 verification closure — 2026-09-26
 

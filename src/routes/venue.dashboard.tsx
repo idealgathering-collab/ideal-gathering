@@ -4,17 +4,7 @@ import { useEffect, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { z } from "zod";
-import {
-  ArrowLeft,
-  Crown,
-  Store,
-  Plus,
-  Trash2,
-  Zap,
-  LogOut,
-  Upload,
-  Loader2,
-} from "lucide-react";
+import { ArrowLeft, Crown, Store, Plus, Trash2, Zap, LogOut, Upload, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useSession } from "@/hooks/use-session";
 import { Button } from "@/components/ui/button";
@@ -22,10 +12,17 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import { ClientOnly } from "@tanstack/react-router";
 import { LocationMapPicker, type MapLocationValue } from "@/components/location-map-picker";
 import { MenuSection } from "@/components/menu-section";
+import { VenueValueDashboard } from "@/components/venue-value-dashboard";
 import { VerifyEmailBanner } from "@/components/verify-email-banner";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { NotificationsBell } from "@/components/notifications-bell";
@@ -39,9 +36,15 @@ export const Route = createFileRoute("/venue/dashboard")({
   head: () => ({
     meta: [
       { title: "Venue portal — Ideal Gathering" },
-      { name: "description", content: "Manage your venue, tables, menu and the gatherings hosted at your place." },
+      {
+        name: "description",
+        content: "Manage your venue, tables, menu and the gatherings hosted at your place.",
+      },
       { property: "og:title", content: "Venue portal — Ideal Gathering" },
-      { property: "og:description", content: "Manage your venue, tables, menu and the gatherings hosted at your place." },
+      {
+        property: "og:description",
+        content: "Manage your venue, tables, menu and the gatherings hosted at your place.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "robots", content: "noindex" },
@@ -70,14 +73,23 @@ function VenueDashboard() {
   const navigate = useNavigate();
   const qc = useQueryClient();
   const t = useT();
-  const ownerPreviewId = typeof window !== "undefined"
-    ? new URLSearchParams(window.location.search).get("ownerPreview")
-    : null;
+  const ownerPreviewId =
+    typeof window !== "undefined"
+      ? new URLSearchParams(window.location.search).get("ownerPreview")
+      : null;
   const isOwnerPreview = !!ownerPreviewId;
 
-  const { data: biz, isLoading: bizLoading, error: bizError } = useQuery({
+  const {
+    data: biz,
+    isLoading: bizLoading,
+    error: bizError,
+    refetch: retryBusiness,
+  } = useQuery({
     queryKey: ["venue-biz", user?.id, ownerPreviewId],
     enabled: !!user,
+    staleTime: 0,
+    gcTime: 0,
+    retry: false,
     queryFn: async () => {
       if (ownerPreviewId) {
         const { getOwnerVenuePreview } = await import("@/lib/owner-venue.functions");
@@ -116,23 +128,34 @@ function VenueDashboard() {
   return (
     <div className="min-h-screen bg-background">
       {isOwnerPreview && (
-        <div className="sticky top-0 z-50 border-b border-primary/30 bg-primary px-4 py-2 text-primary-foreground">
+        <div className="border-b border-primary/30 bg-primary px-4 py-2 text-primary-foreground">
           <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-2 text-sm">
             <div className="flex items-center gap-2 font-medium">
-              <Crown className="h-4 w-4" /> Owner Preview · Viewing {biz?.name ?? "venue"}
+              <Crown className="h-4 w-4" /> {t("vv.preview")} · {biz?.name}
             </div>
             <Button asChild size="sm" variant="secondary" className="rounded-full">
-              <Link to="/owner"><ArrowLeft className="me-1.5 h-4 w-4" />Exit venue view</Link>
+              <Link to="/owner">
+                <ArrowLeft className="me-1.5 h-4 w-4" />
+                {t("vv.exit")}
+              </Link>
             </Button>
           </div>
         </div>
       )}
 
-      <header className={`${isOwnerPreview ? "top-10" : "top-0"} sticky z-40 w-full border-b border-border/60 bg-background/85 backdrop-blur-xl`}>
+      <header className="sticky top-0 z-40 w-full border-b border-border/60 bg-background/85 backdrop-blur-xl">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-3 px-4">
-          <Link to={isOwnerPreview ? "/owner" : "/"} className="flex items-center gap-2">
-            <img src={logoAsset.url} alt="" className="h-9 w-9 rounded-full object-contain animate-logo-spin" />
-            <span className="font-display text-lg">
+          <Link
+            to={isOwnerPreview ? "/owner" : "/"}
+            aria-label="Ideal Gathering"
+            className="flex items-center gap-2"
+          >
+            <img
+              src={logoAsset.url}
+              alt=""
+              className="h-9 w-9 rounded-full object-contain animate-logo-spin"
+            />
+            <span className="hidden font-display text-lg sm:inline">
               Ideal <span className="italic text-primary">Gathering</span>
               <span className="ms-1 text-xs text-muted-foreground">· {t("venueAuth.for")}</span>
             </span>
@@ -141,7 +164,13 @@ function VenueDashboard() {
             <LanguageSwitcher />
             {!isOwnerPreview && user && <NotificationsBell />}
             {!isOwnerPreview && (
-              <Button variant="ghost" size="icon" onClick={signOut} aria-label={t("nav.signOut")} className="rounded-full">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={signOut}
+                aria-label={t("nav.signOut")}
+                className="rounded-full"
+              >
                 <LogOut className="h-4 w-4" />
               </Button>
             )}
@@ -149,17 +178,21 @@ function VenueDashboard() {
         </div>
       </header>
 
-      <main className="mx-auto max-w-4xl px-4 py-8 pb-24">
+      <main className="mx-auto max-w-6xl px-4 py-8 pb-24">
         {isOwnerPreview && (
           <div className="mb-6 rounded-2xl border border-primary/30 bg-primary/10 px-4 py-3 text-sm">
-            <p className="font-medium">Read-only owner preview</p>
-            <p className="mt-1 text-muted-foreground">This is the real venue dashboard layout. Editing, table changes and gathering activation are disabled while previewing.</p>
+            <p className="font-medium">{t("vv.preview")}</p>
+            <p className="mt-1 text-muted-foreground">{t("vv.previewHint")}</p>
           </div>
         )}
 
         <div className="mb-6">
-          <p className="text-xs uppercase tracking-wide text-muted-foreground">{t("venueDash.eyebrow")}</p>
-          <h1 className="font-display text-3xl sm:text-4xl">{biz?.name ?? t("venueDash.newVenue")}</h1>
+          <p className="text-xs uppercase tracking-wide text-muted-foreground">
+            {t("venueDash.eyebrow")}
+          </p>
+          <h1 className="break-words font-display text-3xl sm:text-4xl">
+            {biz?.name ?? t("venueDash.newVenue")}
+          </h1>
           {biz && (
             <div className="mt-2 flex items-center gap-2">
               <StatusBadge status={biz.status} />
@@ -168,7 +201,9 @@ function VenueDashboard() {
         </div>
 
         {!isOwnerPreview && user && !user.email_confirmed_at && (
-          <div className="mb-6"><VerifyEmailBanner email={user.email} /></div>
+          <div className="mb-6">
+            <VerifyEmailBanner email={user.email} />
+          </div>
         )}
 
         {!betaOpen && !isOwnerPreview && (
@@ -178,37 +213,75 @@ function VenueDashboard() {
           </div>
         )}
 
-        {bizError && isOwnerPreview ? (
+        {bizError ? (
           <div className="rounded-2xl border border-destructive/30 bg-destructive/10 p-6 text-sm text-destructive">
-            {bizError instanceof Error ? bizError.message : "Could not open this venue."}
+            <p>{t("vv.error")}</p>
+            <Button
+              variant="outline"
+              className="mt-3 min-h-11"
+              onClick={() => void retryBusiness()}
+            >
+              {t("common.tryAgain")}
+            </Button>
           </div>
         ) : bizLoading || accessLoading ? (
           <div className="py-16 text-center text-muted-foreground">{t("common.loading")}</div>
         ) : biz ? (
           <>
             {biz.status === "pending" && (
-              <div className="mb-6 rounded-2xl border border-sunshine/60 bg-sunshine/20 px-4 py-3 text-sm">{t("venueDash.pendingNote")}</div>
+              <div className="mb-6 rounded-2xl border border-sunshine/60 bg-sunshine/20 px-4 py-3 text-sm">
+                {t("vv.pendingNote")}
+              </div>
             )}
             {biz.status === "rejected" && (
-              <div className="mb-6 rounded-2xl border border-destructive/40 bg-destructive/10 px-4 py-3 text-sm">{t("venueDash.rejectedNote")}</div>
+              <div className="mb-6 rounded-2xl border border-destructive/40 bg-destructive/10 px-4 py-3 text-sm">
+                {t("venueDash.rejectedNote")}
+              </div>
             )}
-            <BusinessForm
-              business={biz as BizRow}
-              userId={(biz as BizRow).owner_id ?? user!.id}
-              readOnly={isOwnerPreview}
-              onSaved={() => qc.invalidateQueries({ queryKey: ["venue-biz"] })}
-            />
-            {betaOpen && (
-              <>
-                <TablesSection business={biz as BizRow} readOnly={isOwnerPreview} />
-                <MenuSection businessId={biz.id} isOwner={!isOwnerPreview} />
-              </>
+            {!isOwnerPreview &&
+              !!user?.email_confirmed_at &&
+              (!betaOpen || biz.status !== "approved") && (
+                <details className="rounded-2xl border border-border p-4">
+                  <summary className="min-h-11 cursor-pointer py-3">{t("vv.profile")}</summary>
+                  <BusinessForm
+                    business={biz as BizRow}
+                    userId={user!.id}
+                    readOnly={false}
+                    onSaved={() => qc.invalidateQueries({ queryKey: ["venue-biz"] })}
+                  />
+                </details>
+              )}
+            {(isOwnerPreview ||
+              (betaOpen && biz.status === "approved" && !!user?.email_confirmed_at)) && (
+              <VenueValueDashboard
+                key={user!.id + biz.id + String(isOwnerPreview)}
+                userId={user!.id}
+                businessId={biz.id}
+                preview={isOwnerPreview}
+                profile={
+                  <BusinessForm
+                    business={biz as BizRow}
+                    userId={(biz as BizRow).owner_id ?? user!.id}
+                    readOnly={isOwnerPreview}
+                    onSaved={() => qc.invalidateQueries({ queryKey: ["venue-biz"] })}
+                  />
+                }
+                tables={<TablesSection business={biz as BizRow} readOnly={isOwnerPreview} />}
+                menu={<MenuSection businessId={biz.id} isOwner={!isOwnerPreview} />}
+              />
             )}
           </>
         ) : isOwnerPreview ? (
-          <div className="rounded-2xl border border-dashed border-border p-10 text-center text-sm text-muted-foreground">Venue not found.</div>
+          <div className="rounded-2xl border border-dashed border-border p-10 text-center text-sm text-muted-foreground">
+            {t("vv.error")}
+          </div>
         ) : (
-          <BusinessForm business={null} userId={user!.id} readOnly={false} onSaved={() => qc.invalidateQueries({ queryKey: ["venue-biz", user!.id] })} />
+          <BusinessForm
+            business={null}
+            userId={user!.id}
+            readOnly={false}
+            onSaved={() => qc.invalidateQueries({ queryKey: ["venue-biz", user!.id] })}
+          />
         )}
       </main>
     </div>
@@ -217,12 +290,18 @@ function VenueDashboard() {
 
 function StatusBadge({ status }: { status: string }) {
   const t = useT();
-  const cls = status === "approved"
-    ? "bg-primary text-primary-foreground"
-    : status === "rejected"
-      ? "bg-destructive text-destructive-foreground"
-      : "bg-sunshine text-sunshine-foreground";
-  const label = status === "approved" ? t("venueDash.approved") : status === "rejected" ? t("venueDash.rejected") : t("venueDash.pending");
+  const cls =
+    status === "approved"
+      ? "bg-primary text-primary-foreground"
+      : status === "rejected"
+        ? "bg-destructive text-destructive-foreground"
+        : "bg-sunshine text-sunshine-foreground";
+  const label =
+    status === "approved"
+      ? t("venueDash.approved")
+      : status === "rejected"
+        ? t("venueDash.rejected")
+        : t("venueDash.pending");
   return <Badge className={`${cls} rounded-full`}>{label}</Badge>;
 }
 
@@ -296,10 +375,14 @@ function BusinessForm({
       setUploading(true);
       const ext = file.name.split(".").pop() || "jpg";
       const path = `${userId}/business-${Date.now()}.${ext}`;
-      const { error: upErr } = await supabase.storage.from("avatars").upload(path, file, { upsert: true });
+      const { error: upErr } = await supabase.storage
+        .from("avatars")
+        .upload(path, file, { upsert: true });
       if (upErr) throw upErr;
       const TEN_YEARS = 60 * 60 * 24 * 365 * 10;
-      const { data: signed } = await supabase.storage.from("avatars").createSignedUrl(path, TEN_YEARS);
+      const { data: signed } = await supabase.storage
+        .from("avatars")
+        .createSignedUrl(path, TEN_YEARS);
       if (!signed?.signedUrl) throw new Error("signed url failed");
       setForm((f) => ({ ...f, cover_url: signed.signedUrl }));
       toast.success(t("venueDash.imageUploaded"));
@@ -321,7 +404,9 @@ function BusinessForm({
         const { error } = await supabase.from("businesses").update(payload).eq("id", business.id);
         if (error) throw error;
       } else {
-        const { error } = await supabase.from("businesses").insert({ ...payload, status: "pending" });
+        const { error } = await supabase
+          .from("businesses")
+          .insert({ ...payload, status: "pending" });
         if (error) throw error;
       }
       toast.success(t("venueDash.saved"));
@@ -337,8 +422,14 @@ function BusinessForm({
     <section className="rounded-3xl border border-border bg-card p-6 shadow-soft">
       <div className="mb-4 flex items-center gap-2">
         <Store className="h-5 w-5 text-primary" />
-        <h2 className="font-display text-2xl">{business ? t("venueDash.editBusiness") : t("venueDash.registerBusiness")}</h2>
-        {readOnly && <Badge variant="outline" className="ms-auto rounded-full">Preview</Badge>}
+        <h2 className="font-display text-2xl">
+          {business ? t("venueDash.editBusiness") : t("venueDash.registerBusiness")}
+        </h2>
+        {readOnly && (
+          <Badge variant="outline" className="ms-auto rounded-full">
+            Preview
+          </Badge>
+        )}
       </div>
 
       <form onSubmit={submit}>
@@ -349,13 +440,25 @@ function BusinessForm({
               {form.cover_url ? (
                 <img src={form.cover_url} alt="" className="h-20 w-20 rounded-2xl object-cover" />
               ) : (
-                <div className="grid h-20 w-20 place-items-center rounded-2xl bg-muted text-muted-foreground"><Store className="h-6 w-6" /></div>
+                <div className="grid h-20 w-20 place-items-center rounded-2xl bg-muted text-muted-foreground">
+                  <Store className="h-6 w-6" />
+                </div>
               )}
               {!readOnly && (
                 <label className="cursor-pointer">
-                  <input type="file" accept="image/*" className="hidden" onChange={handleUpload} disabled={uploading} />
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={handleUpload}
+                    disabled={uploading}
+                  />
                   <span className="inline-flex h-10 items-center gap-1.5 rounded-full border border-border bg-background px-4 text-sm hover:bg-muted">
-                    {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
+                    {uploading ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                      <Upload className="h-4 w-4" />
+                    )}
                     {uploading ? t("common.loading") : t("venueDash.uploadImage")}
                   </span>
                 </label>
@@ -365,17 +468,33 @@ function BusinessForm({
 
           <div className="grid gap-2">
             <Label htmlFor="name">{t("venueDash.name")} *</Label>
-            <Input id="name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required maxLength={120} />
+            <Input
+              id="name"
+              value={form.name}
+              onChange={(e) => setForm({ ...form, name: e.target.value })}
+              required
+              maxLength={120}
+            />
           </div>
 
           <div className="grid gap-2">
             <Label htmlFor="desc">{t("venueDash.description")} *</Label>
-            <Textarea id="desc" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} required minLength={10} maxLength={1200} rows={4} />
+            <Textarea
+              id="desc"
+              value={form.description}
+              onChange={(e) => setForm({ ...form, description: e.target.value })}
+              required
+              minLength={10}
+              maxLength={1200}
+              rows={4}
+            />
           </div>
 
           <div className="grid gap-2">
             <Label>{t("venueDash.address")} *</Label>
-            <ClientOnly fallback={<div className="h-72 rounded-2xl border border-border bg-muted/30" />}>
+            <ClientOnly
+              fallback={<div className="h-72 rounded-2xl border border-border bg-muted/30" />}
+            >
               <LocationMapPicker
                 value={picked}
                 onChange={(v) => {
@@ -401,25 +520,54 @@ function BusinessForm({
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="grid gap-2">
               <Label htmlFor="city">{t("venueDash.city")} *</Label>
-              <Input id="city" value={form.city} onChange={(e) => setForm({ ...form, city: e.target.value })} required maxLength={120} />
+              <Input
+                id="city"
+                value={form.city}
+                onChange={(e) => setForm({ ...form, city: e.target.value })}
+                required
+                maxLength={120}
+              />
             </div>
             <div className="grid gap-2">
               <Label htmlFor="phone">{t("venueDash.phone")} *</Label>
-              <Input id="phone" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} required maxLength={40} />
+              <Input
+                id="phone"
+                value={form.phone}
+                onChange={(e) => setForm({ ...form, phone: e.target.value })}
+                required
+                maxLength={40}
+              />
             </div>
             <div className="grid gap-2">
               <Label htmlFor="mobile">{t("venueDash.mobile")} *</Label>
-              <Input id="mobile" value={form.mobile} onChange={(e) => setForm({ ...form, mobile: e.target.value })} required maxLength={40} />
+              <Input
+                id="mobile"
+                value={form.mobile}
+                onChange={(e) => setForm({ ...form, mobile: e.target.value })}
+                required
+                maxLength={40}
+              />
             </div>
             <div className="grid gap-2">
               <Label htmlFor="menu_link">{t("venueDash.menuLink")}</Label>
-              <Input id="menu_link" type="url" value={form.menu_link} onChange={(e) => setForm({ ...form, menu_link: e.target.value })} placeholder="https://…" maxLength={600} />
+              <Input
+                id="menu_link"
+                type="url"
+                value={form.menu_link}
+                onChange={(e) => setForm({ ...form, menu_link: e.target.value })}
+                placeholder="https://…"
+                maxLength={600}
+              />
             </div>
           </div>
 
           {!readOnly && (
             <Button type="submit" disabled={saving} className="mt-2 h-11 rounded-full">
-              {saving ? t("common.loading") : business ? t("venueDash.saveChanges") : t("venueDash.registerBusiness")}
+              {saving
+                ? t("common.loading")
+                : business
+                  ? t("venueDash.saveChanges")
+                  : t("venueDash.registerBusiness")}
             </Button>
           )}
         </fieldset>
@@ -434,13 +582,38 @@ function TablesSection({ business, readOnly }: { business: BizRow; readOnly: boo
   const [label, setLabel] = useState("");
   const [cap, setCap] = useState(4);
   const [activateFor, setActivateFor] = useState<{ id: string; label: string } | null>(null);
+  const [editing, setEditing] = useState<{ id: string; label: string; capacity: number } | null>(
+    null,
+  );
+  async function saveTable(e: React.FormEvent) {
+    e.preventDefault();
+    if (readOnly || !editing) return;
+    const { error } = await supabase
+      .from("venue_tables")
+      .update({
+        label: editing.label.trim().slice(0, 20),
+        capacity: editing.capacity,
+      })
+      .eq("id", editing.id)
+      .eq("business_id", business.id);
+    if (error)
+      return toast.error(
+        error.message.includes("23505") || error.code === "23505"
+          ? t("biz.duplicateLabel")
+          : t("venueDash.saveFailed"),
+      );
+    setEditing(null);
+    void qc.invalidateQueries({ queryKey: ["venue-biz"] });
+  }
 
   async function add(e: React.FormEvent) {
     e.preventDefault();
     if (readOnly) return;
     const next = label.trim().slice(0, 20);
     if (!next) return;
-    const dup = (business.venue_tables ?? []).some((tbl) => tbl.label.trim().toLowerCase() === next.toLowerCase());
+    const dup = (business.venue_tables ?? []).some(
+      (tbl) => tbl.label.trim().toLowerCase() === next.toLowerCase(),
+    );
     if (dup) return toast.error(t("biz.duplicateLabel"));
 
     const { error } = await supabase.from("venue_tables").insert({
@@ -449,7 +622,9 @@ function TablesSection({ business, readOnly }: { business: BizRow; readOnly: boo
       capacity: Math.max(1, Math.min(30, cap)),
     });
     if (error) {
-      const isDup = (error as { code?: string }).code === "23505" || error.message.includes("venue_tables_business_label_ci_uidx");
+      const isDup =
+        (error as { code?: string }).code === "23505" ||
+        error.message.includes("venue_tables_business_label_ci_uidx");
       return toast.error(isDup ? t("biz.duplicateLabel") : error.message);
     }
     setLabel("");
@@ -462,7 +637,8 @@ function TablesSection({ business, readOnly }: { business: BizRow; readOnly: boo
     const { error } = await supabase.from("venue_tables").delete().eq("id", id);
     if (error) {
       const locked = /TABLE_LOCKED:\s*(.*)$/s.exec(error.message);
-      if (locked) return toast.error(`${t("biz.tableLocked")} ${tableLabel} — ${locked[1]?.trim()}`);
+      if (locked)
+        return toast.error(`${t("biz.tableLocked")} ${tableLabel} — ${locked[1]?.trim()}`);
       return toast.error(error.message);
     }
     toast.success(t("biz.tableRemoved"));
@@ -475,24 +651,52 @@ function TablesSection({ business, readOnly }: { business: BizRow; readOnly: boo
     <section className="mt-8 rounded-3xl border border-border bg-card p-6 shadow-soft">
       <div className="flex items-center justify-between gap-3">
         <h2 className="font-display text-2xl">{t("biz.tables")}</h2>
-        {readOnly && <Badge variant="outline" className="rounded-full">Preview</Badge>}
+        {readOnly && (
+          <Badge variant="outline" className="rounded-full">
+            Preview
+          </Badge>
+        )}
       </div>
       <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {(business.venue_tables ?? []).map((tbl) => (
           <div key={tbl.id} className="rounded-2xl border border-border bg-background p-4">
             <div className="flex items-start justify-between">
               <div>
-                <div className="font-display text-xl">{t("biz.tableLabel")} {tbl.label}</div>
-                <div className="text-xs text-muted-foreground">{tbl.capacity} {t("biz.tableSeats")}</div>
+                <div className="font-display text-xl">
+                  {t("biz.tableLabel")} {tbl.label}
+                </div>
+                <div className="text-xs text-muted-foreground">
+                  {tbl.capacity} {t("biz.tableSeats")}
+                </div>
               </div>
               {!readOnly && (
-                <Button size="icon" variant="ghost" onClick={() => remove(tbl.id, tbl.label)} aria-label={t("biz.removeTable")}>
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  onClick={() => remove(tbl.id, tbl.label)}
+                  aria-label={t("biz.removeTable")}
+                >
                   <Trash2 className="h-4 w-4" />
                 </Button>
               )}
             </div>
             {!readOnly && (
-              <Button size="sm" className="mt-3 w-full rounded-full" onClick={() => setActivateFor({ id: tbl.id, label: tbl.label })} disabled={!canActivate} title={!canActivate ? t("venueDash.activateNeedsApproval") : undefined}>
+              <Button
+                variant="outline"
+                className="mt-3 min-h-11 w-full"
+                onClick={() => setEditing({ ...tbl })}
+              >
+                {t("vv.editTable")}
+              </Button>
+            )}
+            {!readOnly && (
+              <Button
+                size="sm"
+                className="mt-3 w-full rounded-full"
+                onClick={() => setActivateFor({ id: tbl.id, label: tbl.label })}
+                disabled={!canActivate}
+                title={!canActivate ? t("venueDash.activateNeedsApproval") : undefined}
+              >
                 <Zap className="me-1 h-4 w-4" /> {t("venueDash.activate")}
               </Button>
             )}
@@ -501,21 +705,84 @@ function TablesSection({ business, readOnly }: { business: BizRow; readOnly: boo
       </div>
 
       {!readOnly && (
-        <form onSubmit={add} className="mt-4 flex flex-wrap items-end gap-2 rounded-2xl border border-dashed border-border bg-muted/40 p-4">
+        <form
+          onSubmit={add}
+          className="mt-4 flex flex-wrap items-end gap-2 rounded-2xl border border-dashed border-border bg-muted/40 p-4"
+        >
           <div className="grid gap-1">
-            <label className="text-xs text-muted-foreground">{t("biz.newLabel")}</label>
-            <Input value={label} onChange={(e) => setLabel(e.target.value)} maxLength={20} placeholder={t("biz.newLabelPh")} className="w-32" />
+            <label htmlFor="new-table-label" className="text-xs text-muted-foreground">
+              {t("biz.newLabel")}
+            </label>
+            <Input
+              id="new-table-label"
+              value={label}
+              onChange={(e) => setLabel(e.target.value)}
+              maxLength={20}
+              placeholder={t("biz.newLabelPh")}
+              className="w-32"
+            />
           </div>
           <div className="grid gap-1">
-            <label className="text-xs text-muted-foreground">{t("biz.newCapacity")}</label>
-            <Input type="number" min={1} max={30} value={cap} onChange={(e) => setCap(Number(e.target.value))} className="w-24" />
+            <label htmlFor="new-table-capacity" className="text-xs text-muted-foreground">
+              {t("biz.newCapacity")}
+            </label>
+            <Input
+              type="number"
+              min={1}
+              max={30}
+              id="new-table-capacity"
+              value={cap}
+              onChange={(e) => setCap(Number(e.target.value))}
+              className="w-24"
+            />
           </div>
-          <Button type="submit" className="rounded-full"><Plus className="me-1 h-4 w-4" /> {t("biz.addTable")}</Button>
+          <Button type="submit" className="rounded-full">
+            <Plus className="me-1 h-4 w-4" /> {t("biz.addTable")}
+          </Button>
         </form>
       )}
 
       {!readOnly && (
-        <ActivateDialog table={activateFor} businessId={business.id} userId={undefined} onClose={() => setActivateFor(null)} />
+        <Dialog open={!!editing} onOpenChange={(open) => !open && setEditing(null)}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>{t("vv.editTable")}</DialogTitle>
+            </DialogHeader>
+            {editing && (
+              <form onSubmit={saveTable} className="grid gap-4">
+                <Label htmlFor="edit-table-label">{t("biz.newLabel")}</Label>
+                <Input
+                  id="edit-table-label"
+                  required
+                  maxLength={20}
+                  value={editing.label}
+                  onChange={(e) => setEditing({ ...editing, label: e.target.value })}
+                />
+                <Label htmlFor="edit-table-capacity">{t("biz.newCapacity")}</Label>
+                <Input
+                  id="edit-table-capacity"
+                  type="number"
+                  required
+                  min={1}
+                  max={30}
+                  value={editing.capacity}
+                  onChange={(e) => setEditing({ ...editing, capacity: Number(e.target.value) })}
+                />
+                <Button type="submit" className="min-h-11">
+                  {t("vv.saveTable")}
+                </Button>
+              </form>
+            )}
+          </DialogContent>
+        </Dialog>
+      )}
+      {!readOnly && (
+        <ActivateDialog
+          table={activateFor}
+          businessId={business.id}
+          userId={undefined}
+          onClose={() => setActivateFor(null)}
+        />
       )}
     </section>
   );
@@ -574,6 +841,7 @@ function ActivateDialog({
       if (error) throw error;
       toast.success(t("venueDash.activated"));
       qc.invalidateQueries({ queryKey: ["explore-gatherings"] });
+      qc.invalidateQueries({ queryKey: ["venue-value"] });
       onClose();
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Failed");
@@ -585,26 +853,51 @@ function ActivateDialog({
   return (
     <Dialog open={!!table} onOpenChange={(o) => !o && onClose()}>
       <DialogContent>
-        <DialogHeader><DialogTitle>{t("venueDash.activateTitle")} {table?.label}</DialogTitle></DialogHeader>
+        <DialogHeader>
+          <DialogTitle>
+            {t("venueDash.activateTitle")} {table?.label}
+          </DialogTitle>
+        </DialogHeader>
         <form onSubmit={submit} className="grid gap-4">
           <div className="grid gap-2">
             <Label htmlFor="subj">{t("create.subject")} *</Label>
-            <Input id="subj" value={subject} onChange={(e) => setSubject(e.target.value)} required minLength={3} maxLength={120} placeholder={t("create.subjectPh")} />
+            <Input
+              id="subj"
+              value={subject}
+              onChange={(e) => setSubject(e.target.value)}
+              required
+              minLength={3}
+              maxLength={120}
+              placeholder={t("create.subjectPh")}
+            />
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="grid gap-2">
               <Label htmlFor="st">{t("venueDash.startsAt")}</Label>
-              <Input id="st" type="datetime-local" value={startsAt} onChange={(e) => setStartsAt(e.target.value)} />
+              <Input
+                id="st"
+                type="datetime-local"
+                value={startsAt}
+                onChange={(e) => setStartsAt(e.target.value)}
+              />
               <p className="text-xs text-muted-foreground">{t("venueDash.startsAtHint")}</p>
             </div>
             <div className="grid gap-2">
               <Label htmlFor="seats">{t("create.seats")}</Label>
-              <Input id="seats" type="number" min={2} max={30} value={seats} onChange={(e) => setSeats(Number(e.target.value))} />
+              <Input
+                id="seats"
+                type="number"
+                min={2}
+                max={30}
+                value={seats}
+                onChange={(e) => setSeats(Number(e.target.value))}
+              />
             </div>
           </div>
           <DialogFooter>
             <Button type="submit" disabled={saving} className="rounded-full">
-              <Zap className="me-1 h-4 w-4" /> {saving ? t("common.loading") : t("venueDash.activate")}
+              <Zap className="me-1 h-4 w-4" />{" "}
+              {saving ? t("common.loading") : t("venueDash.activate")}
             </Button>
           </DialogFooter>
         </form>

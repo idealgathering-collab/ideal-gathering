@@ -1,4 +1,5 @@
 import { lifeSummaryCopy } from "./life-summary";
+import { venueValueCopy } from "./venue-value";
 import { ru } from "./ru";
 import { lifeProfileCopy } from "./life-profile";
 import { memberProfileCopy } from "./member-profile";
@@ -17,6 +18,7 @@ export const translations: Record<Lang, Dict> = {
   en: {
     ...lifeProfileCopy.en,
     ...lifeSummaryCopy.en,
+    ...venueValueCopy.en,
     ...memberProfileCopy.en,
     "moment.remember": "Remember this?",
     "moment.loading": "Loading your moment…",
@@ -1607,10 +1609,17 @@ export const translations: Record<Lang, Dict> = {
   },
 
 
-  ru: { ...ru, ...lifeProfileCopy.ru, ...lifeSummaryCopy.ru, ...memberProfileCopy.ru },
+  ru: {
+    ...ru,
+    ...lifeProfileCopy.ru,
+    ...lifeSummaryCopy.ru,
+    ...memberProfileCopy.ru,
+    ...venueValueCopy.ru,
+  },
   fa: {
     ...lifeProfileCopy.fa,
     ...lifeSummaryCopy.fa,
+    ...venueValueCopy.fa,
     ...memberProfileCopy.fa,
     "moment.remember": "این لحظه را به یاد بسپاریم؟",
     "moment.loading": "در حال بارگذاری لحظهٔ شما…",

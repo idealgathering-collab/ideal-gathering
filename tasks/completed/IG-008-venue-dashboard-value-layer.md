@@ -1,7 +1,19 @@
 # IG-008 — Venue Dashboard Value Layer
 
 ## Status
-Approved for implementation planning.
+Complete within accepted V1 scope, 2026-09-27. See [verification](IG-008-verification.md). Review, supported-platform build and staging validation remain; not deployed.
+
+## Accepted implementation scope — 2026-09-26
+Six sections: Overview, Gatherings, Visitors, My Venue, Tables, Menu. Preserve
+registration/moderation/access and existing editing/activation infrastructure.
+Use existing gathering business_id, server-side minimal read-only aggregate
+projection and explicit venue ownership/verification/beta/approval authorization.
+Owner preview shares the real UI but remains read-only. Never expose attendee
+identities/private fields. Count actual checked-in rows, not bookings or hosts
+without attendance. Define new/returning against each visitor's earliest eligible
+check-in; period is rolling 30 days. Document current-record limitations.
+No fake demo values, utilization estimates, offers model, monetization or POS.
+Inspect and close direct data-boundary gaps required for trustworthy attribution.
 
 ## Goal
 Finish the venue side around the strongest commercial proof: Ideal Gathering brought real people into this venue.
