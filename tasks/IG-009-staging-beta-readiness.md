@@ -39,7 +39,7 @@ and environment boundary, without duplicating or redesigning the product.
 - [x] Minimal brand/config boundary tested.
 - [x] Unit/type/lint/build results recorded.
 - [x] Isolated hosted staging verified, OR explicit access blockers and manual steps recorded.
-- [ ] Existing PR updated with portable deployment checkpoint.
+- [x] Existing PR updated with portable deployment checkpoint.
 
 ## Safety and rollout
 No schema changes are planned. Existing migrations remain immutable. Use an empty

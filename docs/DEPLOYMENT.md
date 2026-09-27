@@ -8,7 +8,7 @@ run this target. Existing MCP runtime handlers are deliberately preserved.
 
 ## Supported, verified target
 
-Generic Node server, Nitro `node-server` preset. Use Node 24 LTS (verified with
+Generic Node server, Nitro `node-server` preset. Verified on Windows and Ubuntu CI. Use Node 24 LTS (verified with
 24.19.0), Bun 1.4.2 and the committed `bun.lock`. No dependency upgrades or new
 packages were needed. `package-lock.json` remains unchanged; npm installation
 was not reverified in IG-009. Do not regenerate either lockfile incidentally.
@@ -161,3 +161,10 @@ assets, manifest, MCP issuer/auth denial and checks browser bundles for the serv
 sentinel and legacy production default. It does not simulate successful hosted
 Auth/Storage or test the database. Windows sandbox restrictions may require normal
 filesystem/process access for Nitro's dependency tracer.
+
+## CI evidence
+[Portable Node build run 36344103468](https://github.com/idealgathering-collab/ideal-gathering/actions/runs/36344103468)
+passed install, 279 unit tests, typecheck, targeted lint, portable build, Node
+HTTP smoke and the optional Lovable Linux build at implementation 0f03e31.
+Its downloadable artifact uses dummy loopback settings and has 7-day retention;
+rebuild with isolated staging values before hosting. No CI job deploys the app.

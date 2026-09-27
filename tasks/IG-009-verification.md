@@ -80,7 +80,13 @@ formatting/type debt remains. No unrelated source refactor or dependency upgrade
 A read-only `Portable Node build` PR workflow repeats install, unit/type/config
 lint, independent build and local smoke on Ubuntu/Node 24. It saves a clearly
 named dummy-backend artifact, then checks the optional Lovable build on Linux.
-Its actual run result will be recorded after publication; no CI pass is implied yet.
+[Run 36344103468](https://github.com/idealgathering-collab/ideal-gathering/actions/runs/36344103468)
+PASSED at implementation commit `0f03e31bc651938b150fa49c4c8cdd87659f92af`:
+frozen install, 279 tests, typecheck, targeted config/test lint, portable build,
+Node HTTP smoke, artifact upload and `bun run build:lovable` all succeeded on
+Ubuntu/Node 24. The optional Lovable path therefore has a supported-platform build
+pass, not just a preserved config. Neither build was deployed. CI artifact name:
+`portable-node-dummy-backend-smoke-only` (7-day retention; rebuild with staging env).
 Original remote IG-009 checkpoint was 29e419e; local equivalent had different
 line endings in four docs only (normalized contents verified equal). All new
 commits preserve remote ancestry; no force-push or rebase. PR #13 stays draft,
@@ -90,7 +96,7 @@ stacked on #12 and unmerged.
 No isolated Supabase credentials or general Node hosting target are configured
 in this checkout/session. No hosted URL, migrated staging database, real Auth,
 Storage, email, maps, PWA/mobile install or full hosted journey has been verified.
-No production data was read or changed for this implementation; prior read-only
+No production user data was read or changed for this implementation; prior read-only
 schema/ledger evidence below is preserved, not rerun or treated as resolved.
 
 Next: provision an empty isolated Supabase project and a separate Node 24 staging

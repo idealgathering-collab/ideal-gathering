@@ -7,10 +7,11 @@ Branch: codex/ig-009-staging-beta, draft PR #13 stacked on #12.
 [Accepted spec](IG-009-staging-beta-readiness.md) · [Verification](IG-009-verification.md)
 · [Deploy/run/env contract](../docs/DEPLOYMENT.md).
 
-Checkpoint: portable implementation and local verification complete; publishing checkpoint.
+Checkpoint: portable implementation published as 0f03e31; Windows and Linux verification pass.
 Standard Vite/TanStack Start/Nitro Node build passes on Windows/Node 24.
 Copied standalone .output artifact also passes local HTTP smoke outside the repo.
-279 unit tests and typecheck pass. New/config files lint clean; touched legacy
+279 unit tests and typecheck pass. Linux CI 36344103468 also passes the portable
+Node build/smoke, artifact upload and optional Lovable production build. New/config files lint clean; touched legacy
 files retain baseline lint debt (exact comparison in verification).
 Supabase public/server settings are explicit; old tracked .env removed. Direct
 Supabase OAuth is default, Lovable OAuth/build is optional. Local visual assets
