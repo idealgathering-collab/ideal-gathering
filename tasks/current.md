@@ -1,3 +1,26 @@
+# Current task — IG-009
+
+## Active approved scope
+IG-009 — Staging, Integration & Beta Readiness, explicitly authorized by Farzin on 2026-09-27.
+Branch: codex/ig-009-staging-beta. Product baseline: 10984d66b1865e07398015d9818a9dee2c294881.
+[Accepted spec](IG-009-staging-beta-readiness.md) · [Verification/checkpoint](IG-009-verification.md).
+
+Checkpoint: inspection complete enough to identify blockers; staging provisioning blocked.
+GitHub main and Lovable latest code remain 9e69980. PRs #5–#12 are open and unmerged.
+Live migration ledger/schema drift is documented. No production writes, migrations, merge or deployment.
+Lovable remix failed twice with INVALID_ARGUMENT; browser editor requires Farzin's login.
+Exact next step: sign in to Lovable, verify GitHub sync branch, create an isolated project/backend,
+then reconcile staging schema/ledger and deploy the full IG-008 baseline for hosted smoke tests.
+Preserve venue activation 2–5. No IG-010. Do not archive IG-009 until acceptance criteria pass.
+Checks: remote metadata and read-only schema/ledger inspection; documentation verification.
+Application tests/build and all hosted journeys are unrun in IG-009.
+
+---
+
+## Historical record (prior queue authorization and checkpoints)
+The deployment exclusions below describe the earlier IG-001–008 scope. The active IG-009
+spec above governs current staged release work and its production safety gates.
+
 # Current task
 
 ## Approval state
@@ -351,3 +374,4 @@ For each task:
 ## Prior workflow checkpoint
 
 Workflow documentation was prepared on `codex/project-workflow`; see [completion report](completed/workflow-setup.md). Inspect current Git state and branch/merge status rather than assuming that historical branch state has been merged or deployed.
+
