@@ -3,6 +3,7 @@
 Completed 2026-09-27 on `codex/ig-008-venue-value-layer`, based on IG-007
 `d56c413`. Implementation complete within the accepted scope; review, supported
 production build and staging release validation remain. No merge or deployment.
+Implementation `5975fc3` is pushed in draft [PR #12](https://github.com/idealgathering-collab/ideal-gathering/pull/12), stacked on PR #11. All three local ports (55439/55440/55444) confirmed stopped; browser viewport restored.
 The approved IG-001 through IG-008 implementation queue is complete. Do not start
 a new product feature automatically.
 

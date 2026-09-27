@@ -26,6 +26,7 @@ Completion here does not mean merged, deployed or production-beta validated.
 ### IG-008 verification closure — 2026-09-27
 
 Complete on `codex/ig-008-venue-value-layer`, based on IG-007 `d56c413` (PR #11).
+Implementation `5975fc3` is pushed in draft [PR #12](https://github.com/idealgathering-collab/ideal-gathering/pull/12), stacked on PR #11. Temporary services stopped; viewport restored.
 Six-section venue dashboard, real verified visitor aggregates, profile/table/menu
 editing and read-only Owner preview. Pending/beta-wait profile corrections remain
 available. Two additive migrations close attendance forgery/attribution races and
