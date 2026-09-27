@@ -25,7 +25,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { claimInitialOwner, fetchRoles, setAdminPreview } from "@/lib/roles";
 import { getOwnerSnapshot, type OwnerDirectorySection } from "@/lib/owner.functions";
 import { useSession } from "@/hooks/use-session";
-import logoAsset from "@/assets/ideal-gathering-logo.png.asset.json";
+import { logoAsset } from "@/config/brand";
 
 export const Route = createFileRoute("/_authenticated/owner")({
   beforeLoad: async ({ context }) => {

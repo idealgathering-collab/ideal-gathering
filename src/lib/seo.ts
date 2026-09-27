@@ -1,4 +1,5 @@
-export const SITE_URL = "https://www.idealgathering.com";
+import { brand } from "@/config/brand";
+export const SITE_URL = brand.siteUrl;
 
 export const SEO_LANGS = ["en", "ru", "fa"] as const;
 export type SeoLang = (typeof SEO_LANGS)[number];
@@ -183,7 +184,8 @@ export function urlFor(path: string, lang: SeoLang) {
  */
 export function localizedHead(path: string, rawLang: unknown) {
   const lang = normalizeLang(rawLang);
-  const copy = PAGE_SEO[path]?.[lang] ?? PAGE_SEO["/"][lang];
+  const original = PAGE_SEO[path]?.[lang] ?? PAGE_SEO["/"][lang];
+  const copy = { ...original, title: original.title.replaceAll("Ideal Gathering", brand.name) };
   const self = urlFor(path, lang);
 
   return {
@@ -226,7 +228,7 @@ export function jsonLdOrganization(lang: SeoLang) {
     "@context": "https://schema.org",
     "@type": "Organization",
     "@id": `${SITE_URL}/#organization`,
-    name: "Ideal Gathering",
+    name: brand.name,
     url: SITE_URL,
     logo: `${SITE_URL}/favicon.ico`,
     description: PAGE_SEO["/"][lang].description,
@@ -249,7 +251,8 @@ export function jsonLdWebSite(lang: SeoLang) {
 
 /** Per-page WebPage node, tied to the site's WebSite/Organization graph. */
 export function jsonLdWebPage(path: string, lang: SeoLang) {
-  const copy = PAGE_SEO[path]?.[lang] ?? PAGE_SEO["/"][lang];
+  const original = PAGE_SEO[path]?.[lang] ?? PAGE_SEO["/"][lang];
+  const copy = { ...original, title: original.title.replaceAll("Ideal Gathering", brand.name) };
   const url = urlFor(path, lang);
   return {
     "@context": "https://schema.org",

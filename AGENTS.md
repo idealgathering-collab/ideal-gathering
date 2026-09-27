@@ -27,7 +27,7 @@ GitHub is the durable source of truth. Codex is the primary coding agent. ChatGP
 ## Implementation discipline
 - Reuse existing components, helpers, routes, tokens and translations. Avoid unrelated refactors, dependency upgrades, file moves and whole-repo formatting.
 - This is TanStack Start file-based routing. Follow [route conventions](src/routes/README.md); preserve `__root.tsx` and its Outlet. Do not create Next.js/Remix layouts or hand-edit `src/routeTree.gen.ts`.
-- Preserve the Lovable Vite wrapper; do not duplicate its React, TanStack, Tailwind or Nitro plugins.
+- IG-009 approved portability supersedes the old wrapper-only requirement: keep the Lovable wrapper in its optional config; use standard plugins in the independent config. Never combine both plugin stacks.
 - Keep service-role credentials and privileged clients server-only. Validate inputs and authorize the requested resource before privileged reads/writes; route gating alone is insufficient.
 - Protect secrets: never print, copy into docs, commit or expose credentials, tokens, private user records or environment values. A tracked `.env` exists; its presence is not permission to disclose its contents.
 - Preserve privacy, blocking, beta access, email verification, capacity and moderation enforcement. Return minimum necessary profile/matching information.

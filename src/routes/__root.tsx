@@ -1,3 +1,4 @@
+import { brand } from "@/config/brand";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
   Outlet,
@@ -7,7 +8,7 @@ import {
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
-import { useEffect, type ReactNode } from "react";
+import { useEffect, type ReactNode, type CSSProperties } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
@@ -83,29 +84,26 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
-      { name: "theme-color", content: "#6b21a8" },
-      { title: "Ideal Gathering — No One Will Be Alone Anymore" },
+      { name: "theme-color", content: brand.themeColor },
+      { title: `${brand.name} — ${brand.tagline}` },
       {
         name: "description",
-        content:
-          "Real tables at real cafés and restaurants. One subject, a few seats, and people worth meeting — join a gathering or host your own.",
+        content: brand.description,
       },
-      { property: "og:title", content: "Ideal Gathering — No One Will Be Alone Anymore" },
+      { property: "og:title", content: `${brand.name} — ${brand.tagline}` },
       {
         property: "og:description",
-        content:
-          "Real tables at real cafés and restaurants. One subject, a few seats, and people worth meeting — join a gathering or host your own.",
+        content: brand.description,
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "Ideal Gathering — No One Will Be Alone Anymore" },
+      { name: "twitter:title", content: `${brand.name} — ${brand.tagline}` },
       {
         name: "twitter:description",
-        content:
-          "Real tables at real cafés and restaurants. One subject, a few seats, and people worth meeting — join a gathering or host your own.",
+        content: brand.description,
       },
-      { property: "og:image", content: "https://www.idealgathering.com/og-image.jpg" },
-      { name: "twitter:image", content: "https://www.idealgathering.com/og-image.jpg" },
+      { property: "og:image", content: `${brand.siteUrl}/og-image.jpg` },
+      { name: "twitter:image", content: `${brand.siteUrl}/og-image.jpg` },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
@@ -130,7 +128,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
+    <html
+      lang="en"
+      style={
+        import.meta.env.VITE_BRAND_THEME_COLOR
+          ? ({ "--primary": brand.themeColor } as CSSProperties)
+          : undefined
+      }
+    >
       <head>
         <HeadContent />
       </head>
@@ -167,4 +172,3 @@ function RootComponent() {
     </QueryClientProvider>
   );
 }
-

@@ -1,3 +1,114 @@
+# IG-009 verification — portable deployment checkpoint, 2026-09-27
+
+## Current outcome
+Portable implementation and local verification pass. Default build uses standard
+Vite/TanStack Start/React/Tailwind/Nitro, with no Lovable build wrapper or MCP Vite
+plugin. Artifact: complete `.output/`, Nitro `node-server`, Node entry
+`.output/server/index.mjs`. Copied artifact runs outside the checkout.
+No Lovable credits/editor/remix, production writes, migrations, merge or deployment.
+Venue activation remains 2–5; no IG-010 or product feature work.
+
+## Changes and dependency audit
+- Revised the approved spec/current task before implementation; portability
+  supersedes the earlier Lovable staging/remix and conditional-promotion direction.
+- Standard default config retains file routes, SSR, Tailwind, aliases/dedupe,
+  public environment handling, import protection and `src/server.ts`.
+- `vite.lovable.config.ts` retains the original wrapper/MCP plugin and optional
+  platform build; `build:lovable`/`dev:lovable` select it explicitly. Never combine stacks.
+- `@lovable.dev/mcp-js` remains a runtime dependency for existing MCP endpoints;
+  tested issuer discovery and anonymous denial work on the independent Node server.
+  Its Vite plugin is not needed for the default build because routes are committed.
+- `@lovable.dev/cloud-auth-js` remains for optional Lovable OAuth. Direct Supabase
+  OAuth is the portable default; provider/redirect/error branches have unit coverage.
+- Server Supabase clients already used runtime environment variables. Public config
+  now requires explicit URL/key, rejects known privileged keys, and uses no browser
+  `process.env` fallback. MCP issuer uses the configured URL, not a project-ref hostname.
+- Removed tracked root `.env`; retained prior local values only in ignored
+  `.env.lovable.local`. Independent env directory and blank example contain no secrets.
+- Shared brand config supplies logos, translated brand labels, root/SEO metadata,
+  origin, manifest and theme hook; per-language text override map supports future
+  editorial changes. Havato implementation/full legal rebranding is not claimed.
+- Seven original public assets copied byte-for-byte into `public/assets`; no runtime
+  Lovable asset proxy. Two large images imported by a temporary branch-only Action
+  after connector upload failures; fixed SHA-256 checks passed. Import workflow is
+  removed in the implementation checkpoint. No application dependency changes.
+- [Deployment contract](../docs/DEPLOYMENT.md) documents install/build/start,
+  required public/server variables, optional compatibility and exact staging steps.
+
+## Commands and observed local results
+Environment: Windows, Node v24.19.0, Bun 1.4.2. The bundled Bun executable was
+invoked by absolute path because it was not on PATH; commands below use `bun`
+as shorthand for that executable. Dependencies installed from committed bun.lock.
+
+| Command | Result |
+| --- | --- |
+| `bun install --frozen-lockfile` | PASS; 550 packages; no dependency or lockfile changes |
+| `bun run test` | PASS; 26 files / 279 tests, including 13 new config/OAuth tests |
+| `bun node_modules/typescript/bin/tsc --noEmit` | PASS, exit 0 |
+| `bun node_modules/eslint/bin/eslint.js vite.config.ts vite.lovable.config.ts src/config src/integrations/supabase/oauth.ts src/integrations/supabase/client.ts tests/unit/deployment-config.test.ts tests/unit/oauth-config.test.ts 'src/routes/manifest[.]webmanifest.ts' scripts/portable-smoke.mjs` | PASS, exit 0 |
+| ESLint on all touched TS/TSX excluding generated route tree | 320 errors / 2 warnings: 314 formatting findings + 6 pre-existing `no-explicit-any` in owner.$section; same-file baseline 337 errors / 2 warnings (331 formatting + same 6). No new semantic findings |
+| `bun run build` | PASS; standard Vite 8.0.16 + Nitro 3.0.260603-beta, preset node-server |
+| `node scripts/portable-smoke.mjs` | PASS; actual production Node server HTTP checks |
+| `node scripts/portable-smoke.mjs <copied-artifact-directory>` | PASS; complete artifact copied outside source checkout, no development dependency directory |
+| `git diff --check` | PASS after whitespace cleanup |
+
+Build/smoke settings were dummy loopback fixtures, not hosted credentials:
+`VITE_SUPABASE_URL=http://127.0.0.1:54321`,
+`VITE_SUPABASE_PUBLISHABLE_KEY=sb_publishable_ig009_local_fixture`,
+`VITE_SITE_URL=http://localhost:4173`,
+`SUPABASE_SERVICE_ROLE_KEY=ig009_server_only_sentinel`.
+The smoke script supplies matching dummy runtime settings and stops its server.
+The artifact is structurally deployable, but must be rebuilt with real **isolated
+staging** public settings before actual hosted testing.
+
+HTTP checks: /auth, /terms, /privacy, /our-story return SSR HTML with security
+headers; manifest reflects default brand; seven local image responses have exact
+byte lengths; MCP metadata uses configured loopback issuer and anonymous /mcp
+returns 401. Browser assets contain neither the sentinel nor the historical
+production project reference. These are deployment-boundary checks, not successful
+backend, browser hydration, OAuth/Storage/email or full product E2E tests.
+
+Recovered issues: restricted Windows sandbox denied Nitro dependency-tracer
+readlink traversal; rerunning with ordinary filesystem access passed. The old
+Lovable Windows routesDir error does not occur in the independent path. First
+bundle scan caught Bun auto-loading the legacy `.env`; removing that tracked
+default and narrowing explicit public env reads fixed it. Original images were
+not edited or regenerated. Lint line-ending noise was corrected; unrelated legacy
+formatting/type debt remains. No unrelated source refactor or dependency upgrade.
+
+## CI and publication
+A read-only `Portable Node build` PR workflow repeats install, unit/type/config
+lint, independent build and local smoke on Ubuntu/Node 24. It saves a clearly
+named dummy-backend artifact, then checks the optional Lovable build on Linux.
+Its actual run result will be recorded after publication; no CI pass is implied yet.
+Original remote IG-009 checkpoint was 29e419e; local equivalent had different
+line endings in four docs only (normalized contents verified equal). All new
+commits preserve remote ancestry; no force-push or rebase. PR #13 stays draft,
+stacked on #12 and unmerged.
+
+## Hosted staging and remaining manual work
+No isolated Supabase credentials or general Node hosting target are configured
+in this checkout/session. No hosted URL, migrated staging database, real Auth,
+Storage, email, maps, PWA/mobile install or full hosted journey has been verified.
+No production data was read or changed for this implementation; prior read-only
+schema/ledger evidence below is preserved, not rerun or treated as resolved.
+
+Next: provision an empty isolated Supabase project and a separate Node 24 staging
+service; reconcile/apply ordered migrations only there; configure Auth/SMTP,
+redirects, Storage and Edge Functions; set matching build/runtime variables;
+rebuild this PR revision; deploy the entire .output folder behind HTTPS. Verify
+backend identity before synthetic writes, then execute every hosted matrix row
+below. Follow [exact staging steps](../docs/DEPLOYMENT.md#isolated-staging--exact-remaining-action).
+No production promotion is authorized by this revised task. Keep IG-009 active
+until actual hosted beta checks pass. Farzin can host this same core on another
+Node server without Lovable credits; provider/Supabase setup is still required.
+
+---
+
+# Historical inspection checkpoint — superseded direction, evidence retained
+The text below records the earlier inspection. Lovable remix/editor actions and
+promotion are no longer the next steps; the revised scope above governs work.
+
 # IG-009 verification — inspection checkpoint, 2026-09-27
 
 ## Outcome

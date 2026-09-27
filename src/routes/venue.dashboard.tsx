@@ -29,7 +29,7 @@ import { LanguageSwitcher } from "@/components/language-switcher";
 import { NotificationsBell } from "@/components/notifications-bell";
 import { useT } from "@/i18n";
 import { requireVenueAccess } from "@/lib/beta-gate";
-import logoAsset from "@/assets/ideal-gathering-logo.png.asset.json";
+import { logoAsset } from "@/config/brand";
 
 export const Route = createFileRoute("/venue/dashboard")({
   ssr: false,

@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { useT } from "@/i18n";
 import { checkInvitation, normalizeCode, rememberInvite } from "@/lib/access";
-import logoAsset from "@/assets/ideal-gathering-logo.png.asset.json";
+import { logoAsset } from "@/config/brand";
 
 export const Route = createFileRoute("/invite")({
   component: InvitePage,

@@ -11,7 +11,7 @@ Baseline: `a37898970d63c9358c0592a7c81f07c7cbf2b828`. This describes repository 
 | State/data | React state/hooks and TanStack Query; Supabase browser access plus TanStack server functions in `src/lib/*.functions.ts` |
 | Backend | Supabase auth, PostgreSQL/RLS, storage and realtime; `supabase/migrations/` and account-deletion edge function |
 | Server | `src/server.ts` SSR entry/error wrapper configured in `vite.config.ts`; `src/start.ts` |
-| Build integration | `@lovable.dev/vite-tanstack-config`, Nitro default Cloudflare target and Lovable MCP Vite plugin |
+| Build integration | Standard Vite/TanStack Start/React/Tailwind/Nitro Node server; optional `vite.lovable.config.ts` retains Lovable wrapper and MCP generation |
 | Localization | `src/i18n/`; existing multilingual/RTL styling must be preserved |
 | Location | Leaflet/react-leaflet, geolocation and Nominatim helpers, city/neighborhood data including Yerevan |
 | Verification | Vitest unit and opt-in hosted DB suites; ESLint, TypeScript and Vite build |
@@ -38,11 +38,17 @@ The existing MCP tool routes expose gathering operations and must retain their a
 
 ## Constraints and findings
 - Follow [route conventions](../src/routes/README.md). Do not add Next.js or Remix structure or manually edit the generated route tree.
-- The Lovable Vite wrapper already installs core plugins. Duplicate plugin setup can break the app.
+- Portable and optional Lovable build configs are separate; never combine their plugin stacks. See [deployment](DEPLOYMENT.md).
 - Some Supabase integration files identify themselves as generated; use their owning configuration/generation flow when an approved change is required.
 - [Database](DATABASE.md) records owner-helper/type drift and missing migration evidence. Do not treat generated types as proof of migration replay or production state.
-- Tracked `.env` exists; values were not reproduced in this documentation. Review secret hygiene without exposing values.
+- Legacy tracked `.env` was removed in IG-009. Independent public build settings live in ignored `env/.env.local` or process env; runtime secrets stay server-only.
 - Hosted configuration, migration application state, storage bucket settings, build output and production behavior were not verified.
 
 ## PROPOSED operating direction
 Keep this architecture and reuse its components. GitHub is authoritative, Codex implements approved specs, ChatGPT supports decisions/review, and Lovable primarily handles infrastructure/deployment. No framework migration, backend replacement or speculative Brain service is approved.
+
+## IG-009 portable deployment checkpoint (2026-09-27)
+Standard production build and standalone Node HTTP smoke pass on Windows/Node 24.
+Shared brand/environment config and repository-owned static assets support a future
+separate deployment. Hosted staging, real backend journeys and production rollout
+remain unverified; no migrations or production changes occurred. See DEPLOYMENT.md.

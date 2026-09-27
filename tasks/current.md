@@ -1,19 +1,28 @@
 # Current task — IG-009
 
 ## Active approved scope
-IG-009 — Staging, Integration & Beta Readiness, explicitly authorized by Farzin on 2026-09-27.
-Branch: codex/ig-009-staging-beta. Product baseline: 10984d66b1865e07398015d9818a9dee2c294881.
-[Accepted spec](IG-009-staging-beta-readiness.md) · [Verification/checkpoint](IG-009-verification.md).
+IG-009 — Portable Deployment, Staging & Beta Readiness.
+Farzin approved the revised scope on 2026-09-27; it supersedes Lovable-first staging.
+Branch: codex/ig-009-staging-beta, draft PR #13 stacked on #12.
+[Accepted spec](IG-009-staging-beta-readiness.md) · [Verification](IG-009-verification.md)
+· [Deploy/run/env contract](../docs/DEPLOYMENT.md).
 
-Checkpoint: inspection complete enough to identify blockers; staging provisioning blocked.
-GitHub main and Lovable latest code remain 9e69980. PRs #5–#12 are open and unmerged.
-Live migration ledger/schema drift is documented. No production writes, migrations, merge or deployment.
-Lovable remix failed twice with INVALID_ARGUMENT; browser editor requires Farzin's login.
-Exact next step: sign in to Lovable, verify GitHub sync branch, create an isolated project/backend,
-then reconcile staging schema/ledger and deploy the full IG-008 baseline for hosted smoke tests.
-Preserve venue activation 2–5. No IG-010. Do not archive IG-009 until acceptance criteria pass.
-Checks: remote metadata and read-only schema/ledger inspection; documentation verification.
-Application tests/build and all hosted journeys are unrun in IG-009.
+Checkpoint: portable implementation and local verification complete; publishing checkpoint.
+Standard Vite/TanStack Start/Nitro Node build passes on Windows/Node 24.
+Copied standalone .output artifact also passes local HTTP smoke outside the repo.
+279 unit tests and typecheck pass. New/config files lint clean; touched legacy
+files retain baseline lint debt (exact comparison in verification).
+Supabase public/server settings are explicit; old tracked .env removed. Direct
+Supabase OAuth is default, Lovable OAuth/build is optional. Local visual assets
+and minimal brand/SEO/manifest/text/theme hooks support a future Havato build.
+No dependencies/lockfiles/schema/product rules changed; venue cap stays 2–5.
+No Lovable credits/editor/remix, production writes, migrations, merge or deployment.
+Hosted Auth/email/Storage/maps and full beta journeys are NOT RUN: no isolated
+backend/hosting credentials. Local fixture artifact is not a live staging site.
+Exact next action: provision empty Supabase plus a separate Node 24 staging host;
+set its build/runtime variables, rebuild, deploy complete .output, then execute
+the hosted matrix after backend identity checks. No IG-010 or production promotion.
+Keep IG-009 active until actual hosted beta validation passes.
 
 ---
 
@@ -374,4 +383,3 @@ For each task:
 ## Prior workflow checkpoint
 
 Workflow documentation was prepared on `codex/project-workflow`; see [completion report](completed/workflow-setup.md). Inspect current Git state and branch/merge status rather than assuming that historical branch state has been merged or deployed.
-

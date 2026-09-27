@@ -118,3 +118,14 @@ deletion or blocking. See the IG-007 contract in LIFE_MOMENTS.md.
 ### IG-D020 — Accepted: evidence-based venue value (2026-09-27)
 
 Reuse existing business attribution and checked-in rows with explicit venue/staff authorization and aggregate-only output. Protect evidence against forged inserts, retrospective attribution edits and concurrent time changes. Operational writes require approval and beta access; application corrections remain possible. New/returning means earliest retained eligible check-in, not lifetime customer history. Omit busy hours without a reliable venue timezone and omit unsupported commercial claims. See [contract](VENUE_DASHBOARD.md).
+
+### IG-D021 — Accepted: portable deployment with optional Lovable (2026-09-27)
+
+Farzin explicitly replaced IG-009's Lovable-first staging direction. Keep GitHub
+as source of truth and Supabase as backend; standard Vite/TanStack Start/Nitro Node
+is the default build. Retain a separate Lovable config and configurable OAuth;
+existing MCP runtime APIs remain to preserve behavior. Remove tracked backend
+defaults and vendor asset delivery coupling. A small brand/environment boundary
+supports a future Havato deployment of the same core. No feature redesign,
+IG-010, venue-cap change, merge or production deployment. See DEPLOYMENT.md and
+the active IG-009 spec. Hosted staging still requires isolated credentials/access.

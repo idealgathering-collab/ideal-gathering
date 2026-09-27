@@ -8,7 +8,7 @@ import { useT } from "@/i18n";
 import { useSession } from "@/hooks/use-session";
 import { fetchAccessState } from "@/lib/access";
 import { supabase } from "@/integrations/supabase/client";
-import logoAsset from "@/assets/ideal-gathering-logo.png.asset.json";
+import { logoAsset } from "@/config/brand";
 
 type PendingSearch = { as?: "venue" | "member" };
 

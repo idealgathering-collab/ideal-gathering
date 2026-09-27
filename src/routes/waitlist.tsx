@@ -3,7 +3,7 @@ import { useState } from "react";
 import { z } from "zod";
 import { toast } from "sonner";
 import { Sparkles } from "lucide-react";
-import logoAsset from "@/assets/ideal-gathering-logo.png.asset.json";
+import { logoAsset } from "@/config/brand";
 import { PublicHeader } from "@/components/landing/public-header";
 import { CosmicBackdrop } from "@/components/cosmic-backdrop";
 import { supabase } from "@/integrations/supabase/client";

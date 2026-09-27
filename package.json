@@ -12,7 +12,11 @@
     "format": "prettier --write .",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:db": "TEST_DB_ENABLED=1 vitest run --config vitest.db.config.ts"
+    "test:db": "TEST_DB_ENABLED=1 vitest run --config vitest.db.config.ts",
+    "start": "node .output/server/index.mjs",
+    "build:lovable": "vite build --config vite.lovable.config.ts --mode lovable",
+    "dev:lovable": "vite dev --config vite.lovable.config.ts --mode lovable",
+    "test:portable": "node scripts/portable-smoke.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",

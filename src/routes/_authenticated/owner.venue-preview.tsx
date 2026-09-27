@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { fetchRoles } from "@/lib/roles";
 import { listOwnerVenuePreviews } from "@/lib/owner-venue.functions";
-import logoAsset from "@/assets/ideal-gathering-logo.png.asset.json";
+import { logoAsset } from "@/config/brand";
 
 export const Route = createFileRoute("/_authenticated/owner/venue-preview")({
   beforeLoad: async ({ context }) => {

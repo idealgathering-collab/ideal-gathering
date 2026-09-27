@@ -21,7 +21,7 @@ import {
 import { Reveal } from "@/components/landing/reveal";
 import { SiteFooter } from "@/components/site-footer";
 import constellationAsset from "@/assets/constellation-people.png.asset.json";
-import logoAsset from "@/assets/ideal-gathering-logo.png.asset.json";
+import { logoAsset } from "@/config/brand";
 
 /**
  * The full marketing homepage, parked here for the duration of the private

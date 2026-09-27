@@ -1,3 +1,4 @@
+import { brand, brandText } from "@/config/brand";
 import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from "react";
 import { translations, LANGS, type Lang } from "./translations";
 
@@ -64,7 +65,8 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   const t = useCallback(
     (key: string, vars?: Record<string, string | number>) => {
       const dict = translations[lang];
-      let s = dict[key] ?? translations.en[key] ?? key;
+      let s = brandText[lang]?.[key] ?? dict[key] ?? translations.en[key] ?? key;
+      s = s.replaceAll("Ideal Gathering", brand.name);
       if (vars) {
         for (const [k, v] of Object.entries(vars)) {
           s = s.replace(new RegExp(`\\{${k}\\}`, "g"), String(v));

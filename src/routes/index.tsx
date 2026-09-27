@@ -26,7 +26,7 @@ import {
 import { SiteFooter } from "@/components/site-footer";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import constellationAsset from "@/assets/constellation-people.png.asset.json";
-import logoAsset from "@/assets/ideal-gathering-logo.png.asset.json";
+import { logoAsset } from "@/config/brand";
 
 export const Route = createFileRoute("/")({
   component: Home,
