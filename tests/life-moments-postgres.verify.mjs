@@ -561,7 +561,7 @@ try {
   ).rows[0].id;
   const business = (
     await db.query(
-      "INSERT INTO public.businesses(owner_id,name,description,address,city,cover_url,lat,lng,mobile,phone,street_number) VALUES($1,'[test-IG003] Venue','test','test','test','test',0,0,'test','test','1') RETURNING id",
+      "INSERT INTO public.businesses(owner_id,name,description,address,city,cover_url,lat,lng,mobile,phone,street_number,status) VALUES($1,'[test-IG003] Venue','test','test','test','test',0,0,'test','test','1','approved') RETURNING id",
       [ids.venue],
     )
   ).rows[0].id;

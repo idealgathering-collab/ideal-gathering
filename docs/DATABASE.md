@@ -416,3 +416,7 @@ id: string
 interests: string | null
 name: string
 ```
+
+## IG-008 venue value — 2026-09-27
+
+Two ordered additive migrations provide the authorized aggregate RPC, index, restrictive operational writes, attendance evidence guards and serialized attribution checks. No new analytics table or live backfill. See [contract and rollout](VENUE_DASHBOARD.md) and [verification](../tasks/completed/IG-008-verification.md).

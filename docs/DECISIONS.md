@@ -114,3 +114,7 @@ records do not establish those outcomes reliably. No activity warehouse or publi
 metrics. Consequences: the owner sees full period counts independently of history
 limits; counts reflect current eligibility and can change after cancellation,
 deletion or blocking. See the IG-007 contract in LIFE_MOMENTS.md.
+
+### IG-D020 — Accepted: evidence-based venue value (2026-09-27)
+
+Reuse existing business attribution and checked-in rows with explicit venue/staff authorization and aggregate-only output. Protect evidence against forged inserts, retrospective attribution edits and concurrent time changes. Operational writes require approval and beta access; application corrections remain possible. New/returning means earliest retained eligible check-in, not lifetime customer history. Omit busy hours without a reliable venue timezone and omit unsupported commercial claims. See [contract](VENUE_DASHBOARD.md).

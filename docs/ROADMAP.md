@@ -25,3 +25,7 @@ Live Gathering, Emergency Button, Community Aid and advanced Brain research. Eac
 [Root private-beta roadmap](../roadmap.md) remains intact. Its checked boxes and “161 unit tests” are historical assertions, not fresh validation by this task.
 It still lists pending-screen mobile tabs and moving the venue portal gate to route level as unfinished. Reinspect code and specify scope before acting.
 Historical `.lovable/plan/` documents remain intact as context; an old plan is not automatic approval.
+
+## Approved queue closure — 2026-09-27
+
+IG-001 through IG-008 implementations are complete within accepted scopes. This supersedes historical venue-dashboard implementation gaps, not release requirements. Review the stacked branches, pass a supported-platform build and hosted staging checks, audit historical attendance, then decide rollout. No new feature starts automatically. See [current task](../tasks/current.md).

@@ -81,3 +81,7 @@ totals from the capped history below. Empty is a warm invitation with the existi
 My Gatherings link; loading and retryable errors never imply zero activity.
 Mobile stacks the periods; desktop uses three columns. EN/RU/FA labels, dates,
 numbers and RTL are supported. No people/place estimates, scores or comparisons.
+
+## IG-008 venue dashboard — 2026-09-27
+
+Six app sections prioritize upcoming activity and real verified value. Existing editing lives in My Venue, Tables and Menu; pending/beta-wait profile correction stays accessible. Owner preview is read-only. Mobile grid navigation expands to a desktop sidebar; EN/RU/FA, loading/empty/retry states and counting disclosure are supported. See [venue contract](VENUE_DASHBOARD.md).
