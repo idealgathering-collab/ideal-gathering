@@ -3,9 +3,9 @@ import { useEffect, useState } from "react";
 import { z } from "zod";
 import { toast } from "sonner";
 import { ArrowLeft } from "lucide-react";
-import logoAsset from "@/assets/ideal-gathering-logo.png.asset.json";
+import { logoAsset } from "@/config/brand";
 import { supabase } from "@/integrations/supabase/client";
-import { lovable } from "@/integrations/lovable";
+import { signInWithGoogle } from "@/integrations/supabase/oauth";
 import { Button } from "@/components/ui/button";
 import { useT } from "@/i18n";
 import { LanguageSwitcher } from "@/components/language-switcher";
@@ -181,9 +181,9 @@ function AuthPage() {
                 onClick={async () => {
                   try {
                     setLoading(true);
-                    const result = await lovable.auth.signInWithOAuth("google", {
-                      redirect_uri: `${window.location.origin}${redirect ?? ""}`,
-                    });
+                    const result = await signInWithGoogle(
+                      `${window.location.origin}${redirect ?? ""}`,
+                    );
                     if (result.error) throw result.error;
                     if (result.redirected) return;
                     await redeemPendingInvite();

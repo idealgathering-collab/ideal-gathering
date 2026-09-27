@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { fetchRoles } from "@/lib/roles";
 import { getOwnerActivity } from "@/lib/owner.functions";
-import logoAsset from "@/assets/ideal-gathering-logo.png.asset.json";
+import { logoAsset } from "@/config/brand";
 
 export const Route = createFileRoute("/_authenticated/owner/activity")({
   beforeLoad: async ({ context }) => {

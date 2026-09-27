@@ -1,0 +1,38 @@
+name: Portable Node build
+on:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      VITE_SUPABASE_URL: http://127.0.0.1:54321
+      VITE_SUPABASE_PUBLISHABLE_KEY: sb_publishable_ig009_local_fixture
+      VITE_SITE_URL: http://localhost:4173
+      SUPABASE_SERVICE_ROLE_KEY: ig009_server_only_sentinel
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: '1.4.2'
+      - run: bun install --frozen-lockfile
+      - run: bun run test
+      - run: bun node_modules/typescript/bin/tsc --noEmit
+      - name: Lint portable configuration and tests
+        run: bun node_modules/eslint/bin/eslint.js vite.config.ts vite.lovable.config.ts src/config src/integrations/supabase/oauth.ts src/integrations/supabase/client.ts tests/unit/deployment-config.test.ts tests/unit/oauth-config.test.ts 'src/routes/manifest[.]webmanifest.ts' scripts/portable-smoke.mjs
+      - run: bun run build
+      - run: node scripts/portable-smoke.mjs
+      - uses: actions/upload-artifact@v4
+        with:
+          name: portable-node-dummy-backend-smoke-only
+          path: .output/
+          include-hidden-files: true
+          retention-days: 7
+      - name: Verify optional Lovable build on Linux
+        run: bun run build:lovable

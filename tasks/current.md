@@ -1,3 +1,36 @@
+# Current task — IG-009
+
+## Active approved scope
+IG-009 — Portable Deployment, Staging & Beta Readiness.
+Farzin approved the revised scope on 2026-09-27; it supersedes Lovable-first staging.
+Branch: codex/ig-009-staging-beta, draft PR #13 stacked on #12.
+[Accepted spec](IG-009-staging-beta-readiness.md) · [Verification](IG-009-verification.md)
+· [Deploy/run/env contract](../docs/DEPLOYMENT.md).
+
+Checkpoint: portable implementation published as 0f03e31; Windows and Linux verification pass.
+Standard Vite/TanStack Start/Nitro Node build passes on Windows/Node 24.
+Copied standalone .output artifact also passes local HTTP smoke outside the repo.
+279 unit tests and typecheck pass. Linux CI 36344103468 also passes the portable
+Node build/smoke, artifact upload and optional Lovable production build. New/config files lint clean; touched legacy
+files retain baseline lint debt (exact comparison in verification).
+Supabase public/server settings are explicit; old tracked .env removed. Direct
+Supabase OAuth is default, Lovable OAuth/build is optional. Local visual assets
+and minimal brand/SEO/manifest/text/theme hooks support a future Havato build.
+No dependencies/lockfiles/schema/product rules changed; venue cap stays 2–5.
+No Lovable credits/editor/remix, production writes, migrations, merge or deployment.
+Hosted Auth/email/Storage/maps and full beta journeys are NOT RUN: no isolated
+backend/hosting credentials. Local fixture artifact is not a live staging site.
+Exact next action: provision empty Supabase plus a separate Node 24 staging host;
+set its build/runtime variables, rebuild, deploy complete .output, then execute
+the hosted matrix after backend identity checks. No IG-010 or production promotion.
+Keep IG-009 active until actual hosted beta validation passes.
+
+---
+
+## Historical record (prior queue authorization and checkpoints)
+The deployment exclusions below describe the earlier IG-001–008 scope. The active IG-009
+spec above governs current staged release work and its production safety gates.
+
 # Current task
 
 ## Approval state

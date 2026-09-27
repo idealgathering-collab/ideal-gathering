@@ -14,7 +14,7 @@ import { LocationMapPicker, type MapLocationValue } from "@/components/location-
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { useT } from "@/i18n";
 import { requireVenueRegistrationAccess } from "@/lib/beta-gate";
-import logoAsset from "@/assets/ideal-gathering-logo.png.asset.json";
+import { logoAsset } from "@/config/brand";
 
 export const Route = createFileRoute("/venue/register")({
   ssr: false,

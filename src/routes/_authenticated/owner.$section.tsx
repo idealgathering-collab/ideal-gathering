@@ -21,7 +21,7 @@ import { getOwnerDirectory, type OwnerDirectorySection } from "@/lib/owner.funct
 import { createInvitation, revokeInvitation } from "@/lib/beta-admin";
 import { supabase } from "@/integrations/supabase/client";
 import type { Database } from "@/integrations/supabase/types";
-import logoAsset from "@/assets/ideal-gathering-logo.png.asset.json";
+import { logoAsset } from "@/config/brand";
 
 const ALLOWED = new Set<OwnerDirectorySection>(["waitlist", "users", "venues", "invitations", "gatherings"]);
 
