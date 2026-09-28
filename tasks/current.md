@@ -1,5 +1,13 @@
 # Current task — Havato deployment
 
+Branch: havato. Full IG001–IG009 incorporated without conflicts. [Scope](HAVATO-deployment.md) · [Verification and exact blockers](HAVATO-verification.md) · [Darkube runbook](../docs/HAVATO-DARKUBE.md).
+
+Local code, database/API tests, production build and Linux stateless container verification pass. Hosted deployment remains pending new Supabase project/password handoff and paid Darkube approval. No Ideal Gathering production changes. Next: finish isolated backend creation, validate fresh-project migration plan, configure real build arguments/runtime secrets, obtain paid-resource approval, then deploy and run hosted journey matrix.
+
+---
+
+# Current task — Havato deployment
+
 [Approved scope](HAVATO-deployment.md). Branch: havato. Full IG001–IG009 incorporated at 33e3176 by fast-forward. Havato container/branding verification in progress. No production modifications.
 
 ---

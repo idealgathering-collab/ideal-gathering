@@ -14,10 +14,7 @@ import { fetchRoles, setAdminPreview } from "@/lib/roles";
 export const Route = createFileRoute("/admin/auth")({
   component: AdminAuth,
   head: () => ({
-    meta: [
-      { title: "Owner sign-in — Havato" },
-      { name: "robots", content: "noindex, nofollow" },
-    ],
+    meta: [{ title: "Owner sign-in — Havato" }, { name: "robots", content: "noindex, nofollow" }],
   }),
 });
 
@@ -153,7 +150,11 @@ function AdminAuth() {
               </div>
             )}
             <Button type="submit" disabled={loading} className="mt-2 h-11 rounded-full text-base">
-              {loading ? t("auth.submitting") : mode === "forgot" ? t("auth.forgot.send") : t("auth.signIn")}
+              {loading
+                ? t("auth.submitting")
+                : mode === "forgot"
+                  ? t("auth.forgot.send")
+                  : t("auth.signIn")}
             </Button>
           </form>
 

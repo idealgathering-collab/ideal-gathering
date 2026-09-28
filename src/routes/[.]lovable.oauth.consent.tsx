@@ -12,9 +12,15 @@ type AuthorizationDetails = {
 };
 
 type OAuthNamespace = {
-  getAuthorizationDetails: (id: string) => Promise<{ data: AuthorizationDetails | null; error: Error | null }>;
-  approveAuthorization: (id: string) => Promise<{ data: AuthorizationDetails | null; error: Error | null }>;
-  denyAuthorization: (id: string) => Promise<{ data: AuthorizationDetails | null; error: Error | null }>;
+  getAuthorizationDetails: (
+    id: string,
+  ) => Promise<{ data: AuthorizationDetails | null; error: Error | null }>;
+  approveAuthorization: (
+    id: string,
+  ) => Promise<{ data: AuthorizationDetails | null; error: Error | null }>;
+  denyAuthorization: (
+    id: string,
+  ) => Promise<{ data: AuthorizationDetails | null; error: Error | null }>;
 };
 
 function oauth(): OAuthNamespace {
@@ -83,14 +89,11 @@ function Consent() {
   return (
     <main className="mx-auto max-w-md px-6 py-12">
       <div className="rounded-3xl border border-border bg-card p-8 shadow-plum">
-        <h1 className="font-display text-2xl">
-          Connect {clientName} to Havato
-        </h1>
+        <h1 className="font-display text-2xl">Connect {clientName} to Havato</h1>
         <p className="mt-3 text-sm text-muted-foreground">
-          This lets {clientName} use Havato as you — browsing upcoming
-          gatherings, joining or leaving tables, and viewing your own hosted
-          gatherings and businesses. It does not bypass Havato's
-          permissions or your account's privacy rules.
+          This lets {clientName} use Havato as you — browsing upcoming gatherings, joining or
+          leaving tables, and viewing your own hosted gatherings and businesses. It does not bypass
+          Havato's permissions or your account's privacy rules.
         </p>
         {details?.scope && (
           <p className="mt-3 text-xs text-muted-foreground">
