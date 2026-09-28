@@ -19,13 +19,16 @@ jobs:
           --build-arg VITE_SITE_URL=http://localhost:3000 .
       - name: Verify stateless container startup and port 3000
         run: |
+          set -x
           docker run -d --name havato-test --read-only --tmpfs /tmp -p 3000:3000 -e SUPABASE_URL=http://127.0.0.1:54321 -e SUPABASE_PUBLISHABLE_KEY=sb_publishable_ig009_local_fixture -e SUPABASE_SERVICE_ROLE_KEY=ig009_server_only_sentinel havato:test
           for attempt in $(seq 1 60); do
             if curl --fail --silent http://localhost:3000/auth > /tmp/havato.html; then break; fi
             sleep 2
           done
-          grep -q Havato /tmp/havato.html
-          curl --fail --silent http://localhost:3000/manifest.webmanifest | grep -q Havato
+          node -e "const s=require('fs').readFileSync('/tmp/havato.html','utf8');console.log('SSR bytes',s.length,'Havato',s.includes('Havato'));if(!s.includes('Havato')){console.log(s.slice(0,2000));process.exit(1)}"
+          curl --fail --silent http://localhost:3000/manifest.webmanifest -o /tmp/manifest.json
+          cat /tmp/manifest.json
+          grep -q Havato /tmp/manifest.json
           docker exec havato-test node -e "const fs=require('fs');for(const p of fs.readdirSync('.output/public/assets')){if(/\\.js$/.test(p)&&fs.readFileSync('.output/public/assets/'+p,'utf8').includes('ig009_server_only_sentinel'))process.exit(1)}"
           test "$(docker inspect --format '{{.Config.User}}' havato-test)" = node
       - name: Container logs

@@ -91,12 +91,16 @@ export function useT() {
   if (ctx) return ctx.t;
   // Fallback for trees that render outside the provider (e.g. root error boundary).
   return (key: string, vars?: Record<string, string | number>) => {
-    let s = (brandText.en?.[key] ?? translations.en[key] ?? key).replaceAll("Ideal Gathering", brand.name);
-    if (vars) for (const [k, v] of Object.entries(vars)) s = s.replace(new RegExp(`\\{${k}\\}`, "g"), String(v));
+    let s = (brandText.en?.[key] ?? translations.en[key] ?? key).replaceAll(
+      "Ideal Gathering",
+      brand.name,
+    );
+    if (vars)
+      for (const [k, v] of Object.entries(vars))
+        s = s.replace(new RegExp(`\\{${k}\\}`, "g"), String(v));
     return s;
   };
 }
-
 
 export { LANGS };
 export type { Lang };

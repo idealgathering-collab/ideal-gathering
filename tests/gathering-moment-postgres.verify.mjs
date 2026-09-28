@@ -55,7 +55,11 @@ try {
       "SELECT prosrc,prosecdef FROM pg_proc WHERE oid='public.get_gathering_moment_context(uuid)'::regprocedure",
     )
   ).rows[0];
-  check("installed function equals migration", installed.prosrc.trim(), sql.split("$$")[1].trim());
+  check(
+    "installed function equals migration",
+    installed.prosrc.replaceAll("\r\n", "\n").trim(),
+    sql.split("$$")[1].replaceAll("\r\n", "\n").trim(),
+  );
   check("RPC uses caller permissions/RLS", installed.prosecdef, false);
   const events = {};
   for (const [name, age, end, status] of [
