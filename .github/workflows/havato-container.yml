@@ -22,7 +22,7 @@ jobs:
           set -x
           docker run -d --name havato-test --read-only --tmpfs /tmp -p 3000:3000 -e SUPABASE_URL=http://127.0.0.1:54321 -e SUPABASE_PUBLISHABLE_KEY=sb_publishable_ig009_local_fixture -e SUPABASE_SERVICE_ROLE_KEY=ig009_server_only_sentinel havato:test
           for attempt in $(seq 1 60); do
-            if curl --fail --silent http://localhost:3000/auth > /tmp/havato.html; then break; fi
+            if curl --fail --silent --location http://localhost:3000/auth > /tmp/havato.html; then break; fi
             sleep 2
           done
           node -e "const s=require('fs').readFileSync('/tmp/havato.html','utf8');console.log('SSR bytes',s.length,'Havato',s.includes('Havato'));if(!s.includes('Havato')){console.log(s.slice(0,2000));process.exit(1)}"
