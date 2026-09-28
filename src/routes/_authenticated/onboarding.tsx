@@ -27,12 +27,12 @@ export const Route = createFileRoute("/_authenticated/onboarding")({
   validateSearch: SEARCH,
   head: () => ({
     meta: [
-      { title: "Get started — Ideal Gathering" },
+      { title: "Get started — Havato" },
       {
         name: "description",
         content: "Set up your profile and tell us what kind of table you're looking for.",
       },
-      { property: "og:title", content: "Get started — Ideal Gathering" },
+      { property: "og:title", content: "Get started — Havato" },
       {
         property: "og:description",
         content: "Set up your profile and tell us what kind of table you're looking for.",

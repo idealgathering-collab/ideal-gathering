@@ -5,7 +5,7 @@ import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 import { nitro } from "nitro/vite";
-import { publicSupabaseConfig, oauthProvider } from "./src/config/environment";
+import { publicSupabaseConfig, oauthProvider, requireHttpUrl } from "./src/config/environment";
 
 // Deliberately separate from the legacy root .env used by Lovable.
 export default defineConfig(({ mode, command }) => {
@@ -13,6 +13,7 @@ export default defineConfig(({ mode, command }) => {
   const env = loadEnv(mode, envDir, "VITE_");
   publicSupabaseConfig(env);
   oauthProvider(env);
+  requireHttpUrl(env.VITE_SITE_URL, "VITE_SITE_URL");
   return {
     envDir,
     plugins: [

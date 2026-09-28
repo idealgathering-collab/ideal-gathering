@@ -417,7 +417,7 @@ function downloadIcs(g: { id: string; subject: string; description: string | nul
   const lines = [
     "BEGIN:VCALENDAR",
     "VERSION:2.0",
-    "PRODID:-//Ideal Gathering//EN",
+    "PRODID:-//Havato//EN",
     "CALSCALE:GREGORIAN",
     "METHOD:PUBLISH",
     "BEGIN:VEVENT",

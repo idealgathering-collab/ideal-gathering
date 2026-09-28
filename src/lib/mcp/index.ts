@@ -9,11 +9,11 @@ import myBusinesses from "./tools/my-businesses";
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL?.replace(/\/$/, "");
 
 export default defineMcp({
-  name: "ideal-gathering-mcp",
-  title: "Ideal Gathering",
+  name: "havato-mcp",
+  title: "Havato",
   version: "0.1.0",
   instructions:
-    "Tools for Ideal Gathering. Discover upcoming gatherings at partner cafes and restaurants, view details, and join or leave a gathering as the signed-in user. Also lists the user's own gatherings and businesses they own.",
+    "Tools for Havato. Discover upcoming gatherings at partner cafes and restaurants, view details, and join or leave a gathering as the signed-in user. Also lists the user's own gatherings and businesses they own.",
   auth: auth.oauth.issuer({
     issuer: `${supabaseUrl}/auth/v1`,
     acceptedAudiences: "authenticated",

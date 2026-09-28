@@ -33,7 +33,7 @@ export const Route = createFileRoute("/_authenticated/owner/$section")({
   },
   head: ({ params }) => ({
     meta: [
-      { title: `${labelFor(params.section as OwnerDirectorySection)} — Owner — Ideal Gathering` },
+      { title: `${labelFor(params.section as OwnerDirectorySection)} — Owner — Havato` },
       { name: "robots", content: "noindex" },
     ],
   }),

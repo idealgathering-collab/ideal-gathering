@@ -18,10 +18,10 @@ export const Route = createFileRoute("/pending")({
   component: PendingPage,
   head: () => ({
     meta: [
-      { title: "You're on the list — Ideal Gathering" },
-      { name: "description", content: "Ideal Gathering is in private beta. We're opening access gradually." },
-      { property: "og:title", content: "You're on the list — Ideal Gathering" },
-      { property: "og:description", content: "Ideal Gathering is in private beta. We're opening access gradually." },
+      { title: "You're on the list — Havato" },
+      { name: "description", content: "Havato is in private beta. We're opening access gradually." },
+      { property: "og:title", content: "You're on the list — Havato" },
+      { property: "og:description", content: "Havato is in private beta. We're opening access gradually." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "robots", content: "noindex" },

@@ -18,7 +18,7 @@ export const Route = createFileRoute("/_authenticated/my-gatherings")({
   component: MyGatherings,
   head: () => ({
     meta: [
-      { title: "My Gatherings — Ideal Gathering" },
+      { title: "My Gatherings — Havato" },
       { name: "description", content: "Gatherings you are attending and hosting." },
     ],
   }),

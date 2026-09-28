@@ -72,13 +72,13 @@ export function PublicHeader({
           <Link to="/" className="flex items-center gap-2.5">
             <img
               src={logoAsset.url}
-              alt="Ideal Gathering"
+              alt="Havato"
               width={36}
               height={36}
               className="h-9 w-9 rounded-full object-contain"
             />
             <span className="font-serif-warm text-lg font-semibold tracking-tight text-white">
-              Ideal Gathering
+              Havato
             </span>
           </Link>
         </div>

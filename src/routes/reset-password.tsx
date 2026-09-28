@@ -10,7 +10,7 @@ import { Label } from "@/components/ui/label";
 import { useT } from "@/i18n";
 
 export const Route = createFileRoute("/reset-password")({
-  head: () => ({ meta: [{ title: "Reset password — Ideal Gathering" }] }),
+  head: () => ({ meta: [{ title: "Reset password — Havato" }] }),
   component: ResetPasswordPage,
 });
 

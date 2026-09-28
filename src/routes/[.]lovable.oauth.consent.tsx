@@ -84,12 +84,12 @@ function Consent() {
     <main className="mx-auto max-w-md px-6 py-12">
       <div className="rounded-3xl border border-border bg-card p-8 shadow-plum">
         <h1 className="font-display text-2xl">
-          Connect {clientName} to Ideal Gathering
+          Connect {clientName} to Havato
         </h1>
         <p className="mt-3 text-sm text-muted-foreground">
-          This lets {clientName} use Ideal Gathering as you — browsing upcoming
+          This lets {clientName} use Havato as you — browsing upcoming
           gatherings, joining or leaving tables, and viewing your own hosted
-          gatherings and businesses. It does not bypass Ideal Gathering's
+          gatherings and businesses. It does not bypass Havato's
           permissions or your account's privacy rules.
         </p>
         {details?.scope && (

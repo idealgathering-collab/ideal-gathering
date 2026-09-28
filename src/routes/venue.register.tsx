@@ -21,8 +21,8 @@ export const Route = createFileRoute("/venue/register")({
   beforeLoad: () => requireVenueRegistrationAccess(),
   head: () => ({
     meta: [
-      { title: "Register your venue — Ideal Gathering" },
-      { name: "description", content: "Register your venue for Ideal Gathering before launch." },
+      { title: "Register your venue — Havato" },
+      { name: "description", content: "Register your venue for Havato before launch." },
       { name: "robots", content: "noindex" },
     ],
   }),
@@ -142,7 +142,7 @@ function VenueRegisterPage() {
           </div>
           <h1 className="font-display mt-4 text-3xl sm:text-4xl">Register your business for launch</h1>
           <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-            Complete your venue registration now. Your venue profile and dashboard tools will stay locked until Ideal Gathering launches.
+            Complete your venue registration now. Your venue profile and dashboard tools will stay locked until Havato launches.
           </p>
         </div>
 

@@ -16,7 +16,7 @@ export const Route = createFileRoute("/_authenticated/owner/venue-preview")({
   },
   head: () => ({
     meta: [
-      { title: "View as Venue — Owner — Ideal Gathering" },
+      { title: "View as Venue — Owner — Havato" },
       { name: "description", content: "Open the real venue dashboard in read-only owner preview mode." },
       { name: "robots", content: "noindex" },
     ],

@@ -36,12 +36,12 @@ export const Route = createFileRoute("/venue/dashboard")({
   beforeLoad: () => requireVenueAccess(),
   head: () => ({
     meta: [
-      { title: "Venue portal — Ideal Gathering" },
+      { title: "Venue portal — Havato" },
       {
         name: "description",
         content: "Manage your venue, tables, menu and the gatherings hosted at your place.",
       },
-      { property: "og:title", content: "Venue portal — Ideal Gathering" },
+      { property: "og:title", content: "Venue portal — Havato" },
       {
         property: "og:description",
         content: "Manage your venue, tables, menu and the gatherings hosted at your place.",
@@ -148,7 +148,7 @@ function VenueDashboard() {
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-3 px-4">
           <Link
             to={isOwnerPreview ? "/owner" : "/"}
-            aria-label="Ideal Gathering"
+            aria-label="Havato"
             className="flex items-center gap-2"
           >
             <img

@@ -1,3 +1,9 @@
+# Current task — Havato deployment
+
+[Approved scope](HAVATO-deployment.md). Branch: havato. Full IG001–IG009 incorporated at 33e3176 by fast-forward. Havato container/branding verification in progress. No production modifications.
+
+---
+
 # Current task — IG-009
 
 ## Active approved scope

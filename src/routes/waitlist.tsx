@@ -96,7 +96,7 @@ function WaitlistPage() {
       
       <div className="relative z-10 mx-auto flex max-w-md flex-col justify-center px-4 pb-12 pt-28">
         <Link to="/" className="mb-8 inline-flex items-center gap-2 text-primary-foreground">
-          <img src={logoAsset.url} alt="Ideal Gathering" className="h-9 w-9 rounded-full object-contain animate-logo-spin" />
+          <img src={logoAsset.url} alt="Havato" className="h-9 w-9 rounded-full object-contain animate-logo-spin" />
           <span className="font-display text-xl">
             Ideal <span className="italic">Gathering</span>
           </span>

@@ -15,15 +15,15 @@ export const Route = createFileRoute("/invite")({
   component: InvitePage,
   head: () => ({
     meta: [
-      { title: "Enter your invitation — Ideal Gathering" },
+      { title: "Enter your invitation — Havato" },
       {
         name: "description",
-        content: "Have an invitation to the Ideal Gathering private beta? Enter your code to create your account.",
+        content: "Have an invitation to the Havato private beta? Enter your code to create your account.",
       },
-      { property: "og:title", content: "Enter your invitation — Ideal Gathering" },
+      { property: "og:title", content: "Enter your invitation — Havato" },
       {
         property: "og:description",
-        content: "Have an invitation to the Ideal Gathering private beta? Enter your code to create your account.",
+        content: "Have an invitation to the Havato private beta? Enter your code to create your account.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },

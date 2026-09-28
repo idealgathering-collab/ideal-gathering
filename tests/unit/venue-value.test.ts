@@ -50,7 +50,7 @@ describe("venue value dashboard", () => {
   it("prioritizes activity, real visits and recent results", () => {
     const html = renderContent();
     expect(html.indexOf("Upcoming &amp; happening now")).toBeLessThan(
-      html.indexOf("What Ideal Gathering brought"),
+      html.indexOf("What Havato brought"),
     );
     for (const text of [
       "Coffee and good conversation",

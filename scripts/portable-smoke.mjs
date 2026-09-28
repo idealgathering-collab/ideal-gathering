@@ -52,11 +52,11 @@ try {
     assert.match(response.headers.get("content-type"), /text\/html/);
     assert.equal(response.headers.get("x-content-type-options"), "nosniff");
     const html = await response.text();
-    assert.ok(html.includes("Ideal Gathering"), `${path}: SSR content`);
+    assert.ok(html.includes("Havato"), `${path}: SSR content`);
     assert.ok(!html.includes("/__l5e/"), `${path}: no Lovable asset proxy`);
   }
   const manifest = await (await fetch(`${origin}/manifest.webmanifest`)).json();
-  assert.equal(manifest.name, "Ideal Gathering");
+  assert.equal(manifest.name, "Havato");
   assert.equal(manifest.theme_color, "#6b21a8");
   for (const name of await readdir("public/assets")) {
     const response = await fetch(`${origin}/assets/${name}`);

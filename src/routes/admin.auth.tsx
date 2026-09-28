@@ -15,7 +15,7 @@ export const Route = createFileRoute("/admin/auth")({
   component: AdminAuth,
   head: () => ({
     meta: [
-      { title: "Owner sign-in — Ideal Gathering" },
+      { title: "Owner sign-in — Havato" },
       { name: "robots", content: "noindex, nofollow" },
     ],
   }),

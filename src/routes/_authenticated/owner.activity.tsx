@@ -14,7 +14,7 @@ export const Route = createFileRoute("/_authenticated/owner/activity")({
   },
   head: () => ({
     meta: [
-      { title: "Activity — Owner — Ideal Gathering" },
+      { title: "Activity — Owner — Havato" },
       { name: "robots", content: "noindex" },
     ],
   }),

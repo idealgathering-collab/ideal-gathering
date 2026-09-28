@@ -24,9 +24,9 @@ import type { ProfileCardData } from "@/lib/profile-card";
 export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({
     meta: [
-      { title: "Your dashboard — Ideal Gathering" },
+      { title: "Your dashboard — Havato" },
       { name: "description", content: "Your upcoming tables, invitations and gatherings worth joining this week." },
-      { property: "og:title", content: "Your dashboard — Ideal Gathering" },
+      { property: "og:title", content: "Your dashboard — Havato" },
       { property: "og:description", content: "Your upcoming tables, invitations and gatherings worth joining this week." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },

@@ -42,10 +42,10 @@ describe("portable environment contract", () => {
 });
 
 describe("shared brand configuration", () => {
-  it("preserves Ideal Gathering defaults and a portable local logo", () => {
+  it("uses Havato defaults and a portable local logo", () => {
     expect(createBrand({})).toMatchObject({
-      name: "Ideal Gathering",
-      logoUrl: "/assets/ideal-gathering-logo.png",
+      name: "Havato",
+      logoUrl: "/havato-mark.svg",
       themeColor: "#6b21a8",
     });
   });

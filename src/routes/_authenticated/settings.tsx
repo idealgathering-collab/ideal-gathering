@@ -25,10 +25,10 @@ import { useQueryClient } from "@tanstack/react-query";
 export const Route = createFileRoute("/_authenticated/settings")({
   head: () => ({
     meta: [
-      { title: "Settings — Ideal Gathering" },
+      { title: "Settings — Havato" },
       {
         name: "description",
-        content: "Manage your privacy, blocked people, and account on Ideal Gathering.",
+        content: "Manage your privacy, blocked people, and account on Havato.",
       },
       { name: "robots", content: "noindex" },
     ],

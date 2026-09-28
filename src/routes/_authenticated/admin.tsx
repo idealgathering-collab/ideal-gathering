@@ -30,7 +30,7 @@ export const Route = createFileRoute("/_authenticated/admin")({
   },
   head: () => ({
     meta: [
-      { title: "Admin — Ideal Gathering" },
+      { title: "Admin — Havato" },
       { name: "description", content: "Approve venues, review reports and manage members." },
       { name: "robots", content: "noindex" },
     ],

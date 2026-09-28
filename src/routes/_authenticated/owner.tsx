@@ -36,8 +36,8 @@ export const Route = createFileRoute("/_authenticated/owner")({
   },
   head: () => ({
     meta: [
-      { title: "Owner Console — Ideal Gathering" },
-      { name: "description", content: "Owner command center for Ideal Gathering." },
+      { title: "Owner Console — Havato" },
+      { name: "description", content: "Owner command center for Havato." },
       { name: "robots", content: "noindex" },
     ],
   }),

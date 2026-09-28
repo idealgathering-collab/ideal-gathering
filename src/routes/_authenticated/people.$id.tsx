@@ -7,7 +7,7 @@ import { useT } from "@/i18n";
 export const Route = createFileRoute("/_authenticated/people/$id")({
   head: () => ({
     meta: [
-      { title: "Member profile — Ideal Gathering" },
+      { title: "Member profile — Havato" },
       { name: "robots", content: "noindex, nofollow, noarchive" },
     ],
   }),

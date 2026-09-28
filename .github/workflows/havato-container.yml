@@ -1,0 +1,33 @@
+name: Havato container verification
+on:
+  push:
+    branches: [havato]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  container:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build container with dummy backend only
+        run: >-
+          docker build -t havato:test
+          --build-arg VITE_SUPABASE_URL=http://127.0.0.1:54321
+          --build-arg VITE_SUPABASE_PUBLISHABLE_KEY=sb_publishable_ig009_local_fixture
+          --build-arg VITE_SITE_URL=http://localhost:3000 .
+      - name: Verify stateless container startup and port 3000
+        run: |
+          docker run -d --name havato-test --read-only --tmpfs /tmp -p 3000:3000 -e SUPABASE_URL=http://127.0.0.1:54321 -e SUPABASE_PUBLISHABLE_KEY=sb_publishable_ig009_local_fixture -e SUPABASE_SERVICE_ROLE_KEY=ig009_server_only_sentinel havato:test
+          for attempt in $(seq 1 60); do
+            if curl --fail --silent http://localhost:3000/auth > /tmp/havato.html; then break; fi
+            sleep 2
+          done
+          grep -q Havato /tmp/havato.html
+          curl --fail --silent http://localhost:3000/manifest.webmanifest | grep -q Havato
+          docker exec havato-test node -e "const fs=require('fs');for(const p of fs.readdirSync('.output/public/assets')){if(/\\.js$/.test(p)&&fs.readFileSync('.output/public/assets/'+p,'utf8').includes('ig009_server_only_sentinel'))process.exit(1)}"
+          test "$(docker inspect --format '{{.Config.User}}' havato-test)" = node
+      - name: Container logs
+        if: always()
+        run: docker logs havato-test || true

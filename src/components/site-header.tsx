@@ -107,7 +107,7 @@ export function SiteHeader() {
           <Link to={user ? "/dashboard" : "/"} className="flex items-center gap-2 group">
             <img
               src={logoAsset.url}
-              alt="Ideal Gathering"
+              alt="Havato"
               className="h-9 w-9 rounded-full object-contain animate-logo-spin"
             />
             <span className="font-display text-xl leading-none hidden xs:inline sm:inline text-dark-heading">

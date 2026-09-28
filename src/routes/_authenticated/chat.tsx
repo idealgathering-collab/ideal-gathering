@@ -12,7 +12,7 @@ export const Route = createFileRoute("/_authenticated/chat")({
   component: ChatIndex,
   head: () => ({
     meta: [
-      { title: "Chat — Ideal Gathering" },
+      { title: "Chat — Havato" },
       { name: "description", content: "Your gathering chat rooms." },
     ],
   }),

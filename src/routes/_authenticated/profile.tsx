@@ -51,7 +51,7 @@ import { changedFields, saveProfileData, type ProfileEdit } from "@/lib/profile-
 import type { ProfileCardData } from "@/lib/profile-card";
 
 export const Route = createFileRoute("/_authenticated/profile")({
-  head: () => ({ meta: [{ title: "Your profile — Ideal Gathering" }] }),
+  head: () => ({ meta: [{ title: "Your profile — Havato" }] }),
   component: ProfilePage,
 });
 

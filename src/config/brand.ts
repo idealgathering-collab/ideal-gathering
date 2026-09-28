@@ -9,12 +9,12 @@ export function createBrand(env: PublicEnvironment) {
   if (!/^#[0-9a-f]{6}$/i.test(themeColor))
     throw new Error("VITE_BRAND_THEME_COLOR must be a six-digit hex color");
   return {
-    name: env.VITE_BRAND_NAME || "Ideal Gathering",
-    shortName: env.VITE_BRAND_SHORT_NAME || "Gathering",
+    name: env.VITE_BRAND_NAME || "Havato",
+    shortName: env.VITE_BRAND_SHORT_NAME || "Havato",
     siteUrl: env.VITE_SITE_URL
       ? requireHttpUrl(env.VITE_SITE_URL, "VITE_SITE_URL")
-      : "https://www.idealgathering.com",
-    logoUrl: env.VITE_BRAND_LOGO_URL || "/assets/ideal-gathering-logo.png",
+      : "http://localhost:3000",
+    logoUrl: env.VITE_BRAND_LOGO_URL || "/havato-mark.svg",
     tagline: env.VITE_BRAND_TAGLINE || "No One Will Be Alone Anymore",
     description:
       env.VITE_BRAND_DESCRIPTION ||
