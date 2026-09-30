@@ -21,7 +21,7 @@ import {
 import { Reveal } from "@/components/landing/reveal";
 import { SiteFooter } from "@/components/site-footer";
 import constellationAsset from "@/assets/constellation-people.png.asset.json";
-import { logoAsset } from "@/config/brand";
+import { brand, logoAsset } from "@/config/brand";
 
 /**
  * The full marketing homepage, parked here for the duration of the private
@@ -31,15 +31,15 @@ export const Route = createFileRoute("/preview")({
   component: PreviewHome,
   head: () => ({
     meta: [
-      { title: "Havato — the full story" },
+      { title: `${brand.name} — the full story` },
       {
         name: "description",
-        content: "A preview of the full Havato experience: how tables work, matching, safety and venues.",
+        content: `A preview of the full ${brand.name} experience: how tables work, matching, safety and venues.`,
       },
-      { property: "og:title", content: "Havato — the full story" },
+      { property: "og:title", content: `${brand.name} — the full story` },
       {
         property: "og:description",
-        content: "A preview of the full Havato experience: how tables work, matching, safety and venues.",
+        content: `A preview of the full ${brand.name} experience: how tables work, matching, safety and venues.`,
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

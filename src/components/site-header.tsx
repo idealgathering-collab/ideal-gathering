@@ -2,7 +2,7 @@ import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { ArrowLeft, Crown, LogOut, Settings, Shield, Sparkles } from "lucide-react";
 import { NotificationsBell } from "@/components/notifications-bell";
 import { useEffect, useState, type ComponentProps } from "react";
-import { logoAsset } from "@/config/brand";
+import { brand, logoAsset } from "@/config/brand";
 
 
 import { Button } from "@/components/ui/button";
@@ -107,11 +107,11 @@ export function SiteHeader() {
           <Link to={user ? "/dashboard" : "/"} className="flex items-center gap-2 group">
             <img
               src={logoAsset.url}
-              alt="Havato"
+              alt={brand.name}
               className="h-9 w-9 rounded-full object-contain animate-logo-spin"
             />
             <span className="font-display text-xl leading-none hidden xs:inline sm:inline text-dark-heading">
-              Ideal <span className="italic text-dark-primary">Gathering</span>
+              <span className="italic text-dark-primary">{brand.name}</span>
             </span>
           </Link>
         </div>

@@ -25,7 +25,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { claimInitialOwner, fetchRoles, setAdminPreview } from "@/lib/roles";
 import { getOwnerSnapshot, type OwnerDirectorySection } from "@/lib/owner.functions";
 import { useSession } from "@/hooks/use-session";
-import { logoAsset } from "@/config/brand";
+import { brand, logoAsset } from "@/config/brand";
 
 export const Route = createFileRoute("/_authenticated/owner")({
   beforeLoad: async ({ context }) => {
@@ -271,7 +271,7 @@ function OwnerHeader({ onSignOut }: { onSignOut: () => void }) {
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
         <Link to="/owner" className="flex items-center gap-2">
           <img src={logoAsset.url} alt="" className="h-9 w-9 rounded-full object-contain" />
-          <span className="font-display text-lg">Ideal <span className="italic text-primary">Gathering</span></span>
+          <span className="font-display text-lg"><span className="italic text-primary">{brand.name}</span></span>
           <Badge variant="outline" className="ms-1 rounded-full"><Crown className="me-1 h-3 w-3" />Owner</Badge>
         </Link>
         <Button variant="ghost" size="icon" className="rounded-full" onClick={onSignOut} aria-label="Sign out">

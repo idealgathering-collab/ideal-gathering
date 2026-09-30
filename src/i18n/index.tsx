@@ -66,7 +66,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     (key: string, vars?: Record<string, string | number>) => {
       const dict = translations[lang];
       let s = brandText[lang]?.[key] ?? dict[key] ?? translations.en[key] ?? key;
-      s = s.replaceAll("Ideal Gathering", brand.name);
+      s = s.replaceAll("{brandName}", brand.name);
       if (vars) {
         for (const [k, v] of Object.entries(vars)) {
           s = s.replace(new RegExp(`\\{${k}\\}`, "g"), String(v));
@@ -92,7 +92,7 @@ export function useT() {
   // Fallback for trees that render outside the provider (e.g. root error boundary).
   return (key: string, vars?: Record<string, string | number>) => {
     let s = (brandText.en?.[key] ?? translations.en[key] ?? key).replaceAll(
-      "Ideal Gathering",
+      "{brandName}",
       brand.name,
     );
     if (vars)

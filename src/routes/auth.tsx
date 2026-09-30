@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { z } from "zod";
 import { toast } from "sonner";
 import { ArrowLeft } from "lucide-react";
-import { logoAsset } from "@/config/brand";
+import { brand, logoAsset } from "@/config/brand";
 import { supabase } from "@/integrations/supabase/client";
 import { signInWithGoogle } from "@/integrations/supabase/oauth";
 import { Button } from "@/components/ui/button";
@@ -155,7 +155,7 @@ function AuthPage() {
               className="h-9 w-9 rounded-full object-contain animate-logo-spin"
             />
             <span className="font-display text-xl">
-              Ideal <span className="italic">Gathering</span>
+              <span className="italic">{brand.name}</span>
             </span>
           </Link>
           <div className="ms-auto">

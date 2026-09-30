@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { useT } from "@/i18n";
 import { checkInvitation, normalizeCode, rememberInvite } from "@/lib/access";
-import { logoAsset } from "@/config/brand";
+import { brand, logoAsset } from "@/config/brand";
 
 export const Route = createFileRoute("/invite")({
   component: InvitePage,
@@ -75,7 +75,7 @@ function InvitePage() {
           <Link to="/" className="inline-flex items-center gap-2 text-white">
             <img src={logoAsset.url} alt="" aria-hidden className="h-9 w-9 rounded-full object-contain" />
             <span className="font-display text-xl">
-              Ideal <span className="italic text-nebula-violet">Gathering</span>
+              <span className="italic text-nebula-violet">{brand.name}</span>
             </span>
           </Link>
           <div className="ms-auto">

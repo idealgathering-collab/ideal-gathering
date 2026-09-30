@@ -8,7 +8,7 @@ import { useT } from "@/i18n";
 import { useSession } from "@/hooks/use-session";
 import { fetchAccessState } from "@/lib/access";
 import { supabase } from "@/integrations/supabase/client";
-import { logoAsset } from "@/config/brand";
+import { brand, logoAsset } from "@/config/brand";
 
 type PendingSearch = { as?: "venue" | "member" };
 
@@ -74,7 +74,7 @@ function PendingPage() {
         <Link to="/" className="flex items-center gap-2 text-white">
           <img src={logoAsset.url} alt="" aria-hidden className="h-9 w-9 rounded-full object-contain" />
           <span className="font-display text-lg">
-            Ideal <span className="italic text-nebula-violet">Gathering</span>
+            <span className="italic text-nebula-violet">{brand.name}</span>
           </span>
         </Link>
         <div className="flex items-center gap-2">

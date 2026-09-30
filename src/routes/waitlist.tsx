@@ -3,7 +3,7 @@ import { useState } from "react";
 import { z } from "zod";
 import { toast } from "sonner";
 import { Sparkles } from "lucide-react";
-import { logoAsset } from "@/config/brand";
+import { brand, logoAsset } from "@/config/brand";
 import { PublicHeader } from "@/components/landing/public-header";
 import { CosmicBackdrop } from "@/components/cosmic-backdrop";
 import { supabase } from "@/integrations/supabase/client";
@@ -96,9 +96,9 @@ function WaitlistPage() {
       
       <div className="relative z-10 mx-auto flex max-w-md flex-col justify-center px-4 pb-12 pt-28">
         <Link to="/" className="mb-8 inline-flex items-center gap-2 text-primary-foreground">
-          <img src={logoAsset.url} alt="Havato" className="h-9 w-9 rounded-full object-contain animate-logo-spin" />
+          <img src={logoAsset.url} alt={brand.name} className="h-9 w-9 rounded-full object-contain animate-logo-spin" />
           <span className="font-display text-xl">
-            Ideal <span className="italic">Gathering</span>
+            <span className="italic">{brand.name}</span>
           </span>
         </Link>
 

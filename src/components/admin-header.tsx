@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "@tanstack/react-router";
 import { Crown, LogOut, Shield } from "lucide-react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { logoAsset } from "@/config/brand";
+import { brand, logoAsset } from "@/config/brand";
 import { Button } from "@/components/ui/button";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { supabase } from "@/integrations/supabase/client";
@@ -35,7 +35,7 @@ export function AdminHeader() {
         <Link to={isOwner ? "/owner" : "/admin"} className="flex items-center gap-2">
           <img src={logoAsset.url} alt="" className="h-9 w-9 rounded-full object-contain" />
           <span className="font-display text-lg leading-none text-dark-heading">
-            Ideal <span className="italic text-dark-primary">Gathering</span>
+            <span className="italic text-dark-primary">{brand.name}</span>
             <span className="ms-2 align-middle text-xs font-sans font-medium uppercase tracking-[0.14em] text-muted-foreground">
               {t("adminAuth.for")}
             </span>

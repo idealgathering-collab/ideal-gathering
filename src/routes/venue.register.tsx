@@ -14,7 +14,7 @@ import { LocationMapPicker, type MapLocationValue } from "@/components/location-
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { useT } from "@/i18n";
 import { requireVenueRegistrationAccess } from "@/lib/beta-gate";
-import { logoAsset } from "@/config/brand";
+import { brand, logoAsset } from "@/config/brand";
 
 export const Route = createFileRoute("/venue/register")({
   ssr: false,
@@ -128,7 +128,7 @@ function VenueRegisterPage() {
             </Button>
             <Link to="/" className="flex items-center gap-2">
               <img src={logoAsset.url} alt="" className="h-9 w-9 rounded-full object-contain" />
-              <span className="font-display text-lg">Ideal <span className="italic text-primary">Gathering</span></span>
+              <span className="font-display text-lg"><span className="italic text-primary">{brand.name}</span></span>
             </Link>
           </div>
           <LanguageSwitcher />

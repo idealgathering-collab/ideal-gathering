@@ -1,3 +1,15 @@
+# Current task — Havato visible branding correction
+
+User-authorized scope, 2026-09-29: branding only on havato; push for Darkube auto-deployment and verify https://havato-test.darkube.ir. No theme, product behavior, production, or Supabase changes.
+
+Replaced split hardcoded header/footer/auth/venue/admin/owner names with brand.name; retained existing logoAsset. Translation dictionaries now use {brandName} with unchanged language selection/interpolation. SEO titles, descriptions, structured data and gathering fallback metadata use the brand config. Browser/install/share icons use brand.logoUrl, removing the old install icon fallback.
+
+Checks: TypeScript noEmit passes; deployment-config 10 tests and branding metadata 6 tests pass; git diff --check passes. Targeted ESLint with the existing formatting rule disabled reports only 6 pre-existing no-explicit-any errors in owner.$section.tsx and 2 existing Fast Refresh warnings in i18n/index.tsx. Client/server compilation succeeds; local final Nitro packaging blocked by Windows EPERM readlink C:/Users/ASUS. The existing Linux container workflow will verify the pushed commit.
+
+Remaining verification: confirm Linux container CI and Darkube redeployment, then inspect live English/Farsi landing/auth/venue entry pages. Authenticated dashboards have been inspected in source, not claimed as logged-in live checks. Existing historical idealgathering.com story reference and support/legal email remain unchanged; the repository describes its current Havato SVG as provisional. No replacement logo was invented.
+
+---
+
 # Current task — Havato deployment
 
 Branch: havato. Full IG001–IG009 incorporated without conflicts. [Scope](HAVATO-deployment.md) · [Verification and exact blockers](HAVATO-verification.md) · [Darkube runbook](../docs/HAVATO-DARKUBE.md).

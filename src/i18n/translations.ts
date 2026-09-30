@@ -80,12 +80,12 @@ export const translations: Record<Lang, Dict> = {
     "ourStory.ch8.eyebrow": "Chapter eight — today",
     "ourStory.ch8.body": `A group of friends once had something so simple it didn't have a name. I refused to let that just be gone. Today it's small groups, matched by who you actually are, at real cafés, with just enough structure to make the first ten minutes easy. No stage. No swiping. No performance.`,
     "ourStory.closing": "\n",
-    "ourStory.signature": "Farzin Salman, Founder of Ideal Gathering",
+    "ourStory.signature": "Farzin Salman, Founder of {brandName}",
     "ourStory.cta": "Join the table",
 
     // Partnership page
     "partner.eyebrow": "For cafes & restaurants",
-    "partner.intro": "Ideal Gathering brings themed tables — and the guests who want to sit at them — to the cafes and restaurants we already love. Every Gathering at your venue only happens if you approve it.",
+    "partner.intro": "{brandName} brings themed tables — and the guests who want to sit at them — to the cafes and restaurants we already love. Every Gathering at your venue only happens if you approve it.",
     "partner.how.title": "How it works for your venue",
     "partner.cta.title": "Ready to host your first Gathering?",
     "partner.cta.body": "Register your venue in a few minutes. No fee, no commitment — you approve every Gathering before it goes live.",
@@ -108,7 +108,7 @@ export const translations: Record<Lang, Dict> = {
     "home.hero.title1": "No one will be alone anymore.",
     "home.hero.title2": "Just Gather.",
     "home.hero.tagline":
-      "Ideal Gathering turns cafes and restaurants into hosts for conversations worth having. Pick a table, pick a topic, show up.",
+      "{brandName} turns cafes and restaurants into hosts for conversations worth having. Pick a table, pick a topic, show up.",
     
     "home.hero.registerCafe": "Register your cafe",
     "home.stats.venues": "Venues",
@@ -128,7 +128,7 @@ export const translations: Record<Lang, Dict> = {
     "home.two.title1": "Two sides of",
     "home.two.title2": "the same table.",
     "home.two.body":
-      "Whether you're pouring the coffee or pulling up a chair, Ideal Gathering gives you a simple way to bring people together around ideas.",
+      "Whether you're pouring the coffee or pulling up a chair, {brandName} gives you a simple way to bring people together around ideas.",
     "home.two.cafes.title": "For cafes & restaurants",
     "home.two.cafes.body":
       "Register your venue, set up your tables, approve gatherings guests propose, or host your own. Fill quiet hours with meaningful traffic.",
@@ -185,7 +185,7 @@ export const translations: Record<Lang, Dict> = {
     "match.takeQuiz": "Take the 2-minute quiz to see how you fit with each table. Totally optional — you can join anything without it.",
     "match.takeQuizCta": "Take the quiz",
     "match.savedToProfile": "Saved to your profile",
-    "onboarding.welcome.title": "Welcome to Ideal Gathering, {name}",
+    "onboarding.welcome.title": "Welcome to {brandName}, {name}",
     "onboarding.welcome.body": "Small tables, real conversation, and a seat kept for you. Two quick screens and you're in.",
     "onboarding.how.title": "How it works",
     "onboarding.how.find.title": "Find a table near you",
@@ -566,7 +566,7 @@ export const translations: Record<Lang, Dict> = {
     "manifesto.badge": "Community manifesto",
     "manifesto.title": "Why we're setting the table.",
     "manifesto.body": "We are building a counter-culture to the endless scroll. A community of deep thinkers, creators, and tech builders in Yerevan who believe the best conversations happen offline, over a real table, at the cafes we already love.",
-    "manifesto.signature": "— The Ideal Gathering community",
+    "manifesto.signature": "— The {brandName} community",
 
     // Neighborhoods
     "hoods.badge": "Curated living rooms",
@@ -579,7 +579,7 @@ export const translations: Record<Lang, Dict> = {
     "cta.title1": "Save your seat at the",
     "cta.title2": "next table.",
     "cta.body": "Guests join by invitation. Drop your details and we'll open the door as tables free up in your city.",
-    "cta.join": "Join Ideal Gathering",
+    "cta.join": "Join {brandName}",
     "cta.register": "Register your cafe",
 
     // Notifications
@@ -597,7 +597,7 @@ export const translations: Record<Lang, Dict> = {
     "notif.gathering.rejected.title": "Your Gathering was not approved",
 
     // Footer
-    "footer.mission": "Set the table. Set the subject. Ideal Gathering brings people to small, curated tables at cafes worth sitting in.",
+    "footer.mission": "Set the table. Set the subject. {brandName} brings people to small, curated tables at cafes worth sitting in.",
     "footer.col.explore": "Explore",
     "footer.col.business": "For businesses",
     "footer.col.legal": "Legal & social",
@@ -1045,7 +1045,7 @@ export const translations: Record<Lang, Dict> = {
     "privacy.title": "Privacy Policy",
     "privacy.updated": "Last updated July 2026",
     "privacy.intro.title": "Introduction",
-    "privacy.intro.body": "Ideal Gathering (\"we\", \"us\") helps people meet at cafes and restaurants around a subject. This policy explains what we collect, why, and the choices you have.",
+    "privacy.intro.body": "{brandName} (\"we\", \"us\") helps people meet at cafes and restaurants around a subject. This policy explains what we collect, why, and the choices you have.",
     "privacy.collect.title": "What we collect",
     "privacy.collect.body": "Account data: email, display name, and optional avatar image.\nProfile data you choose to add: date of birth, city, interests, and optional quiz answers used to seat you.\nGathering data: subjects you host or join, venue names, and attendance.\nWaitlist data: name, email, city, and interest tags.\nTechnical data: minimal logs needed to run the service securely.",
     "privacy.use.title": "How we use it",
@@ -1065,13 +1065,13 @@ export const translations: Record<Lang, Dict> = {
     "terms.title": "Terms of Service",
     "terms.updated": "Last updated July 2026",
     "terms.accept.title": "Acceptance",
-    "terms.accept.body": "By using Ideal Gathering you agree to these terms. If you don't agree, please don't use the service.",
+    "terms.accept.body": "By using {brandName} you agree to these terms. If you don't agree, please don't use the service.",
     "terms.use.title": "Using the service",
     "terms.use.body": "You must be at least 18 years old. Keep your account credentials safe. You're responsible for activity on your account.",
     "terms.conduct.title": "Community conduct",
     "terms.conduct.body": "No harassment, hate speech, spam, or illegal activity. Show up if you RSVP, or cancel in time. Hosts and admins can remove people who break these rules.",
     "terms.hosts.title": "Hosts and venues",
-    "terms.hosts.body": "Hosts and venues are responsible for what happens at their tables. Ideal Gathering doesn't own or operate the venues and doesn't guarantee any specific outcome from a gathering.",
+    "terms.hosts.body": "Hosts and venues are responsible for what happens at their tables. {brandName} doesn't own or operate the venues and doesn't guarantee any specific outcome from a gathering.",
     "terms.content.title": "Your content",
     "terms.content.body": "You keep the rights to what you post. You grant us a limited license to display it on the platform so gatherings can work as intended.",
     "terms.termination.title": "Termination",
@@ -1224,14 +1224,14 @@ export const translations: Record<Lang, Dict> = {
 
     // Landing — round table
     "landing.table.aria.stage": "Round table — drag or use arrow keys to change seat",
-    "landing.table.seo.h1": "Ideal Gathering — a round table for everyone",
+    "landing.table.seo.h1": "{brandName} — a round table for everyone",
     "landing.table.seat.welcome": "Welcome",
     "landing.table.seat.how": "How it works",
     "landing.table.seat.cafes": "For cafés",
     "landing.table.seat.guests": "For guests",
     "landing.table.seat.manifesto": "Manifesto",
     "landing.table.seat.tables": "Open tables",
-    "landing.table.panel.welcome.eyebrow": "Ideal Gathering",
+    "landing.table.panel.welcome.eyebrow": "{brandName}",
     "landing.table.panel.welcome.title": "No one will be alone anymore. Just Gather.",
     "landing.table.panel.welcome.body": "A round table in your neighbourhood, a subject worth an evening, and warm strangers who might become friends.",
     "landing.table.panel.how.eyebrow": "How it works",
@@ -1254,10 +1254,10 @@ export const translations: Record<Lang, Dict> = {
     "landing.table.panel.tables.open": "See open tables",
     "landing.table.panel.tables.empty": "No open tables right now. Be the first to host one.",
     "landing.table.panel.tables.viewAll": "View all",
-    "landing.table.footer.cta": "Join Ideal Gathering",
+    "landing.table.footer.cta": "Join {brandName}",
 
     // Landing v2 (nebula hero)
-    "landing.v2.brand": "Ideal Gathering",
+    "landing.v2.brand": "{brandName}",
     "landing.v2.title": "No One Will Be Alone Anymore",
     "landing.v2.subtitle": "Just Gather",
     "landing.v2.mission": "Real tables at real cafés — one subject, a few seats, and people worth meeting.",
@@ -1269,7 +1269,7 @@ export const translations: Record<Lang, Dict> = {
     "landing.v2.footer.about": "About",
     "landing.v2.footer.venues": "For Venues",
     "landing.v2.footer.terms": "Terms",
-    "landing.v2.meta.title": "Ideal Gathering — No One Will Be Alone Anymore",
+    "landing.v2.meta.title": "{brandName} — No One Will Be Alone Anymore",
     "landing.v2.meta.description": "Curated conversations at Yerevan's best cafes. Join the table and turn strangers into friends.",
     "landing.v2.meta.ogDescription": "Curated conversations at Yerevan's best cafes.",
 
@@ -1369,7 +1369,7 @@ export const translations: Record<Lang, Dict> = {
 
     "landing.v3.hero.eyebrow": "Small tables · Real people · Real life",
     "landing.v3.hero.title": "Meet real people over\none real conversation.",
-    "landing.v3.hero.sub": "Ideal Gathering seats a few people around one subject at a neighbourhood café. Pick the subject, claim a seat, show up.",
+    "landing.v3.hero.sub": "{brandName} seats a few people around one subject at a neighbourhood café. Pick the subject, claim a seat, show up.",
     "landing.v3.hero.cta": "Join a gathering",
     "landing.v3.hero.secondary": "See how it works",
     "landing.v3.hero.note": "Free to join · Email verified · Starting in Yerevan",
@@ -1543,7 +1543,7 @@ export const translations: Record<Lang, Dict> = {
     "landing.v3.vision.eyebrow": "Where this goes",
     "landing.v3.vision.title": "A city where a table is always open.",
     "landing.v3.vision.body": "We start with a handful of cafés and subjects in one city. Next come more neighbourhoods, more cities, and enough tables that finding company is as ordinary as finding coffee.",
-    "landing.v3.vision.future": "Long term, Ideal Gathering wants to be the default way people meet people offline — and the layer that fills the empty chairs local venues already have.",
+    "landing.v3.vision.future": "Long term, {brandName} wants to be the default way people meet people offline — and the layer that fills the empty chairs local venues already have.",
 
     "landing.v3.final.title": "There's a seat with your name on it.",
     "landing.v3.final.body": "Join the next table in your neighbourhood.",
@@ -1669,7 +1669,7 @@ export const translations: Record<Lang, Dict> = {
     "ourStory.ch8.eyebrow": "فصل هشت — امروز",
     "ourStory.ch8.body": `گروهی از دوستان زمانی چیزی داشتند آن‌قدر ساده که حتی اسم نداشت. نگذاشتم همان‌طور از دست برود. امروز یعنی گروه‌های کوچک، متناسب با همان کسی که واقعاً هستی، در کافه‌های واقعی، با همان‌قدر ساختار که ده دقیقه‌ی اول را آسان کند. نه صحنه‌ای. نه سوایپی. نه نمایشی.`,
     "ourStory.closing": "\n",
-    "ourStory.signature": "فرزین سلمان، بنیان‌گذار Ideal Gathering",
+    "ourStory.signature": "فرزین سلمان، بنیان‌گذار {brandName}",
     "ourStory.cta": "به میز بپیوندید",
 
     // Nav
@@ -1687,7 +1687,7 @@ export const translations: Record<Lang, Dict> = {
 
     // Partnership page
     "partner.eyebrow": "برای کافه‌ها و رستوران‌ها",
-    "partner.intro": "Ideal Gathering میزهای موضوعی — و مهمانانی که می‌خواهند پشت آن‌ها بنشینند — را به کافه‌ها و رستوران‌هایی می‌آورد که دوست‌شان داریم. هر گردهمایی در مکان شما فقط زمانی برگزار می‌شود که خودتان تأییدش کنید.",
+    "partner.intro": "{brandName} میزهای موضوعی — و مهمانانی که می‌خواهند پشت آن‌ها بنشینند — را به کافه‌ها و رستوران‌هایی می‌آورد که دوست‌شان داریم. هر گردهمایی در مکان شما فقط زمانی برگزار می‌شود که خودتان تأییدش کنید.",
     "partner.how.title": "برای مکان شما چگونه کار می‌کند",
     "partner.cta.title": "آماده‌اید اولین گردهمایی خود را میزبانی کنید؟",
     "partner.cta.body": "مکان‌تان را در چند دقیقه ثبت کنید. بدون هزینه، بدون تعهد — هر گردهمایی قبل از انتشار با تأیید شما فعال می‌شود.",
@@ -1710,7 +1710,7 @@ export const translations: Record<Lang, Dict> = {
     "home.hero.title1": "دیگر کسی تنها نخواهد بود.",
     "home.hero.title2": "فقط گرد هم آییم.",
     "home.hero.tagline":
-      "Ideal Gathering کافه‌ها و رستوران‌ها را به میزبانان گفت‌وگوهای ارزشمند تبدیل می‌کند. یک میز انتخاب کنید، یک موضوع بردارید و بیایید.",
+      "{brandName} کافه‌ها و رستوران‌ها را به میزبانان گفت‌وگوهای ارزشمند تبدیل می‌کند. یک میز انتخاب کنید، یک موضوع بردارید و بیایید.",
 
     "home.hero.registerCafe": "کافه‌تان را ثبت کنید",
     "home.stats.venues": "مکان‌ها",
@@ -1730,7 +1730,7 @@ export const translations: Record<Lang, Dict> = {
     "home.two.title1": "دو سوی",
     "home.two.title2": "یک میز.",
     "home.two.body":
-      "چه قهوه بریزید و چه صندلی بکشید، Ideal Gathering راهی ساده برای گرد هم آوردن آدم‌ها حول یک ایده در اختیارتان می‌گذارد.",
+      "چه قهوه بریزید و چه صندلی بکشید، {brandName} راهی ساده برای گرد هم آوردن آدم‌ها حول یک ایده در اختیارتان می‌گذارد.",
     "home.two.cafes.title": "برای کافه‌ها و رستوران‌ها",
     "home.two.cafes.body":
       "مکان‌تان را ثبت کنید، میزها را بچینید، گردهمایی‌های پیشنهادی مهمانان را تأیید کنید یا خودتان میزبان باشید. ساعات خلوت را با ترافیک معنادار پر کنید.",
@@ -1787,7 +1787,7 @@ export const translations: Record<Lang, Dict> = {
     "match.takeQuiz": "آزمون دو دقیقه‌ای را انجام دهید تا هماهنگی خود با هر میز را ببینید. کاملاً اختیاری است — بدون آن هم می‌توانید بپیوندید.",
     "match.takeQuizCta": "انجام آزمون",
     "match.savedToProfile": "در پروفایل شما ذخیره شد",
-    "onboarding.welcome.title": "به Ideal Gathering خوش آمدید، {name}",
+    "onboarding.welcome.title": "به {brandName} خوش آمدید، {name}",
     "onboarding.welcome.body": "میزهای کوچک، گفتگوی واقعی و یک صندلی که برای شما نگه داشته شده است. دو صفحهٔ کوتاه و آماده‌اید.",
     "onboarding.how.title": "چگونه کار می‌کند",
     "onboarding.how.find.title": "میزی نزدیک خود پیدا کنید",
@@ -2168,7 +2168,7 @@ export const translations: Record<Lang, Dict> = {
     "manifesto.badge": "مانیفست جامعه",
     "manifesto.title": "چرا میز را می‌چینیم.",
     "manifesto.body": "ما در حال ساختن یک فرهنگ بدیل در برابر اسکرول بی‌پایان هستیم. جامعه‌ای از اندیشمندان، سازندگان و فعالان فناوری که باور دارند بهترین گفت‌وگوها آفلاین، پشت میزی واقعی و در کافه‌هایی که دوست‌شان داریم رخ می‌دهد.",
-    "manifesto.signature": "— جامعهٔ Ideal Gathering",
+    "manifesto.signature": "— جامعهٔ {brandName}",
 
     // Neighborhoods
     "hoods.badge": "نشیمن‌های گلچین‌شده",
@@ -2181,7 +2181,7 @@ export const translations: Record<Lang, Dict> = {
     "cta.title1": "صندلی‌تان را برای",
     "cta.title2": "میز بعدی نگه دارید.",
     "cta.body": "مهمانان با دعوت می‌آیند. مشخصات‌تان را بگذارید تا با آزاد شدن میزها در شهرتان درها را باز کنیم.",
-    "cta.join": "پیوستن به Ideal Gathering",
+    "cta.join": "پیوستن به {brandName}",
     "cta.register": "کافه‌تان را ثبت کنید",
 
     // Notifications
@@ -2199,7 +2199,7 @@ export const translations: Record<Lang, Dict> = {
     "notif.gathering.rejected.title": "گردهمایی شما تأیید نشد",
 
     // Footer
-    "footer.mission": "میز را بچینید. موضوع را انتخاب کنید. Ideal Gathering آدم‌ها را به میزهای کوچک و گلچین‌شده در کافه‌هایی می‌آورد که ارزش نشستن دارند.",
+    "footer.mission": "میز را بچینید. موضوع را انتخاب کنید. {brandName} آدم‌ها را به میزهای کوچک و گلچین‌شده در کافه‌هایی می‌آورد که ارزش نشستن دارند.",
     "footer.col.explore": "کشف",
     "footer.col.business": "برای کسب‌وکارها",
     "footer.col.legal": "حقوقی و اجتماعی",
@@ -2649,7 +2649,7 @@ export const translations: Record<Lang, Dict> = {
     "privacy.title": "سیاست حریم خصوصی",
     "privacy.updated": "آخرین به‌روزرسانی: تیر ۱۴۰۵",
     "privacy.intro.title": "مقدمه",
-    "privacy.intro.body": "Ideal Gathering («ما») به مردم کمک می‌کند حول یک موضوع در کافه‌ها و رستوران‌ها گرد هم آیند. این سیاست توضیح می‌دهد چه چیزی جمع‌آوری می‌کنیم، چرا، و چه انتخاب‌هایی در اختیار شماست.",
+    "privacy.intro.body": "{brandName} («ما») به مردم کمک می‌کند حول یک موضوع در کافه‌ها و رستوران‌ها گرد هم آیند. این سیاست توضیح می‌دهد چه چیزی جمع‌آوری می‌کنیم، چرا، و چه انتخاب‌هایی در اختیار شماست.",
     "privacy.collect.title": "چه چیزی جمع‌آوری می‌کنیم",
     "privacy.collect.body": "دادهٔ حساب: ایمیل، نام نمایشی و در صورت تمایل تصویر آواتار.\nدادهٔ گردهمایی: موضوعاتی که میزبانی می‌کنید یا می‌پیوندید، نام مکان‌ها و حضور.\nدادهٔ فهرست انتظار: نام، ایمیل، شهر و برچسب علایق.\nدادهٔ فنی: حداقل لاگ‌های لازم برای اجرای امن سرویس.",
     "privacy.use.title": "چگونه استفاده می‌کنیم",
@@ -2669,13 +2669,13 @@ export const translations: Record<Lang, Dict> = {
     "terms.title": "شرایط استفاده",
     "terms.updated": "آخرین به‌روزرسانی: تیر ۱۴۰۵",
     "terms.accept.title": "پذیرش",
-    "terms.accept.body": "با استفاده از Ideal Gathering این شرایط را می‌پذیرید. اگر موافق نیستید، لطفاً از سرویس استفاده نکنید.",
+    "terms.accept.body": "با استفاده از {brandName} این شرایط را می‌پذیرید. اگر موافق نیستید، لطفاً از سرویس استفاده نکنید.",
     "terms.use.title": "استفاده از سرویس",
     "terms.use.body": "باید حداقل ۱۸ سال داشته باشید. اطلاعات حساب‌تان را ایمن نگه دارید. مسئولیت فعالیت روی حساب‌تان با شماست.",
     "terms.conduct.title": "رفتار در جامعه",
     "terms.conduct.body": "بدون آزار، نفرت‌پراکنی، هرزنامه یا فعالیت غیرقانونی. اگر ثبت‌نام کردید، بیایید؛ در غیر این صورت به‌موقع لغو کنید. میزبانان و مدیران می‌توانند کسانی را که قوانین را نقض می‌کنند حذف کنند.",
     "terms.hosts.title": "میزبانان و مکان‌ها",
-    "terms.hosts.body": "میزبانان و مکان‌ها مسئول آنچه در میزهای‌شان می‌گذرد هستند. Ideal Gathering مالک یا گردانندهٔ مکان‌ها نیست و نتیجهٔ خاصی از هیچ گردهمایی تضمین نمی‌کند.",
+    "terms.hosts.body": "میزبانان و مکان‌ها مسئول آنچه در میزهای‌شان می‌گذرد هستند. {brandName} مالک یا گردانندهٔ مکان‌ها نیست و نتیجهٔ خاصی از هیچ گردهمایی تضمین نمی‌کند.",
     "terms.content.title": "محتوای شما",
     "terms.content.body": "حقوق آنچه منتشر می‌کنید نزد شما می‌ماند. برای اینکه گردهمایی‌ها کار کنند، مجوز محدودی به ما می‌دهید تا آن را در پلتفرم نمایش دهیم.",
     "terms.termination.title": "خاتمه",
@@ -2822,14 +2822,14 @@ export const translations: Record<Lang, Dict> = {
 
     // Landing — round table
     "landing.table.aria.stage": "میز گرد — برای تغییر صندلی بکشید یا از کلیدهای جهت‌نما استفاده کنید",
-    "landing.table.seo.h1": "Ideal Gathering — میزی گرد برای همه",
+    "landing.table.seo.h1": "{brandName} — میزی گرد برای همه",
     "landing.table.seat.welcome": "خوش آمدید",
     "landing.table.seat.how": "چگونه کار می‌کند",
     "landing.table.seat.cafes": "برای کافه‌ها",
     "landing.table.seat.guests": "برای مهمانان",
     "landing.table.seat.manifesto": "مانیفست",
     "landing.table.seat.tables": "میزهای آزاد",
-    "landing.table.panel.welcome.eyebrow": "Ideal Gathering",
+    "landing.table.panel.welcome.eyebrow": "{brandName}",
     "landing.table.panel.welcome.title": "دیگر کسی تنها نخواهد بود. فقط دور هم جمع شویم.",
     "landing.table.panel.welcome.body": "یک میز گرد در محلهٔ شما، موضوعی که ارزش یک شب را دارد و غریبه‌هایی گرم که می‌توانند دوست شوند.",
     "landing.table.panel.how.eyebrow": "چگونه کار می‌کند",
@@ -2852,10 +2852,10 @@ export const translations: Record<Lang, Dict> = {
     "landing.table.panel.tables.open": "دیدن میزهای آزاد",
     "landing.table.panel.tables.empty": "در حال حاضر میز آزادی نیست. اولین میزبان باشید.",
     "landing.table.panel.tables.viewAll": "دیدن همه",
-    "landing.table.footer.cta": "به Ideal Gathering بپیوندید",
+    "landing.table.footer.cta": "به {brandName} بپیوندید",
 
     // Landing v2 (nebula hero)
-    "landing.v2.brand": "Ideal Gathering",
+    "landing.v2.brand": "{brandName}",
     "landing.v2.title": "دیگر هیچ‌کس\nتنها نخواهد بود.",
     "landing.v2.subtitle": "فقط گرد هم آیید",
     "landing.v2.mission": "میزهای واقعی در کافه‌های واقعی — یک موضوع، چند صندلی و آدم‌هایی که ارزش شناختن دارند.",
@@ -2867,7 +2867,7 @@ export const translations: Record<Lang, Dict> = {
     "landing.v2.footer.about": "درباره",
     "landing.v2.footer.venues": "برای مکان‌ها",
     "landing.v2.footer.terms": "شرایط",
-    "landing.v2.meta.title": "Ideal Gathering — دیگر هیچ‌کس تنها نخواهد بود",
+    "landing.v2.meta.title": "{brandName} — دیگر هیچ‌کس تنها نخواهد بود",
     "landing.v2.meta.description": "گفت‌وگوهای گزیده در بهترین کافه‌های شهر شما. به میز بپیوندید و غریبه‌ها را به دوست تبدیل کنید.",
     "landing.v2.meta.ogDescription": "گفت‌وگوهای گزیده در بهترین کافه‌های شهر شما.",
 
@@ -2966,7 +2966,7 @@ export const translations: Record<Lang, Dict> = {
 
     "landing.v3.hero.eyebrow": "میزهای کوچک · آدم‌های واقعی · زندگی واقعی",
     "landing.v3.hero.title": "آدم‌های واقعی،\nیک گفت‌وگوی واقعی.",
-    "landing.v3.hero.sub": "Ideal Gathering چند نفر را دور یک موضوع، در کافه‌ای در محلهٔ شما، سر یک میز می‌نشاند. موضوع را انتخاب کنید، صندلی‌تان را بگیرید و بیایید.",
+    "landing.v3.hero.sub": "{brandName} چند نفر را دور یک موضوع، در کافه‌ای در محلهٔ شما، سر یک میز می‌نشاند. موضوع را انتخاب کنید، صندلی‌تان را بگیرید و بیایید.",
     "landing.v3.hero.cta": "به یک گردهمایی بپیوندید",
     "landing.v3.hero.secondary": "ببینید چطور کار می‌کند",
     "landing.v3.hero.note": "پیوستن رایگان · تأیید ایمیل · شروع از ایروان",
@@ -3135,7 +3135,7 @@ export const translations: Record<Lang, Dict> = {
     "landing.v3.vision.eyebrow": "مسیر پیش رو",
     "landing.v3.vision.title": "شهری که همیشه یک میز باز دارد.",
     "landing.v3.vision.body": "با چند کافه و موضوع در یک شهر شروع می‌کنیم. بعد مناطق بیشتر، شهرهای بیشتر و آن‌قدر میز که پیدا کردن همراه به سادگی پیدا کردن قهوه شود.",
-    "landing.v3.vision.future": "در بلندمدت، Ideal Gathering می‌خواهد راه پیش‌فرض آشنا شدن آدم‌ها در دنیای واقعی باشد و لایه‌ای که صندلی‌های خالی مکان‌های محلی را پر می‌کند.",
+    "landing.v3.vision.future": "در بلندمدت، {brandName} می‌خواهد راه پیش‌فرض آشنا شدن آدم‌ها در دنیای واقعی باشد و لایه‌ای که صندلی‌های خالی مکان‌های محلی را پر می‌کند.",
 
     "landing.v3.final.title": "یک صندلی به نام تو هست.",
     "landing.v3.final.body": "به میز بعدی در محله‌تان بپیوندید.",

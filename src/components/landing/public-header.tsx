@@ -1,7 +1,7 @@
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { ArrowLeft, Menu, X } from "lucide-react";
-import { logoAsset } from "@/config/brand";
+import { brand, logoAsset } from "@/config/brand";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { useSession } from "@/hooks/use-session";
 import { useT } from "@/i18n";
@@ -72,13 +72,13 @@ export function PublicHeader({
           <Link to="/" className="flex items-center gap-2.5">
             <img
               src={logoAsset.url}
-              alt="Havato"
+              alt={brand.name}
               width={36}
               height={36}
               className="h-9 w-9 rounded-full object-contain"
             />
             <span className="font-serif-warm text-lg font-semibold tracking-tight text-white">
-              Havato
+              {brand.name}
             </span>
           </Link>
         </div>

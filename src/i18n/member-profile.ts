@@ -3,7 +3,7 @@ export const memberProfileCopy = {
     "member.title": "Member profile",
     "member.unavailable": "This member profile is unavailable.",
     "member.context": "Shared context",
-    "member.connection": "You share an approved gathering through Ideal Gathering.",
+    "member.connection": "You share an approved gathering through {brandName}.",
     "member.moments": "Shared moments",
     "member.momentsHint": "Up to 12 recent moments this member chose to share. Notes stay private.",
     "member.empty": "No shared moments to show.",
@@ -17,7 +17,7 @@ export const memberProfileCopy = {
     "member.title": "Профиль участника",
     "member.unavailable": "Профиль участника недоступен.",
     "member.context": "Что вас связывает",
-    "member.connection": "Вы участвуете в общей одобренной встрече Ideal Gathering.",
+    "member.connection": "Вы участвуете в общей одобренной встрече {brandName}.",
     "member.moments": "Открытые моменты",
     "member.momentsHint":
       "До 12 последних моментов, которыми участник решил поделиться. Заметки остаются личными.",
@@ -32,7 +32,7 @@ export const memberProfileCopy = {
     "member.title": "پروفایل عضو",
     "member.unavailable": "این پروفایل در دسترس نیست.",
     "member.context": "زمینهٔ مشترک",
-    "member.connection": "شما از طریق Ideal Gathering یک دورهمی تأییدشدهٔ مشترک دارید.",
+    "member.connection": "شما از طریق {brandName} یک دورهمی تأییدشدهٔ مشترک دارید.",
     "member.moments": "لحظه‌های اشتراکی",
     "member.momentsHint":
       "تا ۱۲ لحظهٔ اخیر که این عضو برای اشتراک انتخاب کرده است. یادداشت‌ها خصوصی می‌مانند.",

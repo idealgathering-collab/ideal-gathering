@@ -19,154 +19,154 @@ type Copy = { title: string; description: string };
 export const PAGE_SEO: Record<string, Record<SeoLang, Copy>> = {
   "/": {
     en: {
-      title: "Just Gather — Small-Group Meetups | Ideal Gathering",
+      title: `Just Gather — Small-Group Meetups | ${brand.name}`,
       description:
         "An open platform for small-group meetups. Create a gathering for anything, anywhere — coffee, a hike, a game night — and get matched with the right people.",
     },
 
     ru: {
-      title: "Ideal Gathering — Больше никто не будет один",
+      title: `${brand.name} — Больше никто не будет один`,
       description:
         "Настоящие столы в настоящих кафе. Одна тема, несколько стульев и люди, с которыми стоит познакомиться. Присоединяйся к встрече или организуй свою.",
     },
     fa: {
-      title: "Ideal Gathering — دیگر هیچ‌کس تنها نخواهد بود",
+      title: `${brand.name} — دیگر هیچ‌کس تنها نخواهد بود`,
       description:
         "میزهای واقعی در کافه‌های واقعی. یک موضوع، چند صندلی و آدم‌هایی که ارزش شناختن دارند. به یک گردهمایی بپیوندید یا خودتان میزبان شوید.",
     },
   },
   "/explore": {
     en: {
-      title: "Explore Gatherings · Ideal Gathering",
+      title: `Explore Gatherings · ${brand.name}`,
       description:
         "Browse upcoming gatherings around a subject at cafes and restaurants near you.",
     },
     ru: {
-      title: "Найти встречи · Ideal Gathering",
+      title: `Найти встречи · ${brand.name}`,
       description:
         "Смотри предстоящие встречи по интересам в кафе и ресторанах рядом с тобой.",
     },
     fa: {
-      title: "کشف گردهمایی‌ها · Ideal Gathering",
+      title: `کشف گردهمایی‌ها · ${brand.name}`,
       description:
         "گردهمایی‌های پیش‌ رو را در کافه‌ها و رستوران‌های نزدیک خود بر اساس موضوع ببینید.",
     },
   },
   "/partnership": {
     en: {
-      title: "Partnership — Ideal Gathering",
+      title: `Partnership — ${brand.name}`,
       description:
         "Turn quiet hours into themed Gatherings at your cafe or restaurant. You approve every Gathering — full control, no bidding, no commitment.",
     },
     ru: {
-      title: "Партнёрство — Ideal Gathering",
+      title: `Партнёрство — ${brand.name}`,
       description:
         "Превратите тихие часы вашего кафе в тематические встречи. Каждую встречу утверждаете вы — полный контроль, без обязательств.",
     },
     fa: {
-      title: "همکاری — Ideal Gathering",
+      title: `همکاری — ${brand.name}`,
       description:
         "ساعت‌های خلوت کافه یا رستوران خود را به گردهمایی‌های موضوعی تبدیل کنید. هر گردهمایی را شما تأیید می‌کنید — کنترل کامل و بدون تعهد.",
     },
   },
   "/terms": {
     en: {
-      title: "Terms of Service — Ideal Gathering",
+      title: `Terms of Service — ${brand.name}`,
       description:
-        "The rules for using Ideal Gathering: acceptable use, host and venue responsibilities, and liability.",
+        `The rules for using ${brand.name}: acceptable use, host and venue responsibilities, and liability.`,
     },
     ru: {
-      title: "Условия использования — Ideal Gathering",
+      title: `Условия использования — ${brand.name}`,
       description:
-        "Правила пользования Ideal Gathering: допустимое использование, ответственность организатора и площадки, и ограничение ответственности.",
+        `Правила пользования ${brand.name}: допустимое использование, ответственность организатора и площадки, и ограничение ответственности.`,
     },
     fa: {
-      title: "شرایط استفاده — Ideal Gathering",
+      title: `شرایط استفاده — ${brand.name}`,
       description:
-        "قوانین استفاده از Ideal Gathering: استفادهٔ مجاز، مسئولیت میزبان و مکان، و حدود مسئولیت.",
+        `قوانین استفاده از ${brand.name}: استفادهٔ مجاز، مسئولیت میزبان و مکان، و حدود مسئولیت.`,
     },
   },
   "/privacy": {
     en: {
-      title: "Privacy Policy — Ideal Gathering",
+      title: `Privacy Policy — ${brand.name}`,
       description:
-        "How Ideal Gathering collects, uses, and protects your data. Privacy notice for users in Armenia.",
+        `How ${brand.name} collects, uses, and protects your data. Privacy notice for users in Armenia.`,
     },
     ru: {
-      title: "Политика конфиденциальности — Ideal Gathering",
+      title: `Политика конфиденциальности — ${brand.name}`,
       description:
-        "Как Ideal Gathering собирает, использует и защищает ваши данные. Уведомление о конфиденциальности для пользователей из Армении.",
+        `Как ${brand.name} собирает, использует и защищает ваши данные. Уведомление о конфиденциальности для пользователей из Армении.`,
     },
     fa: {
-      title: "سیاست حریم خصوصی — Ideal Gathering",
+      title: `سیاست حریم خصوصی — ${brand.name}`,
       description:
-        "Ideal Gathering چگونه داده‌های شما را جمع‌آوری، استفاده و محافظت می‌کند. اطلاعیهٔ حریم خصوصی برای کاربران ارمنستان.",
+        `${brand.name} چگونه داده‌های شما را جمع‌آوری، استفاده و محافظت می‌کند. اطلاعیهٔ حریم خصوصی برای کاربران ارمنستان.`,
     },
   },
   "/our-story": {
     en: {
-      title: "Our Story — Ideal Gathering",
+      title: `Our Story — ${brand.name}`,
       description:
-        "How Ideal Gathering started: a weekly table of friends, scattered by life, rebuilt into something anyone can have again.",
+        `How ${brand.name} started: a weekly table of friends, scattered by life, rebuilt into something anyone can have again.`,
     },
     ru: {
-      title: "Наша история — Ideal Gathering",
+      title: `Наша история — ${brand.name}`,
       description:
-        "Как появился Ideal Gathering: еженедельный стол друзей, которых разбросала жизнь, — и то, как мы вернули это каждому.",
+        `Как появился ${brand.name}: еженедельный стол друзей, которых разбросала жизнь, — и то, как мы вернули это каждому.`,
     },
     fa: {
-      title: "Our Story — Ideal Gathering",
+      title: `Our Story — ${brand.name}`,
       description:
-        "How Ideal Gathering started: a weekly table of friends, scattered by life, rebuilt into something anyone can have again.",
+        `How ${brand.name} started: a weekly table of friends, scattered by life, rebuilt into something anyone can have again.`,
     },
   },
   "/auth": {
     en: {
-      title: "Sign In or Join — Ideal Gathering",
+      title: `Sign In or Join — ${brand.name}`,
       description:
-        "Create your free Ideal Gathering account to join a table near you, or sign back in to see your upcoming gatherings.",
+        `Create your free ${brand.name} account to join a table near you, or sign back in to see your upcoming gatherings.`,
     },
     ru: {
-      title: "Войти или присоединиться — Ideal Gathering",
+      title: `Войти или присоединиться — ${brand.name}`,
       description:
-        "Создай бесплатный аккаунт Ideal Gathering, чтобы занять место за столом рядом с тобой, или войди, чтобы увидеть предстоящие встречи.",
+        `Создай бесплатный аккаунт ${brand.name}, чтобы занять место за столом рядом с тобой, или войди, чтобы увидеть предстоящие встречи.`,
     },
     fa: {
-      title: "ورود یا عضویت — Ideal Gathering",
+      title: `ورود یا عضویت — ${brand.name}`,
       description:
-        "برای پیوستن به یک میز در نزدیکی خود حساب رایگان Ideal Gathering بسازید یا برای دیدن گردهمایی‌های پیش‌رو وارد شوید.",
+        `برای پیوستن به یک میز در نزدیکی خود حساب رایگان ${brand.name} بسازید یا برای دیدن گردهمایی‌های پیش‌رو وارد شوید.`,
     },
   },
   "/venue/auth": {
     en: {
-      title: "Venue Sign In — Ideal Gathering",
+      title: `Venue Sign In — ${brand.name}`,
       description:
         "Cafés and restaurants: create a venue account to list your tables and host themed gatherings during quiet hours.",
     },
     ru: {
-      title: "Вход для заведений — Ideal Gathering",
+      title: `Вход для заведений — ${brand.name}`,
       description:
         "Кафе и рестораны: создайте аккаунт заведения, чтобы добавить свои столы и принимать тематические встречи в тихие часы.",
     },
     fa: {
-      title: "ورود مکان‌ها — Ideal Gathering",
+      title: `ورود مکان‌ها — ${brand.name}`,
       description:
         "کافه‌ها و رستوران‌ها: برای ثبت میزها و میزبانی گردهمایی‌های موضوعی در ساعت‌های خلوت، حساب مکان بسازید.",
     },
   },
   "/waitlist": {
     en: {
-      title: "Guest Waitlist — Ideal Gathering",
+      title: `Guest Waitlist — ${brand.name}`,
       description:
         "Tell us your city and interests and we'll invite you as new tables open up at cafés near you.",
     },
     ru: {
-      title: "Лист ожидания — Ideal Gathering",
+      title: `Лист ожидания — ${brand.name}`,
       description:
         "Расскажи, в каком ты городе и что тебе интересно, — и мы пригласим тебя, когда рядом откроются новые столы.",
     },
     fa: {
-      title: "فهرست انتظار مهمان — Ideal Gathering",
+      title: `فهرست انتظار مهمان — ${brand.name}`,
       description:
         "شهر و علاقه‌مندی‌های خود را بگویید تا با باز شدن میزهای تازه در کافه‌های نزدیک، دعوت‌تان کنیم.",
     },
@@ -184,8 +184,7 @@ export function urlFor(path: string, lang: SeoLang) {
  */
 export function localizedHead(path: string, rawLang: unknown) {
   const lang = normalizeLang(rawLang);
-  const original = PAGE_SEO[path]?.[lang] ?? PAGE_SEO["/"][lang];
-  const copy = { ...original, title: original.title.replaceAll("Ideal Gathering", brand.name) };
+  const copy = PAGE_SEO[path]?.[lang] ?? PAGE_SEO["/"][lang];
   const self = urlFor(path, lang);
 
   return {
@@ -230,7 +229,7 @@ export function jsonLdOrganization(lang: SeoLang) {
     "@id": `${SITE_URL}/#organization`,
     name: brand.name,
     url: SITE_URL,
-    logo: `${SITE_URL}/favicon.ico`,
+    logo: new URL(brand.logoUrl, SITE_URL).href,
     description: PAGE_SEO["/"][lang].description,
     inLanguage: SCHEMA_LOCALE[lang],
   };
@@ -251,8 +250,7 @@ export function jsonLdWebSite(lang: SeoLang) {
 
 /** Per-page WebPage node, tied to the site's WebSite/Organization graph. */
 export function jsonLdWebPage(path: string, lang: SeoLang) {
-  const original = PAGE_SEO[path]?.[lang] ?? PAGE_SEO["/"][lang];
-  const copy = { ...original, title: original.title.replaceAll("Ideal Gathering", brand.name) };
+  const copy = PAGE_SEO[path]?.[lang] ?? PAGE_SEO["/"][lang];
   const url = urlFor(path, lang);
   return {
     "@context": "https://schema.org",
@@ -388,11 +386,11 @@ const GATHERING_FALLBACK: Record<
   (args: { when: string; where: string; seats: number }) => string
 > = {
   en: ({ when, where, seats }) =>
-    `A gathering around one subject on ${when}${where ? ` at ${where}` : ""}. ${seats} seat${seats === 1 ? "" : "s"} at the table — join on Ideal Gathering.`,
+    `A gathering around one subject on ${when}${where ? ` at ${where}` : ""}. ${seats} seat${seats === 1 ? "" : "s"} at the table — join on ${brand.name}.`,
   ru: ({ when, where, seats }) =>
-    `Встреча на одну тему ${when}${where ? ` в ${where}` : ""}. За столом ${seats} мест — присоединяйся на Ideal Gathering.`,
+    `Встреча на одну тему ${when}${where ? ` в ${where}` : ""}. За столом ${seats} мест — присоединяйся на ${brand.name}.`,
   fa: ({ when, where, seats }) =>
-    `گردهمایی حول یک موضوع در ${when}${where ? ` در ${where}` : ""}. ${seats} صندلی سر میز — در Ideal Gathering بپیوندید.`,
+    `گردهمایی حول یک موضوع در ${when}${where ? ` در ${where}` : ""}. ${seats} صندلی سر میز — در ${brand.name} بپیوندید.`,
 };
 
 const GATHERING_AT: Record<SeoLang, string> = { en: "at", ru: "—", fa: "در" };
@@ -422,11 +420,11 @@ export function gatheringHead(
   if (!g) {
     return {
       meta: [
-        { title: "Gathering not found — Ideal Gathering" },
+        { title: `Gathering not found — ${brand.name}` },
         {
           name: "description",
           content:
-            "This gathering is no longer available. Browse upcoming gatherings on Ideal Gathering.",
+            `This gathering is no longer available. Browse upcoming gatherings on ${brand.name}.`,
         },
         { name: "robots", content: "noindex, follow" },
       ],
@@ -436,7 +434,7 @@ export function gatheringHead(
 
   const venue = g.business?.name ?? g.venue_name ?? "";
   const title = clampTitle(
-    venue ? `${g.subject} ${GATHERING_AT[lang]} ${venue}` : `${g.subject} — Ideal Gathering`,
+    venue ? `${g.subject} ${GATHERING_AT[lang]} ${venue}` : `${g.subject} — ${brand.name}`,
   );
   const when = new Date(g.starts_at).toLocaleDateString(lang, {
     month: "long",

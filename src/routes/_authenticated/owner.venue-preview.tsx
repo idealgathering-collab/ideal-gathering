@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { fetchRoles } from "@/lib/roles";
 import { listOwnerVenuePreviews } from "@/lib/owner-venue.functions";
-import { logoAsset } from "@/config/brand";
+import { brand, logoAsset } from "@/config/brand";
 
 export const Route = createFileRoute("/_authenticated/owner/venue-preview")({
   beforeLoad: async ({ context }) => {
@@ -44,7 +44,7 @@ function OwnerVenuePreviewPage() {
         <div className="mx-auto flex h-16 max-w-5xl items-center justify-between gap-3 px-4">
           <Link to="/owner" className="flex items-center gap-2">
             <img src={logoAsset.url} alt="" className="h-9 w-9 rounded-full object-contain" />
-            <span className="font-display text-lg">Ideal <span className="italic text-primary">Gathering</span></span>
+            <span className="font-display text-lg"><span className="italic text-primary">{brand.name}</span></span>
             <Badge variant="outline" className="ms-1 rounded-full">Owner · View as Venue</Badge>
           </Link>
           <Button asChild variant="ghost" className="rounded-full">

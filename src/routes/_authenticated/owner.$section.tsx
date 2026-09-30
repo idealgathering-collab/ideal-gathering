@@ -21,7 +21,7 @@ import { getOwnerDirectory, type OwnerDirectorySection } from "@/lib/owner.funct
 import { createInvitation, revokeInvitation } from "@/lib/beta-admin";
 import { supabase } from "@/integrations/supabase/client";
 import type { Database } from "@/integrations/supabase/types";
-import { logoAsset } from "@/config/brand";
+import { brand, logoAsset } from "@/config/brand";
 
 const ALLOWED = new Set<OwnerDirectorySection>(["waitlist", "users", "venues", "invitations", "gatherings"]);
 
@@ -271,7 +271,7 @@ function OwnerSubHeader({ title }: { title: string }) {
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
         <Link to="/owner" className="flex items-center gap-2">
           <img src={logoAsset.url} alt="" className="h-9 w-9 rounded-full object-contain" />
-          <span className="font-display text-lg">Ideal <span className="italic text-primary">Gathering</span></span>
+          <span className="font-display text-lg"><span className="italic text-primary">{brand.name}</span></span>
           <Badge variant="outline" className="ms-1 rounded-full">Owner · {title}</Badge>
         </Link>
         <Button asChild variant="ghost" className="rounded-full"><Link to="/owner"><ArrowLeft className="me-2 h-4 w-4" />Back to Owner</Link></Button>

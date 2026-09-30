@@ -1,3 +1,4 @@
+import { brand } from "@/config/brand";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { z } from "zod";
@@ -134,7 +135,7 @@ function VenueAuth() {
               <Store className="h-4 w-4 text-sunshine-foreground" />
             </span>
             <span className="font-display text-xl">
-              Ideal <span className="italic">Gathering</span> · {t("venueAuth.for")}
+              <span className="italic">{brand.name}</span> · {t("venueAuth.for")}
             </span>
           </Link>
           <div className="ms-auto">

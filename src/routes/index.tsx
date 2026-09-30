@@ -26,7 +26,7 @@ import {
 import { SiteFooter } from "@/components/site-footer";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import constellationAsset from "@/assets/constellation-people.png.asset.json";
-import { logoAsset } from "@/config/brand";
+import { brand, logoAsset } from "@/config/brand";
 
 export const Route = createFileRoute("/")({
   component: Home,
@@ -88,7 +88,7 @@ function Home() {
         <Link to="/" className="flex items-center gap-2 text-white">
           <img src={logoAsset.url} alt="" aria-hidden className="h-9 w-9 rounded-full object-contain" />
           <span className="font-display text-lg">
-            Ideal <span className="italic text-nebula-violet">Gathering</span>
+            <span className="italic text-nebula-violet">{brand.name}</span>
           </span>
         </Link>
         <div className="flex items-center gap-2">

@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { Instagram, Linkedin } from "lucide-react";
-import { logoAsset } from "@/config/brand";
+import { brand, logoAsset } from "@/config/brand";
 import { useT } from "@/i18n";
 
 export function SiteFooter() {
@@ -12,11 +12,11 @@ export function SiteFooter() {
           <Link to="/" className="flex items-center gap-2">
             <img
               src={logoAsset.url}
-              alt="Havato"
+              alt={brand.name}
               className="h-10 w-10 rounded-full bg-primary-foreground/10 object-contain p-1 animate-logo-spin"
             />
             <span className="font-display text-xl leading-none">
-              Ideal <span className="italic">Gathering</span>
+              <span className="italic">{brand.name}</span>
             </span>
           </Link>
           <p className="mt-4 max-w-xs text-sm text-primary-foreground/80">
@@ -67,7 +67,7 @@ export function SiteFooter() {
 
       <div className="border-t border-primary-foreground/15">
         <div className="mx-auto flex max-w-6xl flex-col items-start justify-between gap-2 px-4 py-6 text-xs text-primary-foreground/70 sm:flex-row sm:items-center">
-          <div>© {new Date().getFullYear()} Havato.</div>
+          <div>© {new Date().getFullYear()} {brand.name}.</div>
           <div className="italic">{t("footer.bottom")}</div>
         </div>
       </div>

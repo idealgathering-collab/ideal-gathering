@@ -29,7 +29,7 @@ import { LanguageSwitcher } from "@/components/language-switcher";
 import { NotificationsBell } from "@/components/notifications-bell";
 import { useT } from "@/i18n";
 import { requireVenueAccess } from "@/lib/beta-gate";
-import { logoAsset } from "@/config/brand";
+import { brand, logoAsset } from "@/config/brand";
 
 export const Route = createFileRoute("/venue/dashboard")({
   ssr: false,
@@ -148,7 +148,7 @@ function VenueDashboard() {
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-3 px-4">
           <Link
             to={isOwnerPreview ? "/owner" : "/"}
-            aria-label="Havato"
+            aria-label={brand.name}
             className="flex items-center gap-2"
           >
             <img
@@ -157,7 +157,7 @@ function VenueDashboard() {
               className="h-9 w-9 rounded-full object-contain animate-logo-spin"
             />
             <span className="hidden font-display text-lg sm:inline">
-              Ideal <span className="italic text-primary">Gathering</span>
+              <span className="italic text-primary">{brand.name}</span>
               <span className="ms-1 text-xs text-muted-foreground">· {t("venueAuth.for")}</span>
             </span>
           </Link>
