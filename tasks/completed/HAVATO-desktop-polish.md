@@ -1,0 +1,11 @@
+# Havato desktop landing polish
+
+Approval: user request, 2026-09-30; frontend-only desktop polish, commit/push to havato, and verify existing Darkube auto-deployment. Baseline 4e744a85ee547bcb931442c22e1105b45f0baf65.
+
+Only application change: src/components/landing/havato-waitlist.css. Desktop content column widens from 49% to 53%; headline and vertical spacing become more compact, including short laptop screens. Approved logo remains byte-for-byte unchanged: 72px content inside a padded 78px rounded box, versus 55px before (31% larger visual content); adjacent wordmark increases 27%. Existing desktop scene renders at max(100%, 980px), versus 120% of total page height; at 1440x900 the image/phone shrinks from 1235.65px to 980px (20.7%). Original top offset excludes the source image's decorative language label; the softer left fade protects the wider copy column.
+
+Preserved: autumn/Tehran/cafe imagery, palette, copy, RTL/LTR language switch, mobile CSS, form/backend/auth/Supabase/admin/owner/venue behavior, routes and deployment configuration. No database or asset changes.
+
+Checks: git diff --check passes; focused Prettier check passes; Lightning CSS compilation passes. Actual application preview inspected at 1280x720, 1366x768, 1440x900, 1920x1080 and mobile 390x844. FA/EN switch changes direction and copy. Full waitlist CTA bottom is 596px at 1366x768 and 639px at 1440x900; no horizontal overflow. Mobile retains 43px logo and scrollWidth 390px at viewport 390px. Local Vite client/SSR starts with dummy backend configuration; no waitlist submissions or live data writes. No broad test suites run.
+
+Publication: pending. Local bundled Git lacks HTTPS helper; publish through the connected GitHub API with a fast-forward branch update. Then confirm new compiled styles and approved logo on cache-busted live /waitlist (the existing signed-in browser redirects / to its venue dashboard), and check existing Linux container CI. Darkube control-panel health/logs require an authenticated available session; do not infer those from GitHub CI.

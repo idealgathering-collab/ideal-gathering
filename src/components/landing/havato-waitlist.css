@@ -340,10 +340,68 @@
   white-space: nowrap;
   border: 0;
 }
-@media (min-width: 1600px) {
+@media (min-width: 801px) {
+  .havato-header {
+    padding-block: 24px;
+  }
+  .havato-brand {
+    gap: 12px;
+    font-size: 38px;
+  }
+  .havato-brand img {
+    width: 78px;
+    height: 78px;
+    padding: 3px;
+    border-radius: 22px;
+    image-rendering: auto;
+  }
+  .havato-scene {
+    width: 48%;
+  }
+  .havato-scene img {
+    top: -12%;
+    height: max(100%, 980px);
+  }
+  .havato-scene:after {
+    background:
+      linear-gradient(90deg, #fff6e9 0%, #fff6e9 12%, #fff6e966 26%, transparent 45%),
+      linear-gradient(0deg, #fff6e9 0%, transparent 19%);
+  }
   .havato-main {
-    padding-top: 45px;
-    padding-bottom: 55px;
+    padding-top: 8px;
+    padding-bottom: 24px;
+  }
+  .havato-copy {
+    width: 53%;
+    max-width: 660px;
+  }
+  .havato-badge {
+    margin-bottom: 16px;
+  }
+  .havato-copy h1 {
+    font-size: clamp(32px, 3.35vw, 52px);
+    line-height: 1.4;
+    margin-bottom: 12px;
+  }
+  .havato-intro {
+    line-height: 1.85;
+    margin-bottom: 18px;
+    max-width: 610px;
+  }
+  .havato-community {
+    margin-top: 18px;
+  }
+  .havato-trust {
+    margin-top: 30px;
+  }
+}
+@media (min-width: 801px) and (max-height: 800px) {
+  .havato-header {
+    padding-block: 18px;
+  }
+  .havato-copy h1 {
+    font-size: clamp(32px, 3.1vw, 48px);
+    line-height: 1.35;
   }
 }
 @media (max-width: 800px) {

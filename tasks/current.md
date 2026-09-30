@@ -1,3 +1,8 @@
+# Current task — Havato desktop landing polish
+
+User-authorized frontend-only polish on havato, based on deployed 4e744a85ee547bcb931442c22e1105b45f0baf65. See [scope and verification](completed/HAVATO-desktop-polish.md). Implementation and focused local visual/CSS checks complete; GitHub publication and existing Darkube auto-deployment verification pending. No backend, assets, copy, routes, or mobile layout changes.
+
+---
 # Current task — Havato approved logo/icon correction
 
 User-authorized branding-only fix on havato. See [scope and checks](completed/HAVATO-logo-icons.md). Assets prepared; focused checks and existing Darkube deployment verification in progress. Homepage behavior/layout and all production/Supabase settings preserved.
