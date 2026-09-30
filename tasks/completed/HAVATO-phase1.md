@@ -1,6 +1,6 @@
 # Havato Phase 1 — Public waitlist
 
-Status: Implementation complete; branch deployment verification pending.
+Status: Complete — Phase 1 implemented and verified live.
 Approval: User request on 2026-09-30, Phase 1 only; existing Darkube havato auto-deploy authorized.
 Branch: havato. Baseline: dd4d058cc8c200656784e46f35bfa89e995b5870.
 
@@ -13,3 +13,9 @@ Hosted persistence: verified public backend differs from historical Ideal Gather
 Build: client and SSR compilation complete; final local Nitro packaging hits the previously documented Windows EPERM readlink C:/Users/ASUS. Existing havato-container Linux CI will supply the supported production-build check. Exact remaining action: push this checkpoint, inspect container CI, verify Darkube serves the new FA/EN page and both auth entries. No Phase 2 implementation.
 
 Phase 2 remains PWA/service worker, app icons, installability, offline fallback and real Android/iPhone testing.
+
+## Deployment closure
+
+Implementation commit: 9419ff4050937a63ac421a0b7d5bb5933da9e24e. Havato container verification [36745437875](https://github.com/idealgathering-collab/ideal-gathering/actions/runs/36745437875) succeeded. Existing Darkube auto-deployment serves the new public homepage and compressed WebP assets with HTTP 200. Live /waitlist verified in FA/EN, RTL/LTR, desktop and mobile; all three images load and mobile scroll width equals viewport width. The browser retains the existing activated demo session and redirects that session from / to its dashboard as before. Unsigned local Explore, dashboard and create-gathering routes all redirect to sign-in. Inactive-member gating was inspected, not tested with a new inactive hosted account. Hosted user/venue/admin/owner authentication implementations are unchanged.
+
+One synthetic reserved-domain QA waitlist entry remains in isolated Havato; no real records were read or changed. Name/email collection reuses the existing table; phone collection was not added. Local client/SSR build passes but Windows final packaging remains blocked by pre-existing EPERM; Linux production container verification passes. Phase 2 not started.

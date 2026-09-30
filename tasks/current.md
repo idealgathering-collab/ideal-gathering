@@ -1,6 +1,6 @@
 # Current task — Havato Phase 1
 
-User-authorized Phase 1 only. See [implementation and focused verification](HAVATO-phase1.md). Responsive public waitlist is implemented; next: push havato and verify existing Darkube auto-deployment and Linux container CI. Preserve all Ideal Gathering production and Supabase settings. Phase 2 has not started.
+User-authorized Phase 1 only. See [completed Phase 1 and verification](completed/HAVATO-phase1.md). Responsive public waitlist is live on Darkube; implementation 9419ff4, Linux container CI passed, FA/EN and mobile verified. Stop after Phase 1. Preserve all Ideal Gathering production and Supabase settings. Phase 2 has not started.
 
 ---
 
