@@ -16,7 +16,9 @@ export const Route = createFileRoute("/manifest.webmanifest")({
             background_color: "#fffbf5",
             theme_color: brand.themeColor,
             icons: [
-              { src: brand.logoUrl, sizes: "any" },
+              { src: "/favicon-192.png", sizes: "192x192", type: "image/png", purpose: "any" },
+              { src: "/favicon-512.png", sizes: "512x512", type: "image/png", purpose: "any" },
+              { src: "/havato-app-icon-1024.png", sizes: "1024x1024", type: "image/png", purpose: "any" },
             ],
           },
           { headers: { "Content-Type": "application/manifest+json" } },

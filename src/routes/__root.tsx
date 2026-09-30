@@ -110,9 +110,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     links: [
       { rel: "stylesheet", href: appCss },
       { rel: "stylesheet", href: "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" },
-      { rel: "icon", href: brand.logoUrl },
+      { rel: "icon", href: "/favicon.png", type: "image/png", sizes: "32x32" },
       { rel: "manifest", href: "/manifest.webmanifest" },
-      { rel: "apple-touch-icon", href: brand.logoUrl },
+      { rel: "apple-touch-icon", href: "/apple-touch-icon.png", sizes: "180x180" },
 
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },

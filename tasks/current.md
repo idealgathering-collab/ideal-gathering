@@ -1,3 +1,9 @@
+# Current task — Havato approved logo/icon correction
+
+User-authorized branding-only fix on havato. See [scope and checks](completed/HAVATO-logo-icons.md). Assets prepared; focused checks and existing Darkube deployment verification in progress. Homepage behavior/layout and all production/Supabase settings preserved.
+
+---
+
 # Current task — Havato Phase 1
 
 User-authorized Phase 1 only. See [completed Phase 1 and verification](completed/HAVATO-phase1.md). Responsive public waitlist is live on Darkube; implementation 9419ff4, Linux container CI passed, FA/EN and mobile verified. Stop after Phase 1. Preserve all Ideal Gathering production and Supabase settings. Phase 2 has not started.

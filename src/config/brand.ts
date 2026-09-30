@@ -14,7 +14,7 @@ export function createBrand(env: PublicEnvironment) {
     siteUrl: env.VITE_SITE_URL
       ? requireHttpUrl(env.VITE_SITE_URL, "VITE_SITE_URL")
       : "http://localhost:3000",
-    logoUrl: env.VITE_BRAND_LOGO_URL || "/havato-mark.svg",
+    logoUrl: env.VITE_BRAND_LOGO_URL || "/havato-logo.png",
     tagline: env.VITE_BRAND_TAGLINE || "No One Will Be Alone Anymore",
     description:
       env.VITE_BRAND_DESCRIPTION ||

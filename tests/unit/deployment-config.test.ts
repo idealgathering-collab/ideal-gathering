@@ -45,7 +45,7 @@ describe("shared brand configuration", () => {
   it("uses Havato defaults and a portable local logo", () => {
     expect(createBrand({})).toMatchObject({
       name: "Havato",
-      logoUrl: "/havato-mark.svg",
+      logoUrl: "/havato-logo.png",
       themeColor: "#6b21a8",
     });
   });
