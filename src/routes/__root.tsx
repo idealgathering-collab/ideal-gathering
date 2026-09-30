@@ -5,6 +5,7 @@ import {
   Link,
   createRootRouteWithContext,
   useRouter,
+  useRouterState,
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
@@ -130,7 +131,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 function RootShell({ children }: { children: ReactNode }) {
   return (
     <html
-      lang="en"
+      lang="fa"
+      dir="rtl"
       style={
         import.meta.env.VITE_BRAND_THEME_COLOR
           ? ({ "--primary": brand.themeColor } as CSSProperties)
@@ -151,6 +153,9 @@ function RootShell({ children }: { children: ReactNode }) {
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   const router = useRouter();
+  const publicEntry = useRouterState({
+    select: (state) => state.location.pathname === "/" || state.location.pathname === "/waitlist",
+  });
 
   useEffect(() => {
     const { data: sub } = supabase.auth.onAuthStateChange((event) => {
@@ -164,7 +169,7 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <LanguageProvider>
-        <div className="pb-20 sm:pb-0">
+        <div className={publicEntry ? "" : "pb-20 sm:pb-0"}>
           <Outlet />
         </div>
         <MobileTabBar />

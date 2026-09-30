@@ -1,3 +1,9 @@
+# Current task — Havato Phase 1
+
+User-authorized Phase 1 only. See [implementation and focused verification](HAVATO-phase1.md). Responsive public waitlist is implemented; next: push havato and verify existing Darkube auto-deployment and Linux container CI. Preserve all Ideal Gathering production and Supabase settings. Phase 2 has not started.
+
+---
+
 # Current task — Havato visible branding correction
 
 User-authorized scope, 2026-09-29: branding only on havato; push for Darkube auto-deployment and verify https://havato-test.darkube.ir. No theme, product behavior, production, or Supabase changes.

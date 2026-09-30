@@ -1,0 +1,468 @@
+.havato-public {
+  position: relative;
+  isolation: isolate;
+  min-height: 100dvh;
+  overflow: hidden;
+  background: #fff6e9;
+  color: #301b0e;
+  font-family: "Vazirmatn", "Figtree", sans-serif;
+}
+.havato-public * {
+  box-sizing: border-box;
+}
+.havato-public a {
+  color: inherit;
+}
+.havato-public a:hover {
+  text-decoration: underline;
+}
+.havato-public :focus-visible {
+  outline: 3px solid #d84312;
+  outline-offset: 4px;
+}
+.havato-header {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  direction: ltr;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1440px;
+  margin: auto;
+  padding: 38px 6.5%;
+}
+.havato-brand {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  text-decoration: none !important;
+  font-size: 30px;
+  font-weight: 800;
+  color: #ed531c !important;
+}
+.havato-brand img {
+  width: 55px;
+  height: 55px;
+  object-fit: contain;
+}
+.havato-language {
+  border-radius: 99px;
+  background: #fffaf4e8;
+  padding: 7px 15px;
+  border: 1px solid #e9d8c3;
+}
+.havato-language select {
+  color: #301b0e;
+  background: transparent;
+  border: 0;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 5px;
+  cursor: pointer;
+}
+.havato-scene {
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: 53%;
+  overflow: hidden;
+}
+.havato-scene img {
+  position: absolute;
+  right: 0;
+  top: -12%;
+  height: 120%;
+  width: auto;
+  max-width: none;
+}
+.havato-scene:after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, #fff6e9 0%, #fff6e966 14%, transparent 35%),
+    linear-gradient(0deg, #fff6e9 0%, transparent 19%);
+}
+.havato-main {
+  max-width: 1440px;
+  padding: 22px 6.5% 25px;
+  margin: auto;
+  direction: ltr;
+}
+.havato-copy {
+  width: 49%;
+  max-width: 610px;
+  direction: rtl;
+  text-align: right;
+}
+.havato-public[dir="ltr"] .havato-copy {
+  direction: ltr;
+  text-align: left;
+}
+.havato-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #9b552e;
+  font-size: 12px;
+  margin: 0 0 22px;
+}
+.havato-copy h1 {
+  color: #301b0e;
+  font-size: clamp(35px, 3.85vw, 61px);
+  font-weight: 800;
+  line-height: 1.48;
+  letter-spacing: -1.5px;
+  margin: 0 0 15px;
+}
+.havato-copy h1 span {
+  display: block;
+}
+.havato-accent {
+  color: #f25a21;
+}
+.havato-intro {
+  font-size: 17px;
+  line-height: 1.95;
+  color: #6b6056;
+  margin: 0 0 23px;
+  max-width: 540px;
+}
+.havato-form {
+  display: grid;
+  gap: 13px;
+}
+.havato-fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.havato-fields label > span {
+  display: block;
+  font-size: 12px;
+  color: #6b6056;
+  margin: 0 12px 5px;
+}
+.havato-fields input {
+  width: 100%;
+  height: 52px;
+  border: 1px solid #e2cbb5;
+  background: #fffdf9e8;
+  border-radius: 28px;
+  padding: 0 18px;
+  font: inherit;
+  font-size: 14px;
+  color: #301b0e;
+  min-width: 0;
+}
+.havato-fields input[name="email"] {
+  direction: ltr;
+  text-align: start;
+}
+.havato-public[dir="rtl"] .havato-fields input[name="email"]:placeholder-shown {
+  text-align: right;
+  direction: rtl;
+}
+.havato-consent {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 11px;
+  line-height: 1.9;
+  color: #6b6056;
+}
+.havato-consent input {
+  margin-top: 4px;
+  accent-color: #ee541c;
+}
+.havato-consent a {
+  text-decoration: underline;
+}
+.havato-cta {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+  min-height: 54px;
+  border: 0;
+  border-radius: 30px;
+  background: linear-gradient(115deg, #ff8b38, #f54d16);
+  color: white;
+  font:
+    700 16px "Vazirmatn",
+    "Figtree",
+    sans-serif;
+  box-shadow: 0 8px 20px #f45e1822;
+  cursor: pointer;
+}
+.havato-public[dir="rtl"] .havato-cta svg {
+  transform: rotate(180deg);
+}
+.havato-cta:hover {
+  filter: brightness(0.96);
+}
+.havato-cta:disabled {
+  opacity: 0.7;
+  cursor: wait;
+}
+.havato-error {
+  font-size: 13px;
+  color: #a33116;
+  margin: 0;
+}
+.havato-community {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  margin-top: 24px;
+  color: #68594c;
+}
+.havato-community-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  background: #ffe0bb;
+  color: #f25a21;
+}
+.havato-community strong {
+  font-size: 13px;
+}
+.havato-community p {
+  font-size: 11px;
+  line-height: 1.9;
+  margin: 3px 0 0;
+}
+.havato-signin {
+  display: inline-block;
+  margin-top: 13px;
+  font-size: 12px;
+  color: #8d4827 !important;
+}
+.havato-trust {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  max-width: 670px;
+  margin-top: 42px;
+  gap: 10px;
+  text-align: center;
+  direction: rtl;
+}
+.havato-public[dir="ltr"] .havato-trust {
+  direction: ltr;
+}
+.havato-trust > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  border-inline-end: 1px solid #efdbc4;
+  padding: 0 9px;
+}
+.havato-trust > div:last-child {
+  border: 0;
+}
+.havato-trust svg {
+  color: #f25a21;
+}
+.havato-trust strong {
+  font-size: 12px;
+}
+.havato-trust span {
+  font-size: 11px;
+  color: #76695b;
+}
+.havato-confirmation {
+  border: 1px solid #e5c4a3;
+  border-radius: 24px;
+  background: #fffaf2ec;
+  padding: 23px;
+  color: #6b4730;
+}
+.havato-confirmation svg {
+  color: #de571d;
+}
+.havato-confirmation h2 {
+  font-size: 22px;
+  margin: 10px 0;
+}
+.havato-confirmation p {
+  font-size: 14px;
+  line-height: 1.9;
+  overflow-wrap: anywhere;
+}
+.havato-footer {
+  position: relative;
+  max-width: 1440px;
+  margin: auto;
+  padding: 20px 6.5% 25px;
+  font-size: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 15px 30px;
+  color: #786454;
+  border-top: 1px solid #eedbc666;
+  background: #fff6e9d9;
+}
+.havato-footer p {
+  margin: 0;
+}
+.havato-footer p a {
+  color: #b8471b;
+  text-decoration: underline;
+}
+.havato-footer nav {
+  display: flex;
+  gap: 15px;
+}
+.havato-footer small {
+  margin-inline-start: auto;
+}
+.havato-mobile-scene {
+  display: none;
+}
+.havato-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+@media (min-width: 1600px) {
+  .havato-main {
+    padding-top: 45px;
+    padding-bottom: 55px;
+  }
+}
+@media (max-width: 800px) {
+  .havato-header {
+    padding: 25px 7% 18px;
+  }
+  .havato-brand {
+    font-size: 25px;
+  }
+  .havato-brand img {
+    width: 43px;
+    height: 43px;
+  }
+  .havato-main {
+    padding: 14px 7% 0;
+  }
+  .havato-copy {
+    width: 100%;
+    max-width: 620px;
+    margin: auto;
+  }
+  .havato-badge {
+    margin-bottom: 16px;
+  }
+  .havato-copy h1 {
+    font-size: clamp(33px, 7vw, 48px);
+    line-height: 1.55;
+    letter-spacing: -1px;
+  }
+  .havato-intro {
+    font-size: 15px;
+    line-height: 1.95;
+    margin-bottom: 23px;
+  }
+  .havato-scene {
+    width: 100%;
+    height: 240px;
+    bottom: auto;
+    opacity: 0.26;
+  }
+  .havato-scene img {
+    height: 850px;
+    right: 0;
+    top: -85px;
+  }
+  .havato-scene:after {
+    background:
+      linear-gradient(90deg, #fff6e9 10%, #fff6e9aa 65%, transparent),
+      linear-gradient(0deg, #fff6e9, transparent 75%);
+  }
+  .havato-fields {
+    grid-template-columns: 1fr;
+  }
+  .havato-fields input {
+    height: 52px;
+  }
+  .havato-cta {
+    min-height: 57px;
+  }
+  .havato-community {
+    margin-top: 24px;
+  }
+  .havato-trust {
+    margin: 30px auto;
+    gap: 0;
+  }
+  .havato-trust > div {
+    padding: 0 5px;
+  }
+  .havato-trust strong {
+    font-size: 11px;
+    line-height: 1.8;
+  }
+  .havato-trust span {
+    font-size: 10px;
+    line-height: 1.8;
+  }
+  .havato-trust svg {
+    width: 26px;
+  }
+  .havato-mobile-scene {
+    display: block;
+    position: relative;
+    height: 300px;
+    margin: 0 -8.15%;
+    overflow: hidden;
+    z-index: -1;
+  }
+  .havato-mobile-scene img {
+    position: absolute;
+    bottom: -140px;
+    left: -64%;
+    width: 228%;
+    height: auto;
+    max-width: none;
+  }
+  .havato-mobile-scene:after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, #fff6e9 0%, transparent 38%);
+  }
+  .havato-mobile-scene > span {
+    position: absolute;
+    z-index: 1;
+    top: 22px;
+    right: 10%;
+    font-size: 22px;
+    transform: rotate(-7deg);
+    border-bottom: 2px solid #f25a21;
+  }
+  .havato-footer {
+    justify-content: center;
+    text-align: center;
+    padding: 24px 7%;
+    gap: 15px;
+  }
+  .havato-footer small {
+    margin: 0;
+    width: 100%;
+  }
+}

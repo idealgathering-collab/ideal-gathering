@@ -17,8 +17,8 @@ function isLang(v: unknown): v is Lang {
 }
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
-  // Always start with "en" on SSR + first client render to avoid hydration mismatch.
-  const [lang, setLangState] = useState<Lang>("en");
+  // Farsi on SSR and the first client render; explicit saved/URL choices still win.
+  const [lang, setLangState] = useState<Lang>("fa");
 
   useEffect(() => {
     try {
@@ -33,9 +33,6 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
         setLangState(stored);
         return;
       }
-      const nav = window.navigator.language?.toLowerCase() ?? "";
-      if (nav.startsWith("ru")) setLangState("ru");
-      else if (nav.startsWith("fa") || nav.startsWith("pe")) setLangState("fa");
     } catch {
       // ignore
     }
@@ -54,8 +51,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
       window.localStorage.setItem(STORAGE_KEY, l);
       // Keep the URL in sync so each language has a distinct, indexable URL.
       const url = new URL(window.location.href);
-      if (l === "en") url.searchParams.delete("lang");
-      else url.searchParams.set("lang", l);
+      url.searchParams.set("lang", l);
       window.history.replaceState(null, "", url.toString());
     } catch {
       // ignore
