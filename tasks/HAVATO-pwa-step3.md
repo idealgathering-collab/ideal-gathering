@@ -1,6 +1,6 @@
 # Havato PWA Phase 2 — Step 3
 
-Status: Implementation verified locally; publication/live verification pending; physical Android installation remains unverified.
+Status: Published and live browser verification passed; physical Android installation remains unverified.
 Approval: user request, 2026-10-01, Step 3 only; commit/push havato and allow existing Darkube auto-deploy.
 Branch: havato. Baseline: e462a85f061d9fb65e24814fe5cda4eabfb0b3c3.
 
@@ -35,3 +35,11 @@ Step 1 manifest/icons and Step 2 service worker/caching/offline behavior are unc
 - Verify published frontend, unchanged manifest/icons/worker, live native install event and desktop/mobile Chromium diagnostics.
 - Observe Darkube public rollout; distinguish it from dashboard deployment status.
 - Physical Android Chrome: tap Install Havato, complete a proper app installation, launch standalone from the home screen, and confirm CTA absent. Investigate device/Chrome/WebAPK errors if it still produces a shortcut. No physical Android device is attached here. Stop after Step 3.
+
+## Publication and final live verification
+
+Implementation commit: 2992f4b00e6f57a259da99c3f6a1d039daa8234b, pushed to havato through the authenticated GitHub connector. Linux container build/startup verification passed: https://github.com/idealgathering-collab/ideal-gathering/actions/runs/36893531923. Public Darkube auto-rollout observed: updated controller and CTA in live bundles, all 20 inspected script responses HTTP 200.
+
+Post-rollout Chrome with fresh normal persistent profiles: desktop and Android emulation both emit a real beforeinstallprompt, show the actual Install Havato button, invoke the browser's native prompt once when tapped and disable the button while waiting. Both report zero CDP installability errors, secure context, active root service-worker control and no horizontal overflow. /manifest.webmanifest and 192/512 icons return correct MIME and HTTP 200; /sw.js is byte-for-byte unchanged after newline normalization; /auth?mode=signin and /waitlist return HTTP 200. No form submissions or backend changes. Darkube dashboard status was not inspected; deployment is confirmed from publicly served code and browser behavior.
+
+Confirmed defect addressed: missing in-app install event handling/CTA. No site-side Android eligibility failure was reproduced, including before the change. Physical-device shortcut behavior is therefore still unexplained; Android emulation cannot test Android's WebAPK creation. Remaining exact next step: physical Android Chrome installation using the live CTA, then launch from the home screen and confirm standalone display and no CTA. No APK, notifications, full iOS testing or later phase work.
