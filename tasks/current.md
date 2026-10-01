@@ -1,3 +1,9 @@
+# Current task — Havato PWA Phase 2, Step 1
+
+User-authorized 2026-10-01: foundation verification only on havato. See [scope and checks](completed/HAVATO-pwa-step1.md). Manifest/meta colors now match the existing public orange/cream palette; approved icons and launch settings verified. Focused local checks pass. Publish this checkpoint and verify the existing Darkube live manifest/meta/icons. Stop after Step 1; service worker remains Step 2.
+
+---
+
 # Current task — Havato desktop landing polish
 
 User-authorized frontend-only polish on havato, based on deployed 4e744a85ee547bcb931442c22e1105b45f0baf65. See [scope and verification](completed/HAVATO-desktop-polish.md). Implementation and focused local visual/CSS checks complete; GitHub publication and existing Darkube auto-deployment verification pending. No backend, assets, copy, routes, or mobile layout changes.

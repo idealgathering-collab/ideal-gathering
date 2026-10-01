@@ -33,3 +33,6 @@ export const brand = createBrand({
   VITE_BRAND_THEME_COLOR: import.meta.env.VITE_BRAND_THEME_COLOR,
 });
 export const logoAsset = { url: brand.logoUrl };
+
+// Match the public Havato landing palette without changing application styles.
+export const pwaColors = { theme: "#ed531c", background: "#fff6e9" };
