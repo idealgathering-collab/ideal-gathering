@@ -7,6 +7,26 @@
   color: #301b0e;
   font-family: "Vazirmatn", "Figtree", sans-serif;
 }
+.havato-install {
+  margin: 0 0 18px;
+}
+.havato-install-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 9px 17px;
+  border: 1px solid #e9d8c3;
+  border-radius: 99px;
+  background: #fffaf4;
+  color: #301b0e;
+  font: inherit;
+  cursor: pointer;
+}
+.havato-install-button:disabled {
+  opacity: .6;
+  cursor: wait;
+}
 .havato-public * {
   box-sizing: border-box;
 }

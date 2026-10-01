@@ -1,3 +1,9 @@
+# Current task — Havato PWA Phase 2, Step 3
+
+User-authorized 2026-10-01: Android installability diagnosis and public install CTA only on havato, baseline e462a85f061d9fb65e24814fe5cda4eabfb0b3c3. See [Step 3 implementation and checks](HAVATO-pwa-step3.md). Small bilingual CTA and early native event capture implemented; 14 focused tests, TypeScript, focused lint and actual component browser checks pass. Manifest/icons and service worker unchanged; no Android manifest blocker found in live HTTP checks. Publish and verify existing Darkube auto-deploy. Physical Android WebAPK installation/standalone launch still required; device-specific shortcut cause remains unconfirmed. Stop after Step 3.
+
+---
+
 # Current task — Havato PWA Phase 2, Step 2
 
 User-authorized 2026-10-01: service worker, safe static caching and offline fallback only on havato. Baseline 40047719c3706eb11f4b1ee612158c608fb21e16; Step 1 live verification passed. See [Step 2 scope and checks](completed/HAVATO-pwa-step2.md). Focused worker and isolated browser checks pass. Publish checkpoint, allow existing Darkube auto-deploy, then verify live registration/offline/reconnect behavior. Stop after Step 2; Step 3 remains Android install/standalone testing.

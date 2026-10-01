@@ -18,6 +18,10 @@ import { supabase } from "@/integrations/supabase/client";
 import { LanguageProvider, useT } from "@/i18n";
 import { MobileTabBar } from "@/components/mobile-tab-bar";
 import { registerServiceWorker } from "@/lib/register-service-worker";
+import { pwaInstall } from "@/lib/pwa-install";
+
+// Import eagerly so installation eligibility is captured before route hydration.
+void pwaInstall;
 
 
 function NotFoundComponent() {

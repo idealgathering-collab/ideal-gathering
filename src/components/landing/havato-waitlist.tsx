@@ -5,6 +5,7 @@ import { brand, logoAsset } from "@/config/brand";
 import { useI18n } from "@/i18n";
 import { supabase } from "@/integrations/supabase/client";
 import { joinHavatoWaitlist } from "@/lib/havato-waitlist";
+import { HavatoInstall } from "./havato-install";
 import "./havato-waitlist.css";
 
 const copy = {
@@ -143,6 +144,7 @@ export function HavatoWaitlist() {
             <span>{c.last}</span>
           </h1>
           <p className="havato-intro">{c.intro}</p>
+          <HavatoInstall />
           {done ? (
             <div className="havato-confirmation" role="status">
               <Check size={30} />
