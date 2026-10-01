@@ -13,15 +13,27 @@
 .havato-install-button {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  min-height: 44px;
-  padding: 9px 17px;
-  border: 1px solid #e9d8c3;
+  justify-content: center;
+  gap: 10px;
+  min-height: 50px;
+  padding: 12px 24px;
+  border: 1px solid #301b0e;
   border-radius: 99px;
-  background: #fffaf4;
-  color: #301b0e;
+  background: #301b0e;
+  color: #fff6e9;
   font: inherit;
+  font-size: 16px;
+  font-weight: 700;
+  box-shadow: 0 4px 12px #301b0e18;
   cursor: pointer;
+}
+.havato-install-button:hover:not(:disabled) {
+  background: #4b2c18;
+}
+.havato-install-button svg {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
 }
 .havato-install-button:disabled {
   opacity: .6;
@@ -425,6 +437,9 @@
   }
 }
 @media (max-width: 800px) {
+  .havato-install-button {
+    width: 100%;
+  }
   .havato-header {
     padding: 25px 7% 18px;
   }
