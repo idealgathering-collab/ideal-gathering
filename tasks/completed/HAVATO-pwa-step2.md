@@ -1,0 +1,13 @@
+# Havato PWA Phase 2 — Step 2
+
+Approval: user request, 2026-10-01; service worker/static caching/offline fallback only, publish to havato and verify existing Darkube auto-deployment. Baseline 40047719c3706eb11f4b1ee612158c608fb21e16.
+
+Implementation: root React effect registers /sw.js in production secure contexts, once per page, after load; scope / and updateViaCache none. Explicit checks at registration and when returning to a visible tab. New workers skip waiting, claim clients and remove only obsolete Havato caches. No forced reload, preserving unfinished forms. Bump the worker cache version when changing precached offline content/icons; network-only navigations and network-first fingerprinted assets avoid stale app shells.
+
+The install cache contains only the self-contained bilingual offline page and existing approved icons. Exact public files and fingerprinted build JS/CSS/WOFF2 without queries use bounded (64 entries) network-first caching, credential omission, expected MIME validation and rejection of private/no-store/redirected responses. Account/session HTML, API/server calls, Supabase/cross-origin traffic, POSTs and authorization requests are never cached. Navigations preserve normal network requests and only show generic fallback on network failure. An embedded fallback also handles an evicted offline entry. No form queue/background synchronization.
+
+Focused checks: node --test tests/pwa-service-worker.test.mjs; node --check public/sw.js; focused registration TypeScript check; ESLint on registration/root with existing formatting rule disabled; git diff --check. Isolated local Edge browser verifies actual registration/root controller, no sensitive cache entries, offline navigation, retry after reconnect, new-worker activation/old-cache cleanup and preservation of an unsent form without reload. No broad test suites or local full build requested/run. Existing GitHub container workflow runs on publication.
+
+Publication/live verification: pending at commit preparation. Verify /sw.js MIME/content, unchanged manifest/icons, deployed application registration and active controller in an isolated browser; simulate offline navigation and reconnect/retry; inspect cache keys and normal online waitlist/auth responses without submitting data. Darkube panel status is separate from public rollout observations.
+
+Preserved: homepage design/copy, all branding, Step 1 manifest values, auth/backend/waitlist logic, venue/admin/owner routes, Ideal Gathering production, database and deployment configuration. No push notifications, Android installation, iPhone testing or session-persistence work. Stop after Step 2; Step 3 is Android install/standalone behavior.

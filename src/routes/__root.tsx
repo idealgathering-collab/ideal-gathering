@@ -17,6 +17,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { LanguageProvider, useT } from "@/i18n";
 import { MobileTabBar } from "@/components/mobile-tab-bar";
+import { registerServiceWorker } from "@/lib/register-service-worker";
 
 
 function NotFoundComponent() {
@@ -151,6 +152,8 @@ function RootShell({ children }: { children: ReactNode }) {
 }
 
 function RootComponent() {
+  useEffect(registerServiceWorker, []);
+
   const { queryClient } = Route.useRouteContext();
   const router = useRouter();
   const publicEntry = useRouterState({

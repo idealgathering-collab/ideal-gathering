@@ -1,3 +1,9 @@
+# Current task — Havato PWA Phase 2, Step 2
+
+User-authorized 2026-10-01: service worker, safe static caching and offline fallback only on havato. Baseline 40047719c3706eb11f4b1ee612158c608fb21e16; Step 1 live verification passed. See [Step 2 scope and checks](completed/HAVATO-pwa-step2.md). Focused worker and isolated browser checks pass. Publish checkpoint, allow existing Darkube auto-deploy, then verify live registration/offline/reconnect behavior. Stop after Step 2; Step 3 remains Android install/standalone testing.
+
+---
+
 # Current task — Havato PWA Phase 2, Step 1
 
 User-authorized 2026-10-01: foundation verification only on havato. See [scope and checks](completed/HAVATO-pwa-step1.md). Manifest/meta colors now match the existing public orange/cream palette; approved icons and launch settings verified. Focused local checks pass. Publish this checkpoint and verify the existing Darkube live manifest/meta/icons. Stop after Step 1; service worker remains Step 2.
