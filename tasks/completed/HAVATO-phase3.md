@@ -1,4 +1,6 @@
-# Havato Phase 3 — registration, waiting and activation
+# Havato Phase 3 — registration, waiting and activation COMPLETE
+
+Final status: core Phase 3 COMPLETE under the user-approved isolated browser acceptance scope. Google explicitly deferred. Latest acceptance section below supersedes historical incomplete checkpoints. No Phase 4 work.
 
 Approved by the user's explicit five-step request on 2026-10-02. Branch: `havato`; baseline `77ec3914572458a93ff9d6ff972df0925c40ca19`.
 
@@ -6,7 +8,7 @@ Approved by the user's explicit five-step request on 2026-10-02. Branch: `havato
 2. Allow public account registration through existing Supabase Auth and waitlist, retain the same identity/session, show bilingual closed-beta waiting, preserve product gates.
 3. Preserve existing invitation redemption, onboarding and launch controls; verify the same account advances to product without re-registration.
 4. Verify existing venue registration, pending, approval and dashboard gates. Fix only flow defects.
-5. Focused isolated/live verification, publish to havato, verify Darkube. Do not claim complete with unresolved OAuth or journey acceptance blockers.
+5. Focused isolated/live verification, publish to havato, verify Darkube. Latest user instruction explicitly excludes deferred Google from core Phase 3 completion; unresolved core journey acceptance still blocks completion.
 
 No Ideal Gathering production/backend access, second auth system, theme/PWA changes, unrelated refactor, push notifications, payments, native packaging or Phase 4.
 
@@ -45,3 +47,29 @@ Live https://havato-test.darkube.ir returns HTTP 200, but checks through 2026-10
 Browser E2E remains NOT RUN. A second official Chromium runtime attempt downloaded successfully but extraction failed with Windows EPERM realpath in the workspace; automatic download retry stopped. Local Vite servers start but cross-command localhost checks time out in this restricted environment. No account/backend data was written. Prepared browser harness is scratch only and not committed as a passing test. Isolated unit flow evidence is not a complete hosted journey.
 
 Next: verify Darkube deployed c6fed64 (or documentation descendant with identical app code), verify new live public signup/waiting UI; run isolated actual-browser signup/email-confirmation/sign-in/waiting/same-account invitation/activation and venue submission/approval/dashboard checks in a working browser environment. Confirm live email redirect/delivery safely on Havato. Mark core complete only after those checks; then return to Google provider setup. Phase 3 remains INCOMPLETE. Stop before Phase 4.
+
+## Live acceptance follow-up — 2026-10-02
+
+User narrowed this task to live acceptance of the published implementation and explicitly selected isolated browser fixtures. Do not create live accounts, send confirmation email, mutate approvals or enable Google. Email delivery and hosted administrative writes are therefore outside this acceptance pass. Google provider remains disabled in Havato project ntmnpmdjfrbporcvafei, deferred by user decision; this no longer blocks core Phase 3 completion. Stop after Phase 3.
+
+Remote havato still points to 30949e76aa62f4535a88ca6fb3abfc481daec285, whose application implementation is c6fed64cbe181b7151c8fa66306b977f0e7fb176. Exact-commit Linux container/startup checks passed for both commits (runs 37030736150 and 37029624830). Live auth now loads auth-2VISgTNA.js, contains the new registration/waitlist/confirmation behavior, and homepage exposes the new public signup link. The earlier old-bundle publication mismatch has cleared without app code changes. Darkube console presents login, so its exact deployed revision/build-log identity is unavailable; GitHub build success alone is not claimed as console deployment evidence.
+
+Actual live browser checks: new public signup and venue signup forms render, unauthenticated Explore redirects to sign-in, Farsi/RTL and English/LTR switch correctly. Live sw.js is byte-equivalent after line-ending normalization to public/sw.js; manifest responds 200 with Havato, standalone, orange #E87524 and cream #FBF3EA; offline.html responds 200. Existing app/PWA code unchanged.
+
+Portable Chromium 151 launched after a workspace-only runtime compatibility shim replaced the failing asynchronous path lookup with the working synchronous lookup. App dependencies/source remain unchanged. Installed Edge startup failure and initial extraction errors were tooling limitations, resolved for acceptance.
+
+## Final core acceptance — COMPLETE
+
+Actual Chromium at https://havato-test.darkube.ir loaded the deployed Phase 3 assets. Supabase Auth/REST/Storage and required TanStack server functions used isolated responses; no live account, waitlist, upload, invitation, venue or approval writes occurred. Safest isolated backend approval/launch states were selected explicitly by the user. This verifies the deployed client journeys, not hosted SQL/RLS, email delivery or real administrative writes.
+
+- User: fresh browser defaults to FA/RTL. Public email/password signup issued exactly one Auth signup and one existing waitlist insert, displayed persistent email-confirmation feedback, then sign-in reached the clean beta waiting page. Explore, dashboard and create-gathering redirected to pending before activation. Saved-session restoration in a fresh context retained the account and FA/RTL waiting page.
+- Activation: signed-in invitation redemption issued one redemption and no additional signup. Closed beta still routed to pending. Opening the existing beta launch flag routed an unfinished account to onboarding; ready profile state routed the same UUID to the actual rendered product dashboard. Existing identity persisted in the saved auth session.
+- Venue: signup displayed persistent confirmation feedback. The same fixture identity signed in, submitted one business with its owner_id and pending status, and reached the rendered pending page. Pending approval blocked dashboard access even with beta open; approved status still blocked access with beta closed. Approval plus beta open routed the same venue account to the rendered approved dashboard. Dashboard owner-business and empty analytics server-function results were isolated fixtures with the existing response schemas; no owner/admin console writes.
+- Language/mobile: EN/LTR and FA/RTL waiting states passed at 390×844 with no horizontal overflow; user and venue signup copy renders in both languages. Waiting and both dashboards were visually inspected. Existing orange/cream branding preserved.
+- PWA/session: active live service worker controlled the browser; offline navigation rendered the existing offline fallback, then reconnecting returned to pending with the retained session. Live worker matches repository; manifest/offline assets return 200. Native installation and physical devices were not repeated; prior Android acceptance and accepted iOS limitation remain. No PWA code changed.
+
+Focused browser checks ran from uncommitted workspace harnesses work/phase3-browser.cjs and work/phase3-venue-dashboard.cjs against the live origin. User acceptance passed before venue retries; only venue checks were repeated. Initial fixture failures were hydration timing, a broad map-image selector, and an incorrectly shaped analytics mock; corrected harness selectors/fixtures passed without app code changes. Previously passing 36 unit/17 PWA checks and exact-commit Linux builds were not unnecessarily rerun. Documentation diff check passes.
+
+No application changes or deployment fix was required during acceptance. Phase 3 implementation c6fed64 is demonstrably live through auth-2VISgTNA.js and new public signup/waiting behavior; published head 30949e76 is its documentation descendant with identical application code. Darkube console is logged out and exposes no confirmed revision, so exact 30949e76 console deployment identity remains unverified. The old-bundle mismatch has cleared; live site is healthy. This is an accepted deployment-observability limitation, not evidence of an old build.
+
+Remaining accepted limitations: live email delivery/confirmation-link consumption, hosted invitation/approval/RLS enforcement and physical installation were not exercised under the requested fixtures-only scope. Google remains intentionally deferred: Havato Supabase Google provider is disabled. No core acceptance blocker remains. Phase 3 COMPLETE under this user-defined scope. Stop; do not enable Google or start Phase 4.
