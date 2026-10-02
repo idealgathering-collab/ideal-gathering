@@ -1,3 +1,8 @@
+# Current task — Havato logo presentation
+
+User-authorized 2026-10-02 branding-only cleanup on havato, baseline ca58f01. [Scope and focused verification](completed/HAVATO-logo-presentation.md). Removed continuous logo rotation and old circular crops/tinted footer treatment; approved logo assets, image boxes, theme and all app/PWA behavior retained. 16 branding/config tests and TypeScript pass; focused lint matches six pre-existing owner-page errors. Desktop/mobile waitlist, sign-in, pending/loading and shared header/footer verified locally. Publish, verify Darkube and live; stop here, no Phase 3.
+
+---
 # Current task — Havato Phase 2 COMPLETE
 
 User-authorized finish pass on `havato` completed 2026-10-02. [Full scope and verification](completed/HAVATO-phase2-finish.md). Approved orange/cream palette applied; Steps 5–6 passed with recorded fixture/tooling limits. Implementation af01dbfb4aa2db4d38540fa3bd2f228f2994f6e5 published, Linux container CI passed, Darkube deployed and final live site verified. Entire Chromium reopen and actual v1→v2 worker upgrade preserve session/expiry and saved EN/FA/RTL; no auth changes. 17 PWA and 48 focused unit tests plus TypeScript pass; 8 exact baseline lint errors retained. Android physical acceptance relies on user's existing confirmation. Physical iPhone acceptance explicitly waived and accepted as non-blocking residual risk. No production/Supabase changes, push or native packages. Stop here; do not start Phase 3.

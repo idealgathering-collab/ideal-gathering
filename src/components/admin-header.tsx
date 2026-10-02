@@ -33,7 +33,7 @@ export function AdminHeader() {
     <header className="glass-card sticky top-0 z-40 w-full text-dark-secondary">
       <div className="mx-auto flex h-16 max-w-5xl items-center justify-between gap-3 px-4">
         <Link to={isOwner ? "/owner" : "/admin"} className="flex items-center gap-2">
-          <img src={logoAsset.url} alt="" className="h-9 w-9 rounded-full object-contain" />
+          <img src={logoAsset.url} alt="" className="h-9 w-9 shrink-0 object-contain" />
           <span className="font-display text-lg leading-none text-dark-heading">
             <span className="italic text-dark-primary">{brand.name}</span>
             <span className="ms-2 align-middle text-xs font-sans font-medium uppercase tracking-[0.14em] text-muted-foreground">

@@ -126,7 +126,7 @@ function HeroSection() {
                 aria-hidden
                 width={32}
                 height={32}
-                className="h-8 w-8 rounded-full object-contain"
+                className="h-8 w-8 shrink-0 object-contain"
               />
               <p className="text-xs leading-relaxed text-muted-foreground/72">
                 {t("landing.v3.hero.caption")}

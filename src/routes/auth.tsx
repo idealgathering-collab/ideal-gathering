@@ -152,7 +152,7 @@ function AuthPage() {
             <img
               src={logoAsset.url}
               alt=""
-              className="h-9 w-9 rounded-full object-contain animate-logo-spin"
+              className="h-9 w-9 shrink-0 object-contain"
             />
             <span className="font-display text-xl">
               <span className="italic">{brand.name}</span>

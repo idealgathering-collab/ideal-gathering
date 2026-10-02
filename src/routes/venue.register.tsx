@@ -127,7 +127,7 @@ function VenueRegisterPage() {
               <ArrowLeft className="h-4 w-4 rtl:rotate-180" />
             </Button>
             <Link to="/" className="flex items-center gap-2">
-              <img src={logoAsset.url} alt="" className="h-9 w-9 rounded-full object-contain" />
+              <img src={logoAsset.url} alt="" className="h-9 w-9 shrink-0 object-contain" />
               <span className="font-display text-lg"><span className="italic text-primary">{brand.name}</span></span>
             </Link>
           </div>

@@ -108,7 +108,7 @@ export function SiteHeader() {
             <img
               src={logoAsset.url}
               alt={brand.name}
-              className="h-9 w-9 rounded-full object-contain animate-logo-spin"
+              className="h-9 w-9 shrink-0 object-contain"
             />
             <span className="font-display text-xl leading-none hidden xs:inline sm:inline text-dark-heading">
               <span className="italic text-dark-primary">{brand.name}</span>

@@ -43,7 +43,7 @@ function OwnerVenuePreviewPage() {
       <header className="sticky top-0 z-40 border-b border-border/60 bg-background/90 backdrop-blur-xl">
         <div className="mx-auto flex h-16 max-w-5xl items-center justify-between gap-3 px-4">
           <Link to="/owner" className="flex items-center gap-2">
-            <img src={logoAsset.url} alt="" className="h-9 w-9 rounded-full object-contain" />
+            <img src={logoAsset.url} alt="" className="h-9 w-9 shrink-0 object-contain" />
             <span className="font-display text-lg"><span className="italic text-primary">{brand.name}</span></span>
             <Badge variant="outline" className="ms-1 rounded-full">Owner · View as Venue</Badge>
           </Link>

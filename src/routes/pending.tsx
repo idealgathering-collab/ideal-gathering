@@ -72,7 +72,7 @@ function PendingPage() {
 
       <header className="relative z-20 mx-auto flex w-full max-w-4xl items-center justify-between px-4 py-6">
         <Link to="/" className="flex items-center gap-2 text-foreground">
-          <img src={logoAsset.url} alt="" aria-hidden className="h-9 w-9 rounded-full object-contain" />
+          <img src={logoAsset.url} alt="" aria-hidden className="h-9 w-9 shrink-0 object-contain" />
           <span className="font-display text-lg">
             <span className="italic text-nebula-violet">{brand.name}</span>
           </span>

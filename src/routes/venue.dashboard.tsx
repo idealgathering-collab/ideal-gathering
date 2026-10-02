@@ -154,7 +154,7 @@ function VenueDashboard() {
             <img
               src={logoAsset.url}
               alt=""
-              className="h-9 w-9 rounded-full object-contain animate-logo-spin"
+              className="h-9 w-9 shrink-0 object-contain"
             />
             <span className="hidden font-display text-lg sm:inline">
               <span className="italic text-primary">{brand.name}</span>

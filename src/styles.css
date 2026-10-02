@@ -252,9 +252,6 @@
   }
 }
 
-@keyframes logo-idle-spin {
-  to { transform: rotate(360deg); }
-}
 @keyframes magic-glow-pulse {
   0%, 100% {
     filter:
@@ -622,7 +619,7 @@
   .cosmic-panel, .cosmic-panel::after, .cosmic-cta, .cosmic-cta::after,
   .cosmic-aura, .animate-shooting-star, .animate-sparkle-drift,
   .animate-emblem-glow, .animate-headline-glow,
-  .animate-logo-spin, .animate-flag-pulse {
+  .animate-flag-pulse {
     animation: none !important;
   }
 
@@ -653,9 +650,6 @@
 
 
 
-@utility animate-logo-spin {
-  animation: logo-idle-spin 24s linear infinite;
-}
 @utility animate-flag-pulse {
   animation: flag-pulse-glow 1.4s ease-in-out infinite;
   will-change: filter, opacity, transform;

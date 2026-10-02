@@ -73,7 +73,7 @@ function InvitePage() {
             <ArrowLeft className="h-4 w-4 rtl:rotate-180" />
           </Button>
           <Link to="/" className="inline-flex items-center gap-2 text-foreground">
-            <img src={logoAsset.url} alt="" aria-hidden className="h-9 w-9 rounded-full object-contain" />
+            <img src={logoAsset.url} alt="" aria-hidden className="h-9 w-9 shrink-0 object-contain" />
             <span className="font-display text-xl">
               <span className="italic text-nebula-violet">{brand.name}</span>
             </span>

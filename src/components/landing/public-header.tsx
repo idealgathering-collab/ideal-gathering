@@ -75,7 +75,7 @@ export function PublicHeader({
               alt={brand.name}
               width={36}
               height={36}
-              className="h-9 w-9 rounded-full object-contain"
+              className="h-9 w-9 shrink-0 object-contain"
             />
             <span className="font-serif-warm text-lg font-semibold tracking-tight text-foreground">
               {brand.name}
