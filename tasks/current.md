@@ -1,6 +1,6 @@
-# Current task — Havato Phase 2 finish
+# Current task — Havato Phase 2 COMPLETE
 
-User-authorized 2026-10-02 on `havato`: approved palette migration and remaining Steps 5–6 only. See [scope and verification](HAVATO-phase2-finish.md). Shared theme and remaining purple UI updated, launch/offline colors aligned, worker cache v2. Chromium full-browser session/reopen/EN/FA/standalone/offline checks pass with isolated fixtures; no auth behavior changes. 17 PWA and 48 focused unit tests pass; TypeScript passes; focused lint retains 8 proven baseline errors. Publication, Linux build and final live verification in progress. Prior physical Android accepted; physical iPhone explicitly skipped by user and accepted as residual risk. Stop before Phase 3.
+User-authorized finish pass on `havato` completed 2026-10-02. [Full scope and verification](completed/HAVATO-phase2-finish.md). Approved orange/cream palette applied; Steps 5–6 passed with recorded fixture/tooling limits. Implementation af01dbfb4aa2db4d38540fa3bd2f228f2994f6e5 published, Linux container CI passed, Darkube deployed and final live site verified. Entire Chromium reopen and actual v1→v2 worker upgrade preserve session/expiry and saved EN/FA/RTL; no auth changes. 17 PWA and 48 focused unit tests plus TypeScript pass; 8 exact baseline lint errors retained. Android physical acceptance relies on user's existing confirmation. Physical iPhone acceptance explicitly waived and accepted as non-blocking residual risk. No production/Supabase changes, push or native packages. Stop here; do not start Phase 3.
 
 ---
 # Current task — Havato PWA Phase 2, Step 4
