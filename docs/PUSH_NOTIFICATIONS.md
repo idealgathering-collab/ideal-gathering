@@ -45,6 +45,14 @@ disposable schema by `tests/push-subscriptions.local.mjs --write-types` and
 subsequently verified by that same script without the flag; existing unrelated
 types are preserved.
 
+Rollout 2026-10-03: applied this exact migration through the signed-in Havato SQL
+editor and recorded version/name/statements in `supabase_migrations.schema_migrations`.
+Confirmed RLS enabled and four policies. `tests/push-subscriptions.hosted.sql`
+passed actual own-user insert/read/upsert/delete, multi-device and denied
+cross-user read/insert/update/delete/reassignment/endpoint takeover. All synthetic
+accounts/endpoints rolled back; no email or real push sent. Public VAPID build
+configuration remains unset, so actual provider registration is not claimed.
+
 Before enabling creation, verify the project identity, execute the additive
 migration and verify its RLS/grants with two designated test users. Hosted RLS
 verification is separate from disposable PostgreSQL evidence. If rollback is

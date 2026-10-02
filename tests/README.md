@@ -230,3 +230,17 @@ save-error, pending, rejected, unverified, locked and ownerPreview with the fixt
 business UUID. Synthetic in-memory editing only; no hosted services/credentials.
 It is not a production build workaround. Stop services and reset viewport afterward.
 See [exact results](../tasks/completed/IG-008-verification.md).
+
+## Havato push foundation (Notifications Phase 1)
+
+`node tests/push-subscriptions.local.mjs <absolute pglite/dist/index.js>` executes
+the additive migration in a disposable in-memory PostgreSQL database and checks
+ownership, duplicate/multi-device behavior, grants, constraints and generated
+table types. It reads no hosted credentials. `--write-types` selectively generates
+the new table entry only when it is absent.
+
+`tests/push-subscriptions.hosted.sql` is opt-in and must run ONLY in the verified
+Havato project `ntmnpmdjfrbporcvafei`. It creates two synthetic accounts/endpoints
+inside one transaction, tests actual authenticated-role RLS, and rolls everything
+back. It neither changes existing users nor sends email/push. Never use it on
+Ideal Gathering production; never remove its transaction/rollback safeguards.

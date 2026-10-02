@@ -1,6 +1,6 @@
 # Havato Notifications Phase 1 — push foundation
 
-Status: implementation verified locally; hosted rollout pending.
+Status: foundation code/schema deployed; real-provider enablement awaits public VAPID configuration.
 Approval: explicit user request 2026-10-03, Notifications Phase 1 only.
 Branch: `havato`; baseline `0a3c8bd`. Existing product phases accepted complete.
 
@@ -33,15 +33,46 @@ no physical-device or real provider subscription success is claimed. Full-route
 local dev preview hit the baseline React CJS/SSR environment error; standalone
 component preview passed after workspace-only Vite runtime/path setup repairs.
 
-Hosted migration/public VAPID build key are NOT configured or verified. User
-confirmed existing signed-in sessions, but browser control twice timed out and
-computer-use initialization/retry timed out. No hosted accounts/subscriptions
-were written and no private key was created or exposed. Subscription code is
-safely disabled when the public key is absent.
+Published implementation `cb1aafb7174e7347203f0163320dd969c5a3212a` on `havato`.
+API-created tree exactly matches the reviewed staged tree. Exact-commit Linux
+container build/stateless startup passed in Actions run 37071466599. Darkube
+console confirms deployed image cb1aafb7-b15448, healthy and Running, build
+86b8e1cf-ea86-4be7-9eac-df20eff50b91. Live sign-in HTTP 200/Havato confirmed.
 
-Next: publish only havato; verify exact-commit
-Linux CI and live bundles/PWA health. Restore supported browser access, confirm
-Havato project identity, apply the tested additive migration there, configure
-the public half of a retained VAPID pair in Havato Darkube build arguments and
-verify hosted own-user registration/removal. Do not label Phase 1 fully complete
-until those hosted steps close. Stop before Notifications Phase 2.
+Browser access recovered after the user signed in to this chat's pages. Verified
+Havato project name/ref before applying the exact additive migration there and
+recording its version/name/statements in the hosted ledger. RLS enabled/four
+policies confirmed. Hosted SQL effective-authenticated-role ownership tests pass
+own CRUD, duplicate/multi-device and denial of cross-user read/insert/update/
+delete/reassignment/endpoint takeover. All synthetic users/endpoints rolled back;
+no existing account changes or email/push delivery. Initial editor inspection
+replacement affected only Monaco's current line; duplicate DDL was rejected and
+rolled back. Explicit select-all replacement fixed the inspection, with final
+schema/ledger and test success verified.
+
+Public `VITE_WEB_PUSH_VAPID_PUBLIC_KEY` is absent from the verified Havato Darkube
+build arguments. No private pair was generated, configured or exposed. This
+phase supplies the hooks, as the user requested; actual browser push-provider
+subscribe/unsubscribe is not claimed. No sending implementation or Phase 2 work.
+
+Remaining enablement: supply the public half of a securely retained real VAPID
+pair in Havato Darkube build arguments, rebuild and verify actual provider
+registration/removal. Server private credentials stay in encrypted secrets;
+Phase 1 does not consume them. Do not claim end-to-end physical-device success.
+Notifications Phase 2 remains sending/worker delivery and stale-endpoint cleanup;
+events/chat/preferences remain excluded. Stop here.
+
+## Final live verification
+
+Live Chromium desktop and Pixel 7 emulation at havato-test.darkube.ir passed:
+HTTP 200, new notification entry/denied-permission status, disabled Enable, zero
+initial prompts, zero installability errors, unchanged manifest/worker/icon bytes
+and orange/cream metadata, FA/RTL without overflow, offline fallback and online
+session restoration. Auth/REST and empty PushManager lookup used isolated
+fixtures; no live account/subscription writes. Headless browser notification
+permission remained denied even when an ephemeral test context requested a grant;
+this is not physical-device acceptance or actual push-provider registration.
+Earlier expected-missing-key assertions were corrected to match the observed
+denied-permission state. Live implementation and exact-commit Darkube status
+are confirmed. Public key configuration and real-device/provider verification
+remain enablement requirements. No sending work started.
