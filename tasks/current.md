@@ -1,6 +1,6 @@
 # Current task — Havato PWA Phase 2, Step 4
 
-User-authorized 2026-10-02: iPhone/iOS install setup and focused testing only on `havato`, baseline `6cf68a20757dc8765f712f4f31820b621639bef9`. See [Step 4 scope and verification](HAVATO-pwa-step4.md). Existing iOS controller and Android native install behavior preserved. Added Apple Home Screen metadata and clarified bilingual Safari instructions. Local focused checks pass; publication/live verification in progress. Physical iPhone installation/launch remains required. Stop after Step 4; no session persistence, final cross-device checks, color migration, push, backend or production work.
+User-authorized 2026-10-02: iPhone/iOS install setup and focused testing only on `havato`, baseline `6cf68a20757dc8765f712f4f31820b621639bef9`. See [Step 4 scope and verification](HAVATO-pwa-step4.md). Existing iOS controller and Android native install behavior preserved. Added Apple Home Screen metadata and clarified bilingual Safari instructions. Implementation `0b0ba3d0abd7410838e1d3c0cc9f31822ec62b37` published; Linux CI, Darkube auto-deploy and live WebKit EN/FA/standalone plus Android native-eligibility checks pass. Physical iPhone installation/launch remains required. Stop after Step 4; no session persistence, final cross-device checks, color migration, push, backend or production work.
 
 ---
 # Current task — Havato PWA Phase 2, Step 3
