@@ -2,12 +2,12 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { createPwaInstall } from "../src/lib/pwa-install.ts";
 
-function setup({ ios = false, standalone = false, ipad = false } = {}) {
+function setup({ ios = false, standalone = false, ipad = false, userAgent, appleStandalone = false } = {}) {
   const target = new EventTarget();
   const display = new EventTarget();
   display.matches = standalone;
   target.matchMedia = () => display;
-  const nav = { userAgent: ios ? "iPhone" : "Android Chrome", platform: ipad ? "MacIntel" : "", maxTouchPoints: ipad ? 5 : 0 };
+  const nav = { userAgent: userAgent ?? (ios ? "iPhone" : "Android Chrome"), platform: ipad ? "MacIntel" : "", maxTouchPoints: ipad ? 5 : 0, standalone: appleStandalone };
   const install = createPwaInstall(target, nav);
   return { target, display, install };
 }
@@ -82,4 +82,28 @@ test("prompt failure consumes the event without claiming success", async () => {
   assert.equal(install.getSnapshot(), "hidden");
   await install.prompt();
   assert.equal(offered.calls(), 1);
+});
+
+test("realistic iOS browser agents use guidance, never a native prompt", async () => {
+  for (const browser of ["Version/18.0 Mobile/15E148 Safari/604.1", "CriOS/140.0.0.0 Mobile/15E148 Safari/604.1", "FxiOS/140.0 Mobile/15E148 Safari/605.1.15"]) {
+    const { target, install } = setup({ userAgent: `Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 ${browser}` });
+    const offered = offer(target);
+    assert.equal(install.getSnapshot(), "ios");
+    await install.prompt();
+    assert.equal(offered.calls(), 0);
+  }
+});
+
+test("Apple navigator.standalone suppresses guidance independently of display-mode", () => {
+  for (const options of [{ ios: true }, { ipad: true }]) {
+    assert.equal(setup({ ...options, appleStandalone: true }).install.getSnapshot(), "hidden");
+  }
+});
+
+test("iOS guidance disappears when display-mode becomes standalone", () => {
+  const { display, install } = setup({ ios: true });
+  assert.equal(install.getSnapshot(), "ios");
+  display.matches = true;
+  display.dispatchEvent(new Event("change"));
+  assert.equal(install.getSnapshot(), "hidden");
 });

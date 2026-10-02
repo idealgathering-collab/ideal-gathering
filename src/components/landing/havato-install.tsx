@@ -35,8 +35,8 @@ export function HavatoInstall() {
         <DialogContent dir={fa ? "rtl" : "ltr"}>
           <DialogTitle>{fa ? "افزودن هواتو به صفحه اصلی" : "Add Havato to your Home Screen"}</DialogTitle>
           <DialogDescription>{fa
-            ? "این صفحه را در Safari باز کن، روی اشتراک‌گذاری بزن و «افزودن به صفحه اصلی» را انتخاب کن، سپس «افزودن» را بزن."
-            : "Open this page in Safari, tap Share, choose Add to Home Screen, then tap Add."}</DialogDescription>
+            ? "این صفحه را در Safari باز کن. روی «اشتراک‌گذاری» (Share) بزن؛ اگر لازم بود، ابتدا منوی صفحه را باز کن. «افزودن به صفحه اصلی» (Add to Home Screen) را انتخاب کن. اگر گزینه «باز کردن به‌صورت برنامه وب» (Open as Web App) نمایش داده شد، آن را روشن نگه دار، سپس «افزودن» (Add) را بزن."
+            : "Open this page in Safari. Tap Share (open the page menu first if needed), then choose Add to Home Screen. If Open as Web App is shown, keep it on, then tap Add."}</DialogDescription>
         </DialogContent>
       </Dialog>
     </div>

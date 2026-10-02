@@ -1,3 +1,8 @@
+# Current task — Havato PWA Phase 2, Step 4
+
+User-authorized 2026-10-02: iPhone/iOS install setup and focused testing only on `havato`, baseline `6cf68a20757dc8765f712f4f31820b621639bef9`. See [Step 4 scope and verification](HAVATO-pwa-step4.md). Existing iOS controller and Android native install behavior preserved. Added Apple Home Screen metadata and clarified bilingual Safari instructions. Local focused checks pass; publication/live verification in progress. Physical iPhone installation/launch remains required. Stop after Step 4; no session persistence, final cross-device checks, color migration, push, backend or production work.
+
+---
 # Current task — Havato PWA Phase 2, Step 3
 
 User-authorized 2026-10-01: Android installability diagnosis and public install CTA only on havato, baseline e462a85f061d9fb65e24814fe5cda4eabfb0b3c3. See [Step 3 implementation and checks](HAVATO-pwa-step3.md). Small bilingual CTA and early native event capture implemented; 14 focused tests, TypeScript, focused lint and actual component browser checks pass. Manifest/icons and service worker unchanged; no Android manifest blocker found in live HTTP checks. Implementation published as 2992f4b00e6f57a259da99c3f6a1d039daa8234b; Linux container CI passed and Darkube public rollout verified. Live normal Chrome desktop and Android emulation report zero installability errors, emit a real native event, show the CTA and invoke the native prompt once; worker remains active/unchanged. Physical Android WebAPK installation/standalone launch still required; device-specific shortcut cause remains unconfirmed. Next: complete that physical-device check; stop after Step 3.
