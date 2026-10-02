@@ -31,7 +31,7 @@ export async function homePathForUser(userId: string, redirect?: string): Promis
   if (access.isOwner && !isAdminPreview()) return "/owner";
   if (access.isAdmin && !isAdminPreview()) return "/admin";
   if (access.isVenue && !access.isAdmin && !access.isOwner) return "/venue/dashboard";
-  if (!access.hasProductAccess) return access.onboarded ? "/pending" : "/onboarding";
+  if (!access.hasProductAccess) return !access.betaLaunched || access.onboarded ? "/pending" : "/onboarding";
   if (redirect && redirect.startsWith("/") && !redirect.startsWith("//")) return redirect;
   return "/dashboard";
 }

@@ -217,6 +217,9 @@ export function HavatoWaitlist() {
               <p>{c.note}</p>
             </div>
           </div>
+          <Link to="/auth" search={{ mode: "signup" }} className="havato-signin">
+            {language === "fa" ? "ساخت حساب و انتظار برای آغاز بتا" : "Create an account and wait for beta"}
+          </Link>
           <Link to="/auth" search={{ mode: "signin" }} className="havato-signin">
             {c.signin}
           </Link>

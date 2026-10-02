@@ -138,11 +138,11 @@ function VenueRegisterPage() {
       <main className="mx-auto max-w-3xl px-4 py-10 pb-24">
         <div className="mb-8">
           <div className="inline-flex items-center gap-2 rounded-full border border-border bg-muted/40 px-3 py-1 text-xs font-medium">
-            <Store className="h-3.5 w-3.5" /> Venue registration
+            <Store className="h-3.5 w-3.5" /> {t("phase3.venueBadge")}
           </div>
-          <h1 className="font-display mt-4 text-3xl sm:text-4xl">Register your business for launch</h1>
+          <h1 className="font-display mt-4 text-3xl sm:text-4xl">{t("phase3.venueTitle")}</h1>
           <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-            Complete your venue registration now. Your venue profile and dashboard tools will stay locked until Havato launches.
+            {t("phase3.venueBody")}
           </p>
         </div>
 

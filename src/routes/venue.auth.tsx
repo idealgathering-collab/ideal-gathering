@@ -39,6 +39,7 @@ function VenueAuth() {
   const [businessName, setBusinessName] = useState("");
   const [agree, setAgree] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [confirmationSent, setConfirmationSent] = useState(false);
 
   useEffect(() => {
     supabase.auth.getSession().then(async ({ data }) => {
@@ -80,6 +81,8 @@ function VenueAuth() {
         toast.success(t("venueAuth.welcome"));
         if (data.user && data.session) {
           navigate({ to: "/venue/register" });
+        } else {
+          setConfirmationSent(true);
         }
         return;
       }
@@ -151,6 +154,7 @@ function VenueAuth() {
             {mode === "signup" ? t("venueAuth.subtitle.signup") : t("venueAuth.subtitle.signin")}
           </p>
 
+          {confirmationSent && <p role="status" className="mt-6">{t("venueAuth.welcome")}</p>}
           <form onSubmit={submit} className="mt-6 grid gap-4">
             {mode === "signup" && (
               <div className="grid gap-2">

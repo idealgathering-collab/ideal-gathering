@@ -19,7 +19,7 @@ export async function requireProductAccess(location: { pathname: string; href: s
     throw redirect({ to: "/pending", search: { as: "venue" }, replace: true });
   }
   if (!access.hasProductAccess) {
-    throw redirect({ to: access.onboarded ? "/pending" : "/onboarding", replace: true });
+    throw redirect({ to: !access.betaLaunched || access.onboarded ? "/pending" : "/onboarding", replace: true });
   }
   return { user: data.user };
 }

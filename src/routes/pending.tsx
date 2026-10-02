@@ -1,4 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useEffect } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Clock, LogOut, RefreshCw, Sparkles } from "lucide-react";
 import { CosmicBackdrop } from "@/components/cosmic-backdrop";
@@ -44,6 +45,10 @@ function PendingPage() {
 
   const isVenue = as === "venue" || access?.isVenue;
 
+  useEffect(() => {
+    if (!loading && !user) navigate({ to: "/auth", search: { mode: "signin" }, replace: true });
+  }, [loading, user, navigate]);
+
   async function signOut() {
     await qc.cancelQueries();
     qc.clear();
@@ -62,6 +67,8 @@ function PendingPage() {
     ? access?.hasBusiness
       ? "pending.venue.applied"
       : "pending.venue.register"
+    : !access?.betaLaunched
+    ? "phase3.waiting"
     : access?.onboarded
     ? "pending.member.ready"
     : "pending.member.finishOnboarding";
@@ -119,6 +126,8 @@ function PendingPage() {
                   ? access?.hasBusiness
                     ? t("pending.status.venueApplied")
                     : t("pending.status.venueNoApp")
+                  : !access?.betaLaunched
+                  ? t("phase3.waitingStatus")
                   : access?.onboarded
                   ? t("pending.status.memberReady")
                   : t("pending.status.memberOnboarding")}
@@ -127,6 +136,11 @@ function PendingPage() {
           </div>
 
           <div className="mt-6 grid gap-2">
+            {!isVenue && (
+              <Button asChild variant="outline" className="h-11 rounded-full">
+                <Link to="/invite">{t("phase3.haveInvite")}</Link>
+              </Button>
+            )}
             {!isVenue && !access?.onboarded && (
               <Button asChild className="h-11 rounded-full">
                 <Link to="/onboarding" search={{ step: "welcome" }}>

@@ -6,6 +6,8 @@ import { ArrowLeft } from "lucide-react";
 import { brand, logoAsset } from "@/config/brand";
 import { supabase } from "@/integrations/supabase/client";
 import { signInWithGoogle } from "@/integrations/supabase/oauth";
+import { authReturnUrl } from "@/lib/auth-return";
+import { registerWaitingUser } from "@/lib/waiting-registration";
 import { Button } from "@/components/ui/button";
 import { useT } from "@/i18n";
 import { LanguageSwitcher } from "@/components/language-switcher";
@@ -46,6 +48,7 @@ function AuthPage() {
   const [name, setName] = useState("");
   const [agree, setAgree] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [confirmationSent, setConfirmationSent] = useState(false);
   const t = useT();
 
   useEffect(() => setCurrent(mode), [mode]);
@@ -88,25 +91,23 @@ function AuthPage() {
           toast.error(t("consent.required"));
           return;
         }
-        // Private beta: new accounts need a working invitation.
+        // Invitations remain optional; closed-beta access is enforced by existing gates.
         const code = invite ?? readInvite();
-        if (!code || !(await checkInvitation(code))) {
-          toast.error(t("beta.needInvite"));
-          navigate({ to: "/invite" });
+        if (code && !(await checkInvitation(code))) {
+          toast.error(t("invite.invalid"));
           return;
         }
-        rememberInvite(code);
+        if (code) rememberInvite(code);
         const nm = nameSchema.parse(name);
-        const { error } = await supabase.auth.signUp({
-          email: em,
-          password: pw,
-          options: {
-            emailRedirectTo: `${window.location.origin}${redirect ?? ""}`,
-            data: { display_name: nm, account_type: "user" },
-          },
+        const data = await registerWaitingUser({
+          name: nm, email: em, password: pw,
+          returnUrl: authReturnUrl(window.location.origin, redirect),
         });
-        if (error) throw error;
-        toast.success(t("auth.welcomeIn"));
+        if (!data.session) {
+          setConfirmationSent(true);
+          return;
+        }
+        toast.success(t("phase3.registered"));
       } else {
         const { error } = await supabase.auth.signInWithPassword({ email: em, password: pw });
         if (error) throw error;
@@ -182,7 +183,7 @@ function AuthPage() {
                   try {
                     setLoading(true);
                     const result = await signInWithGoogle(
-                      `${window.location.origin}${redirect ?? ""}`,
+                      authReturnUrl(window.location.origin, redirect),
                     );
                     if (result.error) throw result.error;
                     if (result.redirected) return;
@@ -222,7 +223,7 @@ function AuthPage() {
                 <span>{t("beta.inviteApplied")}</span>
               ) : (
                 <span>
-                  {t("beta.needInvite")}{" "}
+                  {t("phase3.signupWaiting")}{" "}
                   <Link to="/invite" className="text-primary hover:underline">
                     {t("beta.cta.invite")}
                   </Link>
@@ -232,7 +233,14 @@ function AuthPage() {
           )}
           {isSignup && !isForgot && <QuizSavedNote />}
 
-          <form onSubmit={handleSubmit} className="grid gap-4">
+          {confirmationSent ? (
+            <div role="status" className="grid gap-4">
+              <p>{t("phase3.confirmEmail")}</p>
+              <Button onClick={() => { setConfirmationSent(false); setCurrent("signin"); }}>
+                {t("auth.signIn")}
+              </Button>
+            </div>
+          ) : <form onSubmit={handleSubmit} className="grid gap-4">
 
             {isSignup && !isForgot && (
               <div className="grid gap-2">
@@ -333,7 +341,7 @@ function AuthPage() {
                 ? t("auth.signUp")
                 : t("auth.signIn")}
             </Button>
-          </form>
+          </form>}
 
           {isForgot ? (
             <button
