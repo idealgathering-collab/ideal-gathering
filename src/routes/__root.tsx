@@ -19,6 +19,7 @@ import { LanguageProvider, useT } from "@/i18n";
 import { MobileTabBar } from "@/components/mobile-tab-bar";
 import { registerServiceWorker } from "@/lib/register-service-worker";
 import { pwaInstall } from "@/lib/pwa-install";
+import { revokeBrowserPush } from "@/lib/web-push";
 
 // Import eagerly so installation eligibility is captured before route hydration.
 void pwaInstall;
@@ -165,6 +166,8 @@ function RootComponent() {
   useEffect(() => {
     const { data: sub } = supabase.auth.onAuthStateChange((event) => {
       if (event !== "SIGNED_IN" && event !== "SIGNED_OUT" && event !== "USER_UPDATED") return;
+      // Revoke the local endpoint even when a session expires or another tab signs out.
+      if (event === "SIGNED_OUT") void revokeBrowserPush().catch(() => {});
       router.invalidate();
       if (event !== "SIGNED_OUT") queryClient.invalidateQueries();
     });

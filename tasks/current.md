@@ -1,3 +1,12 @@
+# Current task — Havato Notifications Phase 1: hosted rollout pending
+
+User-approved 2026-10-03 push foundation only on `havato`, baseline 0a3c8bd.
+[Scope and verified checkpoint](HAVATO-notifications-phase1.md) · [Architecture, schema rollout and exact env names](../docs/PUSH_NOTIFICATIONS.md).
+Reusable opt-in permission entry on authenticated waiting/settings pages, existing worker subscription creation/removal, authenticated PostgREST persistence, global endpoint uniqueness, own-user RLS, minimal delivery metadata and sign-out revocation implemented. No sending/triggers/chat/preferences/analytics/Bazaar or Ideal Gathering production changes.
+68 focused unit + 17 existing PWA + 20 disposable PostgreSQL ownership/constraint/type checks pass. TypeScript and focused lint pass. Actual component Chromium desktop/Android emulation covers tap-only permission, save/remove, failure rollback/retry and FA/RTL layout using isolated browser/Auth/backend fixtures. Windows final packaging hits the existing tslib realpath EPERM; exact-commit Linux CI/live verification pending publication.
+Hosted migration and retained VAPID public-key configuration remain incomplete: existing signed-in sessions were confirmed by the user but both browser and computer-use connections timed out. No hosted subscription write or private key creation. Blank config safely disables Enable. Publish this checkpoint and verify live health; then restore Havato-only backend/deployment access to apply the tested migration and public build key. Phase 1 is not fully complete until hosted registration/removal is verified. Stop before Notifications Phase 2.
+
+---
 # Current task — Havato Phase 3 COMPLETE
 
 [Completed scope and acceptance](completed/HAVATO-phase3.md). User explicitly selected isolated browser fixtures and deferred Google. Published implementation c6fed64cbe181b7151c8fa66306b977f0e7fb176 / documentation head 30949e76aa62f4535a88ca6fb3abfc481daec285: both Linux container/startup checks passed. Live origin now serves Phase 3 auth-2VISgTNA.js and public signup link; previous old-bundle mismatch cleared. Darkube console requires login, so its exact deployed revision is unverified. Live implementation and HTTP 200 confirmed; no app/deployment code change needed.

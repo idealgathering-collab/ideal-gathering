@@ -14,6 +14,39 @@ export type Database = {
   }
   public: {
     Tables: {
+      push_subscriptions: {
+        Row: {
+          application_server_key: string
+          auth: string
+          created_at: string
+          endpoint: string
+          expiration_time: string | null
+          p256dh: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          application_server_key: string
+          auth: string
+          created_at?: string
+          endpoint: string
+          expiration_time?: string | null
+          p256dh: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          application_server_key?: string
+          auth?: string
+          created_at?: string
+          endpoint?: string
+          expiration_time?: string | null
+          p256dh?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       app_config: {
         Row: {
           beta_launched: boolean

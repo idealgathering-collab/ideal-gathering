@@ -10,6 +10,7 @@ import { useSession } from "@/hooks/use-session";
 import { fetchAccessState } from "@/lib/access";
 import { supabase } from "@/integrations/supabase/client";
 import { brand, logoAsset } from "@/config/brand";
+import { PushNotificationEntry } from "@/components/push-notification-entry";
 
 type PendingSearch = { as?: "venue" | "member" };
 
@@ -165,6 +166,7 @@ function PendingPage() {
           </div>
         </div>
 
+        <div className="w-full max-w-md"><PushNotificationEntry /></div>
         <p className="mt-8 text-xs uppercase tracking-[0.14em] text-muted-foreground/55">
           {t("pending.footnote")}
         </p>

@@ -21,6 +21,7 @@ import {
 import { useT } from "@/i18n";
 import { BlockedUsersSection } from "@/components/blocked-users-section";
 import { useQueryClient } from "@tanstack/react-query";
+import { PushNotificationEntry } from "@/components/push-notification-entry";
 
 export const Route = createFileRoute("/_authenticated/settings")({
   head: () => ({
@@ -86,6 +87,7 @@ function SettingsPage() {
         <h1 className="font-display text-3xl sm:text-4xl">{t("settings.title")}</h1>
         <p className="mt-1 text-sm text-muted-foreground">{t("settings.subtitle")}</p>
 
+        <PushNotificationEntry />
         <BlockedUsersSection className="mt-8 rounded-3xl border border-border/60 bg-card p-4 sm:p-6" />
 
         {/* Danger zone */}
