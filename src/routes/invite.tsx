@@ -67,12 +67,12 @@ function InvitePage() {
             variant="ghost"
             size="icon"
             aria-label={t("common.back")}
-            className="rounded-full text-white hover:bg-white/10 hover:text-white"
+            className="rounded-full text-foreground hover:bg-secondary/10 hover:text-foreground"
             onClick={() => navigate({ to: "/" })}
           >
             <ArrowLeft className="h-4 w-4 rtl:rotate-180" />
           </Button>
-          <Link to="/" className="inline-flex items-center gap-2 text-white">
+          <Link to="/" className="inline-flex items-center gap-2 text-foreground">
             <img src={logoAsset.url} alt="" aria-hidden className="h-9 w-9 rounded-full object-contain" />
             <span className="font-display text-xl">
               <span className="italic text-nebula-violet">{brand.name}</span>
@@ -84,16 +84,16 @@ function InvitePage() {
         </div>
 
         <div className="cosmic-panel p-8">
-          <div className="inline-flex items-center gap-2 rounded-full border border-white/12 bg-white/5 px-3 py-1.5 text-[11px] font-medium uppercase tracking-[0.18em] text-[rgba(196,181,253,0.85)]">
+          <div className="inline-flex items-center gap-2 rounded-full border border-border/12 bg-secondary/5 px-3 py-1.5 text-[11px] font-medium uppercase tracking-[0.18em] text-muted-foreground/85">
             <KeyRound className="h-3 w-3 text-sunshine" />
             {t("beta.badge")}
           </div>
-          <h1 className="font-display mt-4 text-3xl text-white">{t("invite.title")}</h1>
-          <p className="mt-2 text-sm text-[rgba(221,214,254,0.75)]">{t("invite.sub")}</p>
+          <h1 className="font-display mt-4 text-3xl text-foreground">{t("invite.title")}</h1>
+          <p className="mt-2 text-sm text-muted-foreground/75">{t("invite.sub")}</p>
 
           <form onSubmit={submit} className="mt-6 grid gap-4">
             <div className="grid gap-2">
-              <Label htmlFor="code" className="text-[rgba(221,214,254,0.9)]">
+              <Label htmlFor="code" className="text-muted-foreground/90">
                 {t("invite.label")}
               </Label>
               <Input
@@ -104,7 +104,7 @@ function InvitePage() {
                 autoComplete="off"
                 maxLength={40}
                 required
-                className="bg-white/5 text-white placeholder:text-white/35"
+                className="bg-secondary/5 text-foreground placeholder:text-foreground/35"
               />
             </div>
             <Button type="submit" disabled={loading} className="h-11 rounded-full text-base">
@@ -112,13 +112,13 @@ function InvitePage() {
             </Button>
           </form>
 
-          <p className="mt-5 text-center text-sm text-[rgba(221,214,254,0.7)]">
+          <p className="mt-5 text-center text-sm text-muted-foreground/70">
             {t("invite.noCode")}{" "}
             <Link to="/waitlist" className="text-nebula-violet hover:underline">
               {t("beta.cta.waitlist")}
             </Link>
           </p>
-          <p className="mt-2 text-center text-sm text-[rgba(221,214,254,0.55)]">
+          <p className="mt-2 text-center text-sm text-muted-foreground/55">
             <Link to="/auth" search={{ mode: "signin" }} className="hover:underline">
               {t("auth.haveAccount")} {t("auth.switchSignin")}
             </Link>

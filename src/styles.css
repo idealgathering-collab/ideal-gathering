@@ -5,8 +5,8 @@
 @custom-variant dark (&:is(.dark *));
 
 /*
- * Ideal Gathering — design system
- * Palette: Deep Purple + Warm Amber/Cream
+ * Havato — design system
+ * Palette: approved orange / cream
  * Type: DM Serif Display (display) + Fira Sans (body)
  */
 
@@ -28,6 +28,12 @@
   --color-popover: var(--popover);
   --color-popover-foreground: var(--popover-foreground);
   --color-primary: var(--primary);
+  --color-primary-dark: var(--primary-dark);
+  --color-primary-light: var(--primary-light);
+  --color-gold: var(--gold);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-info: var(--info);
   --color-primary-foreground: var(--primary-foreground);
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
@@ -76,97 +82,70 @@
 
 :root {
   --radius: 1rem;
-
-  /* Cosmic nebula theme (site-wide, matches landing page) */
-  --background: oklch(0.16 0.05 300);
-  --foreground: oklch(0.87 0.06 300);
-
-  --card: oklch(0.22 0.06 300);
-  --card-foreground: oklch(0.93 0.03 300);
-  --popover: oklch(0.21 0.06 300);
-  --popover-foreground: oklch(0.93 0.03 300);
-
-  /* Vibrant purple */
-  --primary: oklch(0.56 0.23 295);
-  --primary-foreground: oklch(0.99 0.005 300);
-  --plum: oklch(0.27 0.12 295);
-  --plum-foreground: oklch(0.99 0.005 300);
-
-  /* Soft violet */
-  --secondary: oklch(0.3 0.08 295);
-  --secondary-foreground: oklch(0.92 0.04 300);
-  --tangerine: oklch(0.72 0.18 80);
-  --tangerine-foreground: oklch(0.18 0.05 300);
-
-  /* Warm amber/gold highlight */
-  --accent: oklch(0.32 0.09 295);
-  --accent-foreground: oklch(0.94 0.03 300);
-  --sunshine: oklch(0.85 0.15 85);
-  --sunshine-foreground: oklch(0.18 0.05 300);
-
-  --muted: oklch(0.26 0.06 300);
-  --muted-foreground: oklch(0.72 0.06 300);
-
-  --destructive: oklch(0.58 0.22 25);
-  --destructive-foreground: oklch(0.99 0.01 35);
-
-  --border: oklch(0.34 0.07 295);
-  --input: oklch(0.3 0.07 295);
-  --ring: oklch(0.7 0.15 295);
-
-  --gradient-hero: linear-gradient(135deg, #0F0A1E 0%, #1E1038 45%, #2A1055 100%);
-  --gradient-warm: linear-gradient(135deg, oklch(0.85 0.15 85) 0%, oklch(0.72 0.18 80) 100%);
-  --gradient-cool: linear-gradient(135deg, #1B1033 0%, #0F0A1E 100%);
-  --shadow-plum: 0 20px 40px -20px color-mix(in oklab, oklch(0.42 0.22 280) 65%, transparent);
-  --shadow-tangerine: 0 20px 40px -20px color-mix(in oklab, oklch(0.72 0.18 80) 45%, transparent);
-  --shadow-soft: 0 8px 30px -12px rgba(0, 0, 0, 0.55);
-
-  --sidebar: oklch(0.2 0.06 300);
-  --sidebar-foreground: oklch(0.9 0.04 300);
-  --sidebar-primary: oklch(0.56 0.23 295);
-  --sidebar-primary-foreground: oklch(0.99 0.005 300);
-  --sidebar-accent: oklch(0.28 0.07 300);
-  --sidebar-accent-foreground: oklch(0.93 0.03 300);
-  --sidebar-border: oklch(0.34 0.07 295);
-  --sidebar-ring: oklch(0.7 0.15 295);
-
-
-  /* Round-table palette (Phase 1 landing) */
-  --ink-navy: oklch(0.25 0.03 250);
-  --parchment: oklch(0.95 0.02 80);
-  --ember: oklch(0.58 0.15 45);
-  --sage: oklch(0.62 0.06 130);
-
-  /* Dark nebula theme tokens */
-  --dark-bg: #0F0A1E;
-  --dark-primary: #A78BFA;
-  --dark-secondary: #C4B5FD;
-  --dark-heading: #FFFFFF;
-  --nebula-purple: #7C3AED;
-  --nebula-violet: #6D28D9;
-
-  --nebula-glow-1: radial-gradient(
-    ellipse 60% 50% at 80% 20%,
-    color-mix(in srgb, var(--nebula-purple) 35%, transparent) 0%,
-    transparent 60%
-  );
-  --nebula-glow-2: radial-gradient(
-    ellipse 55% 45% at 20% 80%,
-    color-mix(in srgb, var(--nebula-violet) 28%, transparent) 0%,
-    transparent 60%
-  );
-  --nebula-glow-3: radial-gradient(
-    ellipse 50% 40% at 50% 50%,
-    color-mix(in srgb, var(--dark-primary) 18%, transparent) 0%,
-    transparent 65%
-  );
-
-  --glass-card-bg: color-mix(in srgb, var(--nebula-violet) 12%, transparent);
-  --glass-card-border: color-mix(in srgb, var(--dark-primary) 22%, transparent);
-  --glass-card-glow: 0 0 40px -10px color-mix(in srgb, var(--dark-primary) 35%, transparent);
-
-  --glow-button-gradient: linear-gradient(135deg, var(--nebula-purple) 0%, var(--nebula-violet) 100%);
-  --glow-button-shadow: 0 0 24px -4px color-mix(in srgb, var(--dark-primary) 55%, transparent);
+  /* Approved Havato palette. Legacy visual aliases keep existing layouts intact. */
+  --background: #FBF3EA;
+  --foreground: #2B1F1A;
+  --card: #FFF9F2;
+  --card-foreground: var(--foreground);
+  --popover: var(--card);
+  --popover-foreground: var(--foreground);
+  --primary: #E87524;
+  --primary-dark: #D96C1F;
+  --primary-light: #F3A15C;
+  --primary-foreground: var(--foreground);
+  --secondary: #F5E7D8;
+  --secondary-foreground: var(--foreground);
+  --muted: var(--secondary);
+  --muted-foreground: #6F5A4F;
+  --accent: var(--secondary);
+  --accent-foreground: var(--foreground);
+  --gold: #D9A441;
+  --success: #4F7A5A;
+  --warning: #C28A2E;
+  --destructive: #B94B3F;
+  --destructive-foreground: #FFF9F2;
+  --info: #557A8C;
+  --border: #E8D8C8;
+  --input: var(--border);
+  --ring: var(--primary);
+  --plum: var(--primary-dark);
+  --plum-foreground: var(--foreground);
+  --tangerine: var(--primary);
+  --tangerine-foreground: var(--foreground);
+  --sunshine: var(--gold);
+  --sunshine-foreground: var(--foreground);
+  --sidebar: var(--card);
+  --sidebar-foreground: var(--foreground);
+  --sidebar-primary: var(--primary);
+  --sidebar-primary-foreground: var(--primary-foreground);
+  --sidebar-accent: var(--secondary);
+  --sidebar-accent-foreground: var(--foreground);
+  --sidebar-border: var(--border);
+  --sidebar-ring: var(--ring);
+  --ink-navy: var(--foreground);
+  --parchment: var(--background);
+  --ember: var(--primary-dark);
+  --sage: var(--success);
+  --dark-bg: var(--background);
+  --dark-primary: var(--primary);
+  --dark-secondary: var(--muted-foreground);
+  --dark-heading: var(--foreground);
+  --nebula-purple: var(--primary);
+  --nebula-violet: var(--primary-dark);
+  --gradient-hero: linear-gradient(135deg, var(--background), var(--secondary));
+  --gradient-cool: linear-gradient(135deg, var(--card), var(--background));
+  --gradient-warm: linear-gradient(135deg, var(--primary-light), var(--primary));
+  --shadow-plum: 0 20px 40px -20px color-mix(in srgb, var(--primary) 25%, transparent);
+  --shadow-tangerine: 0 20px 40px -20px color-mix(in srgb, var(--primary) 25%, transparent);
+  --shadow-soft: 0 8px 30px -12px #2B1F1A25;
+  --glass-card-bg: var(--card);
+  --glass-card-border: var(--border);
+  --glass-card-glow: 0 8px 30px -12px #2B1F1A25;
+  --nebula-glow-1: none;
+  --nebula-glow-2: none;
+  --nebula-glow-3: none;
+  --glow-button-gradient: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  --glow-button-shadow: 0 0 24px -4px color-mix(in srgb, var(--primary) 25%, transparent);
 }
 
 @layer base {
@@ -200,7 +179,7 @@
 
   h1, h2, h3, h4 {
     font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
-    color: #FFFFFF;
+    color: var(--foreground);
     font-weight: 700;
     letter-spacing: -0.02em;
     line-height: 1.05;
@@ -210,14 +189,14 @@
   /* Landing page dark theme (scoped) — background is provided by the illustrated scene in index.tsx */
   .landing-dark {
     background-color: transparent;
-    color: #C4B5FD;
+    color: var(--muted-foreground);
   }
   .landing-dark h1,
 
   .landing-dark h2,
   .landing-dark h3,
   .landing-dark h4 {
-    color: #FFFFFF;
+    color: var(--foreground);
   }
 
   :lang(fa),
@@ -401,7 +380,7 @@
 }
 
 @utility cosmic-scene {
-  background-color: #0A0616;
+  background-color: var(--background);
 }
 
 /* Slow-breathing aura behind the glass panel */
@@ -458,7 +437,7 @@
     160deg,
     color-mix(in srgb, var(--dark-primary) 12%, transparent) 0%,
     color-mix(in srgb, var(--nebula-violet) 8%, transparent) 45%,
-    color-mix(in srgb, var(--dark-bg) 30%, transparent) 100%
+    var(--card) 100%
   );
   backdrop-filter: blur(18px) saturate(140%);
   border: 1px solid color-mix(in srgb, var(--dark-primary) 30%, transparent);
@@ -514,7 +493,7 @@
 @utility cosmic-cta {
   position: relative;
   overflow: hidden;
-  background-image: linear-gradient(135deg, #7C3AED 0%, #8B5CF6 50%, #6D28D9 100%);
+  background-image: var(--glow-button-gradient);
   border: 1px solid color-mix(in srgb, var(--dark-secondary) 75%, transparent);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.42);
   animation: cosmic-cta-glow 4.5s ease-in-out infinite;
@@ -553,16 +532,16 @@
 }
 
 @keyframes emblem-glow {
-  0%, 100% { filter: drop-shadow(0 0 12px rgba(167,139,250,0.55)); transform: scale(1); }
-  50%      { filter: drop-shadow(0 0 28px rgba(196,181,253,0.95)) drop-shadow(0 0 48px rgba(124,58,237,0.6)); transform: scale(1.04); }
+  0%, 100% { filter: drop-shadow(0 0 12px color-mix(in srgb, var(--primary) 55.00000000000001%, transparent)); transform: scale(1); }
+  50%      { filter: drop-shadow(0 0 28px color-mix(in srgb, var(--primary) 95%, transparent)) drop-shadow(0 0 48px color-mix(in srgb, var(--primary) 60%, transparent)); transform: scale(1.04); }
 }
 @utility animate-emblem-glow {
   animation: emblem-glow 5s ease-in-out infinite;
 }
 
 @keyframes headline-glow {
-  0%, 100% { filter: drop-shadow(0 0 20px rgba(124, 58, 237, 0.5)) drop-shadow(0 0 45px rgba(212, 160, 74, 0.16)); opacity: 0.96; }
-  50%      { filter: drop-shadow(0 0 13px rgba(196, 181, 253, 0.55)) drop-shadow(0 0 35px rgba(124, 58, 237, 0.8)) drop-shadow(0 0 65px rgba(212, 160, 74, 0.3)); opacity: 1; }
+  0%, 100% { filter: drop-shadow(0 0 20px color-mix(in srgb, var(--primary) 50%, transparent)) drop-shadow(0 0 45px rgba(212, 160, 74, 0.16)); opacity: 0.96; }
+  50%      { filter: drop-shadow(0 0 13px color-mix(in srgb, var(--primary) 55.00000000000001%, transparent)) drop-shadow(0 0 35px color-mix(in srgb, var(--primary) 80%, transparent)) drop-shadow(0 0 65px rgba(212, 160, 74, 0.3)); opacity: 1; }
 }
 @utility animate-headline-glow {
   animation: headline-glow 6s ease-in-out infinite;
@@ -577,7 +556,7 @@
   transition: color 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
 
   &:hover {
-    color: #FFFFFF;
+    color: var(--foreground);
     border-color: color-mix(in srgb, var(--dark-primary) 100%, transparent);
     background: color-mix(in srgb, var(--nebula-violet) 18%, transparent);
     box-shadow:

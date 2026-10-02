@@ -81,21 +81,21 @@ function MatchBar({
   const t = useT();
   return (
     <div className="mt-2">
-      <div className="h-2 w-full overflow-hidden rounded-full bg-white/10">
+      <div className="h-2 w-full overflow-hidden rounded-full bg-secondary/10">
         <div
           className={`h-full rounded-full ${animate ? "transition-all duration-700" : ""}`}
           style={{
             width: `${fill}%`,
             background:
               level === "high"
-                ? "linear-gradient(90deg, #A78BFA 0%, #7C3AED 100%)"
+                ? "linear-gradient(90deg, var(--primary-light), var(--primary))"
                 : level === "good"
                   ? "linear-gradient(90deg, #F5D08A 0%, #F59E0B 100%)"
-                  : "linear-gradient(90deg, rgba(196,181,253,0.6) 0%, rgba(139,124,196,0.8) 100%)",
+                  : "linear-gradient(90deg, var(--muted-foreground), var(--border))",
           }}
         />
       </div>
-      <p className="mt-1 text-[11px] font-medium uppercase tracking-wider text-[rgba(196,181,253,0.7)]">
+      <p className="mt-1 text-[11px] font-medium uppercase tracking-wider text-muted-foreground/70">
         {t(`landing.v3.matching.match.level.${level}`)}
       </p>
     </div>
@@ -188,13 +188,13 @@ export function MatchingQuiz({ betaCta = false }: { betaCta?: boolean } = {}) {
                   ? t("landing.v3.matching.quiz.doneLabel")
                   : t("landing.v3.matching.quiz.label")}
               </p>
-              <h3 className="font-serif-warm mt-3 text-xl font-semibold text-white sm:text-2xl">
+              <h3 className="font-serif-warm mt-3 text-xl font-semibold text-foreground sm:text-2xl">
                 {done
                   ? t("landing.v3.matching.quiz.doneTitle")
                   : t("landing.v3.matching.q4.q")}
               </h3>
               {done && (
-                <p className="mt-3 text-sm leading-relaxed text-[rgba(221,214,254,0.78)]">
+                <p className="mt-3 text-sm leading-relaxed text-muted-foreground/78">
                   {t("landing.v3.matching.quiz.doneBody")}
                 </p>
               )}
@@ -209,15 +209,15 @@ export function MatchingQuiz({ betaCta = false }: { betaCta?: boolean } = {}) {
                         key={opt.k}
                         className={`flex items-center gap-3 rounded-2xl border p-3.5 ${
                           selected
-                            ? "border-[rgba(167,139,250,0.55)] bg-[rgba(124,58,237,0.22)] text-white"
-                            : "border-white/10 bg-white/[0.035] text-[rgba(196,181,253,0.85)]"
+                            ? "border-primary/55 bg-primary/22 text-foreground"
+                            : "border-border/10 bg-secondary/[0.035] text-muted-foreground/85"
                         }`}
                       >
                         <span
                           className={`inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl ${
                             selected
-                              ? "bg-[rgba(167,139,250,0.25)] text-[#EDE9FE]"
-                              : "bg-white/5 text-[rgba(196,181,253,0.7)]"
+                              ? "bg-primary/25 text-foreground"
+                              : "bg-secondary/5 text-muted-foreground/70"
                           }`}
                         >
                           <Icon className="h-4 w-4" />
@@ -240,7 +240,7 @@ export function MatchingQuiz({ betaCta = false }: { betaCta?: boolean } = {}) {
                     setIndex(0);
                     setAnswers({});
                   }}
-                  className="cosmic-cta inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-semibold text-white"
+                  className="cosmic-cta inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-semibold text-foreground"
                 >
                   {done
                     ? t("landing.v3.matching.quiz.retake")
@@ -251,7 +251,7 @@ export function MatchingQuiz({ betaCta = false }: { betaCta?: boolean } = {}) {
                     <ArrowRight className="h-4 w-4 rtl:rotate-180" />
                   )}
                 </button>
-                <span className="text-xs text-[rgba(196,181,253,0.6)]">
+                <span className="text-xs text-muted-foreground/60">
                   {t("landing.v3.matching.quiz.optional")}
                 </span>
               </div>
@@ -267,15 +267,15 @@ export function MatchingQuiz({ betaCta = false }: { betaCta?: boolean } = {}) {
                 <button
                   type="button"
                   onClick={reset}
-                  className="text-[11px] uppercase tracking-wider text-[rgba(196,181,253,0.6)] transition-colors hover:text-white"
+                  className="text-[11px] uppercase tracking-wider text-muted-foreground/60 transition-colors hover:text-foreground"
                 >
                   {t("landing.v3.matching.quiz.startOver")}
                 </button>
               </div>
 
-              <div className="mt-3 h-1 w-full overflow-hidden rounded-full bg-white/10">
+              <div className="mt-3 h-1 w-full overflow-hidden rounded-full bg-secondary/10">
                 <div
-                  className={`h-full rounded-full bg-gradient-to-r from-[#A78BFA] to-[#7C3AED] ${
+                  className={`h-full rounded-full bg-gradient-to-r from-primary-light to-primary-dark ${
                     reduced ? "" : "transition-all duration-500"
                   }`}
                   style={{ width: `${((index + 1) / QUIZ.length) * 100}%` }}
@@ -284,7 +284,7 @@ export function MatchingQuiz({ betaCta = false }: { betaCta?: boolean } = {}) {
 
               <h3
                 key={question.k}
-                className={`font-serif-warm mt-5 text-xl font-semibold text-white sm:text-2xl ${
+                className={`font-serif-warm mt-5 text-xl font-semibold text-foreground sm:text-2xl ${
                   reduced ? "" : "animate-in fade-in duration-300"
                 }`}
               >
@@ -302,15 +302,15 @@ export function MatchingQuiz({ betaCta = false }: { betaCta?: boolean } = {}) {
                       onClick={() => advance({ ...answers, [question.k]: i })}
                       className={`flex w-full items-center gap-3 rounded-2xl border p-3.5 text-start transition-colors ${
                         selected
-                          ? "border-[rgba(167,139,250,0.55)] bg-[rgba(124,58,237,0.22)] text-white"
-                          : "border-white/10 bg-white/[0.035] text-[rgba(196,181,253,0.85)] hover:border-[rgba(167,139,250,0.4)] hover:bg-white/[0.07] hover:text-white"
+                          ? "border-primary/55 bg-primary/22 text-foreground"
+                          : "border-border/10 bg-secondary/[0.035] text-muted-foreground/85 hover:border-primary/40 hover:bg-secondary/[0.07] hover:text-foreground"
                       }`}
                     >
                       <span
                         className={`inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl ${
                           selected
-                            ? "bg-[rgba(167,139,250,0.25)] text-[#EDE9FE]"
-                            : "bg-white/5 text-[rgba(196,181,253,0.7)]"
+                            ? "bg-primary/25 text-foreground"
+                            : "bg-secondary/5 text-muted-foreground/70"
                         }`}
                       >
                         <Icon className="h-4 w-4" />
@@ -328,7 +328,7 @@ export function MatchingQuiz({ betaCta = false }: { betaCta?: boolean } = {}) {
                   type="button"
                   disabled={index === 0}
                   onClick={() => setIndex(Math.max(0, index - 1))}
-                  className="inline-flex items-center gap-1.5 text-sm text-[rgba(196,181,253,0.75)] transition-colors hover:text-white disabled:opacity-30"
+                  className="inline-flex items-center gap-1.5 text-sm text-muted-foreground/75 transition-colors hover:text-foreground disabled:opacity-30"
                 >
                   <ArrowLeft className="h-4 w-4 rtl:rotate-180" />
                   {t("landing.v3.matching.quiz.back")}
@@ -336,7 +336,7 @@ export function MatchingQuiz({ betaCta = false }: { betaCta?: boolean } = {}) {
                 <button
                   type="button"
                   onClick={() => advance({ ...answers, [question.k]: null })}
-                  className="text-sm text-[rgba(196,181,253,0.6)] transition-colors hover:text-white"
+                  className="text-sm text-muted-foreground/60 transition-colors hover:text-foreground"
                 >
                   {t("landing.v3.matching.quiz.skip")}
                 </button>
@@ -355,17 +355,17 @@ export function MatchingQuiz({ betaCta = false }: { betaCta?: boolean } = {}) {
 
           {showResult && (
             <>
-              <h3 className="font-serif-warm mt-3 text-xl font-semibold text-white sm:text-2xl">
+              <h3 className="font-serif-warm mt-3 text-xl font-semibold text-foreground sm:text-2xl">
                 {t(`landing.v3.matching.persona.${result.persona}.title`)}
               </h3>
-              <p className="mt-2 text-sm leading-relaxed text-[rgba(221,214,254,0.78)]">
+              <p className="mt-2 text-sm leading-relaxed text-muted-foreground/78">
                 {t(`landing.v3.matching.persona.${result.persona}.body`)}
               </p>
             </>
           )}
 
           {savedToProfile && (
-            <p className="mt-4 inline-flex items-center gap-1.5 rounded-full border border-[rgba(167,139,250,0.35)] bg-[rgba(124,58,237,0.18)] px-3 py-1.5 text-xs font-medium text-[#EDE9FE]">
+            <p className="mt-4 inline-flex items-center gap-1.5 rounded-full border border-primary/35 bg-primary/18 px-3 py-1.5 text-xs font-medium text-foreground">
               <Sparkles className="h-3.5 w-3.5" />
               {t("match.savedToProfile")}
             </p>
@@ -378,11 +378,11 @@ export function MatchingQuiz({ betaCta = false }: { betaCta?: boolean } = {}) {
               return (
                 <div key={trait}>
                   <div className="flex items-center justify-between">
-                    <span className="text-sm font-medium text-white">
+                    <span className="text-sm font-medium text-foreground">
                       {t(`landing.v3.matching.trait.${trait}`)}
                     </span>
                     {showResult && (
-                      <span className="text-xs font-semibold text-[rgba(196,181,253,0.7)]">
+                      <span className="text-xs font-semibold text-muted-foreground/70">
                         {value}%
                       </span>
                     )}
@@ -396,7 +396,7 @@ export function MatchingQuiz({ betaCta = false }: { betaCta?: boolean } = {}) {
           {showResult ? (
             <div className="mt-6">
               {result.answered < result.total && (
-                <p className="mb-3 text-xs text-[rgba(196,181,253,0.6)]">
+                <p className="mb-3 text-xs text-muted-foreground/60">
                   {t("landing.v3.matching.match.partial")
                     .replace("{n}", String(result.answered))
                     .replace("{total}", String(result.total))}
@@ -405,7 +405,7 @@ export function MatchingQuiz({ betaCta = false }: { betaCta?: boolean } = {}) {
               {betaCta ? (
                 <Link
                   to="/waitlist"
-                  className="cosmic-cta inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-semibold text-white"
+                  className="cosmic-cta inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-semibold text-foreground"
                 >
                   {t("landing.v3.matching.match.cta")}
                   <ArrowRight className="h-4 w-4 rtl:rotate-180" />
@@ -413,18 +413,18 @@ export function MatchingQuiz({ betaCta = false }: { betaCta?: boolean } = {}) {
               ) : (
                 <Link
                   to="/waitlist"
-                  className="cosmic-cta inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-semibold text-white"
+                  className="cosmic-cta inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-semibold text-foreground"
                 >
                   {t("landing.v3.matching.match.cta")}
                   <ArrowRight className="h-4 w-4 rtl:rotate-180" />
                 </Link>
               )}
-              <p className="mt-3 text-xs text-[rgba(196,181,253,0.6)]">
+              <p className="mt-3 text-xs text-muted-foreground/60">
                 {t("landing.v3.matching.match.saved")}
               </p>
             </div>
           ) : (
-            <p className="mt-6 text-xs text-[rgba(196,181,253,0.55)]">
+            <p className="mt-6 text-xs text-muted-foreground/55">
               {t("landing.v3.matching.match.example")}
             </p>
           )}

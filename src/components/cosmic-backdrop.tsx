@@ -38,14 +38,14 @@ export function CosmicBackdrop() {
       <div
         aria-hidden
         className="pointer-events-none fixed inset-0 z-0 bg-cover bg-center"
-        style={{ backgroundImage: `url(${nebulaAsset.url})`, inset: "-4%" }}
+        style={{ background: "var(--background)", inset: "-4%" }}
       />
       <div
         aria-hidden
         className="pointer-events-none fixed inset-0 z-[5]"
         style={{
           background:
-            "radial-gradient(ellipse at 50% 30%, rgba(10,6,22,0.35) 0%, rgba(10,6,22,0.82) 60%, rgba(10,6,22,0.96) 100%)",
+            "linear-gradient(var(--background), var(--secondary))",
         }}
       />
       <div aria-hidden className="pointer-events-none fixed inset-0 z-[8] overflow-hidden">
@@ -58,7 +58,7 @@ export function CosmicBackdrop() {
               top: `${star.y}%`,
               width: `${star.size}px`,
               height: `${star.size}px`,
-              background: index % 4 === 0 ? "#A78BFA" : "#EDE9FE",
+              background: index % 4 === 0 ? "var(--primary-light)" : "var(--foreground)",
               animationDelay: `${star.delay}s`,
               animationDuration: `${star.duration}s`,
             }}

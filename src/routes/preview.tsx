@@ -55,7 +55,7 @@ function HeroSection() {
       <div className="mx-auto grid w-full max-w-6xl items-center gap-12 lg:grid-cols-[1.05fr_0.95fr]">
         <div className="text-center lg:text-start">
           <Reveal>
-            <div className="inline-flex items-center gap-2 rounded-full border border-white/12 bg-white/5 px-3 py-1.5 text-[11px] font-medium uppercase tracking-[0.18em] text-[rgba(196,181,253,0.85)]">
+            <div className="inline-flex items-center gap-2 rounded-full border border-border/12 bg-secondary/5 px-3 py-1.5 text-[11px] font-medium uppercase tracking-[0.18em] text-muted-foreground/85">
               <Sparkles className="h-3 w-3 text-sunshine" />
               {t("landing.v3.hero.eyebrow")}
             </div>
@@ -63,13 +63,13 @@ function HeroSection() {
 
           <Reveal delay={70}>
             <h1 className="font-serif-warm animate-headline-glow mt-6 text-[56px] font-extrabold leading-[1.02] tracking-[-0.04em] sm:text-[88px] lg:text-[96px]">
-              <span className="block text-white">{t("landing.v4.hero.title1")}</span>
+              <span className="block text-foreground">{t("landing.v4.hero.title1")}</span>
               <span className="block text-nebula-violet">{t("landing.v4.hero.title2")}</span>
             </h1>
           </Reveal>
 
           <Reveal delay={140}>
-            <p className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-[rgba(221,214,254,0.82)] sm:text-lg lg:mx-0">
+            <p className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-muted-foreground/82 sm:text-lg lg:mx-0">
               {t("landing.v4.hero.sub")}
             </p>
           </Reveal>
@@ -78,7 +78,7 @@ function HeroSection() {
             <div className="mt-9 flex flex-col items-stretch gap-3 sm:flex-row sm:items-center sm:justify-center lg:justify-start">
               <Link
                 to="/waitlist"
-                className="cosmic-cta inline-flex items-center justify-center gap-2 rounded-full px-8 py-4 text-base font-semibold text-white"
+                className="cosmic-cta inline-flex items-center justify-center gap-2 rounded-full px-8 py-4 text-base font-semibold text-foreground"
               >
                 {t("beta.cta.waitlist")}
                 <ArrowRight className="h-4 w-4 rtl:rotate-180" />
@@ -93,7 +93,7 @@ function HeroSection() {
           </Reveal>
 
           <Reveal delay={280}>
-            <p className="mt-6 text-xs uppercase tracking-[0.14em] text-[rgba(196,181,253,0.55)]">
+            <p className="mt-6 text-xs uppercase tracking-[0.14em] text-muted-foreground/55">
               {t("landing.v3.hero.note")}
             </p>
           </Reveal>
@@ -105,7 +105,7 @@ function HeroSection() {
             className="cosmic-aura pointer-events-none absolute -inset-8 -z-10 rounded-[60px] blur-2xl"
             style={{
               background:
-                "radial-gradient(ellipse at 50% 45%, rgba(124,58,237,0.45) 0%, rgba(167,139,250,0.2) 45%, transparent 72%)",
+                "radial-gradient(ellipse at 50% 45%, color-mix(in srgb, var(--primary) 45%, transparent) 0%, color-mix(in srgb, var(--primary-light) 20%, transparent) 45%, transparent 72%)",
             }}
           />
           <div className="cosmic-panel overflow-hidden p-3">
@@ -128,7 +128,7 @@ function HeroSection() {
                 height={32}
                 className="h-8 w-8 rounded-full object-contain"
               />
-              <p className="text-xs leading-relaxed text-[rgba(196,181,253,0.72)]">
+              <p className="text-xs leading-relaxed text-muted-foreground/72">
                 {t("landing.v3.hero.caption")}
               </p>
             </div>

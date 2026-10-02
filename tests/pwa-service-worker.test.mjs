@@ -67,7 +67,7 @@ function worker() {
 
 test("install precaches only public fallback/icons and activates immediately", async () => {
   const w = worker(); await w.lifecycle("install");
-  const keys = [...w.stores.get("havato-pwa-v1").keys()];
+  const keys = [...w.stores.get("havato-pwa-v2").keys()];
   assert.equal(keys.length, 6); assert.ok(keys.includes(`${origin}/offline.html`));
   assert.ok(w.state.skipped);
 });
@@ -82,13 +82,13 @@ test("online authenticated navigation is network-only and never cached", async (
   const w = worker(); await w.lifecycle("install");
   assert.equal(await (await w.dispatch("/owner/account", { navigate: true, credentials: "include" })).text(), "fresh response");
   assert.equal(w.state.calls[0].credentials, "include");
-  assert.equal(w.stores.get("havato-pwa-v1").size, 6);
+  assert.equal(w.stores.get("havato-pwa-v2").size, 6);
 });
 
 test("offline navigation returns only the generic fallback", async () => {
   const w = worker(); await w.lifecycle("install"); w.state.offline = true;
   assert.equal(await (await w.dispatch("/auth?private=value", { navigate: true })).text(), "offline fallback");
-  assert.equal(w.stores.get("havato-pwa-v1").size, 6);
+  assert.equal(w.stores.get("havato-pwa-v2").size, 6);
 });
 
 test("evicted fallback still produces an offline page instead of a browser error", async () => {
@@ -122,13 +122,13 @@ test("private, no-store and unexpected HTML responses are never cached", async (
   for (const [policy, type] of [["private", "text/javascript"], ["no-store", "text/css"], ["", "text/html"]]) {
     const w = worker(); w.state.policy = policy; w.state.type = type;
     await w.dispatch("/assets/app-abcdefgh.js");
-    assert.equal(w.stores.get("havato-pwa-v1").size, 0);
+    assert.equal(w.stores.get("havato-pwa-v2").size, 0);
   }
 });
 
 test("static cache stays bounded and preserves the offline fallback", async () => {
   const w = worker(); await w.lifecycle("install");
   for (let index = 0; index < 70; index++) await w.dispatch(`/assets/app${index}-abcdefgh.js`);
-  assert.equal(w.stores.get("havato-pwa-v1").size, 64);
-  assert.ok(w.stores.get("havato-pwa-v1").has(`${origin}/offline.html`));
+  assert.equal(w.stores.get("havato-pwa-v2").size, 64);
+  assert.ok(w.stores.get("havato-pwa-v2").has(`${origin}/offline.html`));
 });

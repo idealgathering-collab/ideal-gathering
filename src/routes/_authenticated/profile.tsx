@@ -804,7 +804,7 @@ function ProfileContent() {
                             key: "spark",
                             label: t("profile.aura.spark"),
                             value: traitSpark,
-                            color: "#8B5CF6",
+                            color: "var(--primary)",
                           },
                           {
                             key: "curiosity",

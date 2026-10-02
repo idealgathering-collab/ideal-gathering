@@ -5,7 +5,7 @@ import { requireHttpUrl, type PublicEnvironment } from "./environment";
 export const brandText: Record<string, Record<string, string>> = {};
 
 export function createBrand(env: PublicEnvironment) {
-  const themeColor = env.VITE_BRAND_THEME_COLOR || "#6b21a8";
+  const themeColor = env.VITE_BRAND_THEME_COLOR || "#E87524";
   if (!/^#[0-9a-f]{6}$/i.test(themeColor))
     throw new Error("VITE_BRAND_THEME_COLOR must be a six-digit hex color");
   return {
@@ -34,5 +34,5 @@ export const brand = createBrand({
 });
 export const logoAsset = { url: brand.logoUrl };
 
-// Match the public Havato landing palette without changing application styles.
-export const pwaColors = { theme: "#ed531c", background: "#fff6e9" };
+// Browser chrome and launch colors match the approved app palette.
+export const pwaColors = { theme: "#E87524", background: "#FBF3EA" };

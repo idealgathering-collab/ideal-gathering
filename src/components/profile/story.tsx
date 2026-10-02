@@ -59,8 +59,8 @@ function StoryItemCard({
         <p className="text-xs text-white/60">{item.venueName}</p>
       </div>
       
-      {/* Timestamp dot - EXACT from image: purple dot on top center */}
-      <div className="absolute -top-2 left-1/2 -translate-x-1/2 h-4 w-4 rounded-full bg-purple-500 border-2 border-white shadow-lg" />
+      {/* Timestamp dot on top center */}
+      <div className="absolute -top-2 left-1/2 -translate-x-1/2 h-4 w-4 rounded-full bg-primary border-2 border-white shadow-lg" />
     </div>
   );
 
@@ -69,7 +69,7 @@ function StoryItemCard({
       <button
         type="button"
         onClick={() => onClick(item)}
-        className="focus:outline-none focus:ring-2 focus:ring-purple-500 rounded-2xl"
+        className="focus:outline-none focus:ring-2 focus:ring-primary rounded-2xl"
       >
         {content}
       </button>
@@ -84,7 +84,7 @@ function StoryItemCard({
  */
 function TimelineConnector() {
   return (
-    <div className="flex-1 h-px bg-gradient-to-r from-purple-500 to-purple-500/0 self-center my-4 hidden sm:block" />
+    <div className="flex-1 h-px bg-gradient-to-r from-primary to-primary/0 self-center my-4 hidden sm:block" />
   );
 }
 
@@ -140,8 +140,8 @@ export function Story({
         
         {remainingCount > 0 && (
           <div className="flex flex-col items-center shrink-0">
-            <div className="h-32 w-40 rounded-2xl bg-white/5 border-2 border-dashed border-white/20 flex items-center justify-center">
-              <span className="text-white/60">+{remainingCount}</span>
+            <div className="h-32 w-40 rounded-2xl bg-secondary/5 border-2 border-dashed border-border/20 flex items-center justify-center">
+              <span className="text-foreground/60">+{remainingCount}</span>
             </div>
           </div>
         )}
@@ -152,7 +152,7 @@ export function Story({
           <button
             type="button"
             onClick={onViewAll}
-            className="flex items-center gap-1 text-sm text-purple-400 hover:text-purple-300 transition-colors"
+            className="flex items-center gap-1 text-sm text-primary hover:text-primary transition-colors"
           >
             {t("common.viewAll")}
             <ChevronRight className="h-3 w-3" />
@@ -187,7 +187,7 @@ export function StoryFilmstrip({
           key={item.id}
           type="button"
           onClick={() => onItemClick?.(item)}
-          className="shrink-0 focus:outline-none focus:ring-2 focus:ring-purple-500 rounded-2xl"
+          className="shrink-0 focus:outline-none focus:ring-2 focus:ring-primary rounded-2xl"
         >
           <StoryItemCard item={item} interactive={true} onClick={onItemClick} />
         </button>

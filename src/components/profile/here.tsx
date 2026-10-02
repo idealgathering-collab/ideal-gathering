@@ -49,7 +49,7 @@ function IntentionTile({
   return (
     <div className="flex flex-col items-center gap-1.5 group">
       {/* Circular tile with image - EXACT from image */}
-      <div className="relative h-20 w-20 rounded-full overflow-hidden border-2 border-white/20 shadow-lg group-hover:scale-105 transition-transform">
+      <div className="relative h-20 w-20 rounded-full overflow-hidden border-2 border-border/20 shadow-lg group-hover:scale-105 transition-transform">
         <img
           src={imageUrl}
           alt={label}
@@ -111,10 +111,10 @@ export function Here({ here, maxDisplay = 8, children, ...props }: HereProps) {
         
         {remainingCount > 0 && (
           <div className="flex flex-col items-center gap-1.5">
-            <div className="h-20 w-20 rounded-full bg-white/5 border-2 border-dashed border-white/20 flex items-center justify-center">
-              <span className="text-2xl text-white/60">+{remainingCount}</span>
+            <div className="h-20 w-20 rounded-full bg-secondary/5 border-2 border-dashed border-border/20 flex items-center justify-center">
+              <span className="text-2xl text-foreground/60">+{remainingCount}</span>
             </div>
-            <span className="text-xs text-white/40">more</span>
+            <span className="text-xs text-foreground/40">more</span>
           </div>
         )}
       </div>

@@ -92,7 +92,7 @@ export function CompletionBadge({
     // Show a checkmark or completed indicator
     return (
       <span
-        className={`inline-flex items-center gap-1.5 rounded-full bg-white/5 border border-white/10 px-2 py-1 text-white/60 ${sizeClasses.badge} ${className}`}
+        className={`inline-flex items-center gap-1.5 rounded-full bg-secondary/5 border border-border/10 px-2 py-1 text-foreground/60 ${sizeClasses.badge} ${className}`}
         style={{ borderColor: color + "40" }}
       >
         {getSectionIcon(completion.section)}
@@ -106,7 +106,7 @@ export function CompletionBadge({
     <div className={`flex items-center gap-2 ${className}`}>
       {/* Progress badge */}
       <span
-        className={`inline-flex items-center gap-1 rounded-full bg-white/5 border border-white/10 px-2 py-0.5 ${sizeClasses.badge}`}
+        className={`inline-flex items-center gap-1 rounded-full bg-secondary/5 border border-border/10 px-2 py-0.5 ${sizeClasses.badge}`}
         style={{ borderColor: color + "40" }}
       >
         <span
@@ -119,7 +119,7 @@ export function CompletionBadge({
       
       {/* Prompt text (only for self) */}
       {showPrompt && isSelf && (
-        <span className="text-xs text-white/40">
+        <span className="text-xs text-foreground/40">
           {t(completion.promptKey)}
         </span>
       )}
@@ -172,23 +172,23 @@ export function ProfileCompletionCard({
 
   if (isComplete) {
     return (
-      <div className="flex items-center gap-2 rounded-2xl bg-white/5 border border-white/10 p-3">
-        <Sparkles className="h-5 w-5 text-purple-400" />
-        <span className="text-sm text-white">{t("profile.completion.complete")}</span>
+      <div className="flex items-center gap-2 rounded-2xl bg-secondary/5 border border-border/10 p-3">
+        <Sparkles className="h-5 w-5 text-primary" />
+        <span className="text-sm text-foreground">{t("profile.completion.complete")}</span>
       </div>
     );
   }
 
   return (
-    <div className="flex items-center gap-3 rounded-2xl bg-white/5 border border-white/10 p-3">
+    <div className="flex items-center gap-3 rounded-2xl bg-secondary/5 border border-border/10 p-3">
       {/* Progress bar */}
-      <div className="relative h-3 flex-1 rounded-full bg-white/10 overflow-hidden">
+      <div className="relative h-3 flex-1 rounded-full bg-secondary/10 overflow-hidden">
         <div
           className="absolute inset-0 rounded-full transition-all duration-500"
           style={{
             width: `${overallPercent}%`,
             backgroundColor: color,
-            boxShadow: `0 0 10px ${color}60`,
+            boxShadow: `0 0 10px color-mix(in srgb, ${color} 38%, transparent)`,
           }}
         />
       </div>
@@ -206,7 +206,7 @@ export function ProfileCompletionCard({
         <button
           type="button"
           onClick={onComplete}
-          className="text-xs text-purple-400 hover:text-purple-300 transition-colors"
+          className="text-xs text-primary hover:text-primary transition-colors"
         >
           {t("profile.completion.continue")}
         </button>
@@ -243,13 +243,13 @@ export function SectorCompletionPrompt({
 
   return (
     <div
-      className={`rounded-2xl border-2 border-dashed border-white/20 bg-white/5 p-6 text-center cursor-pointer hover:bg-white/10 transition-colors ${onClick ? "cursor-pointer" : "cursor-default"}`}
+      className={`rounded-2xl border-2 border-dashed border-border/20 bg-secondary/5 p-6 text-center cursor-pointer hover:bg-secondary/10 transition-colors ${onClick ? "cursor-pointer" : "cursor-default"}`}
       onClick={onClick}
     >
-      <div className="text-white/60 mb-2">{info.icon}</div>
-      <p className="text-sm text-white/80">{t(`profile.sector.${section}Empty`)}</p>
+      <div className="text-foreground/60 mb-2">{info.icon}</div>
+      <p className="text-sm text-foreground/80">{t(`profile.sector.${section}Empty`)}</p>
       {isSelf && (
-        <p className="text-xs text-white/50 mt-1">{t(info.promptKey)}</p>
+        <p className="text-xs text-foreground/50 mt-1">{t(info.promptKey)}</p>
       )}
     </div>
   );

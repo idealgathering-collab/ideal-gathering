@@ -19,7 +19,7 @@ const TRAIT_CONFIG = [
     key: "spark" as const, 
     labelKey: "profile.aura.spark", 
     icon: "⚡",
-    color: "#8B5CF6",
+    color: "var(--primary)",
   },
   { 
     key: "curiosity" as const, 
@@ -81,18 +81,18 @@ function TraitMeter({
       {/* Label and percentage */}
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 mb-1">
-          <span className="text-sm font-medium text-white truncate">{label}</span>
-          <span className="text-sm font-bold text-white shrink-0">{clampedValue}%</span>
+          <span className="text-sm font-medium text-foreground truncate">{label}</span>
+          <span className="text-sm font-bold text-foreground shrink-0">{clampedValue}%</span>
         </div>
         
         {/* Progress bar - EXACT from image */}
-        <div className="relative h-2 w-full overflow-hidden rounded-full bg-white/10">
+        <div className="relative h-2 w-full overflow-hidden rounded-full bg-secondary/10">
           <div
             className="h-full rounded-full transition-all duration-300 ease-out"
             style={{
               width: `${percentage}%`,
               backgroundColor: color,
-              boxShadow: `0 0 8px ${color}60`,
+              boxShadow: `0 0 8px color-mix(in srgb, ${color} 38%, transparent)`,
             }}
           />
         </div>
@@ -163,7 +163,7 @@ export function AuraColorBadge({
       className={`rounded-full ${sizeClasses[size]}`}
       style={{
         backgroundColor: color,
-        boxShadow: `0 0 10px ${color}80`,
+        boxShadow: `0 0 10px color-mix(in srgb, ${color} 50%, transparent)`,
       }}
     />
   );

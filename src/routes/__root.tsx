@@ -9,7 +9,7 @@ import {
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
-import { useEffect, type ReactNode, type CSSProperties } from "react";
+import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
@@ -141,11 +141,6 @@ function RootShell({ children }: { children: ReactNode }) {
     <html
       lang="fa"
       dir="rtl"
-      style={
-        import.meta.env.VITE_BRAND_THEME_COLOR
-          ? ({ "--primary": brand.themeColor } as CSSProperties)
-          : undefined
-      }
     >
       <head>
         <HeadContent />

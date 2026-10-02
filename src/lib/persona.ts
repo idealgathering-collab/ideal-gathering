@@ -39,7 +39,7 @@ export const PERSONAS = {
     titleKey: "persona.depth.title",
     descriptionKey: "persona.depth.description",
     icon: "🌊",
-    color: "#8B5CF6",
+    color: "#E87524",
     tags: ["Deep Conversations", "Meaningful Connections"],
   },
 } as const;

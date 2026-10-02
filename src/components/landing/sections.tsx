@@ -29,7 +29,7 @@ import { MatchingQuiz } from "@/components/landing/matching-quiz";
 
 function Eyebrow({ children }: { children: React.ReactNode }) {
   return (
-    <div className="inline-flex items-center gap-2 rounded-full border border-white/12 bg-white/5 px-3 py-1 text-[11px] font-medium uppercase tracking-[0.18em] text-[rgba(196,181,253,0.8)]">
+    <div className="inline-flex items-center gap-2 rounded-full border border-border/12 bg-secondary/5 px-3 py-1 text-[11px] font-medium uppercase tracking-[0.18em] text-muted-foreground/80">
       <Sparkles className="h-3 w-3 text-sunshine" />
       {children}
     </div>
@@ -38,7 +38,7 @@ function Eyebrow({ children }: { children: React.ReactNode }) {
 
 function SectionTitle({ children }: { children: React.ReactNode }) {
   return (
-    <h2 className="font-serif-warm mt-4 text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl">
+    <h2 className="font-serif-warm mt-4 text-3xl font-bold leading-tight tracking-tight text-foreground sm:text-4xl">
       {children}
     </h2>
   );
@@ -54,7 +54,7 @@ export function DemoSection({ betaCta = false }: { betaCta?: boolean } = {}) {
         <Reveal className="max-w-2xl">
           <Eyebrow>{t("landing.v3.demo.eyebrow")}</Eyebrow>
           <SectionTitle>{t("landing.v3.demo.title")}</SectionTitle>
-          <p className="mt-4 text-base leading-relaxed text-[rgba(221,214,254,0.75)]">
+          <p className="mt-4 text-base leading-relaxed text-muted-foreground/75">
             {t("landing.v3.demo.body")}
           </p>
         </Reveal>
@@ -62,7 +62,7 @@ export function DemoSection({ betaCta = false }: { betaCta?: boolean } = {}) {
           <TableDemo betaCta={betaCta} />
         </Reveal>
         <Reveal delay={140}>
-          <p className="mt-6 text-xs text-[rgba(196,181,253,0.55)]">
+          <p className="mt-6 text-xs text-muted-foreground/55">
             {t("landing.v3.demo.footnote")}
           </p>
         </Reveal>
@@ -94,17 +94,17 @@ export function HowSection() {
             <Reveal key={s.k} delay={i * 90}>
               <div className="cosmic-panel h-full p-6 text-start sm:p-8">
                 <div className="flex items-center gap-3">
-                  <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-[rgba(124,58,237,0.22)] text-[#C4B5FD]">
+                  <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-primary/22 text-primary">
                     <s.icon className="h-5 w-5" />
                   </span>
-                  <span className="font-serif-warm text-3xl font-bold text-white/15">
+                  <span className="font-serif-warm text-3xl font-bold text-foreground/15">
                     0{i + 1}
                   </span>
                 </div>
-                <h3 className="font-serif-warm mt-5 text-2xl font-bold tracking-tight text-white">
+                <h3 className="font-serif-warm mt-5 text-2xl font-bold tracking-tight text-foreground">
                   {t(`landing.v4.how.${s.k}.title`)}
                 </h3>
-                <p className="mt-2.5 text-sm leading-relaxed text-[rgba(196,181,253,0.75)]">
+                <p className="mt-2.5 text-sm leading-relaxed text-muted-foreground/75">
                   {t(`landing.v4.how.${s.k}.body`)}
                 </p>
               </div>
@@ -142,10 +142,10 @@ export function CategoriesSection() {
                 <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-[rgba(245,208,138,0.15)] text-sunshine">
                   <c.icon className="h-5 w-5" />
                 </span>
-                <h3 className="font-serif-warm mt-5 text-xl font-bold tracking-tight text-white">
+                <h3 className="font-serif-warm mt-5 text-xl font-bold tracking-tight text-foreground">
                   {t(`landing.v4.categories.${c.k}.title`)}
                 </h3>
-                <p className="mt-2 text-sm leading-relaxed text-[rgba(196,181,253,0.75)]">
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground/75">
                   {t(`landing.v4.categories.${c.k}.body`)}
                 </p>
               </div>
@@ -169,7 +169,7 @@ export function UpcomingSection() {
       <div className="mx-auto max-w-6xl px-4">
         <Reveal className="max-w-2xl">
           <SectionTitle>{t("landing.v4.upcoming.title")}</SectionTitle>
-          <p className="mt-3 text-base text-[rgba(221,214,254,0.75)]">
+          <p className="mt-3 text-base text-muted-foreground/75">
             {t("landing.v4.upcoming.subtitle")}
           </p>
         </Reveal>
@@ -182,7 +182,7 @@ export function UpcomingSection() {
               key={k}
               className="cosmic-panel w-[260px] shrink-0 snap-start p-5 text-start sm:w-[300px]"
             >
-              <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-[rgba(196,181,253,0.72)]">
+              <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground/72">
                 <span className="inline-flex items-center gap-1.5">
                   <MapPin className="h-3.5 w-3.5" /> {t(`landing.v4.upcoming.${k}.city`)}
                 </span>
@@ -190,10 +190,10 @@ export function UpcomingSection() {
                   <Clock className="h-3.5 w-3.5" /> {t(`landing.v4.upcoming.${k}.when`)}
                 </span>
               </div>
-              <h3 className="font-serif-warm mt-4 text-lg font-semibold leading-snug text-white">
+              <h3 className="font-serif-warm mt-4 text-lg font-semibold leading-snug text-foreground">
                 {t(`landing.v4.upcoming.${k}.activity`)}
               </h3>
-              <div className="mt-5 inline-flex items-center gap-1.5 rounded-full border border-white/12 bg-white/5 px-3 py-1 text-[11px] font-medium text-sunshine">
+              <div className="mt-5 inline-flex items-center gap-1.5 rounded-full border border-border/12 bg-secondary/5 px-3 py-1 text-[11px] font-medium text-sunshine">
                 <Users className="h-3.5 w-3.5" />
                 {t("landing.v4.upcoming.seats", { n: UPCOMING_SEATS[k] })}
               </div>
@@ -203,7 +203,7 @@ export function UpcomingSection() {
       </Reveal>
 
       <div className="mx-auto max-w-6xl px-4">
-        <p className="mt-4 text-xs text-[rgba(196,181,253,0.55)]">
+        <p className="mt-4 text-xs text-muted-foreground/55">
           {t("landing.v4.upcoming.footnote")}
         </p>
       </div>
@@ -219,10 +219,10 @@ export function DiffSection() {
     <section id="why" className="relative z-20 scroll-mt-20 px-4 py-20 sm:py-28">
       <div className="mx-auto max-w-3xl text-center">
         <Reveal>
-          <h2 className="font-serif-warm animate-headline-glow text-3xl font-extrabold leading-tight tracking-tight text-white sm:text-5xl">
+          <h2 className="font-serif-warm animate-headline-glow text-3xl font-extrabold leading-tight tracking-tight text-foreground sm:text-5xl">
             {t("landing.v4.diff.title")}
           </h2>
-          <p className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-[rgba(221,214,254,0.8)] sm:text-lg">
+          <p className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-muted-foreground/80 sm:text-lg">
             {t("landing.v4.diff.body")}
           </p>
         </Reveal>
@@ -239,17 +239,17 @@ export function SafetySection() {
     <section className="relative z-20 px-4 py-16 sm:py-20">
       <div className="mx-auto max-w-4xl">
         <Reveal>
-          <div className="rounded-[2rem] border border-white/10 bg-white/[0.03] p-8 text-center sm:p-12">
-            <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-[rgba(124,58,237,0.22)] text-[#C4B5FD]">
+          <div className="rounded-[2rem] border border-border/10 bg-secondary/[0.03] p-8 text-center sm:p-12">
+            <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-primary/22 text-primary">
               <HeartHandshake className="h-5 w-5" />
             </span>
-            <h2 className="font-serif-warm mt-5 text-2xl font-semibold leading-snug text-white sm:text-3xl">
+            <h2 className="font-serif-warm mt-5 text-2xl font-semibold leading-snug text-foreground sm:text-3xl">
               {t("landing.v4.safety.title")}
             </h2>
-            <p className="mx-auto mt-4 max-w-xl text-base leading-relaxed text-[rgba(221,214,254,0.8)]">
+            <p className="mx-auto mt-4 max-w-xl text-base leading-relaxed text-muted-foreground/80">
               {t("landing.v4.safety.body1")}
             </p>
-            <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-[rgba(196,181,253,0.7)]">
+            <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-muted-foreground/70">
               {t("landing.v4.safety.body2")}
             </p>
           </div>
@@ -277,7 +277,7 @@ export function MatchingSection({ betaCta = false }: { betaCta?: boolean } = {})
         <Reveal className="max-w-2xl text-center sm:text-start">
           <Eyebrow>{t("landing.v3.matching.eyebrow")}</Eyebrow>
           <SectionTitle>{t("landing.v3.matching.title")}</SectionTitle>
-          <p className="mt-4 text-base leading-relaxed text-[rgba(221,214,254,0.75)]">
+          <p className="mt-4 text-base leading-relaxed text-muted-foreground/75">
             {t("landing.v3.matching.subtitle")}
           </p>
         </Reveal>
@@ -291,7 +291,7 @@ export function MatchingSection({ betaCta = false }: { betaCta?: boolean } = {})
             {CHIPS.map((chip) => (
               <div
                 key={chip.k}
-                className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.035] px-4 py-2 text-sm text-[rgba(221,214,254,0.85)]"
+                className="inline-flex items-center gap-2 rounded-full border border-border/10 bg-secondary/[0.035] px-4 py-2 text-sm text-muted-foreground/85"
               >
                 <chip.icon className="h-4 w-4 text-sunshine" />
                 {t(`landing.v3.matching.${chip.k}`)}
@@ -314,15 +314,15 @@ export function ProblemSection() {
       <div className="mx-auto max-w-4xl text-center">
         <Reveal>
           <Eyebrow>{t("landing.v3.problem.eyebrow")}</Eyebrow>
-          <h2 className="font-serif-warm animate-headline-glow mt-5 text-3xl font-extrabold leading-tight tracking-tight text-white sm:text-5xl">
+          <h2 className="font-serif-warm animate-headline-glow mt-5 text-3xl font-extrabold leading-tight tracking-tight text-foreground sm:text-5xl">
             {t("landing.v3.problem.title")}
           </h2>
         </Reveal>
         <Reveal delay={90}>
-          <p className="mx-auto mt-7 max-w-2xl text-base leading-relaxed text-[rgba(221,214,254,0.8)] sm:text-lg">
+          <p className="mx-auto mt-7 max-w-2xl text-base leading-relaxed text-muted-foreground/80 sm:text-lg">
             {t("landing.v3.problem.p1")}
           </p>
-          <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-[rgba(196,181,253,0.7)]">
+          <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-muted-foreground/70">
             {t("landing.v3.problem.p2")}
           </p>
         </Reveal>
@@ -356,15 +356,15 @@ export function FeaturesSection() {
         <div className="mt-10 grid gap-5 sm:grid-cols-2">
           {FEATURES.map((f, i) => (
             <Reveal key={f.k} delay={i * 70}>
-              <div className="flex h-full items-start gap-4 rounded-3xl border border-white/10 bg-white/[0.035] p-6">
+              <div className="flex h-full items-start gap-4 rounded-3xl border border-border/10 bg-secondary/[0.035] p-6">
                 <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[rgba(245,208,138,0.15)] text-sunshine">
                   <f.icon className="h-5 w-5" />
                 </span>
                 <div>
-                  <h3 className="font-serif-warm text-lg font-semibold text-white">
+                  <h3 className="font-serif-warm text-lg font-semibold text-foreground">
                     {t(`landing.v3.features.${f.k}.title`)}
                   </h3>
-                  <p className="mt-1.5 text-sm leading-relaxed text-[rgba(196,181,253,0.72)]">
+                  <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground/72">
                     {t(`landing.v3.features.${f.k}.body`)}
                   </p>
                 </div>
@@ -385,21 +385,21 @@ export function VenuesSection() {
     <section id="venues" className="relative z-20 scroll-mt-20 px-4 py-16 sm:py-20">
       <div className="mx-auto max-w-6xl">
         <Reveal>
-          <div className="rounded-[2rem] border border-white/10 bg-white/[0.03] p-7 sm:p-10">
+          <div className="rounded-[2rem] border border-border/10 bg-secondary/[0.03] p-7 sm:p-10">
             <div className="grid gap-8 md:grid-cols-[1.1fr_0.9fr] md:items-center">
               <div>
                 <Eyebrow>{t("landing.v3.venues.eyebrow")}</Eyebrow>
-                <h2 className="font-serif-warm mt-4 text-2xl font-semibold text-white sm:text-3xl">
+                <h2 className="font-serif-warm mt-4 text-2xl font-semibold text-foreground sm:text-3xl">
                   {t("landing.v3.venues.title")}
                 </h2>
-                <p className="mt-3 text-sm leading-relaxed text-[rgba(196,181,253,0.75)]">
+                <p className="mt-3 text-sm leading-relaxed text-muted-foreground/75">
                   {t("landing.v3.venues.body")}
                 </p>
                 <div className="mt-5 flex flex-wrap gap-2">
                   {["b1", "b2", "b3"].map((b) => (
                     <span
                       key={b}
-                      className="rounded-full border border-white/12 bg-white/5 px-3 py-1.5 text-xs text-[rgba(221,214,254,0.8)]"
+                      className="rounded-full border border-border/12 bg-secondary/5 px-3 py-1.5 text-xs text-muted-foreground/80"
                     >
                       {t(`landing.v3.venues.${b}`)}
                     </span>
@@ -416,7 +416,7 @@ export function VenuesSection() {
                 </Link>
                 <Link
                   to="/venue/auth"
-                  className="text-sm text-[rgba(196,181,253,0.7)] underline-offset-4 transition-colors hover:text-white hover:underline"
+                  className="text-sm text-muted-foreground/70 underline-offset-4 transition-colors hover:text-foreground hover:underline"
                 >
                   {t("landing.v3.venues.cta2")}
                 </Link>
@@ -447,19 +447,19 @@ export function TractionSection() {
       <div className="mx-auto max-w-6xl">
         <Reveal className="max-w-2xl">
           <SectionTitle>{t("landing.v3.traction.title")}</SectionTitle>
-          <p className="mt-3 text-sm text-[rgba(196,181,253,0.7)]">
+          <p className="mt-3 text-sm text-muted-foreground/70">
             {t("landing.v3.traction.sub")}
           </p>
         </Reveal>
-        <div className="mt-10 grid gap-px overflow-hidden rounded-3xl border border-white/10 bg-white/10 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-10 grid gap-px overflow-hidden rounded-3xl border border-border/10 bg-secondary/10 sm:grid-cols-2 lg:grid-cols-3">
           {TRACTION.map((item, i) => (
             <Reveal key={item.k} delay={i * 55}>
-              <div className="h-full bg-[rgba(12,7,26,0.75)] p-6">
+              <div className="h-full bg-card p-6">
                 <item.icon className="h-5 w-5 text-sunshine" />
-                <h3 className="font-serif-warm mt-4 text-base font-semibold text-white">
+                <h3 className="font-serif-warm mt-4 text-base font-semibold text-foreground">
                   {t(`landing.v3.traction.${item.k}.title`)}
                 </h3>
-                <p className="mt-1.5 text-sm leading-relaxed text-[rgba(196,181,253,0.7)]">
+                <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground/70">
                   {t(`landing.v3.traction.${item.k}.body`)}
                 </p>
               </div>
@@ -481,10 +481,10 @@ export function VisionSection() {
         <Reveal>
           <Eyebrow>{t("landing.v3.vision.eyebrow")}</Eyebrow>
           <SectionTitle>{t("landing.v3.vision.title")}</SectionTitle>
-          <p className="mt-6 text-base leading-relaxed text-[rgba(221,214,254,0.8)]">
+          <p className="mt-6 text-base leading-relaxed text-muted-foreground/80">
             {t("landing.v3.vision.body")}
           </p>
-          <p className="mt-4 text-base leading-relaxed text-[rgba(196,181,253,0.7)]">
+          <p className="mt-4 text-base leading-relaxed text-muted-foreground/70">
             {t("landing.v3.vision.future")}
           </p>
         </Reveal>
@@ -502,12 +502,12 @@ export function FinalCtaSection() {
       <div className="mx-auto max-w-4xl">
         <Reveal>
           <div className="cosmic-panel px-6 py-16 text-center sm:px-12">
-            <h2 className="font-serif-warm animate-headline-glow text-4xl font-extrabold leading-tight tracking-tight text-white sm:text-6xl">
+            <h2 className="font-serif-warm animate-headline-glow text-4xl font-extrabold leading-tight tracking-tight text-foreground sm:text-6xl">
               {t("landing.v4.final.title")}
             </h2>
             <Link
               to="/waitlist"
-              className="cosmic-cta mt-8 inline-flex items-center justify-center gap-2 rounded-full px-9 py-4 text-base font-semibold text-white"
+              className="cosmic-cta mt-8 inline-flex items-center justify-center gap-2 rounded-full px-9 py-4 text-base font-semibold text-foreground"
             >
               {t("landing.v4.final.cta")}
               <ArrowRight className="h-4 w-4 rtl:rotate-180" />

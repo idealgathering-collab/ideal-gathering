@@ -18,7 +18,7 @@ import { calculateUserMatch } from "@/lib/user-match";
  * Photo-first phone card (430px column)
  * Sectors: aura → style → loves → here → story
  * Trust is OFF - not included
- * Dark theme with purple/black background
+ * Havato cream surfaces with orange accents
  */
 export interface ProfileCardProps {
   userId?: string;
@@ -67,17 +67,17 @@ export function ProfileCardSkeleton({
       <IdentitySkeleton darkTheme={darkTheme} />
       
       <div className="-mt-6 px-4 pb-4">
-        <div className="rounded-3xl bg-gray-900/80 backdrop-blur-lg border border-white/10 p-4 space-y-6">
+        <div className="rounded-3xl bg-card backdrop-blur-lg border border-border/10 p-4 space-y-6">
           {PROFILE_SECTORS.map((sector) => (
             <div key={sector} className="animate-pulse">
               <div className="flex items-center gap-2 mb-3">
-                <div className="h-5 w-5 rounded bg-white/10" />
-                <div className="h-4 w-24 rounded bg-white/10 flex-1" />
-                <div className="h-4 w-4 rounded bg-white/10" />
+                <div className="h-5 w-5 rounded bg-secondary/10" />
+                <div className="h-4 w-24 rounded bg-secondary/10 flex-1" />
+                <div className="h-4 w-4 rounded bg-secondary/10" />
               </div>
               <div className="flex gap-2">
-                <div className="h-20 w-20 rounded-2xl bg-white/5" />
-                <div className="h-20 w-20 rounded-2xl bg-white/5" />
+                <div className="h-20 w-20 rounded-2xl bg-secondary/5" />
+                <div className="h-20 w-20 rounded-2xl bg-secondary/5" />
               </div>
             </div>
           ))}
@@ -261,7 +261,7 @@ export function ProfileCard({
 
       {/* Sectors container - EXACT from image: rounded container with sectors */}
       <div className="-mt-6 px-4 pb-4">
-        <div className="rounded-3xl bg-gray-900/90 backdrop-blur-lg border border-white/10 p-4 space-y-6">
+        <div className="rounded-3xl bg-card backdrop-blur-lg border border-border/10 p-4 space-y-6">
           {/* Sectors: aura → style → loves → here → story */}
           <Aura 
             aura={aura} 

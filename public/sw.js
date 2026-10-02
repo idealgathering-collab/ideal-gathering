@@ -1,6 +1,6 @@
 /* Havato Step 2: static resources only; never cache pages or API responses. */
 const CACHE_PREFIX = "havato-pwa-";
-const CACHE_NAME = `${CACHE_PREFIX}v1`;
+const CACHE_NAME = `${CACHE_PREFIX}v2`;
 const OFFLINE_URL = "/offline.html";
 const STATIC_URLS = [
   OFFLINE_URL,

@@ -1,3 +1,8 @@
+# Current task — Havato Phase 2 finish
+
+User-authorized 2026-10-02 on `havato`: approved palette migration and remaining Steps 5–6 only. See [scope and verification](HAVATO-phase2-finish.md). Shared theme and remaining purple UI updated, launch/offline colors aligned, worker cache v2. Chromium full-browser session/reopen/EN/FA/standalone/offline checks pass with isolated fixtures; no auth behavior changes. 17 PWA and 48 focused unit tests pass; TypeScript passes; focused lint retains 8 proven baseline errors. Publication, Linux build and final live verification in progress. Prior physical Android accepted; physical iPhone explicitly skipped by user and accepted as residual risk. Stop before Phase 3.
+
+---
 # Current task — Havato PWA Phase 2, Step 4
 
 User-authorized 2026-10-02: iPhone/iOS install setup and focused testing only on `havato`, baseline `6cf68a20757dc8765f712f4f31820b621639bef9`. See [Step 4 scope and verification](HAVATO-pwa-step4.md). Existing iOS controller and Android native install behavior preserved. Added Apple Home Screen metadata and clarified bilingual Safari instructions. Implementation `0b0ba3d0abd7410838e1d3c0cc9f31822ec62b37` published; Linux CI, Darkube auto-deploy and live WebKit EN/FA/standalone plus Android native-eligibility checks pass. Physical iPhone installation/launch remains required. Stop after Step 4; no session persistence, final cross-device checks, color migration, push, backend or production work.

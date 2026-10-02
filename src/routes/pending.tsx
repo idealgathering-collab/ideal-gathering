@@ -71,7 +71,7 @@ function PendingPage() {
       <CosmicBackdrop />
 
       <header className="relative z-20 mx-auto flex w-full max-w-4xl items-center justify-between px-4 py-6">
-        <Link to="/" className="flex items-center gap-2 text-white">
+        <Link to="/" className="flex items-center gap-2 text-foreground">
           <img src={logoAsset.url} alt="" aria-hidden className="h-9 w-9 rounded-full object-contain" />
           <span className="font-display text-lg">
             <span className="italic text-nebula-violet">{brand.name}</span>
@@ -85,7 +85,7 @@ function PendingPage() {
               size="icon"
               onClick={signOut}
               aria-label={t("nav.signOut")}
-              className="rounded-full text-white hover:bg-white/10 hover:text-white"
+              className="rounded-full text-foreground hover:bg-secondary/10 hover:text-foreground"
             >
               <LogOut className="h-4 w-4" />
             </Button>
@@ -94,27 +94,27 @@ function PendingPage() {
       </header>
 
       <main className="relative z-10 mx-auto flex w-full max-w-2xl flex-col items-center px-4 pb-24 pt-10 text-center">
-        <div className="inline-flex items-center gap-2 rounded-full border border-white/12 bg-white/5 px-3 py-1.5 text-[11px] font-medium uppercase tracking-[0.18em] text-[rgba(196,181,253,0.85)]">
+        <div className="inline-flex items-center gap-2 rounded-full border border-border/12 bg-secondary/5 px-3 py-1.5 text-[11px] font-medium uppercase tracking-[0.18em] text-muted-foreground/85">
           <Sparkles className="h-3 w-3 text-sunshine" />
           {t("beta.badge")}
         </div>
 
-        <h1 className="font-serif-warm mt-7 text-[40px] font-extrabold leading-[1.05] tracking-[-0.03em] text-white sm:text-[60px]">
+        <h1 className="font-serif-warm mt-7 text-[40px] font-extrabold leading-[1.05] tracking-[-0.03em] text-foreground sm:text-[60px]">
           {t("pending.title")}
         </h1>
 
-        <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-[rgba(221,214,254,0.82)]">
+        <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-muted-foreground/82">
           {loading || !access ? t("common.loading") : t(bodyKey)}
         </p>
 
         <div className="cosmic-panel mt-10 w-full max-w-md p-6 text-start">
           <div className="flex items-center gap-3">
-            <span className="grid h-10 w-10 place-items-center rounded-full bg-white/10">
+            <span className="grid h-10 w-10 place-items-center rounded-full bg-secondary/10">
               <Clock className="h-4 w-4 text-sunshine" />
             </span>
             <div>
-              <p className="text-sm font-medium text-white">{t("pending.status.label")}</p>
-              <p className="text-sm text-[rgba(221,214,254,0.7)]">
+              <p className="text-sm font-medium text-foreground">{t("pending.status.label")}</p>
+              <p className="text-sm text-muted-foreground/70">
                 {isVenue
                   ? access?.hasBusiness
                     ? t("pending.status.venueApplied")
@@ -151,7 +151,7 @@ function PendingPage() {
           </div>
         </div>
 
-        <p className="mt-8 text-xs uppercase tracking-[0.14em] text-[rgba(196,181,253,0.55)]">
+        <p className="mt-8 text-xs uppercase tracking-[0.14em] text-muted-foreground/55">
           {t("pending.footnote")}
         </p>
       </main>

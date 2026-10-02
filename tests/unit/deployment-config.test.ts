@@ -46,7 +46,7 @@ describe("shared brand configuration", () => {
     expect(createBrand({})).toMatchObject({
       name: "Havato",
       logoUrl: "/havato-logo.png",
-      themeColor: "#6b21a8",
+      themeColor: "#E87524",
     });
   });
   it("supports a separate brand/domain without changing the shared product", () => {

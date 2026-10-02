@@ -14,9 +14,9 @@ const DEFAULT_ANCHORS = [
 
 
 const PILL =
-  "rounded-full px-3 py-2 text-sm text-[rgba(221,214,254,0.78)] transition-colors hover:bg-white/5 hover:text-white";
+  "rounded-full px-3 py-2 text-sm text-muted-foreground/78 transition-colors hover:bg-secondary/5 hover:text-foreground";
 const PILL_MOBILE =
-  "rounded-xl px-3 py-2.5 text-sm text-[rgba(221,214,254,0.85)] hover:bg-white/5 hover:text-white";
+  "rounded-xl px-3 py-2.5 text-sm text-muted-foreground/85 hover:bg-secondary/5 hover:text-foreground";
 
 export function PublicHeader({
   anchors = DEFAULT_ANCHORS,
@@ -49,7 +49,7 @@ export function PublicHeader({
       className={
         "fixed inset-x-0 top-0 z-50 transition-colors duration-300 " +
         (filled
-          ? "border-b border-white/10 bg-[rgba(12,7,26,0.96)] backdrop-blur-xl"
+          ? "border-b border-border/10 bg-card backdrop-blur-xl"
           : "border-b border-transparent bg-transparent")
       }
     >
@@ -64,7 +64,7 @@ export function PublicHeader({
                 if (typeof window !== "undefined" && window.history.length > 1) window.history.back();
                 else navigate({ to: "/" });
               }}
-              className="inline-flex h-9 w-9 items-center justify-center rounded-full text-[rgba(221,214,254,0.78)] transition-colors hover:bg-white/5 hover:text-white md:absolute md:-start-10"
+              className="inline-flex h-9 w-9 items-center justify-center rounded-full text-muted-foreground/78 transition-colors hover:bg-secondary/5 hover:text-foreground md:absolute md:-start-10"
             >
               <ArrowLeft className="h-4 w-4 rtl:rotate-180" />
             </button>
@@ -77,7 +77,7 @@ export function PublicHeader({
               height={36}
               className="h-9 w-9 rounded-full object-contain"
             />
-            <span className="font-serif-warm text-lg font-semibold tracking-tight text-white">
+            <span className="font-serif-warm text-lg font-semibold tracking-tight text-foreground">
               {brand.name}
             </span>
           </Link>
@@ -102,7 +102,7 @@ export function PublicHeader({
           {user ? (
             <Link
               to="/dashboard"
-              className="cosmic-cta hidden rounded-full px-4 py-2 text-sm font-semibold text-white sm:inline-flex"
+              className="cosmic-cta hidden rounded-full px-4 py-2 text-sm font-semibold text-foreground sm:inline-flex"
             >
               {t("nav.dashboard")}
             </Link>
@@ -110,13 +110,13 @@ export function PublicHeader({
             <>
               <Link
                 to="/auth"
-                className="hidden rounded-full px-3 py-2 text-sm text-[rgba(221,214,254,0.78)] transition-colors hover:text-white sm:inline-flex"
+                className="hidden rounded-full px-3 py-2 text-sm text-muted-foreground/78 transition-colors hover:text-foreground sm:inline-flex"
               >
                 {t("landing.v3.nav.login")}
               </Link>
               <Link
                 to="/waitlist"
-                className="cosmic-cta hidden rounded-full px-4 py-2 text-sm font-semibold text-white sm:inline-flex"
+                className="cosmic-cta hidden rounded-full px-4 py-2 text-sm font-semibold text-foreground sm:inline-flex"
               >
                 {t("landing.v3.nav.cta")}
               </Link>
@@ -127,7 +127,7 @@ export function PublicHeader({
             aria-label={t("nav.menu")}
             aria-expanded={open}
             onClick={() => setOpen((v) => !v)}
-            className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/15 text-white md:hidden"
+            className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-border/15 text-foreground md:hidden"
           >
             {open ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
           </button>
@@ -135,7 +135,7 @@ export function PublicHeader({
       </div>
 
       {open && (
-        <div className="border-t border-white/10 bg-[rgba(12,7,26,0.95)] px-4 pb-5 pt-3 backdrop-blur-xl md:hidden">
+        <div className="border-t border-border/10 bg-card px-4 pb-5 pt-3 backdrop-blur-xl md:hidden">
           <div className="flex flex-col gap-1">
             {anchors.map((a) => (
               <a key={a.href} href={a.href} onClick={() => setOpen(false)} className={PILL_MOBILE}>
@@ -152,7 +152,7 @@ export function PublicHeader({
               <Link
                 to="/dashboard"
                 onClick={() => setOpen(false)}
-                className="cosmic-cta mt-2 inline-flex items-center justify-center rounded-full px-4 py-3 text-sm font-semibold text-white"
+                className="cosmic-cta mt-2 inline-flex items-center justify-center rounded-full px-4 py-3 text-sm font-semibold text-foreground"
               >
                 {t("nav.dashboard")}
               </Link>
@@ -164,7 +164,7 @@ export function PublicHeader({
                 <Link
                   to="/waitlist"
                   onClick={() => setOpen(false)}
-                  className="cosmic-cta mt-2 inline-flex items-center justify-center rounded-full px-4 py-3 text-sm font-semibold text-white"
+                  className="cosmic-cta mt-2 inline-flex items-center justify-center rounded-full px-4 py-3 text-sm font-semibold text-foreground"
                 >
                   {t("landing.v3.nav.cta")}
                 </Link>

@@ -1,6 +1,9 @@
 # Design system
 
-## CURRENT — source-defined system
+## CURRENT — Havato branch palette (2026-10-02)
+
+The user-approved Havato theme supersedes the historical purple default below on `havato`. Shared semantic tokens and legacy visual aliases now use orange/cream: primary #E87524, dark #D96C1F, light #F3A15C; background #FBF3EA, surface #FFF9F2, warm surface #F5E7D8; text #2B1F1A / #6F5A4F; border #E8D8C8; gold #D9A441, success #4F7A5A, warning #C28A2E, error #B94B3F, info #557A8C. Manifest/browser/offline colors follow this palette. Existing layouts/fonts/product behavior preserved. See [Phase 2 verification](../tasks/HAVATO-phase2-finish.md).
+## Historical source-defined system
 Baseline: `a37898970d63c9358c0592a7c81f07c7cbf2b828`. Evidence: [styles](../src/styles.css), [component configuration](../components.json), `src/components/ui/`, profile and gathering components. No rendered UI audit was performed in this setup.
 
 - Tailwind 4 CSS theme variables with semantic background, foreground, card, primary, secondary, accent, muted, destructive, border/input/ring and sidebar tokens.

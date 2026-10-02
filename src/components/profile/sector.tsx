@@ -31,11 +31,11 @@ export interface SectorProps {
 
 function getSectorIcon(sector: ProfileSector) {
   const icons: Record<ProfileSector, React.ReactNode> = {
-    aura: <Sparkles className="h-5 w-5 text-purple-400" />,
-    style: <Users className="h-5 w-5 text-purple-400" />,
-    loves: <Heart className="h-5 w-5 text-purple-400" />,
-    here: <Target className="h-5 w-5 text-purple-400" />,
-    story: <BookOpen className="h-5 w-5 text-purple-400" />,
+    aura: <Sparkles className="h-5 w-5 text-primary" />,
+    style: <Users className="h-5 w-5 text-primary" />,
+    loves: <Heart className="h-5 w-5 text-primary" />,
+    here: <Target className="h-5 w-5 text-primary" />,
+    story: <BookOpen className="h-5 w-5 text-primary" />,
   };
   return icons[sector];
 }
@@ -107,7 +107,7 @@ export function Sector({
         {icon}
         <div className="flex-1">
           <div className="flex items-center gap-2">
-            <p className="text-sm font-semibold text-white">
+            <p className="text-sm font-semibold text-foreground">
               {displayTitle}
             </p>
             {/* Show completion badge if we have data */}
@@ -121,10 +121,10 @@ export function Sector({
             )}
           </div>
           {displayHint && (
-            <p className="text-xs text-white/50">{displayHint}</p>
+            <p className="text-xs text-foreground/50">{displayHint}</p>
           )}
         </div>
-        <HelpCircle className="h-4 w-4 text-white/40" />
+        <HelpCircle className="h-4 w-4 text-foreground/40" />
       </div>
       
       {/* Sector content */}
@@ -154,6 +154,6 @@ export function SectorEmpty({ sector, message }: SectorEmptyProps) {
   const displayMessage = message ?? defaultMessages[sector];
   
   return (
-    <p className="text-sm text-white/40 italic">{displayMessage}</p>
+    <p className="text-sm text-foreground/40 italic">{displayMessage}</p>
   );
 }

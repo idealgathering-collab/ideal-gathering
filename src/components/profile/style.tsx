@@ -41,7 +41,7 @@ const STYLE_ICONS: Record<string, { icon: string; labelKey: string; color: strin
   high: { icon: "⚡", labelKey: "profile.style.energyHigh", color: "#EF4444" },
   medium: { icon: "⚡", labelKey: "profile.style.energyMedium", color: "#F59E0B" },
   low: { icon: "⚡", labelKey: "profile.style.energyLow", color: "#10B981" },
-  intimate: { icon: "👥", labelKey: "profile.style.sizeIntimate", color: "#8B5CF6" },
+  intimate: { icon: "👥", labelKey: "profile.style.sizeIntimate", color: "var(--primary)" },
   small: { icon: "👥", labelKey: "profile.style.sizeSmall", color: "#3B82F6" },
   large: { icon: "👥", labelKey: "profile.style.sizeLarge", color: "#EF4444" },
   listener: { icon: "🗣️", labelKey: "profile.style.talkListener", color: "#10B981" },
@@ -68,14 +68,14 @@ function StyleTile({
 }) {
   return (
     <div
-      className="flex flex-col items-center gap-1 p-2.5 text-center rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 min-w-[80px]"
+      className="flex flex-col items-center gap-1 p-2.5 text-center rounded-2xl bg-secondary/5 backdrop-blur-sm border border-border/10 min-w-[80px]"
       style={{ color }}
     >
       <span className="text-xl" style={{ color }}>
         {icon}
       </span>
-      <span className="text-xs font-medium text-white truncate">{label}</span>
-      {subtitle && <span className="text-xs text-white/60">{subtitle}</span>}
+      <span className="text-xs font-medium text-foreground truncate">{label}</span>
+      {subtitle && <span className="text-xs text-foreground/60">{subtitle}</span>}
     </div>
   );
 }

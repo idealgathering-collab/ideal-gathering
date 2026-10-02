@@ -277,7 +277,7 @@ export function getCompletionColor(level: CompletionLevel): string {
     low: "#F59E0B",       // orange-500
     medium: "#3B82F6",     // blue-500
     high: "#10B981",      // green-500
-    complete: "#8B5CF6",   // purple-500
+    complete: "#E87524",   // Havato primary
   };
   return colors[level];
 }

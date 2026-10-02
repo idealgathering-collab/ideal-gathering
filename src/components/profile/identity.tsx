@@ -39,7 +39,7 @@ export interface IdentityProps {
 const FALLBACK_COVER = "https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=800&q=80";
 
 const PERSONA_COLORS: Record<string, string> = {
-  spark: "#8B5CF6",
+  spark: "var(--primary)",
   curiosity: "#F59E0B",
   warmth: "#10B981",
   depth: "#3B82F6",
@@ -139,8 +139,8 @@ export function Identity({
                   className="h-full w-full object-cover"
                 />
               ) : (
-                <div className="h-full w-full grid place-items-center bg-gradient-to-br from-purple-600 to-pink-700">
-                  <span className="text-5xl font-bold text-white">
+                <div className="h-full w-full grid place-items-center bg-gradient-to-br from-primary to-primary-dark">
+                  <span className="text-5xl font-bold text-foreground">
                     {displayName.slice(0, 1).toUpperCase()}
                   </span>
                 </div>
@@ -167,10 +167,10 @@ export function Identity({
       <div className="px-6 pb-6 pt-20">
         <div className="text-center">
           {/* Name and persona title on SAME line */}
-          <h1 className="text-3xl font-bold text-white">
+          <h1 className="text-3xl font-bold text-foreground">
             {displayName}
             {personaTitle && (
-              <span className="ml-2 text-xl font-medium text-white/80">
+              <span className="ml-2 text-xl font-medium text-foreground/80">
                 {personaTitle}
               </span>
             )}
@@ -178,7 +178,7 @@ export function Identity({
           
           {/* Location with icon */}
           {location && (
-            <p className="mt-2 flex items-center justify-center gap-1 text-white/70">
+            <p className="mt-2 flex items-center justify-center gap-1 text-foreground/70">
               <MapPin className="h-4 w-4" />
               <span>{location}</span>
             </p>
@@ -186,7 +186,7 @@ export function Identity({
           
           {/* Tags - EXACT from image (e.g., "Deep Conversations · Small Groups") */}
           {displayTags && (
-            <p className="mt-3 text-sm text-white/60">
+            <p className="mt-3 text-sm text-foreground/60">
               {displayTags}
             </p>
           )}

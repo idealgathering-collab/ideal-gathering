@@ -60,7 +60,7 @@ export function MatchScore({
     // Simple badge
     return (
       <span
-        className={`inline-flex items-center gap-1.5 rounded-full bg-white/95 backdrop-blur-md px-4 py-2 text-xl font-bold text-gray-900 shadow-xl ${className}`}
+        className={`inline-flex items-center gap-1.5 rounded-full bg-secondary/95 backdrop-blur-md px-4 py-2 text-xl font-bold text-gray-900 shadow-xl ${className}`}
         style={{
           borderColor: color + "40",
           boxShadow: `0 0 20px ${color}30`,
@@ -74,11 +74,11 @@ export function MatchScore({
 
   // Full breakdown
   return (
-    <div className={`rounded-2xl bg-gray-900/80 backdrop-blur-lg border border-white/10 p-4 ${className}`}>
+    <div className={`rounded-2xl bg-card backdrop-blur-lg border border-border/10 p-4 ${className}`}>
       {/* Main score */}
       <div className="flex items-center gap-3 mb-4">
         <span
-          className={`rounded-full bg-white/95 backdrop-blur-md ${badgeClasses[size]} font-bold text-gray-900`}
+          className={`rounded-full bg-secondary/95 backdrop-blur-md ${badgeClasses[size]} font-bold text-gray-900`}
           style={{
             borderColor: color + "40",
             boxShadow: `0 0 15px ${color}30`,
@@ -86,7 +86,7 @@ export function MatchScore({
         >
           {matchResult.score}%
         </span>
-        <span className="text-white font-medium">
+        <span className="text-foreground font-medium">
           {t(`landing.v3.matching.match.level.${level}`)}
         </span>
       </div>
@@ -138,8 +138,8 @@ function MatchBreakdownItem({
 
   return (
     <div className="flex items-center gap-2 text-sm">
-      <span className="text-white/60">{icon}</span>
-      <span className="text-white/80 flex-1">{label}</span>
+      <span className="text-foreground/60">{icon}</span>
+      <span className="text-foreground/80 flex-1">{label}</span>
       <span
         className="font-medium"
         style={{ color }}
@@ -178,7 +178,7 @@ export function MatchScoreBadge({
 
   return (
     <span
-      className={`inline-flex items-center gap-1.5 rounded-full bg-white/95 backdrop-blur-md font-bold text-gray-900 shadow-xl ${sizeClasses[size]} ${className}`}
+      className={`inline-flex items-center gap-1.5 rounded-full bg-secondary/95 backdrop-blur-md font-bold text-gray-900 shadow-xl ${sizeClasses[size]} ${className}`}
       style={{
         boxShadow: `0 0 20px ${color}30`,
       }}
@@ -241,7 +241,7 @@ export function MatchCompatibility({
       {items.map((item, index) => (
         <span
           key={index}
-          className="inline-flex items-center gap-1 rounded-full bg-white/5 border border-white/10 px-2 py-1 text-xs text-white/80"
+          className="inline-flex items-center gap-1 rounded-full bg-secondary/5 border border-border/10 px-2 py-1 text-xs text-foreground/80"
         >
           {item.icon}
           <span>{item.value}%</span>
