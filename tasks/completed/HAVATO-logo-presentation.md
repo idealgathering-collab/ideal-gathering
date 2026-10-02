@@ -1,6 +1,6 @@
 # Havato — stationary approved logo
 
-Status: Implementation checked; publication and live deployment verification pending.
+Status: COMPLETE — published and live verified 2026-10-02.
 Approval: User request 2026-10-02, logo behavior/consistency only; commit/publish to havato and verify Darkube. Phase 2 remains complete; no Phase 3.
 Branch: havato. Baseline: ca58f01ff24fc862752ee68334608a40a8de6542.
 
@@ -26,4 +26,10 @@ No new logo, asset redraw, theme/layout redesign, backend/auth/waitlist/product 
 
 ## Publication
 
-Publish this bounded change to havato, allow the existing auto-deploy, verify exact-commit Darkube success and live stationary/uncropped logo. Stop after logo cleanup.
+Implementation published as 3db0825e2ab6dd3d5945926ad2bb77af311773e5. The GitHub connector published the exact tested local tree c771f5f62ab669b8ee2159553222e2da0985110a with a non-forced fast-forward; local unpublished 61d4c19 was reconciled to the identical remote tree.
+
+[Exact-commit Darkube build](https://console.hamravesh.com/@havato/darkube/app/b1544805-3e87-4110-b0ba-4b8fb723e103/build_list/a5a9942c-61f6-4b05-bc9b-b573d51a7d2f) reports image pushed, deployment OK and build completed successfully; app healthy. [Live Havato](https://havato-test.darkube.ir/) verified after rollout: read-only existing venue session on desktop/mobile, public mobile FA waitlist, shared public header/footer; computed logo animationName none, transform none, borderRadius 0px, objectFit contain. Live /auth?mode=signin, /pending, /terms and /waitlist?lang=en return 200; logo markup is uncropped and all loaded stylesheets lack logo-idle-spin/animate-logo-spin. Full live auth/pending visual checks are covered by local browser checks; the existing logged-in browser was preserved.
+
+Live approved website logo and favicon/192/512/Apple/1024px icon bytes exactly match repository files. Manifest retains standalone root entry and orange/cream launch colors. Physical installed-device launch was not rerun; no distinct standalone logo implementation exists. No remaining logo animation. Generic activity spinners and unrelated decorations intentionally remain.
+
+Completion update changes documentation only; application tree is identical to the verified deployment. Stop here; no Phase 3.
