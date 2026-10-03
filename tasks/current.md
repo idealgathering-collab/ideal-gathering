@@ -1,15 +1,18 @@
-# Current task — Havato Notifications Phase 4: final code phase in progress
+# Current task — Havato Notifications Phase 4: final code phase COMPLETE
 
 User-approved Havato-only preferences/controls, baseline `b6746236`, no device
-acceptance or Bazaar/TWA/APK work. [Scope and checkpoint](HAVATO-notifications-phase4.md).
+acceptance or Bazaar/TWA/APK work. [Completed scope and exact device checklist](completed/HAVATO-notifications-phase4.md).
 Master/four categories, per-user RLS storage, explicit FA/EN push language and
-delivery-time gating implemented. 129 unit, 27 preference SQL/type, 38 event SQL,
-35 PWA/worker/install checks, TypeScript and focused implementation lint pass.
-Havato-only migration applied and schema/grants/RLS inspected; ledger readback,
-DOM suite fixes, publication/Linux container CI and Darkube/live verification remain.
-Local visual preview unavailable; Windows Nitro packaging retains known EPERM.
-Next: finish DOM fixture checks, publish, verify Linux CI and Havato deployment,
-archive record. No real push or hosted product/preference fixture was created.
+delivery-time gating implemented. 140 unit/DOM, 85 disposable SQL/type/security,
+35 PWA/worker/install checks, TypeScript and focused lint pass. Implementation
+`2550a5d1bc50459ee026b372724a00c9fbdc5e08` published; exact-tree Linux CI passes
+container and stateless startup. Havato-only migration/ledger applied and verified;
+RLS/least-privilege grants inspected. Darkube build `20b59a9d-3a5c-4925-8bb4-a463365aae5b`
+deploy OK, app healthy, live Phase 4 auth/settings/manifest and actual preference
+bundle verified; worker bytes unchanged. Local visual preview unavailable;
+Windows Nitro packaging retains known EPERM. Physical mobile/real-provider and
+authenticated live preference writes remain in the separate final acceptance.
+Stop here: no real push, hosted preference fixtures, device acceptance or packaging.
 
 ---
 # Historical — Havato Notifications Phase 3: code and infrastructure COMPLETE

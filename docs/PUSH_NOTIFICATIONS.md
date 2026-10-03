@@ -16,7 +16,7 @@ After event-recipient authorization, dispatch reads latest preferences immediate
 before shared delivery. Read errors fail closed; suppressed claimed events are not
 replayed. Event capture/in-app state, subscriptions and provider cleanup are intact.
 Migration `20261003150000` applies only to Havato `ntmnpmdjfrbporcvafei`.
-See [Phase 4 scope/checkpoint and final device checklist](../tasks/HAVATO-notifications-phase4.md).
+See [completed Phase 4 record and final device checklist](../tasks/completed/HAVATO-notifications-phase4.md).
 Final real Android/iPhone acceptance remains a separate task; no push was sent here.
 
 ## Notifications Phase 3
