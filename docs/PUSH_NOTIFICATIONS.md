@@ -5,7 +5,7 @@
 User-approved event wiring on `havato`: committed join confirmation; approved
 gathering updates/approval and cancellation; one pre-start reminder; profile
 readiness/beta launch; venue approval/rejection; existing room message writes.
-See [exact Phase 3 targeting, templates, scheduling, dedupe and rollout](../tasks/HAVATO-notifications-phase3.md).
+See [exact Phase 3 targeting, templates, scheduling, dedupe and rollout](../tasks/completed/HAVATO-notifications-phase3.md).
 Database triggers capture events without changing existing product write paths.
 Service-only dispatch rechecks current recipients and uses the Phase 2 sender.
 Templates contain no personal/product text. Persian default, English ready;

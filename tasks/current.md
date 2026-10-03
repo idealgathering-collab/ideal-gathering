@@ -1,17 +1,18 @@
-# Current task — Havato Notifications Phase 3: event wiring, verification and rollout
+# Current task — Havato Notifications Phase 3: code and infrastructure COMPLETE
 
-User explicitly approved Phase 3 only on `havato`, baseline `0fb6f92`.
-[Exact scope and implementation checkpoint](HAVATO-notifications-phase3.md).
-Shared Phase 2 delivery extracted for reuse. Additive Havato-only trigger/event
-migration implements join confirmations, gathering updates/cancellations/reminders,
-ready account/beta launch, venue approval/rejection and existing chat write path.
-Typed Persian/English templates; current-recipient checks and terminal dedupe.
-111 focused unit tests, 38 disposable PostgreSQL checks and 35 worker/PWA checks
-pass. Typecheck and focused lint pass; Windows build filesystem restriction is recorded, Linux
-checks pending publication. Havato prerequisite dashboard inspected, no migration
-applied yet. Next: focused CI, exact Havato migration, publish and verify deployment.
+User-approved Phase 3 only on `havato`.
+[Completed scope, verification and rollout](completed/HAVATO-notifications-phase3.md).
+Published implementation `856ee1ab` and line-ending preservation `8478e612`.
+111 focused unit tests, 38 disposable SQL checks, 35 PWA/worker/install checks,
+TypeScript, focused lint and both Linux container/startup CI runs pass.
+Havato-only migration applied and ledger recorded; six triggers and service-only
+access verified. Darkube build `b06414bf-04d4-4e4f-8939-142dad48ba54` deploy OK,
+image `8478e612-b15448`, app healthy. Earlier live HTTP checks confirm Phase 3
+server/auth, manifest/worker and disabled test endpoint. Browser sign-in works;
+repeat shell checks blocked by local DNS, no repeated full HTTP suite claimed.
 Real-device Phase 2/3 acceptance intentionally deferred until code phases complete,
-per user; do not block Phase 3 on it. Stop before Phase 4/preferences/Bazaar.
+per user instruction. Phase 4 preferences/controls remain; no Phase 4/Bazaar work
+started. Stop here.
 
 ---
 # Historical — Havato Notifications Phase 2: infrastructure deployed, real-device acceptance deferred

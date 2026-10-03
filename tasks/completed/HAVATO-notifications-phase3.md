@@ -1,6 +1,6 @@
 # Havato Notifications Phase 3 — product event delivery
 
-Status: In progress. User explicitly approved Phase 3 implementation, publication
+Status: Phase 3 code and infrastructure complete; real-device acceptance deferred. User explicitly approved Phase 3 implementation, publication
 and Havato deployment on 2026-10-03. Baseline `0fb6f92a0e6c1479ee2ec5938d607b6c78227c8a`.
 Branch `havato`. This approval supersedes the historical Phase 2 acceptance gate:
 finish notification code phases first; defer real-device acceptance until afterward.
@@ -33,8 +33,11 @@ auth/beta gates; worker and offline/install/cache behavior are unchanged.
 
 ## Data, targeting and rollout
 
-Apply only `20261003120000_havato_push_events.sql` to Havato project
+Applied only `20261003120000_havato_push_events.sql` to Havato project
 `ntmnpmdjfrbporcvafei`, after prerequisite inspection and disposable SQL checks.
+Hosted metadata confirms six capture triggers, RLS enabled, no authenticated
+table/claim/recheck privileges, service-role claim allowed, and migration ledger
+recorded. PostgREST schema reload notified. No hosted fixture/product writes.
 New event table has no client privileges or RLS policies; private trigger helpers
 and service-only claim RPC. No backfill or changes to existing product RLS.
 Event recipient IDs come from committed rows, never client push input.
@@ -76,7 +79,7 @@ TypeScript and focused lint pass. Windows Vitest temporary rename restriction wa
 resolved by setting TEMP/TMP to a workspace scratch directory; no repo tooling
 change. Windows production build reaches Nitro packaging and reproduces the known
 EPERM asynchronous realpath restriction. Frozen dependency/Linux container CI
-and exact deployment verification pending. npm ci was unavailable because the
+passed for both published implementation and normalization heads. npm ci was unavailable because the
 existing npm lockfile lags package.json; preserved both lockfiles and reused the
 Phase 2 installed modules locally. Linux uses the authoritative frozen Bun graph.
 
@@ -86,7 +89,36 @@ table/history rather than destructive cleanup. No broad migration replay.
 
 ## Remaining
 
-Focused checks, Havato migration rollout, commit/push and Darkube/live verification.
+No Phase 3 code or rollout work remains. Provider/device acceptance remains
+intentionally deferred until the code phases finish.
 Phase 4: notification controls/preferences and delivery selection, followed by
 explicit supported Android/iPhone subscription/provider/display/click acceptance
 across Phases 2–3. Physical-device acceptance intentionally deferred by the user.
+
+## Published implementation and rollout
+
+Implementation: `856ee1aba0017bc31abbb7fd348e34b4b49b13c9`.
+Line-ending preservation: `8478e6122d6fbf5b79791be6c5fa7dce311bed3a`.
+Both published Linux CI runs pass; [current implementation-head run](https://github.com/idealgathering-collab/ideal-gathering/actions/runs/37122540901)
+includes frozen Bun dependencies, focused tests, Docker build and stateless startup.
+Darkube [build b06414bf-04d4-4e4f-8939-142dad48ba54](https://console.hamravesh.com/@havato/darkube/app/b1544805-3e87-4110-b0ba-4b8fb723e103/build_list/b06414bf-04d4-4e4f-8939-142dad48ba54)
+shows image `8478e612-b15448`, deploy OK and build completed successfully; app healthy.
+Live auth returned HTTP 200 with `x-havato-notifications-phase: 3`; manifest and
+worker returned 200 with Havato branding. Disabled self-test returned 404 JSON.
+A later browser check loads the Persian Havato sign-in page correctly. Repeat
+shell HTTP checks encountered local DNS resolution failure; no full repeated
+HTTP suite or final live worker byte comparison is claimed. Worker source is
+unchanged and its focused regression checks pass. No actual push was sent.
+
+Changed files: `src/lib/push-delivery.server.ts` (shared sender),
+`src/lib/push-events.server.ts` (templates/dispatcher), `src/server.ts` (timer),
+`src/integrations/supabase/types.ts` (verified RPC shapes),
+`supabase/migrations/20261003120000_havato_push_events.sql` (events/security),
+`tests/unit/push-events.test.ts`, `tests/push-events.local.mjs`,
+`.github/workflows/havato-container.yml`, `env/.env.example`,
+`docs/PUSH_NOTIFICATIONS.md`, `tasks/HAVATO-notifications-phase2.md`,
+`tasks/current.md`, and this archived completion record.
+
+No preferences/final acceptance/Bazaar work started. Phase 4 remains notification
+preferences and controls, then real Android/iPhone subscription, provider, display
+and click acceptance across Phases 2–3, explicitly deferred by the user.

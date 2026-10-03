@@ -152,7 +152,7 @@ Clear the test allowlist after verification; sender then returns 404 again.
 
 Superseded by explicit user authorization on 2026-10-03: implement Notifications
 Phase 3 now, complete code phases first and defer real-device acceptance until
-afterward. [Current Phase 3 scope and checkpoint](HAVATO-notifications-phase3.md).
+afterward. [Current Phase 3 scope and checkpoint](completed/HAVATO-notifications-phase3.md).
 The historical gate below no longer blocks Phase 3.
 
 Product event triggers (invites, reminders, chat, approvals) remain entirely
