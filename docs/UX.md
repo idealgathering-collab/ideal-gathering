@@ -1,5 +1,16 @@
 # UX
 
+## IG-010 Havato public home — 2026-10-03
+
+The reference-based home explains finding new activity companions and organizing
+friends/family gatherings. Farsi defaults to RTL; persisted English switches to
+LTR. Responsive cards, planning strip, activity examples, trust guidance, FAQ,
+mobile navigation and signup statuses use the existing orange/cream tokens.
+Signup retains the required name, email and consent and the existing Supabase
+contract. Planning features are explicitly described as staged product direction.
+Approved logo, PWA install, auth links and access gates remain intact.
+See [verification](../tasks/completed/IG-010-havato-home-report.md).
+
 ## IG-005 own Life Profile — 2026-09-24
 
 `/profile` now opens on identity, a bounded real-data life summary, private-aware
