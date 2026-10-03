@@ -17,12 +17,14 @@ jobs:
       - name: Focused notification checks with the frozen dependency graph
         run: |
           bun install --frozen-lockfile
-          bun run test -- tests/unit/push-delivery.test.ts tests/unit/push-adapter.test.ts tests/unit/web-push.test.ts tests/unit/push-events.test.ts
-          npm install --prefix /tmp/havato-pg --no-save --ignore-scripts --no-audit --no-fund @electric-sql/pglite@0.5.8
+          bun run test -- tests/unit/push-delivery.test.ts tests/unit/push-adapter.test.ts tests/unit/web-push.test.ts tests/unit/push-events.test.ts tests/unit/notification-preferences.test.ts tests/unit/notification-preferences-store.test.ts
+          npm install --prefix /tmp/havato-pg --no-save --ignore-scripts --no-audit --no-fund @electric-sql/pglite@0.5.8 jsdom@26.1.0
           node tests/push-events.local.mjs /tmp/havato-pg/node_modules/@electric-sql/pglite/dist/index.js
+          node tests/notification-preferences.local.mjs /tmp/havato-pg/node_modules/@electric-sql/pglite/dist/index.js
+          HAVATO_TEST_JSDOM=/tmp/havato-pg/node_modules/jsdom/lib/api.js bun run test -- tests/unit/notification-controls.ui.test.ts
           node --test tests/pwa-push.test.mjs tests/pwa-service-worker.test.mjs tests/pwa-install.test.mjs
           bunx tsc --noEmit
-          bunx eslint src/lib/push-delivery.server.ts src/lib/push-events.server.ts tests/unit/push-events.test.ts tests/unit/push-delivery.test.ts tests/unit/push-adapter.test.ts
+          bunx eslint src/lib/push-delivery.server.ts src/lib/push-events.server.ts src/lib/notification-preferences.ts src/lib/notification-preferences-store.ts src/components/notification-preferences-controls.tsx src/components/push-notification-entry.tsx tests/unit/push-events.test.ts tests/unit/push-delivery.test.ts tests/unit/push-adapter.test.ts tests/unit/notification-preferences.test.ts tests/unit/notification-preferences-store.test.ts
       - name: Build container with dummy backend only
         run: >-
           docker build -t havato:test

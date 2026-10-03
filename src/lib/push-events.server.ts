@@ -1,4 +1,5 @@
 import { createHash } from "node:crypto";
+import { notificationAllowed, type NotificationPreferences } from "./notification-preferences";
 import {
   deliverUserPush,
   pushDependencies,
@@ -60,8 +61,7 @@ const copy: Record<PushEventKind, { en: string; fa: string }> = {
   },
 };
 
-// Existing language is browser-local, unavailable to trusted server dispatch.
-// Persian is Havato's existing default; English is ready without adding preferences.
+// Explicit per-user push language; absent preferences retain Persian.
 export function buildEventPayload(event: PushEvent, language: unknown = "fa"): PushPayload {
   if (!eventKinds.includes(event.kind)) throw new Error("Unknown push event");
   const lang = language === "en" ? "en" : "fa";
@@ -110,6 +110,51 @@ export function createEventRunner(dependencies: {
   };
 }
 
+export function createPreferenceEventSender(dependencies: {
+  authorize: (event: PushEvent) => Promise<boolean>;
+  preferences: (userId: string) => Promise<NotificationPreferences | null>;
+  deliver: (event: PushEvent, payload: PushPayload) => Promise<unknown>;
+}) {
+  return async (event: PushEvent) => {
+    if (!(await dependencies.authorize(event))) return;
+    // Read at delivery time, after authorization, never cached with the claim.
+    const preferences = await dependencies.preferences(event.recipient_id);
+    if (!notificationAllowed(preferences, event.kind)) return;
+    return dependencies.deliver(event, buildEventPayload(event, preferences?.language));
+  };
+}
+
+const sendEvent = createPreferenceEventSender({
+  async authorize(event) {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data, error } = await supabaseAdmin.rpc("havato_push_event_eligible", {
+      _id: event.id,
+    });
+    if (error) throw new Error("Event authorization unavailable");
+    return data === true;
+  },
+  async preferences(userId) {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data, error } = await supabaseAdmin
+      .from("notification_preferences")
+      .select(
+        "enabled,gathering_reminders,gathering_updates,chat_messages,account_venue_status,language",
+      )
+      .eq("user_id", userId)
+      .maybeSingle();
+    if (error) throw new Error("Notification preferences unavailable");
+    return data ? { ...data, language: data.language === "en" ? "en" : "fa" } : null;
+  },
+  async deliver(event, payload) {
+    return deliverUserPush(
+      pushDependencies,
+      event.recipient_id,
+      payload,
+      validateVapidConfig(process.env),
+    );
+  },
+});
+
 const runEvents = createEventRunner({
   async claim(lead) {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
@@ -119,20 +164,7 @@ const runEvents = createEventRunner({
     if (error) throw new Error("Event claim unavailable");
     return (data ?? []) as PushEvent[];
   },
-  async send(event, payload) {
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { data, error } = await supabaseAdmin.rpc("havato_push_event_eligible", {
-      _id: event.id,
-    });
-    if (error) throw new Error("Event authorization unavailable");
-    if (data !== true) return;
-    return deliverUserPush(
-      pushDependencies,
-      event.recipient_id,
-      payload,
-      validateVapidConfig(process.env),
-    );
-  },
+  send: sendEvent,
   log: (code) => console.warn("[Havato push]", code),
 });
 

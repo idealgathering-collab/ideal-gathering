@@ -1,4 +1,23 @@
-# Havato Web Push (Notifications Phases 1–3)
+# Havato Web Push (Notifications Phases 1–4)
+
+## Notifications Phase 4
+
+Settings now consolidates device registration with account-wide master/category
+controls. Default master and all categories are on; missing rows preserve existing
+delivery. Categories: reminders; gathering updates/cancellations/join confirmations;
+chat; account readiness/beta launch and venue decisions. Device unsubscribe remains
+separate and does not change the account-wide choices. Denied/unsupported/iOS
+Home Screen states retain clear instructions without automatic permission prompts.
+
+`notification_preferences` stores one ownership/RLS-protected row per user. Client
+SELECT/INSERT/UPDATE only, no delete; service-role SELECT only. Explicit saved
+notification language is FA/EN, default Persian, independent of browser UI language.
+After event-recipient authorization, dispatch reads latest preferences immediately
+before shared delivery. Read errors fail closed; suppressed claimed events are not
+replayed. Event capture/in-app state, subscriptions and provider cleanup are intact.
+Migration `20261003150000` applies only to Havato `ntmnpmdjfrbporcvafei`.
+See [Phase 4 scope/checkpoint and final device checklist](../tasks/HAVATO-notifications-phase4.md).
+Final real Android/iPhone acceptance remains a separate task; no push was sent here.
 
 ## Notifications Phase 3
 

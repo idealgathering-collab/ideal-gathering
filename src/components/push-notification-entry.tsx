@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Bell } from "lucide-react";
+import { NotificationPreferencesControls } from "./notification-preferences-controls";
 import { Button } from "@/components/ui/button";
 import { useSession } from "@/hooks/use-session";
 import { useI18n } from "@/i18n";
@@ -16,12 +17,12 @@ import {
 const copy = {
   en: {
     title: "Notifications on this device",
-    body: "Prepare this device for Havato notifications. Notifications are not being sent yet.",
+    body: "Enable push on this device, then choose what you receive below.",
     enable: "Enable notifications",
     disable: "Disable on this device",
     checking: "Checking this device…",
     ready: "Not enabled on this device.",
-    enabled: "This device is registered. Notifications will begin in a later release.",
+    enabled: "Notifications are enabled on this device. Your choices below control delivery.",
     repair: "This device needs to be registered again. Tap Enable to retry.",
     busy: "Updating…",
     denied: "Notifications are blocked. Allow them in your browser or device settings, then retry.",
@@ -36,12 +37,12 @@ const copy = {
   },
   fa: {
     title: "اعلان‌ها در این دستگاه",
-    body: "این دستگاه را برای اعلان‌های هواتو آماده کنید. هنوز اعلانی ارسال نمی‌شود.",
+    body: "اعلان‌ها را در این دستگاه فعال کنید و در پایین انتخاب کنید چه اعلان‌هایی دریافت کنید.",
     enable: "فعال‌کردن اعلان‌ها",
     disable: "غیرفعال‌کردن در این دستگاه",
     checking: "در حال بررسی دستگاه…",
     ready: "اعلان‌ها در این دستگاه فعال نیستند.",
-    enabled: "این دستگاه ثبت شد. ارسال اعلان‌ها در نسخه‌های بعدی شروع می‌شود.",
+    enabled: "اعلان‌ها در این دستگاه فعال هستند. انتخاب‌های زیر ارسال آن‌ها را کنترل می‌کنند.",
     repair: "این دستگاه باید دوباره ثبت شود. برای تلاش مجدد، فعال‌کردن را بزنید.",
     busy: "در حال به‌روزرسانی…",
     denied:
@@ -191,6 +192,7 @@ export function PushNotificationEntry() {
           )}
         </div>
       )}
+      <NotificationPreferencesControls />
     </section>
   );
 }

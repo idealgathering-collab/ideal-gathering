@@ -14,6 +14,36 @@ export type Database = {
   }
   public: {
     Tables: {
+      notification_preferences: {
+        Row: {
+          user_id: string
+          enabled: boolean
+          gathering_reminders: boolean
+          gathering_updates: boolean
+          chat_messages: boolean
+          account_venue_status: boolean
+          language: string
+        }
+        Insert: {
+          user_id: string
+          enabled?: boolean
+          gathering_reminders?: boolean
+          gathering_updates?: boolean
+          chat_messages?: boolean
+          account_venue_status?: boolean
+          language?: string
+        }
+        Update: {
+          user_id?: string
+          enabled?: boolean
+          gathering_reminders?: boolean
+          gathering_updates?: boolean
+          chat_messages?: boolean
+          account_venue_status?: boolean
+          language?: string
+        }
+        Relationships: []
+      }
       push_subscriptions: {
         Row: {
           application_server_key: string

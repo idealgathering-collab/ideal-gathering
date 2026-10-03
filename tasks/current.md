@@ -1,4 +1,18 @@
-# Current task — Havato Notifications Phase 3: code and infrastructure COMPLETE
+# Current task — Havato Notifications Phase 4: final code phase in progress
+
+User-approved Havato-only preferences/controls, baseline `b6746236`, no device
+acceptance or Bazaar/TWA/APK work. [Scope and checkpoint](HAVATO-notifications-phase4.md).
+Master/four categories, per-user RLS storage, explicit FA/EN push language and
+delivery-time gating implemented. 129 unit, 27 preference SQL/type, 38 event SQL,
+35 PWA/worker/install checks, TypeScript and focused implementation lint pass.
+Havato-only migration applied and schema/grants/RLS inspected; ledger readback,
+DOM suite fixes, publication/Linux container CI and Darkube/live verification remain.
+Local visual preview unavailable; Windows Nitro packaging retains known EPERM.
+Next: finish DOM fixture checks, publish, verify Linux CI and Havato deployment,
+archive record. No real push or hosted product/preference fixture was created.
+
+---
+# Historical — Havato Notifications Phase 3: code and infrastructure COMPLETE
 
 User-approved Phase 3 only on `havato`.
 [Completed scope, verification and rollout](completed/HAVATO-notifications-phase3.md).

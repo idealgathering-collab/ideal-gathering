@@ -1,5 +1,19 @@
 # Tests
 
+## Havato notification preferences / controls
+
+Focused logic/store tests: `bun run test -- tests/unit/notification-preferences.test.ts tests/unit/notification-preferences-store.test.ts`.
+Disposable SQL/ownership/defaults/types: `node tests/notification-preferences.local.mjs <pglite/dist/index.js>`.
+DOM integration uses scratch-installed `jsdom@26.1.0` (not an app dependency):
+`HAVATO_TEST_JSDOM=<absolute jsdom/lib/api.js> bun run test -- tests/unit/notification-controls.ui.test.ts`.
+It is explicitly skipped without that environment setting; CI enables it. Covers
+FA/EN direction/labels, master/category saves, failures/retry, account transition,
+denied/unsupported and subscribe/unsubscribe with synthetic APIs and no real push.
+Portable visual fixture: `bunx vite --config tests/notifications-preview/vite.config.ts`.
+Fixture URL switches: `?permission=denied`, `?unsupported=1`, `?load-error=1`, `?fail=1`.
+No hosted credentials or real provider calls. DOM tests do not prove visual layout
+or real device acceptance; separately inspect mobile FA/EN and the final checklist.
+
 ## Unit (default)
 
 ```bash
