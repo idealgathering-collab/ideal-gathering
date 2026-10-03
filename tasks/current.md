@@ -1,4 +1,4 @@
-# Current task — Havato Notifications Phase 2: infrastructure implemented, live acceptance pending
+# Current task — Havato Notifications Phase 2: infrastructure deployed, real-provider acceptance blocked
 
 User-approved 2026-10-03 Notifications Phase 2 only on `havato`, baseline
 `8b49c7cde351b10bf30454076e428ec1e824dc21`.
@@ -6,12 +6,23 @@ User-approved 2026-10-03 Notifications Phase 2 only on `havato`, baseline
 Server-only self-test sender, VAPID validation, provider egress guard, snapshot-safe
 404/410 cleanup, worker display/click and focused tests implemented. Real pair
 generated and privately retained encrypted; Havato Darkube runtime/public build
-settings saved. Commit, Linux CI, new deployment and live-bundle verification
-in progress. Test endpoint remains disabled without a designated account UUID.
+settings saved and public/isolated-backend build arguments read back. Implementation
+`278dc99a4470a2611ce5778508661262c8070d3d` published; Linux frozen install, 91 focused
+unit checks, 35 PWA checks, typecheck/lint, container and stateless startup pass
+(run `37113320146`). Darkube build `90552293-7717-4dd5-bb0a-aa5c4c707f32` succeeded;
+`278dc99a-b15448` deployed. Live auth HTTP 200, manifest Havato, worker exact-source
+match, and actual served notification bundle contains the matching retained public
+key. Three runtime VAPID entries persisted, private half encrypted/masked. Test
+endpoint remains disabled without a designated account UUID; observed live
+HTTP 404 JSON. VAPID setup is resolved, not an outstanding configuration blocker.
 No real browser subscription or end-to-end notification claim: browser app is
 signed out. No DB migration/RLS change or Ideal Gathering production work.
 Stop before event triggers/preferences/Bazaar. Do not mark Phase 2 complete until
 real-provider and observed-device acceptance is recorded.
+Precise owner action: sign in to a designated Havato test account in the retained
+browser tab; never send passwords/session tokens in chat. Then allowlist that
+account with runtime `WEB_PUSH_TEST_USER_IDS` and perform explicit real-device
+subscription/self-test/display/click verification. No actual push was sent.
 
 ---
 # Historical — Havato Notifications Phase 1: deployed foundation, VAPID enablement pending at that checkpoint

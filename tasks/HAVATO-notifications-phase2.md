@@ -1,6 +1,6 @@
 # Havato Notifications Phase 2 — secure delivery infrastructure
 
-Status: Implementation complete; publication and live verification in progress.
+Status: Infrastructure configured, published and deployed; real-provider/device acceptance blocked on owner sign-in. Overall Phase 2 is not marked complete.
 Approval: User request on 2026-10-03, Notifications Phase 2 only.
 Branch: `havato`; baseline `8b49c7cde351b10bf30454076e428ec1e824dc21`.
 
@@ -58,7 +58,12 @@ Configured runtime `WEB_PUSH_VAPID_PRIVATE_KEY` in encrypted secrets and
 `WEB_PUSH_VAPID_PUBLIC_KEY`, `WEB_PUSH_VAPID_SUBJECT` in runtime variables.
 Subject uses the owner-controlled Havato HTTPS app URL, no invented mailbox.
 Configured matching public `VITE_WEB_PUSH_VAPID_PUBLIC_KEY` as Docker build ARG.
-Saved settings; exact new-code deployment verification remains below.
+Saved and read back the setting on a freshly loaded settings page: exact retained
+public key matches. The CI editor prepended rather than appended the new row;
+early incomplete edits did not persist. Filled the actual new row and verified
+all three original arguments plus the public key persisted before rebuilding.
+The runtime entries also persisted on a freshly loaded page: public half matches
+and private half is listed exclusively as a masked encrypted secret.
 Existing runtime Supabase variables are unchanged. Test account allowlist remains
 unset deliberately: there is no signed-in Havato test account in this browser.
 
@@ -71,20 +76,34 @@ Prior hosted RLS passes are historical evidence, not a new Phase 2 run.
 
 ## Checks and remaining acceptance
 
-- Focused unit sender/config/URL/egress/auth/rate/error tests and Phase 1 lifecycle
-  regression checks run locally; final exact count recorded after final validation.
+- Focused unit sender/config/URL/egress/auth/rate/error/adapter tests and Phase 1
+  subscription lifecycle regression checks: 91 passed in three files.
 - Worker receive/display/click and existing install/offline suite: 35 passed.
   These are isolated worker fixtures, not provider/device receipt.
-- Focused lint run; final result recorded after final validation.
+- Focused lint for server and the two new unit files: passed.
+- TypeScript: passed locally after pinning the TanStack versions already in Bun
+  lock; no source repair or tracked dependency upgrades were needed.
+- Local Vite build using a dummy backend: passed using task-local filesystem
+  compatibility helpers. Browser output scan found no server/private material.
+  Local process listened; HTTP from a separate command timed out in this sandbox.
 - Windows Bun temporary directory access fails with EBADF; npm fallback uses
   task-local filesystem compatibility helpers (untracked). Initial npm-ci refused
   the already-stale npm lockfile. It was not broadly regenerated.
 - Local fallback dependency drift initially produced an unchanged `__root.tsx`
   router type mismatch; locked-version Linux CI is the authoritative check.
 - Added only the Web Push dependency graph to authoritative Bun lock from
-  registry metadata/integrities; frozen install/container CI must confirm it.
-- Current live app remains healthy at baseline before publishing. Real app
-  `/pending` redirects to sign-in: no logged-in Havato account is available.
+  registry metadata/integrities. Exact-commit Linux CI run `37113320146` passed:
+  frozen install, the focused checks, TypeScript, lint, Docker build, stateless
+  non-root startup, Havato health/manifest, and existing server-secret sentinel scan.
+- Implementation `278dc99a4470a2611ce5778508661262c8070d3d` committed and pushed to
+  `havato`. Initial Darkube build `8f82123c-3d42-497e-bf13-28312d60bcdb` completed
+  successfully, including deploy. Live auth HTTP 200; new worker push/click code
+  present; disabled internal endpoint returns HTTP 404 JSON `Not found`.
+  That first image's served notification chunk did not yet contain the public
+  key. An early repeat build used the unchanged persisted settings; a final
+  rebuild followed after the new argument was correctly saved and freshly read back.
+- Real app `/pending` redirects to sign-in: no logged-in Havato account is
+  available. No browser permission request/subscription was performed by the agent.
 - Real provider subscription/persistence: NOT VERIFIED. No actual notification
   sent, received, displayed or clicked; no physical Android/iPhone claim.
 - Owner verification action: sign in to a designated Havato test account on a
@@ -100,6 +119,34 @@ Never put it in command arguments, source or chat. Record aggregate provider
 status separately from observed OS notification and click behavior. Verify
 subscribe/save/unsubscribe/remove against the live backend, without fixtures.
 Clear the test allowlist after verification; sender then returns 404 again.
+
+## Final infrastructure/live checkpoint — 2026-10-03
+
+- Darkube build `90552293-7717-4dd5-bb0a-aa5c4c707f32` for implementation
+  `278dc99a4470a2611ce5778508661262c8070d3d` completed build/push/deploy successfully.
+  Image tag `278dc99a-b15448`, digest
+  `sha256:4f65f86373dc8252ca74666e356aaca3c25041fe551c6969edb8c3080e480bba`.
+- Live auth returns HTTP 200. Live
+  `assets/push-notification-entry-D_nzYsBX.js` returns HTTP 200 and contains the
+  exact retained matching public key (value intentionally omitted).
+  The other intermediate emitted filename is not a live asset; no success claim
+  relies on it. Public key is now genuinely compiled in, not just an editor value.
+- Live `/sw.js` matches committed worker source after newline normalization.
+  Live manifest still names Havato; cache/install/offline source unchanged.
+  No authenticated waiting/venue acceptance or physical install was re-run.
+- Live `POST /api/push/test` returns 404 JSON `Not found` while test allowlist is
+  unset. This confirms disabled runtime behavior, not authenticated send success.
+- VAPID build/runtime configuration is no longer a blocker. Only
+  `WEB_PUSH_TEST_USER_IDS` still needs a designated authenticated test account.
+- No real provider subscription, subscription DB persistence, actual provider
+  acceptance, OS notification display or actual click has been verified.
+- One precise owner action to resume acceptance: sign in to a designated Havato
+  test account in the retained browser tab. Do not send a password/session token
+  in chat. The agent can then configure the account allowlist and coordinate
+  explicit notification permission and real-device self-test verification.
+- This verification update is published separately from implementation. Its
+  auto-deployment contains identical application code; final chat reports the
+  subsequent documentation head and its observed deployment status.
 
 ## Phase 3 boundary
 

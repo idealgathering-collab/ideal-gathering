@@ -244,3 +244,18 @@ Havato project `ntmnpmdjfrbporcvafei`. It creates two synthetic accounts/endpoin
 inside one transaction, tests actual authenticated-role RLS, and rolls everything
 back. It neither changes existing users nor sends email/push. Never use it on
 Ideal Gathering production; never remove its transaction/rollback safeguards.
+# Havato Notifications Phase 2 focused checks
+
+On `havato` only:
+
+```sh
+bun run test -- tests/unit/push-delivery.test.ts tests/unit/push-adapter.test.ts tests/unit/web-push.test.ts
+node --test tests/pwa-push.test.mjs tests/pwa-service-worker.test.mjs tests/pwa-install.test.mjs
+bunx tsc --noEmit
+bunx eslint src/lib/push-delivery.server.ts tests/unit/push-delivery.test.ts tests/unit/push-adapter.test.ts
+```
+
+Unit adapters and worker fixtures never contact a real push provider or live
+database. They cannot prove permission/subscription creation, delivery or OS
+display/click. See `tasks/HAVATO-notifications-phase2.md` for exact live status
+and the allowlisted self-only manual verification path. No schema/RLS changes.
