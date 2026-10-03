@@ -1,4 +1,23 @@
-# Havato Web Push (Notifications Phases 1–2)
+# Havato Web Push (Notifications Phases 1–3)
+
+## Notifications Phase 3
+
+User-approved event wiring on `havato`: committed join confirmation; approved
+gathering updates/approval and cancellation; one pre-start reminder; profile
+readiness/beta launch; venue approval/rejection; existing room message writes.
+See [exact Phase 3 targeting, templates, scheduling, dedupe and rollout](../tasks/HAVATO-notifications-phase3.md).
+Database triggers capture events without changing existing product write paths.
+Service-only dispatch rechecks current recipients and uses the Phase 2 sender.
+Templates contain no personal/product text. Persian default, English ready;
+browser-local language is unavailable on server. No preferences added.
+Server minute timer, default 60-minute reminder lead, unique event/recipient,
+atomic terminal claim before delivery; no automatic retry. No-subscription no-op.
+Gathering invitations/join requests and unredeemed email invitations are deferred
+because there is no suitable existing workflow or identified subscribed recipient.
+Real-device acceptance for Phases 2–3 is intentionally deferred until all code
+phases are complete, per user instruction. This supersedes the old Phase 2 gate.
+
+## Historical Phases 1–2
 
 Scope: opt-in subscription registration/removal and secure self-test delivery on
 `havato`. No product event triggers, chat push, preferences, analytics or Bazaar

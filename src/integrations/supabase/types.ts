@@ -910,6 +910,22 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      havato_push_event_eligible: { Args: { _id: string }; Returns: boolean }
+      havato_claim_push_events: {
+        Args: { _lead_minutes?: number }
+        Returns: {
+          id: string
+          event_key: string
+          kind: string
+          recipient_id: string
+          resource_id: string
+          actor_id: string | null
+          snapshot: string | null
+          created_at: string
+          expires_at: string
+          claimed_at: string | null
+        }[]
+      }
       get_gathering_moment_context: {
         Args: { _gathering_id: string };
         Returns: { happened_at: string; id: string; place: string; title: string }[];

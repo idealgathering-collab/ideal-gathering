@@ -1,4 +1,7 @@
 import "./lib/error-capture";
+import { startPushEventTimer } from "./lib/push-events.server";
+
+startPushEventTimer();
 
 import { consumeLastCapturedError } from "./lib/error-capture";
 import { renderErrorPage } from "./lib/error-page";
@@ -85,6 +88,7 @@ function withSecurityHeaders(response: Response): Response {
   headers.set("referrer-policy", "strict-origin-when-cross-origin");
   headers.set("x-content-type-options", "nosniff");
   headers.set("permissions-policy", PERMISSIONS_POLICY);
+  headers.set("x-havato-notifications-phase", "3");
   return new Response(response.body, {
     status: response.status,
     statusText: response.statusText,

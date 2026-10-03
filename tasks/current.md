@@ -1,4 +1,20 @@
-# Current task — Havato Notifications Phase 2: infrastructure deployed, real-provider acceptance blocked
+# Current task — Havato Notifications Phase 3: event wiring, verification and rollout
+
+User explicitly approved Phase 3 only on `havato`, baseline `0fb6f92`.
+[Exact scope and implementation checkpoint](HAVATO-notifications-phase3.md).
+Shared Phase 2 delivery extracted for reuse. Additive Havato-only trigger/event
+migration implements join confirmations, gathering updates/cancellations/reminders,
+ready account/beta launch, venue approval/rejection and existing chat write path.
+Typed Persian/English templates; current-recipient checks and terminal dedupe.
+111 focused unit tests, 38 disposable PostgreSQL checks and 35 worker/PWA checks
+pass. Typecheck and focused lint pass; Windows build filesystem restriction is recorded, Linux
+checks pending publication. Havato prerequisite dashboard inspected, no migration
+applied yet. Next: focused CI, exact Havato migration, publish and verify deployment.
+Real-device Phase 2/3 acceptance intentionally deferred until code phases complete,
+per user; do not block Phase 3 on it. Stop before Phase 4/preferences/Bazaar.
+
+---
+# Historical — Havato Notifications Phase 2: infrastructure deployed, real-device acceptance deferred
 
 User-approved 2026-10-03 Notifications Phase 2 only on `havato`, baseline
 `8b49c7cde351b10bf30454076e428ec1e824dc21`.

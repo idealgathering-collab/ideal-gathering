@@ -21,7 +21,7 @@ export type StoredSubscription = {
   application_server_key: string;
   updated_at: string;
 };
-type VapidConfig = { subject: string; publicKey: string; privateKey: string };
+export type VapidConfig = { subject: string; publicKey: string; privateKey: string };
 type Environment = Record<string, string | undefined>;
 
 export function validateVapidConfig(env: Environment): VapidConfig {
@@ -125,7 +125,7 @@ export function safePushEndpoint(endpoint: string): boolean {
   }
 }
 
-type Dependencies = {
+export type PushDependencies = {
   authenticate: (token: string) => Promise<string | null>;
   subscriptions: (userId: string) => Promise<StoredSubscription[]>;
   remove: (userId: string, subscription: StoredSubscription) => Promise<boolean>;
@@ -172,7 +172,10 @@ async function readTestInput(request: Request): Promise<"en" | "fa"> {
   return data.lang === "fa" ? "fa" : "en";
 }
 
-export function createTestPushHandler(dependencies: Dependencies, environment: () => Environment) {
+export function createTestPushHandler(
+  dependencies: PushDependencies,
+  environment: () => Environment,
+) {
   const lastAttempt = new Map<string, number>();
   const respond = (status: number, body: unknown) =>
     Response.json(body, {
@@ -234,103 +237,122 @@ export function createTestPushHandler(dependencies: Dependencies, environment: (
           ? "اعلان آزمایشی هواتو. برای باز کردن برنامه ضربه بزنید."
           : "Havato test notification. Tap to open the app.",
     });
-    const summary = { accepted: 0, removed: 0, failed: 0, skipped: 0 };
     try {
-      const subscriptions = await dependencies.subscriptions(userId);
-      if (subscriptions.length > MAX_SUBSCRIPTIONS)
+      return respond(200, await deliverUserPush(dependencies, userId, payload, config));
+    } catch (error) {
+      if (error instanceof PushFanoutError)
         return respond(409, { error: "Too many subscriptions for test delivery" });
-      for (const subscription of subscriptions) {
-        if (
-          subscription.application_server_key !== config.publicKey ||
-          !safePushEndpoint(subscription.endpoint) ||
-          !/^[A-Za-z0-9_-]{87}$/.test(subscription.p256dh) ||
-          !/^[A-Za-z0-9_-]{22}$/.test(subscription.auth)
-        ) {
-          summary.skipped++;
-          dependencies.log("subscription_skipped");
-          continue;
-        }
-        try {
-          await dependencies.send(subscription, payload, config);
-          summary.accepted++;
-        } catch (error) {
-          const candidate =
-            error && typeof error === "object"
-              ? (error as { statusCode?: unknown }).statusCode
-              : undefined;
-          const status =
-            typeof candidate === "number" && Number.isInteger(candidate) ? candidate : undefined;
-          if (status === 404 || status === 410) {
-            try {
-              if (await dependencies.remove(userId, subscription)) summary.removed++;
-              else summary.skipped++;
-            } catch {
-              summary.failed++;
-              dependencies.log("stale_cleanup_failed", status);
-            }
-          } else {
-            summary.failed++;
-            dependencies.log("provider_delivery_failed", status);
-          }
-        }
-      }
-      return respond(200, summary);
-    } catch {
-      dependencies.log("subscription_read_failed");
       return respond(503, { error: "Push delivery unavailable" });
     }
   };
 }
 
-export const handleTestPush = createTestPushHandler(
-  {
-    async authenticate(token) {
-      const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-      const { data, error } = await supabaseAdmin.auth.getUser(token);
-      return error ? null : (data.user?.id ?? null);
-    },
-    async subscriptions(userId) {
-      const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-      const { data, error } = await supabaseAdmin
-        .from("push_subscriptions")
-        .select("endpoint,p256dh,auth,application_server_key,updated_at")
-        .eq("user_id", userId)
-        .limit(MAX_SUBSCRIPTIONS + 1);
-      if (error) throw new Error("Subscription read failed");
-      return data ?? [];
-    },
-    async remove(userId, subscription) {
-      const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-      const { data, error } = await supabaseAdmin
-        .from("push_subscriptions")
-        .delete()
-        .eq("user_id", userId)
-        .eq("endpoint", subscription.endpoint)
-        .eq("updated_at", subscription.updated_at)
-        .eq("p256dh", subscription.p256dh)
-        .eq("auth", subscription.auth)
-        .eq("application_server_key", subscription.application_server_key)
-        .select("endpoint");
-      if (error) throw new Error("Subscription cleanup failed");
-      return !!data?.length;
-    },
-    async send(subscription, payload, config) {
-      await webpush.sendNotification(
-        {
-          endpoint: subscription.endpoint,
-          keys: { p256dh: subscription.p256dh, auth: subscription.auth },
-        },
-        JSON.stringify(payload),
-        {
-          vapidDetails: config,
-          TTL: 300,
-          timeout: 10_000,
-          contentEncoding: "aes128gcm",
-          urgency: "normal",
-        },
-      );
-    },
-    log: (code, status) => console.warn("[Havato push]", code, status ?? "network_or_validation"),
+export const pushDependencies: PushDependencies = {
+  async authenticate(token) {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data, error } = await supabaseAdmin.auth.getUser(token);
+    return error ? null : (data.user?.id ?? null);
   },
-  () => process.env,
-);
+  async subscriptions(userId) {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data, error } = await supabaseAdmin
+      .from("push_subscriptions")
+      .select("endpoint,p256dh,auth,application_server_key,updated_at")
+      .eq("user_id", userId)
+      .limit(MAX_SUBSCRIPTIONS + 1);
+    if (error) throw new Error("Subscription read failed");
+    return data ?? [];
+  },
+  async remove(userId, subscription) {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data, error } = await supabaseAdmin
+      .from("push_subscriptions")
+      .delete()
+      .eq("user_id", userId)
+      .eq("endpoint", subscription.endpoint)
+      .eq("updated_at", subscription.updated_at)
+      .eq("p256dh", subscription.p256dh)
+      .eq("auth", subscription.auth)
+      .eq("application_server_key", subscription.application_server_key)
+      .select("endpoint");
+    if (error) throw new Error("Subscription cleanup failed");
+    return !!data?.length;
+  },
+  async send(subscription, payload, config) {
+    await webpush.sendNotification(
+      {
+        endpoint: subscription.endpoint,
+        keys: { p256dh: subscription.p256dh, auth: subscription.auth },
+      },
+      JSON.stringify(payload),
+      {
+        vapidDetails: config,
+        TTL: 300,
+        timeout: 10_000,
+        contentEncoding: "aes128gcm",
+        urgency: "normal",
+      },
+    );
+  },
+  log: (code, status) => console.warn("[Havato push]", code, status ?? "network_or_validation"),
+};
+
+export const handleTestPush = createTestPushHandler(pushDependencies, () => process.env);
+
+class PushFanoutError extends Error {}
+
+export async function deliverUserPush(
+  dependencies: PushDependencies,
+  userId: string,
+  input: PushPayload,
+  config: VapidConfig,
+) {
+  if (!UUID.test(userId)) throw new Error("Invalid recipient");
+  const payload = validatePushPayload(input);
+  const summary = { accepted: 0, removed: 0, failed: 0, skipped: 0 };
+  try {
+    const subscriptions = await dependencies.subscriptions(userId);
+    if (subscriptions.length > MAX_SUBSCRIPTIONS)
+      throw new PushFanoutError("Too many subscriptions for delivery");
+    for (const subscription of subscriptions) {
+      if (
+        subscription.application_server_key !== config.publicKey ||
+        !safePushEndpoint(subscription.endpoint) ||
+        !/^[A-Za-z0-9_-]{87}$/.test(subscription.p256dh) ||
+        !/^[A-Za-z0-9_-]{22}$/.test(subscription.auth)
+      ) {
+        summary.skipped++;
+        dependencies.log("subscription_skipped");
+        continue;
+      }
+      try {
+        await dependencies.send(subscription, payload, config);
+        summary.accepted++;
+      } catch (error) {
+        const candidate =
+          error && typeof error === "object"
+            ? (error as { statusCode?: unknown }).statusCode
+            : undefined;
+        const status =
+          typeof candidate === "number" && Number.isInteger(candidate) ? candidate : undefined;
+        if (status === 404 || status === 410) {
+          try {
+            if (await dependencies.remove(userId, subscription)) summary.removed++;
+            else summary.skipped++;
+          } catch {
+            summary.failed++;
+            dependencies.log("stale_cleanup_failed", status);
+          }
+        } else {
+          summary.failed++;
+          dependencies.log("provider_delivery_failed", status);
+        }
+      }
+    }
+    return summary;
+  } catch (error) {
+    if (error instanceof PushFanoutError) throw error;
+    dependencies.log("subscription_read_failed");
+    throw new Error("Push delivery unavailable");
+  }
+}
