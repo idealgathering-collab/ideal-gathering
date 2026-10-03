@@ -1,4 +1,20 @@
-# Current task — Havato Notifications Phase 4: final code phase COMPLETE
+# Current task — IG-010 Havato homepage implemented
+
+User-approved reference homepage on `havato-home-reference`, baseline 9ed2316.
+[Completed scope](completed/IG-010-havato-home.md) · [Verification](completed/IG-010-havato-home-report.md).
+Responsive FA/EN home, two use cases, planning strip, trust, activity categories,
+FAQ and mobile menu. Exact waitlist helper/insert contract and approved logo
+preserved. Four optimized supporting images; install/auth/backend untouched.
+14 browser layout configurations and 7 interaction checks pass; 9 focused unit
+checks, TypeScript and focused lint pass. Full suite: 415 pass, 16 failures also
+reproduced on baseline, 11 skipped. Full lint retains unrelated baseline errors.
+Client/SSR compilation passes; Windows Nitro packaging blocked by the recorded
+baseline tslib realpath EPERM. Draft review branch only; no merge/deployment or
+production writes. Next: review the draft and validate Linux packaging before a
+separately authorized Havato release.
+
+---
+Current task â€” Havato Notifications Phase 4: final code phase COMPLETE
 
 User-approved Havato-only preferences/controls, baseline `b6746236`, no device
 acceptance or Bazaar/TWA/APK work. [Completed scope and exact device checklist](completed/HAVATO-notifications-phase4.md).
@@ -15,7 +31,7 @@ authenticated live preference writes remain in the separate final acceptance.
 Stop here: no real push, hosted preference fixtures, device acceptance or packaging.
 
 ---
-# Historical — Havato Notifications Phase 3: code and infrastructure COMPLETE
+# Historical â€” Havato Notifications Phase 3: code and infrastructure COMPLETE
 
 User-approved Phase 3 only on `havato`.
 [Completed scope, verification and rollout](completed/HAVATO-notifications-phase3.md).
@@ -32,7 +48,7 @@ per user instruction. Phase 4 preferences/controls remain; no Phase 4/Bazaar wor
 started. Stop here.
 
 ---
-# Historical — Havato Notifications Phase 2: infrastructure deployed, real-device acceptance deferred
+# Historical â€” Havato Notifications Phase 2: infrastructure deployed, real-device acceptance deferred
 
 User-approved 2026-10-03 Notifications Phase 2 only on `havato`, baseline
 `8b49c7cde351b10bf30454076e428ec1e824dc21`.
@@ -59,17 +75,17 @@ account with runtime `WEB_PUSH_TEST_USER_IDS` and perform explicit real-device
 subscription/self-test/display/click verification. No actual push was sent.
 
 ---
-# Historical — Havato Notifications Phase 1: deployed foundation, VAPID enablement pending at that checkpoint
+# Historical â€” Havato Notifications Phase 1: deployed foundation, VAPID enablement pending at that checkpoint
 
 User-approved 2026-10-03 push foundation only on `havato`, baseline 0a3c8bd.
-[Implementation and final verification](HAVATO-notifications-phase1.md) · [Architecture, schema and exact env names](../docs/PUSH_NOTIFICATIONS.md).
+[Implementation and final verification](HAVATO-notifications-phase1.md) Â· [Architecture, schema and exact env names](../docs/PUSH_NOTIFICATIONS.md).
 Implementation cb1aafb7174e7347203f0163320dd969c5a3212a published; exact-commit Linux container/stateless startup CI passed. Darkube confirms cb1aafb7-b15448 healthy/Running. Live desktop/Android emulation: HTTP 200, new notification entry, no initial permission prompt, denied-permission guard, zero installability errors, unchanged worker/icons/manifest/colors, FA/RTL/mobile overflow and offline/reconnect pass. Auth/REST and empty PushManager lookup were fixtures, no real provider subscription claimed.
 68 focused unit + 17 PWA + 20 disposable PostgreSQL checks, TypeScript and focused lint pass. Actual reusable component browser fixtures verify subscribe/save, unsubscribe/delete, persistence-failure rollback/retry and FA/RTL. Windows packaging hits pre-existing tslib realpath EPERM; Linux CI resolves build validation.
 Signed-in in-app browser recovered. Applied exact additive migration 20261003090000 only to Havato project ntmnpmdjfrbporcvafei and recorded ledger entry. Hosted authenticated-role own CRUD/upsert/multiple-device and cross-user denial checks pass; all synthetic users/endpoints rolled back. Existing account data unaffected. No Ideal Gathering production access or change.
 Public VITE_WEB_PUSH_VAPID_PUBLIC_KEY is not configured in Darkube build arguments. Hooks are implemented, and absent config safely disables Enable. No private VAPID pair was generated/configured. Supply the public half of a retained real pair, rebuild and verify actual provider subscribe/unsubscribe before claiming end-to-end push foundation activation. Physical Android/iPhone push remains untested. Stop before sending/event/chat/preferences/analytics/Bazaar work. Notifications Phase 2 remains secure delivery, worker handling and stale-endpoint cleanup.
 
 ---
-# Current task — Havato Phase 3 COMPLETE
+# Current task â€” Havato Phase 3 COMPLETE
 
 [Completed scope and acceptance](completed/HAVATO-phase3.md). User explicitly selected isolated browser fixtures and deferred Google. Published implementation c6fed64cbe181b7151c8fa66306b977f0e7fb176 / documentation head 30949e76aa62f4535a88ca6fb3abfc481daec285: both Linux container/startup checks passed. Live origin now serves Phase 3 auth-2VISgTNA.js and public signup link; previous old-bundle mismatch cleared. Darkube console requires login, so its exact deployed revision is unverified. Live implementation and HTTP 200 confirmed; no app/deployment code change needed.
 
@@ -77,57 +93,57 @@ Actual live Chromium acceptance with intercepted backend responses passed user s
 
 Accepted fixture limitations: email delivery/link consumption, hosted SQL/RLS/admin approval and physical installs were not repeated. Google is explicitly deferred and unchanged: disabled in Havato Supabase project ntmnpmdjfrbporcvafei. This does not block Phase 3 completion by user decision. No core blocker remains. Phase 3 COMPLETE. Stop here; no Google configuration, Phase 4 or Ideal Gathering production work.
 ---
-# Current task — Havato logo presentation COMPLETE
+# Current task â€” Havato logo presentation COMPLETE
 
 User-authorized 2026-10-02 branding-only cleanup on havato, baseline ca58f01. [Scope and focused verification](completed/HAVATO-logo-presentation.md). Removed continuous logo rotation and old circular crops/tinted footer treatment; approved logo assets, image boxes, theme and all app/PWA behavior retained. 16 branding/config tests and TypeScript pass; focused lint matches six pre-existing owner-page errors. Desktop/mobile waitlist, sign-in, pending/loading and shared header/footer verified locally. Implementation 3db0825e2ab6dd3d5945926ad2bb77af311773e5 published; exact-commit Darkube deployment succeeded and live logo HTML/CSS, desktop/mobile venue/public/shared logos and unchanged approved asset bytes verified. Physical installed-device launch not rerun. Stop here, no Phase 3.
 
 ---
-# Current task — Havato Phase 2 COMPLETE
+# Current task â€” Havato Phase 2 COMPLETE
 
-User-authorized finish pass on `havato` completed 2026-10-02. [Full scope and verification](completed/HAVATO-phase2-finish.md). Approved orange/cream palette applied; Steps 5–6 passed with recorded fixture/tooling limits. Implementation af01dbfb4aa2db4d38540fa3bd2f228f2994f6e5 published, Linux container CI passed, Darkube deployed and final live site verified. Entire Chromium reopen and actual v1→v2 worker upgrade preserve session/expiry and saved EN/FA/RTL; no auth changes. 17 PWA and 48 focused unit tests plus TypeScript pass; 8 exact baseline lint errors retained. Android physical acceptance relies on user's existing confirmation. Physical iPhone acceptance explicitly waived and accepted as non-blocking residual risk. No production/Supabase changes, push or native packages. Stop here; do not start Phase 3.
+User-authorized finish pass on `havato` completed 2026-10-02. [Full scope and verification](completed/HAVATO-phase2-finish.md). Approved orange/cream palette applied; Steps 5â€“6 passed with recorded fixture/tooling limits. Implementation af01dbfb4aa2db4d38540fa3bd2f228f2994f6e5 published, Linux container CI passed, Darkube deployed and final live site verified. Entire Chromium reopen and actual v1â†’v2 worker upgrade preserve session/expiry and saved EN/FA/RTL; no auth changes. 17 PWA and 48 focused unit tests plus TypeScript pass; 8 exact baseline lint errors retained. Android physical acceptance relies on user's existing confirmation. Physical iPhone acceptance explicitly waived and accepted as non-blocking residual risk. No production/Supabase changes, push or native packages. Stop here; do not start Phase 3.
 
 ---
-# Current task — Havato PWA Phase 2, Step 4
+# Current task â€” Havato PWA Phase 2, Step 4
 
 User-authorized 2026-10-02: iPhone/iOS install setup and focused testing only on `havato`, baseline `6cf68a20757dc8765f712f4f31820b621639bef9`. See [Step 4 scope and verification](HAVATO-pwa-step4.md). Existing iOS controller and Android native install behavior preserved. Added Apple Home Screen metadata and clarified bilingual Safari instructions. Implementation `0b0ba3d0abd7410838e1d3c0cc9f31822ec62b37` published; Linux CI, Darkube auto-deploy and live WebKit EN/FA/standalone plus Android native-eligibility checks pass. Physical iPhone installation/launch remains required. Stop after Step 4; no session persistence, final cross-device checks, color migration, push, backend or production work.
 
 ---
-# Current task — Havato PWA Phase 2, Step 3
+# Current task â€” Havato PWA Phase 2, Step 3
 
 User-authorized 2026-10-01: Android installability diagnosis and public install CTA only on havato, baseline e462a85f061d9fb65e24814fe5cda4eabfb0b3c3. See [Step 3 implementation and checks](HAVATO-pwa-step3.md). Small bilingual CTA and early native event capture implemented; 14 focused tests, TypeScript, focused lint and actual component browser checks pass. Manifest/icons and service worker unchanged; no Android manifest blocker found in live HTTP checks. Implementation published as 2992f4b00e6f57a259da99c3f6a1d039daa8234b; Linux container CI passed and Darkube public rollout verified. Live normal Chrome desktop and Android emulation report zero installability errors, emit a real native event, show the CTA and invoke the native prompt once; worker remains active/unchanged. Physical Android WebAPK installation/standalone launch still required; device-specific shortcut cause remains unconfirmed. Next: complete that physical-device check; stop after Step 3.
 
 ---
 
-# Current task — Havato PWA Phase 2, Step 2
+# Current task â€” Havato PWA Phase 2, Step 2
 
 User-authorized 2026-10-01: service worker, safe static caching and offline fallback only on havato. Baseline 40047719c3706eb11f4b1ee612158c608fb21e16; Step 1 live verification passed. See [Step 2 scope and checks](completed/HAVATO-pwa-step2.md). Focused worker and isolated browser checks pass. Publish checkpoint, allow existing Darkube auto-deploy, then verify live registration/offline/reconnect behavior. Stop after Step 2; Step 3 remains Android install/standalone testing.
 
 ---
 
-# Current task — Havato PWA Phase 2, Step 1
+# Current task â€” Havato PWA Phase 2, Step 1
 
 User-authorized 2026-10-01: foundation verification only on havato. See [scope and checks](completed/HAVATO-pwa-step1.md). Manifest/meta colors now match the existing public orange/cream palette; approved icons and launch settings verified. Focused local checks pass. Publish this checkpoint and verify the existing Darkube live manifest/meta/icons. Stop after Step 1; service worker remains Step 2.
 
 ---
 
-# Current task — Havato desktop landing polish
+# Current task â€” Havato desktop landing polish
 
 User-authorized frontend-only polish on havato, based on deployed 4e744a85ee547bcb931442c22e1105b45f0baf65. See [scope and verification](completed/HAVATO-desktop-polish.md). Implementation and focused local visual/CSS checks complete; GitHub publication and existing Darkube auto-deployment verification pending. No backend, assets, copy, routes, or mobile layout changes.
 
 ---
-# Current task — Havato approved logo/icon correction
+# Current task â€” Havato approved logo/icon correction
 
 User-authorized branding-only fix on havato. See [scope and checks](completed/HAVATO-logo-icons.md). Assets prepared; focused checks and existing Darkube deployment verification in progress. Homepage behavior/layout and all production/Supabase settings preserved.
 
 ---
 
-# Current task — Havato Phase 1
+# Current task â€” Havato Phase 1
 
 User-authorized Phase 1 only. See [completed Phase 1 and verification](completed/HAVATO-phase1.md). Responsive public waitlist is live on Darkube; implementation 9419ff4, Linux container CI passed, FA/EN and mobile verified. Stop after Phase 1. Preserve all Ideal Gathering production and Supabase settings. Phase 2 has not started.
 
 ---
 
-# Current task — Havato visible branding correction
+# Current task â€” Havato visible branding correction
 
 User-authorized scope, 2026-09-29: branding only on havato; push for Darkube auto-deployment and verify https://havato-test.darkube.ir. No theme, product behavior, production, or Supabase changes.
 
@@ -139,28 +155,28 @@ Remaining verification: confirm Linux container CI and Darkube redeployment, the
 
 ---
 
-# Current task — Havato deployment
+# Current task â€” Havato deployment
 
-Branch: havato. Full IG001–IG009 incorporated without conflicts. [Scope](HAVATO-deployment.md) · [Verification and exact blockers](HAVATO-verification.md) · [Darkube runbook](../docs/HAVATO-DARKUBE.md).
+Branch: havato. Full IG001â€“IG009 incorporated without conflicts. [Scope](HAVATO-deployment.md) Â· [Verification and exact blockers](HAVATO-verification.md) Â· [Darkube runbook](../docs/HAVATO-DARKUBE.md).
 
 Local code, database/API tests, production build and Linux stateless container verification pass. Hosted deployment remains pending new Supabase project/password handoff and paid Darkube approval. No Ideal Gathering production changes. Next: finish isolated backend creation, validate fresh-project migration plan, configure real build arguments/runtime secrets, obtain paid-resource approval, then deploy and run hosted journey matrix.
 
 ---
 
-# Current task — Havato deployment
+# Current task â€” Havato deployment
 
-[Approved scope](HAVATO-deployment.md). Branch: havato. Full IG001–IG009 incorporated at 33e3176 by fast-forward. Havato container/branding verification in progress. No production modifications.
+[Approved scope](HAVATO-deployment.md). Branch: havato. Full IG001â€“IG009 incorporated at 33e3176 by fast-forward. Havato container/branding verification in progress. No production modifications.
 
 ---
 
-# Current task — IG-009
+# Current task â€” IG-009
 
 ## Active approved scope
-IG-009 — Portable Deployment, Staging & Beta Readiness.
+IG-009 â€” Portable Deployment, Staging & Beta Readiness.
 Farzin approved the revised scope on 2026-09-27; it supersedes Lovable-first staging.
 Branch: codex/ig-009-staging-beta, draft PR #13 stacked on #12.
-[Accepted spec](IG-009-staging-beta-readiness.md) · [Verification](IG-009-verification.md)
-· [Deploy/run/env contract](../docs/DEPLOYMENT.md).
+[Accepted spec](IG-009-staging-beta-readiness.md) Â· [Verification](IG-009-verification.md)
+Â· [Deploy/run/env contract](../docs/DEPLOYMENT.md).
 
 Checkpoint: portable implementation published as 0f03e31; Windows and Linux verification pass.
 Standard Vite/TanStack Start/Nitro Node build passes on Windows/Node 24.
@@ -171,7 +187,7 @@ files retain baseline lint debt (exact comparison in verification).
 Supabase public/server settings are explicit; old tracked .env removed. Direct
 Supabase OAuth is default, Lovable OAuth/build is optional. Local visual assets
 and minimal brand/SEO/manifest/text/theme hooks support a future Havato build.
-No dependencies/lockfiles/schema/product rules changed; venue cap stays 2–5.
+No dependencies/lockfiles/schema/product rules changed; venue cap stays 2â€“5.
 No Lovable credits/editor/remix, production writes, migrations, merge or deployment.
 Hosted Auth/email/Storage/maps and full beta journeys are NOT RUN: no isolated
 backend/hosting credentials. Local fixture artifact is not a live staging site.
@@ -183,7 +199,7 @@ Keep IG-009 active until actual hosted beta validation passes.
 ---
 
 ## Historical record (prior queue authorization and checkpoints)
-The deployment exclusions below describe the earlier IG-001–008 scope. The active IG-009
+The deployment exclusions below describe the earlier IG-001â€“008 scope. The active IG-009
 spec above governs current staged release work and its production safety gates.
 
 # Current task
@@ -195,14 +211,14 @@ Execute one bounded spec at a time. Approval of the queue does not authorize unr
 
 ## Approved implementation queue
 
-1. [IG-001 — Owner Role Foundation — complete](completed/IG-001-owner-role-foundation.md)
-2. [IG-002 — Profile Data Ownership Cleanup — complete](completed/IG-002-profile-data-ownership.md)
-3. [IG-003 — Life Moments Foundation — complete](completed/IG-003-life-moments-foundation.md)
-4. [IG-004 — Completed Gathering to Life Moment — complete](completed/IG-004-gathering-to-life-moment.md)
-5. [IG-005 — Life Profile V1 — complete](completed/IG-005-life-profile-v1.md)
-6. [IG-006 — Other-User Member Profile + Privacy — complete](completed/IG-006-public-life-profile.md)
-7. [IG-007 — Life Summary & Activity Insights V1 — complete](completed/IG-007-life-summary-v1.md)
-8. [IG-008 — Venue Dashboard Value Layer — complete](completed/IG-008-venue-dashboard-value-layer.md)
+1. [IG-001 â€” Owner Role Foundation â€” complete](completed/IG-001-owner-role-foundation.md)
+2. [IG-002 â€” Profile Data Ownership Cleanup â€” complete](completed/IG-002-profile-data-ownership.md)
+3. [IG-003 â€” Life Moments Foundation â€” complete](completed/IG-003-life-moments-foundation.md)
+4. [IG-004 â€” Completed Gathering to Life Moment â€” complete](completed/IG-004-gathering-to-life-moment.md)
+5. [IG-005 â€” Life Profile V1 â€” complete](completed/IG-005-life-profile-v1.md)
+6. [IG-006 â€” Other-User Member Profile + Privacy â€” complete](completed/IG-006-public-life-profile.md)
+7. [IG-007 â€” Life Summary & Activity Insights V1 â€” complete](completed/IG-007-life-summary-v1.md)
+8. [IG-008 â€” Venue Dashboard Value Layer â€” complete](completed/IG-008-venue-dashboard-value-layer.md)
 
 ## Implementation queue complete
 
@@ -211,12 +227,12 @@ No next product feature is authorized automatically. Next: review the stacked PR
 complete supported-platform build and hosted staging validation, then plan release.
 Completion here does not mean merged, deployed or production-beta validated.
 
-### IG-008 corrective checkpoint — 2026-09-27
+### IG-008 corrective checkpoint â€” 2026-09-27
 
 User-authorized follow-up on `codex/ig-008-venue-value-layer`, starting at
 `14d9330`, in existing draft PR #12, still stacked on IG-007 PR #11.
 Both registration and dashboard profile pickers now inherit shared Armenia/Yerevan
-behavior. Venue activation has integer 2–5 form bounds, defensive payload clamping,
+behavior. Venue activation has integer 2â€“5 form bounds, defensive payload clamping,
 and an origin-specific database CHECK for direct inserts/updates. Physical table
 capacity and consumer gathering capacity rules remain unchanged.
 
@@ -237,7 +253,7 @@ Exact commands, evidence and rollout limits are in the
 Next: review this correction in PR #12, then supported-platform build and staging
 validation in dependency order. No IG-009, merge, deployment or production mutation.
 
-### IG-008 verification closure — 2026-09-27
+### IG-008 verification closure â€” 2026-09-27
 
 Complete on `codex/ig-008-venue-value-layer`, based on IG-007 `d56c413` (PR #11).
 Implementation `5975fc3` is pushed in draft [PR #12](https://github.com/idealgathering-collab/ideal-gathering/pull/12), stacked on PR #11. Temporary services stopped; viewport restored.
@@ -260,7 +276,7 @@ restrict operational writes; applied only to the marked disposable database.
 [verification report](completed/IG-008-verification.md), and
 [counting/privacy contract](../docs/VENUE_DASHBOARD.md).
 
-### IG-007 verification closure — 2026-09-26
+### IG-007 verification closure â€” 2026-09-26
 
 Complete on `codex/ig-007-life-summary-v1`, based on IG-006 `65f9286`.
 Implementation `e601443` is pushed in draft [PR #11](https://github.com/idealgathering-collab/ideal-gathering/pull/11),
@@ -288,7 +304,7 @@ of reliable evidence. Existing editing, matching and IG-006 remain unchanged.
 files, commands, recovered failures and rollout limits. IG-006 PR #10 remains an
 unmerged dependency. Review the stacked PR; IG-008 stays a separate task.
 
-### IG-006 verification closure — 2026-09-26
+### IG-006 verification closure â€” 2026-09-26
 
 Complete on `codex/ig-006-member-profile-privacy`, based on IG-005 `d840b37`.
 Implementation `ac493ee` is pushed in draft [PR #10](https://github.com/idealgathering-collab/ideal-gathering/pull/10), stacked on PR #9.
@@ -311,7 +327,7 @@ behavior verified. No public social metadata, new feed or /life route.
 commands, recovered failures and rollout limits. Next: review IG-006, then implement
 IG-007 as a separate task. Preserve the unmerged IG-005 dependency.
 
-### IG-005 verification closure — 2026-09-24
+### IG-005 verification closure â€” 2026-09-24
 
 Branch `codex/ig-005-life-profile-v1`, based on IG-004 `abafe39` / PR #8.
 Implementation `c5c4d4b` is pushed in draft
@@ -344,7 +360,7 @@ files, all checks and environment limits. No production migration, merge or
 deployment. Preserve the unmerged PR #8 dependency. Exact next step: review
 IG-005, then address IG-006 separately; do not start it in this task.
 
-### IG-004 verification closure — 2026-09-24
+### IG-004 verification closure â€” 2026-09-24
 
 Branch `codex/ig-004-gathering-to-life-moment`, based on IG-003 `7c71e88` / PR #7.
 Implementation checkpoint `bb8d0a7` is pushed in ready-for-review
@@ -376,7 +392,7 @@ copy are complete. No Profile redesign, automatic creation or IG-005 work.
 Review stacked on PR #7 and preserve the unmerged dependency order.
 Temporary database/API/preview services stopped; browser viewport restored.
 
-### IG-003 verification closure — 2026-09-20
+### IG-003 verification closure â€” 2026-09-20
 
 Branch `codex/ig-003-life-moments-foundation`, based on IG-002 `72b214a` / PR #6.
 Implementation checkpoint `8cdc039` is pushed in ready-for-review
@@ -408,7 +424,7 @@ after 60 seconds; private orphan media cleanup remains authorized rollout work.
 Review this branch stacked on PR #6 and preserve dependency order.
 Final cleanup confirmed both disposable test-service ports are closed.
 
-### IG-002 verification closure — 2026-09-19
+### IG-002 verification closure â€” 2026-09-19
 
 Branch `codex/ig-002-profile-data-ownership`, based on IG-001 completion `c78968c`.
 Implemented canonical preference ownership, additive table/RLS/backfill migration
@@ -434,7 +450,7 @@ which is still unmerged; preserve dependency order. Review/merge and production
 rollout remain separate. Apply the additive migration before new RPC clients,
 inspect target schema/ledger drift and verify staging cache/privacy/save behavior.
 
-### IG-001 verification closure — 2026-09-19
+### IG-001 verification closure â€” 2026-09-19
 
 Continued from `116a53f` on the same branch. No implementation restart.
 [Final verification report](completed/IG-001-verification.md) and
@@ -464,7 +480,7 @@ the documented rollout procedure. The known build/lint issues remain documented.
 
 ## Historical IG-001 checkpoints (superseded by closure above)
 
-### IG-001 checkpoint — 2026-09-19
+### IG-001 checkpoint â€” 2026-09-19
 
 Branch: `codex/ig-001-owner-role-foundation`, based on approved specs commit `f9c8e3e` (includes main `9e69980`). Separate clean checkout; earlier local work preserved.
 
@@ -474,7 +490,7 @@ Implemented additive corrective migration using `private.has_role`, serialized c
 
 Remaining: finish verification and baseline failure comparison, record rollout/type-generation limitations and final handoff. No hosted database, deployment or merge performed.
 
-### IG-001 final implementation checkpoint — 2026-09-19
+### IG-001 final implementation checkpoint â€” 2026-09-19
 
 Implementation ready for review; validation remains incomplete. See [exact results and rollout/recovery report](completed/IG-001-verification.md).
 
@@ -490,7 +506,7 @@ targets the approved specs branch `docs/ig-001-008-build-specs`. Not merged/depl
 
 Exact next step: review the task branch, verify the migration/RPC/auth/admin behavior and simultaneous admin claims on a designated disposable target, regenerate types from verified schema, and obtain a supported-platform build. Preserve the active spec until these checks close, then archive spec/report under `completed/`, update links and hand off to IG-002. No unrelated implementation is authorized by this checkpoint.
 
-**IG-001 — Owner Role Foundation**
+**IG-001 â€” Owner Role Foundation**
 
 Repository evidence already identified a concrete mismatch: the owner bootstrap migration references a public role helper removed/moved by earlier migrations, while generated Supabase types lag owner role/RPC support.
 
@@ -503,12 +519,12 @@ Do not broaden IG-001 into an access-system rewrite or owner-dashboard redesign.
 The surrounding gathering product already exists and should not be rebuilt.
 
 The main consumer change is:
-completed gathering → Life Moment → Life Profile.
+completed gathering â†’ Life Moment â†’ Life Profile.
 
 The Life Profile is the existing Profile; do not create a separate `/life` product.
 
 The main business change is:
-venue gathering activity → real attendance attribution → venue value metrics.
+venue gathering activity â†’ real attendance attribution â†’ venue value metrics.
 
 Do not rebuild the venue dashboard. Preserve and extend it.
 
