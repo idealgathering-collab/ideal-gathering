@@ -1,4 +1,20 @@
-# Current task — Havato Notifications Phase 1: deployed foundation, VAPID enablement pending
+# Current task — Havato Notifications Phase 2: infrastructure implemented, live acceptance pending
+
+User-approved 2026-10-03 Notifications Phase 2 only on `havato`, baseline
+`8b49c7cde351b10bf30454076e428ec1e824dc21`.
+[Exact architecture/configuration/verification checkpoint](HAVATO-notifications-phase2.md).
+Server-only self-test sender, VAPID validation, provider egress guard, snapshot-safe
+404/410 cleanup, worker display/click and focused tests implemented. Real pair
+generated and privately retained encrypted; Havato Darkube runtime/public build
+settings saved. Commit, Linux CI, new deployment and live-bundle verification
+in progress. Test endpoint remains disabled without a designated account UUID.
+No real browser subscription or end-to-end notification claim: browser app is
+signed out. No DB migration/RLS change or Ideal Gathering production work.
+Stop before event triggers/preferences/Bazaar. Do not mark Phase 2 complete until
+real-provider and observed-device acceptance is recorded.
+
+---
+# Historical — Havato Notifications Phase 1: deployed foundation, VAPID enablement pending at that checkpoint
 
 User-approved 2026-10-03 push foundation only on `havato`, baseline 0a3c8bd.
 [Implementation and final verification](HAVATO-notifications-phase1.md) · [Architecture, schema and exact env names](../docs/PUSH_NOTIFICATIONS.md).

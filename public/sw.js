@@ -12,6 +12,58 @@ const STATIC_URLS = [
 ];
 const MAX_ENTRIES = 64;
 
+function safeNotificationUrl(value) {
+  try {
+    if (typeof value !== "string" || value.length > 512 || /[\p{Cc}\\]/u.test(value)) return `${self.location.origin}/`;
+    const url = new URL(value, self.location.origin);
+    if (url.origin !== self.location.origin || url.username || url.password ||
+        !/^\/(?:pending|settings)?$/.test(url.pathname) || url.search || url.hash) return `${self.location.origin}/`;
+    return url.href;
+  } catch { return `${self.location.origin}/`; }
+}
+
+function notificationPayload(event) {
+  const fallback = { title: "Havato / هواتو", body: "Open Havato / هواتو را باز کنید", url: "/", tag: "havato-notification", lang: "en" };
+  try {
+    const value = event.data?.json();
+    if (!value || value.version !== 1 || !["en", "fa"].includes(value.lang) ||
+        typeof value.title !== "string" || !value.title.trim() || value.title.length > 100 ||
+        typeof value.body !== "string" || !value.body.trim() || value.body.length > 500 ||
+        typeof value.tag !== "string" || !value.tag.trim() || value.tag.length > 64 ||
+        /\p{Cc}/u.test(value.title + value.body + value.tag)) return fallback;
+    return { title: value.title, body: value.body, url: value.url, tag: value.tag, lang: value.lang };
+  } catch { return fallback; }
+}
+
+self.addEventListener("push", (event) => {
+  const payload = notificationPayload(event);
+  event.waitUntil(self.registration.showNotification(payload.title, {
+    body: payload.body, icon: "/favicon-192.png", badge: "/favicon.png",
+    tag: payload.tag, lang: payload.lang, dir: payload.lang === "fa" ? "rtl" : "ltr",
+    data: { url: safeNotificationUrl(payload.url) },
+  }));
+});
+
+self.addEventListener("notificationclick", (event) => {
+  event.notification.close();
+  const url = safeNotificationUrl(event.notification.data?.url);
+  event.waitUntil((async () => {
+    const windows = await self.clients.matchAll({ type: "window", includeUncontrolled: true });
+    const appWindows = windows.filter((client) => {
+      try { return new URL(client.url).origin === self.location.origin; } catch { return false; }
+    });
+    const exact = appWindows.find((client) => client.url === url);
+    if (exact) { await exact.focus(); return; }
+    if (appWindows.length) {
+      try {
+        const navigated = await appWindows[0].navigate(url);
+        if (navigated) { await navigated.focus(); return; }
+      } catch { await self.clients.openWindow(url); return; }
+    }
+    await self.clients.openWindow(url);
+  })());
+});
+
 self.addEventListener("install", (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then(async (cache) => {

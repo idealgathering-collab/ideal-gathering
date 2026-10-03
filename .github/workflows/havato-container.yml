@@ -11,6 +11,16 @@ jobs:
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.4.2
+      - name: Focused notification checks with the frozen dependency graph
+        run: |
+          bun install --frozen-lockfile
+          bun run test -- tests/unit/push-delivery.test.ts tests/unit/push-adapter.test.ts tests/unit/web-push.test.ts
+          node --test tests/pwa-push.test.mjs tests/pwa-service-worker.test.mjs tests/pwa-install.test.mjs
+          bunx tsc --noEmit
+          bunx eslint src/lib/push-delivery.server.ts tests/unit/push-delivery.test.ts tests/unit/push-adapter.test.ts
       - name: Build container with dummy backend only
         run: >-
           docker build -t havato:test

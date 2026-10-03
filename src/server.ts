@@ -95,6 +95,10 @@ function withSecurityHeaders(response: Response): Response {
 export default {
   async fetch(request: Request, env: unknown, ctx: unknown) {
     try {
+      if (new URL(request.url).pathname === "/api/push/test") {
+        const { handleTestPush } = await import("./lib/push-delivery.server");
+        return withSecurityHeaders(await handleTestPush(request));
+      }
       const handler = await getServerEntry();
       const response = await handler.fetch(request, env, ctx);
       return withSecurityHeaders(await normalizeCatastrophicSsrResponse(response));

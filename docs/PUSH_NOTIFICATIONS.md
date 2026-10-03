@@ -1,8 +1,8 @@
-# Havato Web Push foundation (Notifications Phase 1)
+# Havato Web Push (Notifications Phases 1–2)
 
-Scope: opt-in subscription registration/removal only, on `havato`. No sender,
-push-event handler, event triggers, chat push, preferences, analytics or Bazaar work.
-The existing static/offline service worker and install behavior are unchanged.
+Scope: opt-in subscription registration/removal and secure self-test delivery on
+`havato`. No product event triggers, chat push, preferences, analytics or Bazaar
+work. Existing static/offline worker caching and install behavior are unchanged.
 
 `PushNotificationEntry` is reused on authenticated `/pending` (members and venues)
 and `/settings`. Signed-out pages do not show it. FA/EN copy uses the existing
@@ -30,7 +30,7 @@ Unsubscribe deletes this account's endpoint first, then revokes the browser
 subscription; failed deletion preserves the endpoint for retry. Sign-out events
 (including other tabs) revoke the local endpoint. Revoked/stale hosted rows may
 remain after sign-out/reinstallation, because there is no authenticated worker
-session or fingerprint; Phase 2 must remove expired/410 endpoints when sending.
+  session or fingerprint; Phase 2 removes provider-confirmed 404/410 endpoints when sending.
 No automatic subscription recreation occurs after sign-out or reinstall.
 
 ## Isolated schema rollout
@@ -69,11 +69,13 @@ than deleting subscription data. No destructive rollback is automated.
 - Keep the corresponding private key in Havato's encrypted server secret store.
   No private key is required or read by Phase 1. Do not generate a throwaway
   production pair, commit a private key, or put it in any `VITE_` variable/ARG.
-- Reserved Phase 2 names: **`WEB_PUSH_VAPID_PRIVATE_KEY`** (server secret),
-  **`WEB_PUSH_VAPID_SUBJECT`** (server contact, `mailto:` or HTTPS). These are
-  documented names only; this phase does not implement a sender consuming them.
-  Phase 2 should read the matching public key server-side from
-  **`WEB_PUSH_VAPID_PUBLIC_KEY`**. Do not rotate keys without re-registration.
+- Phase 2 runtime names: **`WEB_PUSH_VAPID_PRIVATE_KEY`** (encrypted server secret),
+  **`WEB_PUSH_VAPID_SUBJECT`** (owner-controlled `mailto:` or HTTPS contact),
+  **`WEB_PUSH_VAPID_PUBLIC_KEY`** (matching public half). Sender validates their
+  format and the actual P-256 keypair relationship. Do not rotate keys without
+  re-registration. Never put the private half in any frontend variable.
+- **`WEB_PUSH_TEST_USER_IDS`**: runtime comma-separated test-account UUIDs. Unset
+  means the internal self-test endpoint returns 404, regardless of authentication.
 - Existing `VITE_SUPABASE_URL`/`VITE_SUPABASE_PUBLISHABLE_KEY` stay pointed at
   Havato; existing server Supabase credentials remain server-only.
 
@@ -83,6 +85,42 @@ Android or iPhone subscriptions. iOS needs Home Screen launch and supported
 OS/Web Push APIs; physical-iPhone success must be verified on an actual device.
 See [WebKit's Home Screen permission requirements](https://webkit.org/blog/13878/web-push-for-web-apps-on-ios-and-ipados/).
 
-Phase 2 remains secure VAPID configuration and delivery, worker visible-message
-handling/click behavior, sender egress/endpoint validation, expired/revoked
-endpoint cleanup and sending verification. Event triggers remain Phase 3.
+## Phase 2 delivery and verification
+
+`POST /api/push/test` verifies a Supabase bearer token with Auth `getUser`, requires
+the exact Havato backend/origin and an allowlisted authenticated account, accepts
+only `{ "lang": "en" }` or `{ "lang": "fa" }` (or `{}`), and targets only that
+account's stored subscriptions. There is no client-chosen target, endpoint, title,
+body or URL. No public test button/preferences page. An optional local operator
+script `scripts/test-havato-push.mjs` reads the caller's session token on stdin,
+never from command arguments. Do not paste tokens or passwords into chat.
+
+The test path is limited to 20 subscriptions and one attempt per user/minute per
+process; current one-replica Havato testing only. No distributed limiter, queue,
+automatic retry/scheduler or product event pipeline is claimed. Unknown provider
+hosts/path formats are skipped. HTTPS provider allowlist prevents arbitrary
+database endpoint strings from becoming server-side requests. Logs and responses
+do not contain keys, endpoints, tokens or provider response bodies.
+
+Only provider 404/410 deletes stale rows, guarded by owner, endpoint and the exact
+timestamp/keys sent. Refreshed/reassigned rows survive. Other errors retain rows;
+failure counts are returned. `accepted` means provider acceptance, NOT delivery
+or visible notification. Cleanup occurs during sending, not on a cron.
+
+Payload v1: bounded title/body/tag, language EN/FA, a safe URL. Worker independently
+validates payloads, uses Havato icons/badge, sets FA RTL, and shows a generic
+visible fallback on malformed/empty pushes. Click closes the notification and
+focuses/navigates an existing same-origin window or opens the app. URL whitelist:
+`/`, `/pending`, `/settings`, without query/hash/credentials; everything else
+falls back to `/`. Session/auth gates are not bypassed. Existing worker caches,
+offline fallback, manifest and branding files are unchanged.
+
+`scripts/generate-havato-vapid.ps1` uses standard `web-push` generation and stores
+the private half as a Windows user-bound DPAPI SecureString in ignored
+`env/.env.vapid.local`, refusing overwrite. Never commit or print that file's
+decrypted material. Retain/back up the private half securely; the matching public
+half must be configured both as Docker build ARG and server runtime variable.
+
+[Phase 2 exact configuration and acceptance status](../tasks/HAVATO-notifications-phase2.md).
+Real subscription and observed-device acceptance remain separate from unit/worker
+fixtures. Event triggers remain Notifications Phase 3, preferences Phase 4.
