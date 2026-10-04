@@ -1,5 +1,17 @@
 # UX
 
+## IG-011 Havato public polish — 2026-10-04
+
+Desktop home fills the viewport above 1000px; existing mobile sizing retained.
+Shared FA/EN public home/story chrome guides visitors to Request Access.
+Our Story links to the existing eight-chapter origin with Havato presentation.
+Cards and activity examples are informational; venue access is a distinct footer
+entry. Member sign-in is controlled by `showMemberSignIn` in public chrome;
+auth and venue routes remain intact. Signup uses the same waitlist contract,
+with early-access copy; invitations remain gradual. PWA install unchanged.
+See [review verification](../tasks/completed/IG-011-havato-public-polish-report.md).
+This review branch has not been merged or deployed.
+
 ## IG-010 Havato public home — 2026-10-03
 
 The reference-based home explains finding new activity companions and organizing

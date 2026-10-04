@@ -1,4 +1,19 @@
-# Current task — Havato prelaunch account links COMPLETE
+# Current task — IG-011 Havato public-site polish Phase 1, review pending
+
+User-authorized 2026-10-04. Branch `codex/havato-public-polish-phase1`,
+base `havato` at d69e6954104b3c39dad393fe5c278a2960934ad7.
+[Approved scope](completed/IG-011-havato-public-polish.md) ·
+[Implementation/checks](completed/IG-011-havato-public-polish-report.md).
+Desktop scale, FA/EN Early Access, restored/rebranded story, shared public
+navigation/footer, grouped venue access, hidden member entry flag and decorative
+clickability cleanup implemented. 36 browser layouts/eight interaction groups,
+9 focused units, 35 PWA checks, typecheck and changed-component lint pass.
+Existing full-suite/lint and Windows Nitro packaging failures documented.
+Review-only Linux CI pending; do not merge/deploy. No backend/schema/auth/legal
+content/PWA/hosting changes. Next: finish CI evidence and review Phase 1 PR.
+
+---
+# Historical — Havato prelaunch account links COMPLETE
 
 User-authorized 2026-10-04 small homepage follow-up on `havato`.
 Implementation `ff53f83693ccabd74d5e9083c46cbd1350987686` published and live.

@@ -1,0 +1,30 @@
+name: Havato public-site review
+on:
+  pull_request:
+    branches: [havato]
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      VITE_SUPABASE_URL: http://127.0.0.1:54321
+      VITE_SUPABASE_PUBLISHABLE_KEY: sb_publishable_ig009_local_fixture
+      VITE_SITE_URL: http://localhost:4173
+      SUPABASE_SERVICE_ROLE_KEY: ig009_server_only_sentinel
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: '1.4.2'
+      - run: bun install --frozen-lockfile
+      - run: bun run test -- tests/unit/havato-waitlist.test.ts tests/unit/branding.test.ts
+      - run: node --test tests/pwa-install.test.mjs tests/pwa-service-worker.test.mjs tests/pwa-push.test.mjs
+      - run: bunx tsc --noEmit
+      - run: bunx eslint src/components/landing/havato-public-chrome.tsx src/components/landing/havato-story.tsx src/components/landing/havato-home-copy.ts src/components/landing/havato-waitlist.tsx src/routes/our-story.tsx tests/landing-preview/main.tsx tests/landing-preview/fixtures.tsx
+      - run: bun run build
+      - run: node tests/havato-public-smoke.mjs

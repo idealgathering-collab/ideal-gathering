@@ -2,7 +2,6 @@ import { Link } from "@tanstack/react-router";
 import { useRef, useState, type FormEvent } from "react";
 import {
   ArrowRight,
-  ArrowUpRight,
   Check,
   Coffee,
   MapPin,
@@ -14,8 +13,6 @@ import {
   Coins,
   NotebookPen,
   Camera,
-  Menu,
-  X,
   LockKeyhole,
   Utensils,
   Footprints,
@@ -24,12 +21,13 @@ import {
   ShoppingBasket,
   Sparkles,
 } from "lucide-react";
-import { brand, logoAsset } from "@/config/brand";
+import { brand } from "@/config/brand";
 import { useI18n } from "@/i18n";
 import { supabase } from "@/integrations/supabase/client";
 import { joinHavatoWaitlist } from "@/lib/havato-waitlist";
 import { HavatoInstall } from "./havato-install";
 import { landingCopy } from "./havato-home-copy";
+import { HavatoPublicHeader, HavatoPublicFooter } from "./havato-public-chrome";
 import "./havato-waitlist.css";
 
 const copy = {
@@ -39,22 +37,18 @@ const copy = {
     intro: "با آدم‌های مناسب، برای کارهایی که دوست داری.",
     name: "نام و نام خانوادگی",
     email: "ایمیل شما",
-    join: "در لیست انتظار ثبت‌نام کن",
+    join: "درخواست دسترسی زودهنگام",
     busy: "در حال ثبت…",
     agree: "با",
     terms: "شرایط استفاده",
     privacy: "حریم خصوصی",
     and: "و",
     consent: "موافقم.",
-    signin: "قبلاً ثبت‌نام کرده‌ای؟ ورود",
-    venue: "کافه یا رستوران دارید؟",
-    venueLink: "ورود مجموعه‌ها",
-    done: "جایت در لیست انتظار محفوظ است",
-    doneBody: "وقتی ظرفیت دعوت باز شود، از طریق ایمیل خبرت می‌کنیم.",
-    existing: "این ایمیل از قبل در لیست انتظار است.",
+    done: "درخواست دسترسی‌ات ثبت شد",
+    doneBody: "با گسترش ظرفیت دسترسی، از طریق ایمیل دعوتت می‌کنیم.",
+    existing: "این ایمیل از قبل در فهرست دسترسی زودهنگام ثبت شده است.",
     failed: "ثبت انجام نشد. لطفاً دوباره تلاش کن.",
     valid: "نام و یک ایمیل معتبر وارد کن و شرایط را بپذیر.",
-    language: "زبان",
   },
   en: {
     first: "Wherever you are,",
@@ -62,22 +56,18 @@ const copy = {
     intro: "With the right people, for the things you love.",
     name: "Full name",
     email: "Your email",
-    join: "Join the waitlist",
-    busy: "Joining…",
+    join: "Request Early Access",
+    busy: "Sending request…",
     agree: "I agree to the",
     terms: "Terms",
     privacy: "Privacy Policy",
     and: "and",
     consent: ".",
-    signin: "Already registered? Sign in",
-    venue: "Run a café or restaurant?",
-    venueLink: "Venue sign in",
-    done: "You’re on the waitlist",
-    doneBody: "We’ll email you when invitations open.",
-    existing: "This email is already on the waitlist.",
+    done: "You’re on the early access list",
+    doneBody: "We’ll invite you by email as access expands.",
+    existing: "This email is already on the early access list.",
     failed: "We couldn’t save your details. Please try again.",
     valid: "Enter your name and a valid email, and accept the terms.",
-    language: "Language",
   },
 };
 const trustIcons = [MapPin, ShieldCheck, Users];
@@ -85,11 +75,10 @@ const featureIcons = [Mail, CalendarCheck, ClipboardCheck, Coins, NotebookPen, C
 const activityIcons = [Coffee, Utensils, Footprints, Gamepad2, Film, ShoppingBasket, Sparkles];
 
 export function HavatoWaitlist() {
-  const { lang, setLang } = useI18n();
+  const { lang } = useI18n();
   const language = lang === "en" ? "en" : "fa";
   const c = copy[language];
   const home = landingCopy[language];
-  const [menuOpen, setMenuOpen] = useState(false);
   const [form, setForm] = useState({ name: "", email: "" });
   const [agree, setAgree] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -121,51 +110,7 @@ export function HavatoWaitlist() {
         {home.skip}
       </a>
       <div className="havato-page">
-        <header className="havato-header">
-          <Link to="/" aria-label={brand.name} className="havato-brand">
-            <img
-              src={logoAsset.url}
-              alt={language === "fa" ? "هواتو" : brand.name}
-              width="720"
-              height="735"
-            />
-          </Link>
-          <nav
-            className={menuOpen ? "havato-nav is-open" : "havato-nav"}
-            id="havato-navigation"
-            aria-label={home.navigation}
-          >
-            {home.nav.map(([label, id]) => (
-              <a key={id} href={`#${id}`} onClick={() => setMenuOpen(false)}>
-                {label}
-              </a>
-            ))}
-          </nav>
-          <div className="havato-header-actions">
-            <div className="havato-language" role="group" aria-label={c.language} dir="ltr">
-              {(["fa", "en"] as const).map((value) => (
-                <button
-                  key={value}
-                  type="button"
-                  aria-pressed={language === value}
-                  onClick={() => setLang(value)}
-                >
-                  {value.toUpperCase()}
-                </button>
-              ))}
-            </div>
-            <button
-              type="button"
-              className="havato-menu"
-              aria-label={menuOpen ? home.closeMenu : home.openMenu}
-              aria-expanded={menuOpen}
-              aria-controls="havato-navigation"
-              onClick={() => setMenuOpen(!menuOpen)}
-            >
-              {menuOpen ? <X aria-hidden="true" /> : <Menu aria-hidden="true" />}
-            </button>
-          </div>
-        </header>
+        <HavatoPublicHeader />
         <main className="havato-main">
           <section className="havato-hero" aria-labelledby="havato-title">
             <div className="havato-hero-photo" aria-hidden="true">
@@ -273,7 +218,7 @@ export function HavatoWaitlist() {
             </h2>
             <div className="havato-case-grid">
               {home.cases.map((item, index) => (
-                <a href="#waitlist" className="havato-case" key={item.title}>
+                <article className="havato-case" key={item.title}>
                   <div className="havato-case-art" aria-hidden="true">
                     <img
                       src={
@@ -291,10 +236,7 @@ export function HavatoWaitlist() {
                     <h3>{item.title}</h3>
                     <p>{item.body}</p>
                   </div>
-                  <span className="havato-case-arrow">
-                    <ArrowUpRight size={20} aria-hidden="true" />
-                  </span>
-                </a>
+                </article>
               ))}
             </div>
           </section>
@@ -344,7 +286,7 @@ export function HavatoWaitlist() {
                 const Icon = activityIcons[index];
                 return (
                   <li key={label}>
-                    <a href="#waitlist" className="havato-activity">
+                    <div className="havato-activity">
                       <span
                         className={`havato-activity-photo activity-${index}`}
                         aria-hidden="true"
@@ -353,7 +295,7 @@ export function HavatoWaitlist() {
                         <Icon size={19} aria-hidden="true" />
                         {label}
                       </span>
-                    </a>
+                    </div>
                   </li>
                 );
               })}
@@ -372,18 +314,7 @@ export function HavatoWaitlist() {
             <HavatoInstall />
           </div>
         </main>
-        <footer className="havato-footer">
-          <p>
-            {c.venue} <Link to="/venue/auth">{c.venueLink}</Link>
-          </p>
-          <nav aria-label={language === "fa" ? "قوانین" : "Legal"}>
-            <Link to="/terms">{c.terms}</Link>
-            <Link to="/privacy">{c.privacy}</Link>
-          </nav>
-          <small>
-            © {new Date().getFullYear()} {brand.name}
-          </small>
-        </footer>
+        <HavatoPublicFooter />
       </div>
     </div>
   );

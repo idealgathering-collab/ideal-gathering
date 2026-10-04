@@ -19,9 +19,9 @@ type Copy = { title: string; description: string };
 export const PAGE_SEO: Record<string, Record<SeoLang, Copy>> = {
   "/": {
     en: {
-      title: `Just Gather — Small-Group Meetups | ${brand.name}`,
+      title: `Find Your Gathering · Early Access | ${brand.name}`,
       description:
-        "An open platform for small-group meetups. Create a gathering for anything, anywhere — coffee, a hike, a game night — and get matched with the right people.",
+        "Find the right people for real-life activities and make gatherings easier to organize. Request Havato early access as invitations expand.",
     },
 
     ru: {
@@ -32,7 +32,7 @@ export const PAGE_SEO: Record<string, Record<SeoLang, Copy>> = {
     fa: {
       title: `${brand.name} — دیگر هیچ‌کس تنها نخواهد بود`,
       description:
-        "میزهای واقعی در کافه‌های واقعی. یک موضوع، چند صندلی و آدم‌هایی که ارزش شناختن دارند. به یک گردهمایی بپیوندید یا خودتان میزبان شوید.",
+        "آدم‌های مناسب را برای فعالیت‌های واقعی پیدا کن و دورهمی‌ها را راحت‌تر هماهنگ کن. برای دعوت به هواتو، درخواست دسترسی زودهنگام ثبت کن.",
     },
   },
   "/explore": {
@@ -115,9 +115,9 @@ export const PAGE_SEO: Record<string, Record<SeoLang, Copy>> = {
         `Как появился ${brand.name}: еженедельный стол друзей, которых разбросала жизнь, — и то, как мы вернули это каждому.`,
     },
     fa: {
-      title: `Our Story — ${brand.name}`,
+      title: `داستان ما — ${brand.name}`,
       description:
-        `How ${brand.name} started: a weekly table of friends, scattered by life, rebuilt into something anyone can have again.`,
+        `داستان ${brand.name}: یک دورهمی هفتگی دوستانه، پراکنده شدن آن جمع و تلاش برای اینکه هیچ‌کس تنها نماند.`,
     },
   },
   "/auth": {
