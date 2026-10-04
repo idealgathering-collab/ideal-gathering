@@ -370,14 +370,6 @@ export function HavatoWaitlist() {
           </section>
           <div className="havato-access havato-section">
             <HavatoInstall />
-            <div>
-              <Link to="/auth" search={{ mode: "signup" }}>
-                {home.signup}
-              </Link>
-              <Link to="/auth" search={{ mode: "signin" }}>
-                {c.signin}
-              </Link>
-            </div>
           </div>
         </main>
         <footer className="havato-footer">

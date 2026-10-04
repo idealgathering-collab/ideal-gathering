@@ -1,3 +1,16 @@
+# Current task — Havato prelaunch account links
+
+User-authorized 2026-10-04 small homepage follow-up on `havato`, baseline
+`eb101fbb5d9639a992a79d68d5ffd70bb0115d2b`. Remove the consumer signup and
+sign-in links from the Farsi and English public homepage until launch.
+Implementation removes only the shared auth-link block; waitlist, installation,
+venue access and auth routes remain unchanged. No database or configuration
+changes. Source diff reviewed: eight JSX lines removed, no `/auth` homepage
+links remain. Linux CI and existing Darkube rollout/live checks pending.
+Next: verify deployment and absence of both links in FA/EN desktop/mobile.
+Restore homepage account entry points as part of the separately approved launch.
+
+---
 # Current task — IG-010 Havato homepage implemented
 
 User-approved reference homepage on `havato-home-reference`, baseline 9ed2316.
