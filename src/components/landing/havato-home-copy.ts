@@ -35,7 +35,7 @@ export const landingCopy = {
     trustTitle: "دورهمی با خیال آسوده‌تر",
     trust: [
       ["هر جا هستی", "در اطرافت"],
-      ["با خیال آسوده‌تر", "تأیید و امکان گزارش"],
+      ["با خیال آسوده‌تر", "گزارش و مسدودسازی"],
       ["دورهمی‌های کوچک", "و صمیمی"],
     ],
     activitiesTitle: "برای چه کارهایی؟",
@@ -52,7 +52,7 @@ export const landingCopy = {
       ],
       [
         "چطور با خیال آسوده‌تر شرکت کنم؟",
-        "هواتو ابزارهای تأیید، گزارش و مسدود کردن را دارد. برای آشنایی اول، جای عمومی انتخاب کن، اطلاعات خصوصی را با احتیاط به اشتراک بگذار و اگر مشکلی دیدی گزارش بده.",
+        "در قابلیت‌های فعال هواتو می‌توانی گزارش بدهی و افراد را مسدود کنی. تأیید ایمیل به معنای تأیید هویت یا تضمین ایمنی نیست. برای آشنایی اول، جای عمومی انتخاب کن، اطلاعات خصوصی را با احتیاط به اشتراک بگذار و نگرانی‌ها را گزارش بده.",
       ],
     ],
   },
@@ -95,7 +95,7 @@ export const landingCopy = {
     trustTitle: "Gather with more confidence",
     trust: [
       ["Wherever you are", "Around you"],
-      ["More peace of mind", "Verification & reporting"],
+      ["More peace of mind", "Reporting & blocking"],
       ["Small gatherings", "Real connections"],
     ],
     activitiesTitle: "for what you love",
@@ -112,7 +112,7 @@ export const landingCopy = {
       ],
       [
         "How can I meet with more confidence?",
-        "Havato has verification, reporting, and blocking tools. Choose a public place for your first meeting, share private details thoughtfully, and report concerns.",
+        "Enabled Havato features offer reporting and blocking. Email confirmation is not identity verification or a safety guarantee. Choose a public place for your first meeting, share private details thoughtfully, and report concerns.",
       ],
     ],
   },

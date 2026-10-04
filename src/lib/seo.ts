@@ -90,17 +90,17 @@ export const PAGE_SEO: Record<string, Record<SeoLang, Copy>> = {
     en: {
       title: `Privacy Policy — ${brand.name}`,
       description:
-        `How ${brand.name} collects, uses, and protects your data. Privacy notice for users in Armenia.`,
+        `How ${brand.name} handles early-access and account information, service providers, deletion requests, and applicable privacy rights.`,
     },
     ru: {
       title: `Политика конфиденциальности — ${brand.name}`,
       description:
-        `Как ${brand.name} собирает, использует и защищает ваши данные. Уведомление о конфиденциальности для пользователей из Армении.`,
+        `Как ${brand.name} обрабатывает данные раннего доступа и аккаунтов, запросы на удаление и применимые права на конфиденциальность.`,
     },
     fa: {
       title: `سیاست حریم خصوصی — ${brand.name}`,
       description:
-        `${brand.name} چگونه داده‌های شما را جمع‌آوری، استفاده و محافظت می‌کند. اطلاعیهٔ حریم خصوصی برای کاربران ارمنستان.`,
+        `${brand.name}: اطلاعات دسترسی زودهنگام و حساب، ارائه‌دهندگان خدمات، درخواست حذف و حقوق حریم خصوصی مربوط.`,
     },
   },
   "/our-story": {

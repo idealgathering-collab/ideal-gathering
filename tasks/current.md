@@ -1,3 +1,16 @@
+# Current task — IG-012 Havato legal/trust Phase 2, in progress
+
+User-authorized 2026-10-04; [scope](IG-012-havato-legal-trust.md).
+Continue draft PR #15 on codex/havato-public-polish-phase1, base havato only.
+Terms/Privacy FA/EN, shared legal presentation, contact configuration, metadata,
+legacy legal copy removal and truthful trust messaging implemented; validation pending.
+User requested no public email addresses yet. Public privacy/early-access deletion
+request channel and verified operator/postal details remain prelaunch decisions.
+Preserve existing 18+ policy; signup enforcement is not changed.
+No backend/schema/waitlist/auth/account/PWA/infrastructure changes. Do not merge,
+deploy, or touch idealgathering.com. Next: local visual/checks and Linux review CI.
+
+---
 # Current task — IG-011 Havato public-site polish Phase 1, review pending
 
 User-authorized 2026-10-04. Branch `codex/havato-public-polish-phase1`,

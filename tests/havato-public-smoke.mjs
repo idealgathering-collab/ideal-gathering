@@ -34,7 +34,17 @@ try {
     await delay(250);
   }
   assert.ok(ready, logs);
-  for (const path of ["/", "/our-story", "/auth?mode=signin", "/auth?mode=signup", "/venue/auth"]) {
+  for (const path of [
+    "/",
+    "/our-story",
+    "/terms",
+    "/privacy",
+    "/terms?lang=en",
+    "/privacy?lang=en",
+    "/auth?mode=signin",
+    "/auth?mode=signup",
+    "/venue/auth",
+  ]) {
     const response = await fetch(origin + path);
     assert.equal(response.status, 200, path);
     assert.match(response.headers.get("content-type"), /text\/html/);
@@ -46,6 +56,16 @@ try {
       assert.ok(!html.includes('href="/auth"'), "public member sign-in stays hidden");
       assert.match(html, /href="\/venue\/auth"/);
     }
+    if (path.startsWith("/terms") || path.startsWith("/privacy")) {
+      assert.match(html, /id="havato-legal-title"/);
+      assert.match(html, /id="contact"/);
+      assert.match(html, /havato-public/);
+      assert.match(html, /dir="rtl"/);
+      assert.doesNotMatch(
+        html,
+        /Ideal Gathering|idealgathering\.com|Armenia|Yerevan|ارمنستان|ایروان|mailto:/i,
+      );
+    }
     if (path === "/") assert.match(html, /id="waitlist"/);
     if (path === "/our-story") {
       assert.match(html, /id="havato-story-title"/);
@@ -56,7 +76,7 @@ try {
   assert.equal(manifest.name, "Havato");
   assert.equal(manifest.theme_color, "#E87524");
   console.log(
-    "PASS: candidate SSR home/story, default Farsi/RTL, member and venue auth routes, eight story chapters, retained Havato PWA manifest. No hosted writes or authenticated journey tested.",
+    "PASS: candidate SSR home/story/legal routes, default Farsi/RTL, member and venue auth routes, eight story chapters, retained Havato PWA manifest. No hosted writes or authenticated journey tested.",
   );
 } finally {
   child.kill();

@@ -8,12 +8,19 @@ import { landingCopy } from "./havato-home-copy";
 // Restore public member sign-in at launch with this presentation flag.
 const showMemberSignIn = false;
 
-export function HavatoPublicHeader({ story = false }: { story?: boolean }) {
+export function HavatoPublicHeader({
+  story = false,
+  subpage = false,
+}: {
+  story?: boolean;
+  subpage?: boolean;
+}) {
   const { lang, setLang } = useI18n();
   const language = lang === "en" ? "en" : "fa";
   const home = landingCopy[language];
   const [menuOpen, setMenuOpen] = useState(false);
-  const accessHref = story ? `/?lang=${language}#waitlist` : "#waitlist";
+  const awayFromHome = story || subpage;
+  const accessHref = awayFromHome ? `/?lang=${language}#waitlist` : "#waitlist";
   return (
     <header className="havato-header">
       <Link to="/" search={{ lang: language }} aria-label={brand.name} className="havato-brand">
@@ -40,7 +47,7 @@ export function HavatoPublicHeader({ story = false }: { story?: boolean }) {
         {home.nav.map(([label, id]) => (
           <a
             key={id}
-            href={story ? `/?lang=${language}#${id}` : `#${id}`}
+            href={awayFromHome ? `/?lang=${language}#${id}` : `#${id}`}
             onClick={() => setMenuOpen(false)}
           >
             {label}

@@ -1,10 +1,12 @@
 import { Link } from "@tanstack/react-router";
 import { Instagram, Linkedin } from "lucide-react";
 import { brand, logoAsset } from "@/config/brand";
+import { legalContactHref } from "@/config/legal";
 import { useT } from "@/i18n";
 
 export function SiteFooter() {
   const t = useT();
+  const contactHref = legalContactHref() || "/privacy#contact";
   return (
     <footer className="bg-plum text-primary-foreground">
       <div className="mx-auto grid max-w-6xl gap-10 px-4 py-14 sm:grid-cols-2 lg:grid-cols-4">
@@ -19,18 +21,16 @@ export function SiteFooter() {
               <span className="italic">{brand.name}</span>
             </span>
           </Link>
-          <p className="mt-4 max-w-xs text-sm text-primary-foreground/80">
-            {t("footer.mission")}
-          </p>
+          <p className="mt-4 max-w-xs text-sm text-primary-foreground/80">{t("footer.mission")}</p>
         </div>
 
         <FooterCol
           title={t("footer.col.explore")}
           links={[
-            { label: t("footer.explore.how"), href: "/#how" },
-            { label: t("landing.v4.footer.categories"), href: "/#categories" },
-            { label: t("landing.v4.footer.upcoming"), href: "/#gatherings" },
-            { label: t("landing.v4.footer.why"), href: "/#why" },
+            { label: t("footer.explore.how"), href: "/#how-it-works" },
+            { label: t("landing.v4.footer.categories"), href: "/#activities-title" },
+            { label: t("landing.v4.footer.upcoming"), href: "/#waitlist" },
+            { label: t("landing.v4.footer.why"), href: "/#about" },
             { label: t("nav.ourStory"), href: "/our-story", route: true },
           ]}
         />
@@ -40,7 +40,7 @@ export function SiteFooter() {
           links={[
             { label: t("footer.biz.partnership"), href: "/partnership", route: true },
             { label: t("footer.biz.sub"), href: "/venue/auth", route: true },
-            { label: t("footer.biz.support"), href: "mailto:hello@idealgathering.com" },
+            { label: t("footer.biz.support"), href: contactHref },
           ]}
         />
         <div>
@@ -48,17 +48,39 @@ export function SiteFooter() {
             {t("footer.col.legal")}
           </div>
           <ul className="mt-4 space-y-2 text-sm">
-            <li><Link to="/terms" className="hover:text-sunshine">{t("footer.legal.tos")}</Link></li>
-            <li><Link to="/privacy" className="hover:text-sunshine">{t("footer.legal.privacy")}</Link></li>
-            <li><a href="mailto:hello@idealgathering.com" className="hover:text-sunshine">{t("footer.legal.contact")}</a></li>
+            <li>
+              <Link to="/terms" className="hover:text-sunshine">
+                {t("footer.legal.tos")}
+              </Link>
+            </li>
+            <li>
+              <Link to="/privacy" className="hover:text-sunshine">
+                {t("footer.legal.privacy")}
+              </Link>
+            </li>
+            <li>
+              <a href={contactHref} className="hover:text-sunshine">
+                {t("footer.legal.contact")}
+              </a>
+            </li>
           </ul>
           <div className="mt-5 flex items-center gap-2">
-            <a href="https://instagram.com" target="_blank" rel="noreferrer" aria-label="Instagram"
-              className="grid h-9 w-9 place-items-center rounded-full border border-primary-foreground/25 text-primary-foreground/80 hover:bg-primary-foreground/10 hover:text-sunshine">
+            <a
+              href="https://instagram.com"
+              target="_blank"
+              rel="noreferrer"
+              aria-label="Instagram"
+              className="grid h-9 w-9 place-items-center rounded-full border border-primary-foreground/25 text-primary-foreground/80 hover:bg-primary-foreground/10 hover:text-sunshine"
+            >
               <Instagram className="h-4 w-4" />
             </a>
-            <a href="https://linkedin.com" target="_blank" rel="noreferrer" aria-label="LinkedIn"
-              className="grid h-9 w-9 place-items-center rounded-full border border-primary-foreground/25 text-primary-foreground/80 hover:bg-primary-foreground/10 hover:text-sunshine">
+            <a
+              href="https://linkedin.com"
+              target="_blank"
+              rel="noreferrer"
+              aria-label="LinkedIn"
+              className="grid h-9 w-9 place-items-center rounded-full border border-primary-foreground/25 text-primary-foreground/80 hover:bg-primary-foreground/10 hover:text-sunshine"
+            >
               <Linkedin className="h-4 w-4" />
             </a>
           </div>
@@ -67,7 +89,9 @@ export function SiteFooter() {
 
       <div className="border-t border-primary-foreground/15">
         <div className="mx-auto flex max-w-6xl flex-col items-start justify-between gap-2 px-4 py-6 text-xs text-primary-foreground/70 sm:flex-row sm:items-center">
-          <div>© {new Date().getFullYear()} {brand.name}.</div>
+          <div>
+            © {new Date().getFullYear()} {brand.name}.
+          </div>
           <div className="italic">{t("footer.bottom")}</div>
         </div>
       </div>
@@ -91,9 +115,13 @@ function FooterCol({
         {links.map((l) => (
           <li key={l.label}>
             {l.route ? (
-              <Link to={l.href} className="hover:text-sunshine">{l.label}</Link>
+              <Link to={l.href} className="hover:text-sunshine">
+                {l.label}
+              </Link>
             ) : (
-              <a href={l.href} className="hover:text-sunshine">{l.label}</a>
+              <a href={l.href} className="hover:text-sunshine">
+                {l.label}
+              </a>
             )}
           </li>
         ))}
