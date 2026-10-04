@@ -1,14 +1,14 @@
-# Current task — Havato prelaunch account links
+# Current task — Havato prelaunch account links COMPLETE
 
-User-authorized 2026-10-04 small homepage follow-up on `havato`, baseline
-`eb101fbb5d9639a992a79d68d5ffd70bb0115d2b`. Remove the consumer signup and
-sign-in links from the Farsi and English public homepage until launch.
-Implementation removes only the shared auth-link block; waitlist, installation,
-venue access and auth routes remain unchanged. No database or configuration
-changes. Source diff reviewed: eight JSX lines removed, no `/auth` homepage
-links remain. Linux CI and existing Darkube rollout/live checks pending.
-Next: verify deployment and absence of both links in FA/EN desktop/mobile.
-Restore homepage account entry points as part of the separately approved launch.
+User-authorized 2026-10-04 small homepage follow-up on `havato`.
+Implementation `ff53f83693ccabd74d5e9083c46cbd1350987686` published and live.
+Both consumer account links removed from the FA/EN homepage until launch.
+Focused lint and exact-commit Linux CI/container/startup pass. Darkube build
+`e766c874-dbb4-45df-9111-508b5a73b355` deploy OK, app healthy; live FA/EN
+at 1280 and 390 widths contain zero consumer auth links. No backend, schema,
+configuration or idealgathering.com changes.
+[Scope and verification](completed/HAVATO-prelaunch-account-links.md).
+Next: restore account entry links as part of a separately approved launch.
 
 ---
 # Current task — IG-010 Havato homepage implemented
