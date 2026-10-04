@@ -19,9 +19,9 @@ type Copy = { title: string; description: string };
 export const PAGE_SEO: Record<string, Record<SeoLang, Copy>> = {
   "/": {
     en: {
-      title: `Just Gather — Small-Group Meetups | ${brand.name}`,
+      title: `Find Your Gathering · Early Access | ${brand.name}`,
       description:
-        "An open platform for small-group meetups. Create a gathering for anything, anywhere — coffee, a hike, a game night — and get matched with the right people.",
+        "Find the right people for real-life activities and make gatherings easier to organize. Request Havato early access as invitations expand.",
     },
 
     ru: {
@@ -30,9 +30,9 @@ export const PAGE_SEO: Record<string, Record<SeoLang, Copy>> = {
         "Настоящие столы в настоящих кафе. Одна тема, несколько стульев и люди, с которыми стоит познакомиться. Присоединяйся к встрече или организуй свою.",
     },
     fa: {
-      title: `${brand.name} — دیگر هیچ‌کس تنها نخواهد بود`,
+      title: `هواتو — دورهمی و دسترسی زودهنگام`,
       description:
-        "میزهای واقعی در کافه‌های واقعی. یک موضوع، چند صندلی و آدم‌هایی که ارزش شناختن دارند. به یک گردهمایی بپیوندید یا خودتان میزبان شوید.",
+        "آدم‌های مناسب را برای فعالیت‌های واقعی پیدا کن و دورهمی‌ها را راحت‌تر هماهنگ کن. برای دعوت به هواتو، درخواست دسترسی زودهنگام ثبت کن.",
     },
   },
   "/explore": {
@@ -81,7 +81,7 @@ export const PAGE_SEO: Record<string, Record<SeoLang, Copy>> = {
         `Правила пользования ${brand.name}: допустимое использование, ответственность организатора и площадки, и ограничение ответственности.`,
     },
     fa: {
-      title: `شرایط استفاده — ${brand.name}`,
+      title: `شرایط استفاده — هواتو`,
       description:
         `قوانین استفاده از ${brand.name}: استفادهٔ مجاز، مسئولیت میزبان و مکان، و حدود مسئولیت.`,
     },
@@ -90,17 +90,17 @@ export const PAGE_SEO: Record<string, Record<SeoLang, Copy>> = {
     en: {
       title: `Privacy Policy — ${brand.name}`,
       description:
-        `How ${brand.name} collects, uses, and protects your data. Privacy notice for users in Armenia.`,
+        `How ${brand.name} handles early-access and account information, service providers, deletion requests, and applicable privacy rights.`,
     },
     ru: {
       title: `Политика конфиденциальности — ${brand.name}`,
       description:
-        `Как ${brand.name} собирает, использует и защищает ваши данные. Уведомление о конфиденциальности для пользователей из Армении.`,
+        `Как ${brand.name} обрабатывает данные раннего доступа и аккаунтов, запросы на удаление и применимые права на конфиденциальность.`,
     },
     fa: {
-      title: `سیاست حریم خصوصی — ${brand.name}`,
+      title: `سیاست حریم خصوصی — هواتو`,
       description:
-        `${brand.name} چگونه داده‌های شما را جمع‌آوری، استفاده و محافظت می‌کند. اطلاعیهٔ حریم خصوصی برای کاربران ارمنستان.`,
+        `${brand.name}: اطلاعات دسترسی زودهنگام و حساب، ارائه‌دهندگان خدمات، درخواست حذف و حقوق حریم خصوصی مربوط.`,
     },
   },
   "/our-story": {
@@ -115,9 +115,9 @@ export const PAGE_SEO: Record<string, Record<SeoLang, Copy>> = {
         `Как появился ${brand.name}: еженедельный стол друзей, которых разбросала жизнь, — и то, как мы вернули это каждому.`,
     },
     fa: {
-      title: `Our Story — ${brand.name}`,
+      title: `داستان ما — هواتو`,
       description:
-        `How ${brand.name} started: a weekly table of friends, scattered by life, rebuilt into something anyone can have again.`,
+        `داستان ${brand.name}: یک دورهمی هفتگی دوستانه، پراکنده شدن آن جمع و تلاش برای اینکه هیچ‌کس تنها نماند.`,
     },
   },
   "/auth": {
@@ -156,9 +156,9 @@ export const PAGE_SEO: Record<string, Record<SeoLang, Copy>> = {
   },
   "/waitlist": {
     en: {
-      title: `Guest Waitlist — ${brand.name}`,
+      title: `Early Access — ${brand.name}`,
       description:
-        "Tell us your city and interests and we'll invite you as new tables open up at cafés near you.",
+        "Request an invitation to Havato. Early Access opens gradually as availability expands.",
     },
     ru: {
       title: `Лист ожидания — ${brand.name}`,
@@ -166,15 +166,17 @@ export const PAGE_SEO: Record<string, Record<SeoLang, Copy>> = {
         "Расскажи, в каком ты городе и что тебе интересно, — и мы пригласим тебя, когда рядом откроются новые столы.",
     },
     fa: {
-      title: `فهرست انتظار مهمان — ${brand.name}`,
+      title: `دسترسی زودهنگام — هواتو`,
       description:
-        "شهر و علاقه‌مندی‌های خود را بگویید تا با باز شدن میزهای تازه در کافه‌های نزدیک، دعوت‌تان کنیم.",
+        "برای دعوت به هواتو درخواست ثبت کن. با گسترش ظرفیت، دسترسی به‌تدریج فراهم می‌شود.",
     },
   },
 };
 
 export function urlFor(path: string, lang: SeoLang) {
   const base = `${SITE_URL}${path === "/" ? "/" : path}`;
+  if (["/", "/our-story", "/terms", "/privacy", "/waitlist"].includes(path))
+    return `${base}?lang=${lang === "en" ? "en" : "fa"}`;
   return lang === "en" ? base : `${base}?lang=${lang}`;
 }
 
@@ -183,7 +185,9 @@ export function urlFor(path: string, lang: SeoLang) {
  * JSON-LD node for a public route.
  */
 export function localizedHead(path: string, rawLang: unknown) {
-  const lang = normalizeLang(rawLang);
+  const publicPage = ["/", "/our-story", "/terms", "/privacy", "/waitlist"].includes(path);
+  const lang = publicPage ? (rawLang === "en" ? "en" : "fa") : normalizeLang(rawLang);
+  const languages = publicPage ? (["fa", "en"] as const) : SEO_LANGS;
   const copy = PAGE_SEO[path]?.[lang] ?? PAGE_SEO["/"][lang];
   const self = urlFor(path, lang);
 
@@ -199,12 +203,12 @@ export function localizedHead(path: string, rawLang: unknown) {
     ],
     links: [
       { rel: "canonical", href: self },
-      ...SEO_LANGS.map((l) => ({
+      ...languages.map((l) => ({
         rel: "alternate",
         hrefLang: l,
         href: urlFor(path, l),
       })),
-      { rel: "alternate", hrefLang: "x-default", href: urlFor(path, "en") },
+      { rel: "alternate", hrefLang: "x-default", href: urlFor(path, publicPage ? "fa" : "en") },
     ],
     scripts: [
       {
@@ -244,7 +248,7 @@ export function jsonLdWebSite(lang: SeoLang) {
     name: PAGE_SEO["/"][lang].title,
     description: PAGE_SEO["/"][lang].description,
     inLanguage: SCHEMA_LOCALE[lang],
-    publisher: { "@id": `${SITE_URL}/#organization` },
+    publisher: { "@id": `${SITE_URL}/#organization`, name: brand.name },
   };
 }
 
@@ -261,7 +265,7 @@ export function jsonLdWebPage(path: string, lang: SeoLang) {
     description: copy.description,
     inLanguage: SCHEMA_LOCALE[lang],
     isPartOf: { "@id": `${SITE_URL}/#website` },
-    publisher: { "@id": `${SITE_URL}/#organization` },
+    publisher: { "@id": `${SITE_URL}/#organization`, name: brand.name },
   };
 }
 

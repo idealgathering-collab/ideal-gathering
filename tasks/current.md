@@ -1,4 +1,42 @@
-# Current task — Havato prelaunch account links COMPLETE
+# Current task — IG-012 Havato legal/trust Phase 2, review ready
+
+User-authorized 2026-10-04. [Scope](completed/IG-012-havato-legal-trust.md) ·
+[Report and launch decisions](completed/IG-012-havato-legal-trust-report.md).
+Continue draft PR #15 on codex/havato-public-polish-phase1, base havato only.
+Validated implementation 46238c708b98b80239c7eba3fe8f75ee1ebbd525.
+Terms/Privacy FA/EN, shared legal presentation, neutral operator/configurable
+contact, metadata, legacy public copy/footer and truthful safety copy implemented.
+24 legal browser layouts/two bilingual interaction groups, 35 focused units,
+35 PWA checks, TypeScript and focused lint pass. Linux review CI 37211617366
+passes frozen install, full production build and candidate legal/auth/PWA SSR smoke.
+Inherited full-suite CI still has 16 existing rendering failures; global lint debt
+remains. User requested no public email addresses yet: monitored privacy/list
+deletion channel and verified operator/postal details remain launch decisions.
+Existing 18+ preserved; signup enforcement and regional legal/provider/retention
+review remain before broad launch. No backend/schema/waitlist/auth/account/PWA/
+infrastructure changes. Do not merge/deploy or touch idealgathering.com.
+Next: review Phase 2 visuals/content and resolve launch decisions before Phase 3.
+
+---
+# Current task — IG-011 Havato public-site polish Phase 1, review pending
+
+User-authorized 2026-10-04. Branch `codex/havato-public-polish-phase1`,
+base `havato` at d69e6954104b3c39dad393fe5c278a2960934ad7.
+[Approved scope](completed/IG-011-havato-public-polish.md) ·
+[Implementation/checks](completed/IG-011-havato-public-polish-report.md).
+Desktop scale, FA/EN Early Access, restored/rebranded story, shared public
+navigation/footer, grouped venue access, hidden member entry flag and decorative
+clickability cleanup implemented. 36 browser layouts/eight interaction groups,
+9 focused units, 35 PWA checks, typecheck and changed-component lint pass.
+Focused Linux CI 37208769543 passes frozen install, full production build and
+candidate home/story/member/venue auth/PWA SSR checks at `43dd1115`.
+Inherited full-suite CI retains the documented 16 rendering failures; global lint
+errors remain. [Draft PR #15](https://github.com/idealgathering-collab/ideal-gathering/pull/15)
+targets Havato only. Do not merge/deploy. No backend/schema/auth/legal content/
+PWA/hosting changes. Next: review Phase 1 visuals, content and PR.
+
+---
+# Historical — Havato prelaunch account links COMPLETE
 
 User-authorized 2026-10-04 small homepage follow-up on `havato`.
 Implementation `ff53f83693ccabd74d5e9083c46cbd1350987686` published and live.

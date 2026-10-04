@@ -413,7 +413,7 @@ function icsFold(line: string) {
 function downloadIcs(g: { id: string; subject: string; description: string | null; startsAt: string; location: string }) {
   const start = new Date(g.startsAt);
   const end = new Date(start.getTime() + 2 * 60 * 60 * 1000);
-  const host = typeof window !== "undefined" ? window.location.hostname : "idealgathering.com";
+  const host = typeof window !== "undefined" ? window.location.hostname : "havato-test.darkube.ir";
   const lines = [
     "BEGIN:VCALENDAR",
     "VERSION:2.0",
@@ -435,7 +435,7 @@ function downloadIcs(g: { id: string; subject: string; description: string | nul
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;
-  a.download = `${g.subject.replace(/[^\w\-]+/g, "_").slice(0, 60) || "gathering"}.ics`;
+  a.download = `${g.subject.replace(/[^\w-]+/g, "_").slice(0, 60) || "gathering"}.ics`;
   document.body.appendChild(a);
   a.click();
   a.remove();

@@ -1,5 +1,29 @@
 # UX
 
+## IG-012 Havato legal and trust — 2026-10-04
+
+Terms/Privacy retain stable routes, use the Phase 1 public shell, and offer
+FA/RTL by default plus English, numbered sections, contents anchors and related
+document navigation. Header anchors from legal pages return to the homepage.
+Public trust copy clarifies email confirmation is not identity verification.
+Old legal/contact/domain/country boilerplate removed. Existing 18+ preserved.
+Owner requested no public email addresses yet; empty configurable contact details
+and a truthful request-channel limitation remain visible alongside account settings.
+[Validation and unresolved launch decisions](../tasks/completed/IG-012-havato-legal-trust-report.md).
+Draft PR #15 only; no merge/deployment or core product change.
+
+## IG-011 Havato public polish — 2026-10-04
+
+Desktop home fills the viewport above 1000px; existing mobile sizing retained.
+Shared FA/EN public home/story chrome guides visitors to Request Access.
+Our Story links to the existing eight-chapter origin with Havato presentation.
+Cards and activity examples are informational; venue access is a distinct footer
+entry. Member sign-in is controlled by `showMemberSignIn` in public chrome;
+auth and venue routes remain intact. Signup uses the same waitlist contract,
+with early-access copy; invitations remain gradual. PWA install unchanged.
+See [review verification](../tasks/completed/IG-011-havato-public-polish-report.md).
+This review branch has not been merged or deployed.
+
 ## IG-010 Havato public home — 2026-10-03
 
 The reference-based home explains finding new activity companions and organizing

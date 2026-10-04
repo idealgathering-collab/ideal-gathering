@@ -4,14 +4,19 @@ import type { ComponentProps } from "react";
 export function Link({
   to,
   search,
+  hash,
   children,
   ...props
 }: ComponentProps<"a"> & {
   to: string;
   search?: Record<string, string>;
+  hash?: string;
 }) {
   return (
-    <a href={to + (search ? `?${new URLSearchParams(search)}` : "")} {...props}>
+    <a
+      href={to + (search ? `?${new URLSearchParams(search)}` : "") + (hash ? `#${hash}` : "")}
+      {...props}
+    >
       {children}
     </a>
   );
