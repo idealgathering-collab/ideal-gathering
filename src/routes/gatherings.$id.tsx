@@ -435,7 +435,7 @@ function downloadIcs(g: { id: string; subject: string; description: string | nul
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;
-  a.download = `${g.subject.replace(/[^\w\-]+/g, "_").slice(0, 60) || "gathering"}.ics`;
+  a.download = `${g.subject.replace(/[^\w-]+/g, "_").slice(0, 60) || "gathering"}.ics`;
   document.body.appendChild(a);
   a.click();
   a.remove();

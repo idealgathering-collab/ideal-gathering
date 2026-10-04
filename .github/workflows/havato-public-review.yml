@@ -25,7 +25,7 @@ jobs:
       - run: bun run test -- tests/unit/havato-waitlist.test.ts tests/unit/branding.test.ts tests/unit/havato-legal.test.ts tests/unit/age.test.ts tests/unit/havato-phase3.test.ts
       - run: node --test tests/pwa-install.test.mjs tests/pwa-service-worker.test.mjs tests/pwa-push.test.mjs
       - run: bunx tsc --noEmit
-      - run: bunx eslint src/components/landing/havato-public-chrome.tsx src/components/landing/havato-story.tsx src/components/landing/havato-home-copy.ts src/components/landing/havato-waitlist.tsx src/routes/our-story.tsx tests/landing-preview/main.tsx tests/landing-preview/fixtures.tsx src/components/landing/havato-legal.tsx src/components/landing/havato-legal-copy.ts src/config/legal.ts src/routes/terms.tsx src/routes/privacy.tsx src/components/site-footer.tsx tests/unit/havato-legal.test.ts tests/havato-public-smoke.mjs
+      - run: bunx eslint src/components/landing/havato-public-chrome.tsx src/components/landing/havato-story.tsx src/components/landing/havato-home-copy.ts src/components/landing/havato-waitlist.tsx src/routes/our-story.tsx src/routes/preview.tsx tests/landing-preview/main.tsx tests/landing-preview/fixtures.tsx src/components/landing/havato-legal.tsx src/components/landing/havato-legal-copy.ts src/config/legal.ts src/routes/terms.tsx src/routes/privacy.tsx src/components/site-footer.tsx tests/unit/havato-legal.test.ts tests/havato-public-smoke.mjs
       - run: >-
           bunx eslint src/lib/seo.ts src/i18n/translations.ts src/i18n/ru.ts --rule 'prettier/prettier: off'
       - run: bun run build

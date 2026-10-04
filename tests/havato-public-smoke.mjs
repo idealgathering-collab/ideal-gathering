@@ -37,6 +37,9 @@ try {
   for (const path of [
     "/",
     "/our-story",
+    "/waitlist",
+    "/preview",
+    "/invite",
     "/terms",
     "/privacy",
     "/terms?lang=en",
@@ -50,7 +53,7 @@ try {
     assert.match(response.headers.get("content-type"), /text\/html/);
     const html = await response.text();
     assert.match(html, /Havato/);
-    if (path === "/" || path === "/our-story") {
+    if (["/", "/our-story", "/waitlist", "/preview"].includes(path)) {
       assert.match(html, /dir="rtl"/);
       assert.match(html, /داستان ما/);
       assert.ok(!html.includes('href="/auth"'), "public member sign-in stays hidden");
