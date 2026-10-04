@@ -280,8 +280,8 @@ export const translations: Record<Lang, Dict> = {
     "auth.subtitle.signup":
       "Create your account to join gatherings, meet new people and save your seat.",
     "auth.subtitle.signin": "Sign in to see your gatherings and find your next table.",
-    "auth.waitlistHint": "Not ready to sign up? Join the",
-    "auth.waitlistLink": "waitlist",
+    "auth.waitlistHint": "Not ready to sign up?",
+    "auth.waitlistLink": "Request Early Access",
     "auth.google": "Continue with Google",
     "auth.quizSaved": "Your quiz result is saved — {persona}. We'll use it to seat you at the right table.",
 
@@ -1517,7 +1517,7 @@ export const translations: Record<Lang, Dict> = {
     "beta.hero.sub": "A new way to find the right people, for the right gathering, at the right moment. We're inviting our first community gradually.",
     "beta.hero.caption": "One table, a few good people, and an open seat waiting for you.",
     "beta.hero.note": "Iran-first early access — availability opens gradually",
-    "beta.cta.waitlist": "Join the Waiting List",
+    "beta.cta.waitlist": "Request Early Access",
     "beta.cta.invite": "I Have an Invitation",
     "beta.cta.venue": "Register Your Venue",
     "beta.needInvite": "New accounts need an invitation during the private beta.",
@@ -1843,7 +1843,7 @@ export const translations: Record<Lang, Dict> = {
       "برای پیوستن به گردهمایی‌ها، آشنایی با آدم‌های تازه و رزرو صندلی‌تان حساب بسازید.",
     "auth.subtitle.signin": "برای دیدن گردهمایی‌های‌تان و یافتن میز بعدی وارد شوید.",
     "auth.waitlistHint": "هنوز آمادهٔ ثبت‌نام نیستید؟",
-    "auth.waitlistLink": "به فهرست انتظار بپیوندید",
+    "auth.waitlistLink": "درخواست دسترسی زودهنگام",
     "auth.google": "ادامه با گوگل",
     "auth.quizSaved": "نتیجهٔ آزمون‌تان ذخیره شده — {persona}. از آن برای نشاندن‌تان سر میز درست استفاده می‌کنیم.",
 
@@ -3069,7 +3069,7 @@ export const translations: Record<Lang, Dict> = {
     "beta.hero.sub": "راهی تازه برای پیدا کردن آدم‌های درست، برای دورهمی درست، در لحظهٔ درست. ما جامعهٔ اولمان را کم‌کم دعوت می‌کنیم.",
     "beta.hero.caption": "یک میز، چند آدم خوب، و یک صندلی خالی که منتظر شماست.",
     "beta.hero.note": "شروع دسترسی زودهنگام از ایران — گسترش تدریجی ظرفیت",
-    "beta.cta.waitlist": "به فهرست انتظار بپیوندید",
+    "beta.cta.waitlist": "درخواست دسترسی زودهنگام",
     "beta.cta.invite": "دعوت‌نامه دارم",
     "beta.cta.venue": "مکان خود را ثبت کنید",
     "beta.needInvite": "در دورهٔ بتای خصوصی، ساخت حساب جدید به دعوت‌نامه نیاز دارد.",
