@@ -34,4 +34,28 @@ Screenshots and machine-readable layout/route results are delivered in this chat
 ## Boundaries and remaining checkpoint
 No database, migrations, waitlist helper/insert contract, backend, authentication, accounts, venue product, PWA/controller/worker/manifest, approved assets, Terms/Privacy content, dependency lockfile or hosting configuration changes. No production writes, merge, deployment, or idealgathering.com work.
 
-Review-only CI result will be recorded before handoff. Existing global tests/lint failures remain separate maintenance; do not bypass them or describe the entire repository as green. Real Supabase submission/email delivery, authenticated account journeys and physical-device installation were not exercised. Next: review Phase 1 visuals/content/PR; Terms/Privacy remain Phase 2.
+## Published review and Linux verification
+
+Draft [PR #15](https://github.com/idealgathering-collab/ideal-gathering/pull/15)
+targets `havato`; implementation commit `43dd1115b150e0612b4290858ca3c56e5eaac57f`.
+Its published tree is byte-identical to the locally checked implementation tree
+`55a1cbffe5d5f296f53a1b4028a978249eb5e845`. GitHub connector published this
+review branch because local Git Credential Manager cannot run in the sandbox.
+
+[Focused Linux CI 37208769543](https://github.com/idealgathering-collab/ideal-gathering/actions/runs/37208769543)
+passes frozen Bun install, 9 focused units, 35 PWA checks, TypeScript, focused
+lint, full production build and candidate SSR smoke. Actual candidate homepage,
+story, member sign-in/signup and venue sign-in all return 200; default Farsi/RTL,
+eight chapters, hidden public member entry and unchanged orange Havato manifest
+verified. Windows packaging limitation is resolved for review by Linux evidence.
+
+[Inherited full-suite CI 37208769464](https://github.com/idealgathering-collab/ideal-gathering/actions/runs/37208769464)
+fails at full unit tests: exactly 415 pass, 16 fail, 11 skipped, matching the local
+result and prior recorded rendering failures. Later steps in that older job are
+skipped; do not describe it as passing or bypass its status. Existing global lint
+errors also remain separate maintenance.
+
+No implementation blockers remain for visual/content review. The repository's
+full-suite check remains red. Real Supabase submission/email delivery,
+authenticated account journeys and physical-device installation were not
+exercised. Next: review Phase 1 visuals/content/PR; Terms/Privacy remain Phase 2.

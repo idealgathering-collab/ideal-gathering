@@ -8,9 +8,12 @@ Desktop scale, FA/EN Early Access, restored/rebranded story, shared public
 navigation/footer, grouped venue access, hidden member entry flag and decorative
 clickability cleanup implemented. 36 browser layouts/eight interaction groups,
 9 focused units, 35 PWA checks, typecheck and changed-component lint pass.
-Existing full-suite/lint and Windows Nitro packaging failures documented.
-Review-only Linux CI pending; do not merge/deploy. No backend/schema/auth/legal
-content/PWA/hosting changes. Next: finish CI evidence and review Phase 1 PR.
+Focused Linux CI 37208769543 passes frozen install, full production build and
+candidate home/story/member/venue auth/PWA SSR checks at `43dd1115`.
+Inherited full-suite CI retains the documented 16 rendering failures; global lint
+errors remain. [Draft PR #15](https://github.com/idealgathering-collab/ideal-gathering/pull/15)
+targets Havato only. Do not merge/deploy. No backend/schema/auth/legal content/
+PWA/hosting changes. Next: review Phase 1 visuals, content and PR.
 
 ---
 # Historical — Havato prelaunch account links COMPLETE
