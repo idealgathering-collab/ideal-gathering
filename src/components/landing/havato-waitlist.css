@@ -1,4 +1,5 @@
 .havato-public {
+  --havato-action: #a84c16;
   min-height: 100dvh;
   padding: 24px;
   background:
@@ -8,6 +9,17 @@
 }
 .havato-public * {
   box-sizing: border-box;
+}
+.havato-public h1,
+.havato-public h2,
+.havato-public h3 {
+  font-family: inherit;
+  text-wrap: balance;
+}
+.havato-public[dir="rtl"] h1,
+.havato-public[dir="rtl"] h2,
+.havato-public[dir="rtl"] h3 {
+  letter-spacing: 0;
 }
 .havato-public a {
   color: inherit;
@@ -257,7 +269,7 @@
   width: 100%;
   border: 0;
   border-radius: 12px;
-  background: var(--primary-dark);
+  background: var(--havato-action);
   color: white;
   font-size: 16px;
   font-weight: 700;
@@ -577,6 +589,8 @@
 }
 .havato-footer nav {
   display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: 18px;
 }
 .havato-footer a {
@@ -789,7 +803,7 @@
     font-size: 18px;
   }
   .havato-case p {
-    font-size: 12px;
+    font-size: 14px;
   }
   .havato-tools {
     padding-top: 16px;
@@ -814,7 +828,7 @@
     height: 20px;
   }
   .havato-feature-note {
-    font-size: 11px;
+    font-size: 13px;
   }
   .havato-trust {
     gap: 6px;
@@ -835,7 +849,7 @@
     height: 24px;
   }
   .havato-trust p {
-    font-size: 11px;
+    font-size: 12px;
     line-height: 1.7;
   }
   .havato-activities {
@@ -864,6 +878,7 @@
   }
   .havato-footer {
     padding: 20px 16px;
+    font-size: 14px;
     justify-content: center;
     text-align: center;
   }
@@ -871,10 +886,18 @@
     width: 100%;
   }
 }
+@media (max-width: 360px) {
+  .havato-case-grid {
+    grid-template-columns: 1fr;
+  }
+  .havato-activity-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
 .havato-public a.havato-nav-access {
   padding: 10px 18px;
   border-radius: 12px;
-  background: var(--primary-dark);
+  background: var(--havato-action);
   color: white;
   font-weight: 700;
   text-align: center;
@@ -933,7 +956,7 @@
   font-weight: 800;
 }
 .havato-story h2 {
-  color: var(--primary-dark);
+  color: var(--havato-action);
   font-size: 18px;
   font-weight: 700;
   line-height: 1.8;

@@ -32,40 +32,40 @@ import "./havato-waitlist.css";
 
 const copy = {
   fa: {
-    first: "هر جا هستی،",
+    first: "برای باهم بودن،",
     accent: "دورهمی پیدا کن",
     intro: "با آدم‌های مناسب، برای کارهایی که دوست داری.",
     name: "نام و نام خانوادگی",
-    email: "ایمیل شما",
+    email: "ایمیل",
     join: "درخواست دسترسی زودهنگام",
     busy: "در حال ثبت…",
-    agree: "با",
+    agree: "۱۸ سال یا بیشتر دارم و با",
     terms: "شرایط استفاده",
     privacy: "حریم خصوصی",
     and: "و",
     consent: "موافقم.",
     done: "درخواست دسترسی‌ات ثبت شد",
-    doneBody: "با گسترش ظرفیت دسترسی، از طریق ایمیل دعوتت می‌کنیم.",
+    doneBody: "با گسترش ظرفیت هواتو، دعوت‌نامه را به ایمیلت می‌فرستیم.",
     existing: "این ایمیل از قبل در فهرست دسترسی زودهنگام ثبت شده است.",
     failed: "ثبت انجام نشد. لطفاً دوباره تلاش کن.",
     valid: "نام و یک ایمیل معتبر وارد کن و شرایط را بپذیر.",
   },
   en: {
-    first: "Wherever you are,",
-    accent: "find your gathering.",
+    first: "Make time to",
+    accent: "get together.",
     intro: "With the right people, for the things you love.",
     name: "Full name",
     email: "Your email",
     join: "Request Early Access",
     busy: "Sending request…",
-    agree: "I agree to the",
+    agree: "I am 18 or over and agree to the",
     terms: "Terms",
     privacy: "Privacy Policy",
     and: "and",
     consent: ".",
-    done: "You’re on the early access list",
+    done: "Your access request is confirmed",
     doneBody: "We’ll invite you by email as access expands.",
-    existing: "This email is already on the early access list.",
+    existing: "This email is already on the Early Access list.",
     failed: "We couldn’t save your details. Please try again.",
     valid: "Enter your name and a valid email, and accept the terms.",
   },
@@ -185,13 +185,21 @@ export function HavatoWaitlist() {
                         disabled={busy}
                       />
                       <span>
-                        {c.agree} <Link to="/terms">{c.terms}</Link> {c.and}{" "}
-                        <Link to="/privacy">{c.privacy}</Link> {c.consent}
+                        {c.agree}{" "}
+                        <Link to="/terms" search={{ lang: language }}>
+                          {c.terms}
+                        </Link>{" "}
+                        {c.and}{" "}
+                        <Link to="/privacy" search={{ lang: language }}>
+                          {c.privacy}
+                        </Link>
+                        {language === "fa" ? " " : ""}
+                        {c.consent}
                       </span>
                     </label>
                     <button className="havato-cta" type="submit" disabled={busy}>
                       {busy ? c.busy : c.join}
-                      <ArrowRight size={21} />
+                      <ArrowRight size={21} aria-hidden="true" />
                     </button>
                     {error && (
                       <p role="alert" className="havato-error">

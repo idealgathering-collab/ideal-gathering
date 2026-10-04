@@ -28,13 +28,13 @@ export const legalCopy: Record<"fa" | "en", LegalCopy> = {
     operator:
       "Havato is operated by the Havato team. This name describes the service and its operator; it does not identify a registered Havato company.",
     contactPending:
-      "Public legal and privacy contact details are not yet published. Account holders can use the deletion control in account settings where available. A public request channel for other privacy matters and early-access list removal still needs to be provided before wider access.",
+      "Public legal and privacy contact details are not currently available. Account holders can request deletion in account settings where available. If you do not have an account, there is currently no public channel for privacy requests or removal from the Early Access list. Wider access remains subject to providing that channel.",
     contactLink: "Legal and privacy requests",
     settings: "Account settings",
     terms: {
       title: "Terms of Service",
       intro:
-        "Clear expectations for using Havato, meeting people, and planning gatherings during controlled early access.",
+        "Your rights and responsibilities when using Havato, meeting people, and planning gatherings during Early Access.",
       sections: [
         {
           id: "service",
@@ -48,7 +48,7 @@ export const legalCopy: Record<"fa" | "en", LegalCopy> = {
           id: "eligibility",
           title: "2. Eligibility and account care",
           paragraphs: [
-            "You must be at least 18 years old and legally able to use the service in your location. Havato is not intended for minors or unsupervised use by children. If local law imposes additional eligibility requirements, those also apply.",
+            "You must be at least 18 years old and legally able to use the service in your location. Havato is for adults and is not intended for anyone under 18. If local law imposes additional eligibility requirements, those also apply.",
             "Provide accurate information, use only accounts you are authorized to control, and keep credentials secure. Tell us through an available support channel if you suspect unauthorized use. Do not impersonate another person, a venue, or the Havato team. Email confirmation or an access approval is not proof of identity or a background check.",
           ],
         },
@@ -247,7 +247,7 @@ export const legalCopy: Record<"fa" | "en", LegalCopy> = {
           id: "children",
           title: "14. Children and age",
           paragraphs: [
-            "Havato's existing minimum age is 18. The service is not intended for children, and we do not knowingly invite minors to use account or gathering features. If information from an ineligible minor is identified, we will restrict access and address deletion subject to applicable legal obligations.",
+            "Havato is for adults aged 18 and over. We do not knowingly invite anyone under 18 to use account or gathering features. If information from an ineligible minor is identified, we will restrict access and address deletion subject to applicable legal obligations.",
           ],
         },
         {
@@ -271,13 +271,13 @@ export const legalCopy: Record<"fa" | "en", LegalCopy> = {
     operator:
       "هواتو توسط تیم هواتو اداره می‌شود. این نام به سرویس و گردانندهٔ آن اشاره دارد و به معنای معرفی یک شرکت ثبت‌شده با نام هواتو نیست.",
     contactPending:
-      "اطلاعات تماس عمومی برای امور حقوقی و حریم خصوصی هنوز منتشر نشده است. دارندگان حساب می‌توانند، در صورت در دسترس بودن، از گزینهٔ حذف حساب در تنظیمات استفاده کنند. پیش از گسترش دسترسی، باید راهی عمومی برای سایر درخواست‌های حریم خصوصی و حذف اطلاعات فهرست دسترسی زودهنگام فراهم شود.",
+      "اطلاعات تماس عمومی برای امور حقوقی و حریم خصوصی در حال حاضر در دسترس نیست. دارندگان حساب می‌توانند، در صورت دسترسی به این گزینه، از تنظیمات حساب درخواست حذف کنند. اگر حساب ندارید، اکنون راه ارتباطی عمومی برای درخواست‌های حریم خصوصی یا حذف اطلاعات از فهرست دسترسی زودهنگام وجود ندارد. گسترش دسترسی منوط به فراهم شدن این راه ارتباطی است.",
     contactLink: "درخواست‌های حقوقی و حریم خصوصی",
     settings: "تنظیمات حساب",
     terms: {
       title: "شرایط استفاده",
       intro:
-        "انتظارهای روشن برای استفاده از هواتو، آشنایی با دیگران و برنامه‌ریزی دورهمی‌ها در دورهٔ دسترسی زودهنگام کنترل‌شده.",
+        "حقوق و مسئولیت‌های شما هنگام استفاده از هواتو، آشنایی با دیگران و برنامه‌ریزی دورهمی‌ها در دورهٔ دسترسی زودهنگام.",
       sections: [
         {
           id: "service",
@@ -291,7 +291,7 @@ export const legalCopy: Record<"fa" | "en", LegalCopy> = {
           id: "eligibility",
           title: "۲. شرایط عضویت و مراقبت از حساب",
           paragraphs: [
-            "باید حداقل ۱۸ سال داشته باشید و از نظر قانونی مجاز به استفاده از سرویس در محل خود باشید. هواتو برای افراد زیر سن مجاز یا استفادهٔ بدون نظارت کودکان طراحی نشده است. الزامات تکمیلی قانون محل شما نیز باید رعایت شود.",
+            "باید حداقل ۱۸ سال داشته باشید و از نظر قانونی مجاز به استفاده از سرویس در محل زندگی خود باشید. هواتو ویژهٔ بزرگسالان است و برای افراد زیر ۱۸ سال ارائه نمی‌شود. الزامات تکمیلی قانون محل شما نیز باید رعایت شود.",
             "اطلاعات درست ارائه کنید، فقط از حساب‌هایی استفاده کنید که اجازهٔ کنترل آن‌ها را دارید و اطلاعات ورود را امن نگه دارید. در صورت احتمال استفادهٔ غیرمجاز، از راه پشتیبانی موجود اطلاع دهید. خود را به‌جای شخص دیگر، یک مکان یا تیم هواتو معرفی نکنید. تأیید ایمیل یا تأیید دسترسی، احراز هویت یا بررسی پیشینه محسوب نمی‌شود.",
           ],
         },
@@ -490,7 +490,7 @@ export const legalCopy: Record<"fa" | "en", LegalCopy> = {
           id: "children",
           title: "۱۴. کودکان و سن",
           paragraphs: [
-            "حداقل سن موجود هواتو ۱۸ سال است. سرویس برای کودکان نیست و آگاهانه افراد زیر سن مجاز را به قابلیت‌های حساب یا دورهمی دعوت نمی‌کنیم. اگر اطلاعات فرد زیر سن مجاز شناسایی شود، دسترسی محدود و با رعایت تعهد قانونی دربارهٔ حذف رسیدگی می‌شود.",
+            "هواتو ویژهٔ افراد ۱۸ سال به بالا است. افراد زیر ۱۸ سال را آگاهانه به استفاده از حساب یا دورهمی‌ها دعوت نمی‌کنیم. اگر اطلاعات فردی زیر سن مجاز شناسایی شود، دسترسی او را محدود می‌کنیم و با رعایت تعهدهای قانونی به حذف اطلاعات رسیدگی می‌کنیم.",
           ],
         },
         {

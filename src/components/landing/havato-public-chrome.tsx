@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Menu, X } from "lucide-react";
 import { brand, logoAsset } from "@/config/brand";
 import { useI18n } from "@/i18n";
@@ -19,10 +19,19 @@ export function HavatoPublicHeader({
   const language = lang === "en" ? "en" : "fa";
   const home = landingCopy[language];
   const [menuOpen, setMenuOpen] = useState(false);
+  const menuButton = useRef<HTMLButtonElement>(null);
   const awayFromHome = story || subpage;
   const accessHref = awayFromHome ? `/?lang=${language}#waitlist` : "#waitlist";
   return (
-    <header className="havato-header">
+    <header
+      className="havato-header"
+      onKeyDown={(event) => {
+        if (event.key === "Escape" && menuOpen) {
+          setMenuOpen(false);
+          menuButton.current?.focus();
+        }
+      }}
+    >
       <Link to="/" search={{ lang: language }} aria-label={brand.name} className="havato-brand">
         <img
           src={logoAsset.url}
@@ -74,7 +83,10 @@ export function HavatoPublicHeader({
               key={value}
               type="button"
               aria-pressed={language === value}
-              onClick={() => setLang(value)}
+              onClick={() => {
+                setLang(value);
+                setMenuOpen(false);
+              }}
             >
               {value.toUpperCase()}
             </button>
@@ -82,6 +94,7 @@ export function HavatoPublicHeader({
         </div>
         <button
           type="button"
+          ref={menuButton}
           className="havato-menu"
           aria-label={menuOpen ? home.closeMenu : home.openMenu}
           aria-expanded={menuOpen}

@@ -16,7 +16,7 @@ export const landingCopy = {
       ["سؤالات متداول", "faq"],
     ],
     joinTitle: "دسترسی زودهنگام هواتو",
-    joinNote: "دسترسی به‌تدریج باز می‌شود. درخواستت را ثبت کن تا با گسترش ظرفیت دعوتت کنیم.",
+    joinNote: "درخواستت را ثبت کن. با گسترش ظرفیت هواتو، دعوت‌نامه را برایت می‌فرستیم.",
     private: "اطلاعاتت مطابق سیاست حریم خصوصی نگهداری می‌شود.",
     withWho: "با کی می‌خوای",
     gathering: "دورهمی",
@@ -29,13 +29,13 @@ export const landingCopy = {
       },
     ],
     toolsTitle: "ابزارهای برنامه‌ریزی دورهمی",
-    features: ["دعوت", "RSVP", "لیست کارها", "هزینه‌ها", "یادداشت", "عکس‌ها"],
+    features: ["دعوت", "اعلام حضور", "فهرست کارها", "هزینه‌ها", "یادداشت", "عکس‌ها"],
     featureNote:
       "از دعوت و اعلام حضور تا کارها، هزینه‌ها و خاطره‌ها؛ هواتو هماهنگی دورهمی را ساده‌تر می‌کند. ابزارهای برنامه‌ریزی در دسترسی زودهنگام مرحله‌به‌مرحله ارائه می‌شوند.",
     trustTitle: "دورهمی با خیال آسوده‌تر",
     trust: [
-      ["هر جا هستی", "در اطرافت"],
-      ["با خیال آسوده‌تر", "گزارش و مسدودسازی"],
+      ["نزدیک به تو", "با گسترش دسترسی"],
+      ["اختیار بیشتر", "گزارش و مسدودسازی"],
       ["دورهمی‌های کوچک", "و صمیمی"],
     ],
     activitiesTitle: "برای چه کارهایی؟",
@@ -44,15 +44,15 @@ export const landingCopy = {
     faq: [
       [
         "هواتو برای چه کسانی است؟",
-        "برای کسانی که می‌خواهند آدم‌های تازه‌ای برای فعالیت‌های مشترک پیدا کنند، یا دورهمی دوستان و خانواده را راحت‌تر هماهنگ کنند.",
+        "برای افراد ۱۸ سال به بالا که می‌خواهند همراه تازه‌ای برای کارهای موردعلاقه‌شان پیدا کنند یا دورهمی دوستان و خانواده را راحت‌تر هماهنگ کنند.",
       ],
       [
         "بعد از درخواست دسترسی چه اتفاقی می‌افتد؟",
-        "نام و ایمیلت در فهرست دسترسی زودهنگام ثبت می‌شود. با گسترش ظرفیت، دعوت‌نامه را از طریق ایمیل دریافت می‌کنی. درخواست رایگان است؛ دعوت‌ها به‌تدریج ارسال می‌شوند و دسترسی فوری نیست.",
+        "نام و ایمیلت ثبت می‌شود و با گسترش ظرفیت، دعوت‌نامه را از طریق ایمیل دریافت می‌کنی. درخواست رایگان است. دعوت‌ها به‌تدریج ارسال می‌شوند؛ ثبت درخواست به معنای دسترسی فوری نیست.",
       ],
       [
         "چطور با خیال آسوده‌تر شرکت کنم؟",
-        "در قابلیت‌های فعال هواتو می‌توانی گزارش بدهی و افراد را مسدود کنی. تأیید ایمیل به معنای تأیید هویت یا تضمین ایمنی نیست. برای آشنایی اول، جای عمومی انتخاب کن، اطلاعات خصوصی را با احتیاط به اشتراک بگذار و نگرانی‌ها را گزارش بده.",
+        "برای دیدار اول، جای عمومی انتخاب کن و اطلاعات خصوصی را با احتیاط به اشتراک بگذار. هر جا ابزارهای گزارش و مسدودسازی فعال‌اند، از آن‌ها برای پیگیری نگرانی‌ها استفاده کن. تأیید ایمیل به معنای تأیید هویت یا تضمین ایمنی نیست.",
       ],
     ],
   },
@@ -73,7 +73,7 @@ export const landingCopy = {
       ["FAQ", "faq"],
     ],
     joinTitle: "Havato Early Access",
-    joinNote: "Access is opening gradually. Request an invitation as we expand availability.",
+    joinNote: "Request your invitation. We’ll email you as Havato opens to more people.",
     private: "Your details are handled under our Privacy Policy.",
     withWho: "Who will you",
     gathering: "gather",
@@ -91,11 +91,11 @@ export const landingCopy = {
     toolsTitle: "Gathering planning tools",
     features: ["Invites", "RSVP", "Checklists", "Expenses", "Notes", "Photos"],
     featureNote:
-      "From invitations and RSVPs to tasks, shared costs, and memories, Havato brings gathering plans together. Planning tools roll out in stages during early access.",
+      "Invitations, RSVPs, shared plans, and memories in one place. Planning tools become available in stages during Early Access.",
     trustTitle: "Gather with more confidence",
     trust: [
-      ["Wherever you are", "Around you"],
-      ["More peace of mind", "Reporting & blocking"],
+      ["Closer to you", "As access expands"],
+      ["More control", "Reporting & blocking"],
       ["Small gatherings", "Real connections"],
     ],
     activitiesTitle: "for what you love",
@@ -104,15 +104,15 @@ export const landingCopy = {
     faq: [
       [
         "Who is Havato for?",
-        "People looking for new company for shared activities, and people who want to coordinate gatherings with friends and family more easily.",
+        "Adults aged 18 and over who want to meet people for shared activities or make gatherings with friends and family easier to organize.",
       ],
       [
         "What happens after I request access?",
-        "Your name and email are saved to the early access list. We’ll invite you by email as availability expands. Requests are free; invitations are sent gradually and access is not immediate.",
+        "We save your name and email, then send an invitation as availability expands. Requesting access is free. Invitations go out gradually, so submitting a request does not give you immediate access.",
       ],
       [
         "How can I meet with more confidence?",
-        "Enabled Havato features offer reporting and blocking. Email confirmation is not identity verification or a safety guarantee. Choose a public place for your first meeting, share private details thoughtfully, and report concerns.",
+        "Choose a public place for your first meeting and share private details thoughtfully. Use reporting and blocking wherever those tools are available. Email confirmation does not verify someone’s identity or guarantee safety.",
       ],
     ],
   },
