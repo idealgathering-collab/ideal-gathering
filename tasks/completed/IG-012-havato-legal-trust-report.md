@@ -70,7 +70,7 @@ No opinion on specific Iran licensing or local legal compliance is claimed.
   inherited prettier rule suppressed; not presented as strict whole-repository lint.
 - Production component preview build passes. Local application client/SSR compile
   succeeds; final Windows Nitro packaging hits the known tslib realpath EPERM.
-  Linux review CI required for final packaging validation, pending at this checkpoint.
+  Final Linux review CI passes full production packaging and candidate SSR smoke; see exact evidence below.
 - First local test attempt ran zero tests due to sandbox temp rename EPERM; retry
   with an in-workspace temporary directory passed all 35. No test failure concealed.
 - git diff --check passes. Dependencies copied from Phase 1 cache; declarations and
@@ -103,4 +103,32 @@ writes, merge, deployment, or idealgathering.com access. Review draft visuals/co
 and complete the separate prelaunch decisions before authorizing Phase 3 release.
 
 ## Published Linux validation
-Pending at implementation checkpoint; append exact commit/run evidence after CI.
+Implementation commit: a0a84be93237606efd596310a885b9ded750ec2e.
+Review-workflow correction/current validated implementation:
+46238c708b98b80239c7eba3fe8f75ee1ebbd525, tree
+0f5adff4c6965d0724b9e9719de2102263709b47; published tree exactly matches local tree.
+
+[Focused Linux review CI 37211617366](https://github.com/idealgathering-collab/ideal-gathering/actions/runs/37211617366)
+**passes** frozen Bun install, all 35 focused units, 35 PWA checks, TypeScript,
+changed-file lint, semantic SEO/dictionary lint, full production build and candidate
+SSR home/story/Terms/Privacy/member signin/signup/venue auth/manifest checks.
+Both legal routes and EN-query URLs return 200; default Farsi/RTL and no legal
+legacy references verified. Existing provider first-renders FA on SSR and applies
+saved/URL EN on hydration; browser checks verify actual EN content. No i18n/auth
+provider refactor was included. No real backend or account changes tested.
+
+First review workflow revision did not start due to an incorrectly quoted YAML
+lint command. Corrected to a block scalar and verified with js-yaml before the
+successful run; no production config was affected.
+
+[Inherited full-suite CI 37211617394](https://github.com/idealgathering-collab/ideal-gathering/actions/runs/37211617394)
+remains red on the 16 existing life-profile/life-summary/member-profile/venue-value
+rendering failures. Earlier Phase 2 run 37211183651 confirms **421 pass, 16 fail,
+11 skipped** (six new focused legal checks account for the increase from 415).
+This status is not bypassed and the whole repository is not described as green.
+Global formatting debt remains. Browser checks were repeated against the final
+dictionary changes and again passed all 24 layouts/two interaction groups.
+
+No Phase 2 implementation blockers remain for draft review. A subsequent handoff
+commit changes documentation only. Launch decisions above remain deliberately open.
+Draft PR #15 remains unmerged and undeployed, targeting havato only.

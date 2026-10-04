@@ -1,14 +1,21 @@
-# Current task — IG-012 Havato legal/trust Phase 2, in progress
+# Current task — IG-012 Havato legal/trust Phase 2, review ready
 
-User-authorized 2026-10-04; [scope](IG-012-havato-legal-trust.md).
+User-authorized 2026-10-04. [Scope](completed/IG-012-havato-legal-trust.md) ·
+[Report and launch decisions](completed/IG-012-havato-legal-trust-report.md).
 Continue draft PR #15 on codex/havato-public-polish-phase1, base havato only.
-Terms/Privacy FA/EN, shared legal presentation, contact configuration, metadata,
-legacy legal copy removal and truthful trust messaging implemented; validation pending.
-User requested no public email addresses yet. Public privacy/early-access deletion
-request channel and verified operator/postal details remain prelaunch decisions.
-Preserve existing 18+ policy; signup enforcement is not changed.
-No backend/schema/waitlist/auth/account/PWA/infrastructure changes. Do not merge,
-deploy, or touch idealgathering.com. Next: local visual/checks and Linux review CI.
+Validated implementation 46238c708b98b80239c7eba3fe8f75ee1ebbd525.
+Terms/Privacy FA/EN, shared legal presentation, neutral operator/configurable
+contact, metadata, legacy public copy/footer and truthful safety copy implemented.
+24 legal browser layouts/two bilingual interaction groups, 35 focused units,
+35 PWA checks, TypeScript and focused lint pass. Linux review CI 37211617366
+passes frozen install, full production build and candidate legal/auth/PWA SSR smoke.
+Inherited full-suite CI still has 16 existing rendering failures; global lint debt
+remains. User requested no public email addresses yet: monitored privacy/list
+deletion channel and verified operator/postal details remain launch decisions.
+Existing 18+ preserved; signup enforcement and regional legal/provider/retention
+review remain before broad launch. No backend/schema/waitlist/auth/account/PWA/
+infrastructure changes. Do not merge/deploy or touch idealgathering.com.
+Next: review Phase 2 visuals/content and resolve launch decisions before Phase 3.
 
 ---
 # Current task — IG-011 Havato public-site polish Phase 1, review pending

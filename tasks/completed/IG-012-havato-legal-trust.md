@@ -1,6 +1,6 @@
 # IG-012 — Havato legal, privacy, and trust cleanup
 
-Status: Approved / in progress
+Status: Complete for draft review; launch decisions open
 Owner: product owner
 Approval: User request in this chat on 2026-10-04 explicitly approves the 16
 Phase 2 requirements and validation, continuing draft PR #15. Follow-up: remove
@@ -61,3 +61,5 @@ Cached dependencies copied without changing declarations/lockfiles.
 Scope approved by the explicit user request; no additional scope confirmation needed.
 Next: implement documents/configuration, verify local visuals/checks, publish only
 the existing draft branch, and record review/launch decisions separately.
+
+Final: [implementation and validation](IG-012-havato-legal-trust-report.md).

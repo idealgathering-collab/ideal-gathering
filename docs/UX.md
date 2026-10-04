@@ -1,5 +1,17 @@
 # UX
 
+## IG-012 Havato legal and trust — 2026-10-04
+
+Terms/Privacy retain stable routes, use the Phase 1 public shell, and offer
+FA/RTL by default plus English, numbered sections, contents anchors and related
+document navigation. Header anchors from legal pages return to the homepage.
+Public trust copy clarifies email confirmation is not identity verification.
+Old legal/contact/domain/country boilerplate removed. Existing 18+ preserved.
+Owner requested no public email addresses yet; empty configurable contact details
+and a truthful request-channel limitation remain visible alongside account settings.
+[Validation and unresolved launch decisions](../tasks/completed/IG-012-havato-legal-trust-report.md).
+Draft PR #15 only; no merge/deployment or core product change.
+
 ## IG-011 Havato public polish — 2026-10-04
 
 Desktop home fills the viewport above 1000px; existing mobile sizing retained.
