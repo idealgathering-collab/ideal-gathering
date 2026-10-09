@@ -1,3 +1,30 @@
+# Current task — IG-013 Havato Phase 5.1 authentication, implementation ready
+
+User-authorized 2026-10-10. Branch codex/havato-auth-phase5-1; base havato at
+755a9ed024f9672dffe5afaea46d109ae899ac49, verified via GitHub API.
+[Approved bounded scope](IG-013-havato-auth-phase5-1.md) ·
+[Provider/credential acceptance runbook](../docs/HAVATO-AUTH.md).
+Resend confirmation, explicit invalid/expired links and dedicated PKCE recovery
+implemented. Stored ordinary sessions cannot authorize reset. Venue confirmation
+uses the common handler; owner/admin recovery uses the same secure flow.
+54 focused unit/SDK/DOM and OAuth/signup regressions pass. TypeScript passes;
+focused lint has zero errors and two existing i18n warnings. Draft PR #16 is open.
+Authentication/public Linux CI pass, including frozen install and full build.
+General CI: 449 pass, 16 baseline rendering failures, 20 skips; the same sixteen
+failures were freshly reproduced against unchanged original application files.
+Windows packaging retains tslib realpath EPERM after client/server compilation.
+[Exact report and checks](IG-013-havato-auth-phase5-1-report.md).
+Connected Supabase audit confirms Havato healthy, Google disabled (authorize 400),
+email/signup enabled and confirmation required. Invalid-token callback probes for
+Havato auth/reset routes return 303 to localhost:3000; Site URL/allowlist mismatch
+is indicated. Full Auth settings/credentials cannot be read/edited by the available
+connector; dashboard controls did not load. Owner configuration and real delivery,
+sign-in/confirmation/recovery round trips remain pending. See runbook/report.
+No hosted mutations, database change, migration, merge or deployment.
+idealgathering.com untouched. Next: review PR #16 and complete the recorded hosted
+acceptance with authorized Havato project access and a designated test account.
+
+---
 # Current task — IG-012 Havato legal/trust Phase 2, review ready
 
 User-authorized 2026-10-04. [Scope](completed/IG-012-havato-legal-trust.md) ·
@@ -606,3 +633,4 @@ For each task:
 ## Prior workflow checkpoint
 
 Workflow documentation was prepared on `codex/project-workflow`; see [completion report](completed/workflow-setup.md). Inspect current Git state and branch/merge status rather than assuming that historical branch state has been merged or deployed.
+

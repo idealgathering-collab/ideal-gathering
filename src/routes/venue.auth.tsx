@@ -5,6 +5,8 @@ import { z } from "zod";
 import { toast } from "sonner";
 import { ArrowLeft, Store } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { authReturnUrl } from "@/lib/auth-return";
+import { ResendConfirmation } from "@/components/resend-confirmation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -73,7 +75,7 @@ function VenueAuth() {
           email: em,
           password: pw,
           options: {
-            emailRedirectTo: `${window.location.origin}/venue/register`,
+            emailRedirectTo: authReturnUrl(window.location.origin, "/venue/register"),
             data: { display_name: nm, account_type: "venue" },
           },
         });
@@ -154,7 +156,12 @@ function VenueAuth() {
             {mode === "signup" ? t("venueAuth.subtitle.signup") : t("venueAuth.subtitle.signin")}
           </p>
 
-          {confirmationSent && <p role="status" className="mt-6">{t("venueAuth.welcome")}</p>}
+          {confirmationSent && (
+            <div className="mt-6">
+              <p role="status">{t("venueAuth.welcome")}</p>
+              <ResendConfirmation initialEmail={email} redirect="/venue/register" />
+            </div>
+          )}
           <form onSubmit={submit} className="mt-6 grid gap-4">
             {mode === "signup" && (
               <div className="grid gap-2">
