@@ -51,8 +51,12 @@ function ResetPasswordPage() {
       if (!signedOut || !browserSignedOut) toast.warning(t("reset.signOutFailed"));
       navigate({ to: "/auth", search: { mode: "signin" } });
     } catch (err) {
-      if (err instanceof Error && err.message === "recovery_required") setLinkState("expired");
-      toast.error(err instanceof Error ? err.message : t("auth.generic"));
+      if (err instanceof Error && err.message === "recovery_required") {
+        setLinkState("expired");
+        toast.error(t("reset.expired"));
+      } else {
+        toast.error(err instanceof Error ? err.message : t("auth.generic"));
+      }
     } finally {
       setLoading(false);
     }

@@ -1,6 +1,6 @@
 # IG-013 — Havato Phase 5.1 authentication
 
-Status: Implemented; CI and hosted acceptance pending
+Status: Implemented and CI verified; review and hosted acceptance pending
 Owner: repository owner
 Approval: user request in this chat, 2026-10-10, explicitly authorizes the following bounded implementation, focused tests, provider audit where access exists and a reviewable PR.
 Branch: codex/havato-auth-phase5-1
@@ -28,4 +28,4 @@ Synthetic unit/SDK transport and real-component DOM checks cover authorization, 
 ## Checkpoint
 Application source was reconstructed from 569 local files whose Git blob hashes match the API tree; the sole unmatched file, tasks/current.md, came from the API. No clone or local-history assumption was used. Local 54 focused checks and TypeScript pass; focused lint has zero errors and two pre-existing Fast Refresh warnings. Final Windows packaging failed after compilation; exact error and Linux result will be recorded in the report. PR is required before review; no merge/deploy.
 
-See [configuration and acceptance runbook](../docs/HAVATO-AUTH.md). Update current.md and the report with exact CI results before handoff.
+See [verification report](IG-013-havato-auth-phase5-1-report.md) and [configuration and acceptance runbook](../docs/HAVATO-AUTH.md). Authentication/public review Linux CI pass; general CI retains sixteen reproduced baseline rendering failures. PR #16 is draft; hosted acceptance remains pending.

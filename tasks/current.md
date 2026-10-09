@@ -8,13 +8,17 @@ Resend confirmation, explicit invalid/expired links and dedicated PKCE recovery
 implemented. Stored ordinary sessions cannot authorize reset. Venue confirmation
 uses the common handler; owner/admin recovery uses the same secure flow.
 54 focused unit/SDK/DOM and OAuth/signup regressions pass. TypeScript passes;
-focused lint has zero errors and two existing i18n warnings. Linux CI/PR pending;
-Windows final packaging failed after client/server compilation (report pending).
+focused lint has zero errors and two existing i18n warnings. Draft PR #16 is open.
+Authentication/public Linux CI pass, including frozen install and full build.
+General CI: 449 pass, 16 baseline rendering failures, 20 skips; the same sixteen
+failures were freshly reproduced against unchanged original application files.
+Windows packaging retains tslib realpath EPERM after client/server compilation.
+[Exact report and checks](IG-013-havato-auth-phase5-1-report.md).
 Supabase integration is unconnected and dashboard controls did not load; current
 Google/email/redirect/SMTP credentials and live delivery/round trips are unverified.
 No hosted mutations, database change, migration, merge or deployment.
-idealgathering.com untouched. Next: publish review PR, inspect CI and record exact
-results; hosted acceptance requires authorized Havato project access/test account.
+idealgathering.com untouched. Next: review PR #16 and complete the recorded hosted
+acceptance with authorized Havato project access and a designated test account.
 
 ---
 # Current task — IG-012 Havato legal/trust Phase 2, review ready
