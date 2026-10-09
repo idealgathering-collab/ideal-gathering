@@ -1,3 +1,22 @@
+# Current task — IG-013 Havato Phase 5.1 authentication, implementation ready
+
+User-authorized 2026-10-10. Branch codex/havato-auth-phase5-1; base havato at
+755a9ed024f9672dffe5afaea46d109ae899ac49, verified via GitHub API.
+[Approved bounded scope](IG-013-havato-auth-phase5-1.md) ·
+[Provider/credential acceptance runbook](../docs/HAVATO-AUTH.md).
+Resend confirmation, explicit invalid/expired links and dedicated PKCE recovery
+implemented. Stored ordinary sessions cannot authorize reset. Venue confirmation
+uses the common handler; owner/admin recovery uses the same secure flow.
+54 focused unit/SDK/DOM and OAuth/signup regressions pass. TypeScript passes;
+focused lint has zero errors and two existing i18n warnings. Linux CI/PR pending;
+Windows final packaging failed after client/server compilation (report pending).
+Supabase integration is unconnected and dashboard controls did not load; current
+Google/email/redirect/SMTP credentials and live delivery/round trips are unverified.
+No hosted mutations, database change, migration, merge or deployment.
+idealgathering.com untouched. Next: publish review PR, inspect CI and record exact
+results; hosted acceptance requires authorized Havato project access/test account.
+
+---
 # Current task — IG-012 Havato legal/trust Phase 2, review ready
 
 User-authorized 2026-10-04. [Scope](completed/IG-012-havato-legal-trust.md) ·
@@ -606,3 +625,4 @@ For each task:
 ## Prior workflow checkpoint
 
 Workflow documentation was prepared on `codex/project-workflow`; see [completion report](completed/workflow-setup.md). Inspect current Git state and branch/merge status rather than assuming that historical branch state has been merged or deployed.
+

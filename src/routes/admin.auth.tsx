@@ -5,6 +5,7 @@ import { z } from "zod";
 import { toast } from "sonner";
 import { ArrowLeft, Shield } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { recoveryClient } from "@/integrations/supabase/recovery";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -48,7 +49,7 @@ function AdminAuth() {
       setLoading(true);
 
       if (mode === "forgot") {
-        const { error } = await supabase.auth.resetPasswordForEmail(em, {
+        const { error } = await recoveryClient().auth.resetPasswordForEmail(em, {
           redirectTo: `${window.location.origin}/reset-password`,
         });
         if (error) throw error;

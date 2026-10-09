@@ -7,6 +7,10 @@ import { brand, logoAsset } from "@/config/brand";
 import { supabase } from "@/integrations/supabase/client";
 import { signInWithGoogle } from "@/integrations/supabase/oauth";
 import { authReturnUrl } from "@/lib/auth-return";
+import { authLinkError, hasAuthCallback, cleanAuthLink, type LinkState } from "@/lib/auth-link-state";
+import { confirmationLinkState } from "@/lib/confirmation-link";
+import { recoveryClient } from "@/integrations/supabase/recovery";
+import { ResendConfirmation } from "@/components/resend-confirmation";
 import { registerWaitingUser } from "@/lib/waiting-registration";
 import { Button } from "@/components/ui/button";
 import { useT } from "@/i18n";
@@ -49,6 +53,8 @@ function AuthPage() {
   const [agree, setAgree] = useState(false);
   const [loading, setLoading] = useState(false);
   const [confirmationSent, setConfirmationSent] = useState(false);
+  const [showResend, setShowResend] = useState(false);
+  const [linkState, setLinkState] = useState<LinkState>("idle");
   const t = useT();
 
   useEffect(() => setCurrent(mode), [mode]);
@@ -60,12 +66,34 @@ function AuthPage() {
 
   useEffect(() => {
     if (current === "forgot") return;
-    supabase.auth.getSession().then(async ({ data }) => {
-      if (!data.session) return;
+    let active = true;
+    const url = new URL(window.location.href);
+    const linkError = authLinkError(url);
+    if (linkError) {
+      setLinkState(linkError);
+      setShowResend(true);
+      window.history.replaceState(null, "", cleanAuthLink(url));
+      return;
+    }
+    const callback = hasAuthCallback(url);
+    if (callback) setLinkState("checking");
+    supabase.auth.getSession().then(async ({ data, error }) => {
+      if (!active) return;
+      if (callback) {
+        const state = confirmationLinkState(url, data.session, error);
+        const valid = state === "valid";
+        setLinkState(state);
+        window.history.replaceState(null, "", cleanAuthLink(url));
+        if (!valid) { setShowResend(true); return; }
+      }
+      if (!data.session || error) return;
       await redeemPendingInvite();
       const to = await homePathForUser(data.session.user.id, redirect);
-      navigate({ to });
+      if (active) navigate({ to });
+    }).catch(() => {
+      if (active && callback) { setLinkState("invalid"); setShowResend(true); }
     });
+    return () => { active = false; };
   }, [navigate, redirect, current]);
 
 
@@ -76,7 +104,7 @@ function AuthPage() {
       setLoading(true);
 
       if (current === "forgot") {
-        const { error } = await supabase.auth.resetPasswordForEmail(em, {
+        const { error } = await recoveryClient().auth.resetPasswordForEmail(em, {
           redirectTo: `${window.location.origin}/reset-password`,
         });
         if (error) throw error;
@@ -121,6 +149,7 @@ function AuthPage() {
       navigate({ to });
 
     } catch (err) {
+      if (typeof err === "object" && err && "code" in err && err.code === "email_not_confirmed") setShowResend(true);
       const msg = err instanceof Error ? err.message : t("auth.generic");
       toast.error(msg);
     } finally {
@@ -172,6 +201,7 @@ function AuthPage() {
           <p className="mt-1 text-sm text-muted-foreground">
             {isForgot ? t("auth.forgot.subtitle") : isSignup ? t("auth.subtitle.signup") : t("auth.subtitle.signin")}
           </p>
+          {linkState !== "idle" && <p role="status" className="mt-4 text-sm">{t(`auth.link.${linkState}`)}</p>}
 
           {!isForgot && (
             <>
@@ -236,6 +266,7 @@ function AuthPage() {
           {confirmationSent ? (
             <div role="status" className="grid gap-4">
               <p>{t("phase3.confirmEmail")}</p>
+              <ResendConfirmation initialEmail={email} redirect={redirect} />
               <Button onClick={() => { setConfirmationSent(false); setCurrent("signin"); }}>
                 {t("auth.signIn")}
               </Button>
@@ -342,6 +373,12 @@ function AuthPage() {
                 : t("auth.signIn")}
             </Button>
           </form>}
+          {!confirmationSent && !isForgot && (
+            <>
+              <Button type="button" variant="link" className="mt-3" onClick={() => setShowResend(!showResend)}>{t("auth.resend")}</Button>
+              {showResend && <ResendConfirmation initialEmail={email} redirect={redirect} />}
+            </>
+          )}
 
           {isForgot ? (
             <button

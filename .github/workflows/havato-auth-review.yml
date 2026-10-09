@@ -1,0 +1,42 @@
+name: Havato authentication review
+on:
+  pull_request:
+    branches: [havato]
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      VITE_SUPABASE_URL: http://127.0.0.1:54321
+      VITE_SUPABASE_PUBLISHABLE_KEY: sb_publishable_ig009_local_fixture
+      VITE_SITE_URL: http://localhost:4173
+      SUPABASE_SERVICE_ROLE_KEY: ig009_server_only_sentinel
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: '1.4.2'
+      - run: bun install --frozen-lockfile
+      - name: Synthetic DOM runtime
+        run: npm install --prefix /tmp/havato-auth --no-save --ignore-scripts --no-audit --no-fund jsdom@26.1.0
+      - name: Focused auth and existing OAuth/signup regressions
+        run: >-
+          HAVATO_TEST_JSDOM=/tmp/havato-auth/node_modules/jsdom/lib/api.js
+          bun run test -- tests/unit/password-recovery.test.ts tests/unit/confirmation-link.test.ts
+          tests/unit/auth-controls.ui.test.ts tests/unit/oauth-config.test.ts
+          tests/unit/havato-phase3.test.ts tests/unit/waiting-registration.test.ts
+      - run: bunx tsc --noEmit
+      - name: Changed authentication code lint
+        run: >-
+          bunx eslint src/lib/auth-link-state.ts src/lib/confirmation-link.ts src/lib/password-recovery.ts
+          src/integrations/supabase/recovery.ts src/components/resend-confirmation.tsx
+          src/i18n/auth.ts src/i18n/index.tsx src/routes/auth.tsx src/routes/reset-password.tsx
+          src/routes/admin.auth.tsx src/routes/venue.auth.tsx tests/unit/password-recovery.test.ts
+          tests/unit/confirmation-link.test.ts tests/unit/auth-controls.ui.test.ts
+          --rule 'prettier/prettier: off'
+      - run: bun run build

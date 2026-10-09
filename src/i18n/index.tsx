@@ -2,6 +2,7 @@ import { brand, brandText } from "@/config/brand";
 import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from "react";
 import { translations, LANGS, type Lang } from "./translations";
 import { registrationCopy } from "./registration";
+import { authCopy } from "./auth";
 
 type Ctx = {
   lang: Lang;
@@ -62,7 +63,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   const t = useCallback(
     (key: string, vars?: Record<string, string | number>) => {
       const dict = translations[lang];
-      let s = brandText[lang]?.[key] ?? registrationCopy[lang]?.[key] ?? dict[key] ?? registrationCopy.en[key] ?? translations.en[key] ?? key;
+      let s = brandText[lang]?.[key] ?? authCopy[lang]?.[key] ?? registrationCopy[lang]?.[key] ?? dict[key] ?? registrationCopy.en[key] ?? translations.en[key] ?? key;
       s = s.replaceAll("{brandName}", brand.name);
       if (vars) {
         for (const [k, v] of Object.entries(vars)) {
@@ -88,7 +89,7 @@ export function useT() {
   if (ctx) return ctx.t;
   // Fallback for trees that render outside the provider (e.g. root error boundary).
   return (key: string, vars?: Record<string, string | number>) => {
-    let s = (brandText.en?.[key] ?? translations.en[key] ?? key).replaceAll(
+    let s = (brandText.en?.[key] ?? authCopy.en[key] ?? translations.en[key] ?? key).replaceAll(
       "{brandName}",
       brand.name,
     );
