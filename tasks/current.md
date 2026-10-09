@@ -14,8 +14,12 @@ General CI: 449 pass, 16 baseline rendering failures, 20 skips; the same sixteen
 failures were freshly reproduced against unchanged original application files.
 Windows packaging retains tslib realpath EPERM after client/server compilation.
 [Exact report and checks](IG-013-havato-auth-phase5-1-report.md).
-Supabase integration is unconnected and dashboard controls did not load; current
-Google/email/redirect/SMTP credentials and live delivery/round trips are unverified.
+Connected Supabase audit confirms Havato healthy, Google disabled (authorize 400),
+email/signup enabled and confirmation required. Invalid-token callback probes for
+Havato auth/reset routes return 303 to localhost:3000; Site URL/allowlist mismatch
+is indicated. Full Auth settings/credentials cannot be read/edited by the available
+connector; dashboard controls did not load. Owner configuration and real delivery,
+sign-in/confirmation/recovery round trips remain pending. See runbook/report.
 No hosted mutations, database change, migration, merge or deployment.
 idealgathering.com untouched. Next: review PR #16 and complete the recorded hosted
 acceptance with authorized Havato project access and a designated test account.
