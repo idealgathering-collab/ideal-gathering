@@ -11,9 +11,10 @@ Going/Maybe/Declined, combined capacity, privacy/grants, persistent quotas and
 FA/EN mobile guest/host controls implemented. 73 migrations replayed locally;
 179 DB checks, 98 focused tests, typecheck, focused lint and production build pass.
 Execution-time expiry correction adds two regressions; no hosted migration was rewritten. Eight synthetic browser layouts verified. Local dependencies reused; Linux frozen
-install/review CI passes at implementation 128d414bdae9266cd291ad23259e8c35a727b6f1
-(run 38084272566); public-site review passes too. General CI: 452 passed/16 documented
-baseline failures/25 skipped (38084272476). Built-server guest HTTP smoke: 20 passing.
+install/review CI passes at final implementation f25d769d34364571ef985a546296d5faf5d87fd5
+(run 38084597078); public-site review passes too (38084597137). General CI: 452 passed/
+16 documented baseline failures/25 skipped (38084597411). Built-server guest HTTP smoke:
+20 passing. A final documentation-only checkpoint records these exact-head results.
 No hosted application, merge/deployment,
 external messaging or idealgathering.com access. Next: review guest capability
 contract and approve designated staging checks/migrations separately before release.

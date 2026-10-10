@@ -96,7 +96,18 @@ receiving the FA-default language (life-profile, life-summary, member-profile,
 venue-value). The earlier baseline evidence remains in the IG-014 report; no new
 full-suite pass is claimed here.
 
-## Published verification evidence before the final execution-time expiry correction
+## Final implementation verification
+Final implementation `f25d769d34364571ef985a546296d5faf5d87fd5` uses execution-time
+expiry checks after locks and passes the added within-transaction expiry regressions.
+[Linux Phase 6 review](https://github.com/idealgathering-collab/ideal-gathering/actions/runs/38084597078)
+passes frozen install, **73 migrations / 179 DB checks / 98 focused tests**, typecheck,
+focused lint and production build. [Public-site review](https://github.com/idealgathering-collab/ideal-gathering/actions/runs/38084597137)
+passes. [General CI](https://github.com/idealgathering-collab/ideal-gathering/actions/runs/38084597411)
+retains 452 passed / 16 baseline failures / 25 skipped. Final job results and logs were
+inspected. The following evidence records the preceding implementation checkpoint;
+the last follow-up changes only this verification documentation.
+
+## Earlier published verification evidence
 Implementation checkpoint `128d414bdae9266cd291ad23259e8c35a727b6f1` includes the
 application/test tree before the final execution-time expiry correction; 177 DB checks at that checkpoint. The final correction adds two DB regressions (179 total) and uses clock_timestamp after locks. Final-head CI is inspected separately.
 The intervening line-ending preservation commit is a normal fast-forward; no published
