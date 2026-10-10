@@ -27,7 +27,7 @@ import { momentPhotoExtension } from "@/lib/gathering-moment";
 type Loaded = Awaited<ReturnType<typeof loadGatheringLifeMoment>>;
 
 /** Passive card: never opens over check-in, safety controls, or feedback. */
-export function GatheringMoment({ gatheringId, userId }: { gatheringId: string; userId: string }) {
+export function GatheringMoment({ gatheringId, userId, privateGathering = false }: { gatheringId: string; userId: string; privateGathering?: boolean }) {
   const t = useT();
   const load = useServerFn(loadGatheringLifeMoment);
   const [open, setOpen] = useState(false);
@@ -83,6 +83,7 @@ export function GatheringMoment({ gatheringId, userId }: { gatheringId: string; 
               <MomentEditor
                 gatheringId={gatheringId}
                 loaded={loaded}
+                privateGathering={privateGathering}
                 onBusy={setBusy}
                 onClose={() => setOpen(false)}
                 onSaved={() => {
@@ -112,12 +113,14 @@ export function MomentEditor({
   onBusy,
   onClose,
   onSaved,
+  privateGathering = false,
 }: {
   gatheringId: string | null;
   loaded: Loaded;
   onBusy: (value: boolean) => void;
   onClose: () => void;
   onSaved: () => void;
+  privateGathering?: boolean;
 }) {
   const t = useT();
   const { lang } = useI18n();
@@ -133,6 +136,7 @@ export function MomentEditor({
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const title = moment?.title ?? loaded.prefill?.title ?? "";
+  const privateOnly = privateGathering || moment?.private_gathering === true;
   const date = moment?.happened_at ?? loaded.prefill?.happened_at;
   async function save() {
     if (busy) return;
@@ -287,7 +291,7 @@ export function MomentEditor({
           </div>
           <fieldset className="flex min-w-0 flex-wrap gap-2">
             <legend className="mb-2 text-sm">{t("moment.visibility")}</legend>
-            {(["private", "profile"] as const).map((value) => (
+            {(["private", "profile"] as const).filter((value) => !privateOnly || value === "private").map((value) => (
               <label
                 key={value}
                 className="flex min-h-11 cursor-pointer items-center gap-2 rounded-full border border-input px-4 has-[:checked]:border-primary has-[:checked]:bg-primary/10"
@@ -303,6 +307,7 @@ export function MomentEditor({
               </label>
             ))}
           </fieldset>
+          {privateOnly && <p className="text-sm text-muted-foreground">{t("private.memory")}</p>}
         </fieldset>
         {error && (
           <p

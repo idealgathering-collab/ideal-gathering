@@ -1,5 +1,15 @@
 # Decisions
 
+## IG-016 coordination scope — accepted 2026-10-11
+Explicit user instruction authorizes checklist-integrated responsibilities,
+shared gathering notes and simple expense splitting on existing draft PR #17.
+Expense writes are host-managed; Going members read records/calculations.
+One currency and deterministic equal integer shares form this bounded increment.
+Guests can manage only their own responsibility on host-shared checklist items
+and read host-shared notes while adult-attested Going with a valid link. No guest
+expense/chat/member/profile access, payments, shared album or Phase 5 changes.
+Hosted migrations, merging and deployment need separate approval.
+
 Initial accepted decisions below come from the user's workflow brief and referenced Ideal Gathering discussion. Observations are labeled separately; they do not silently change product policy.
 
 | ID | Status | Decision and consequence |

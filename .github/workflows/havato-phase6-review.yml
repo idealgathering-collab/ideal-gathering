@@ -1,0 +1,33 @@
+name: Havato Phase 6 review
+on:
+  pull_request:
+    branches: [havato]
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      VITE_SUPABASE_URL: http://127.0.0.1:54321
+      VITE_SUPABASE_PUBLISHABLE_KEY: sb_publishable_ig009_local_fixture
+      VITE_SITE_URL: http://localhost:4173
+      SUPABASE_SERVICE_ROLE_KEY: ig009_server_only_sentinel
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: '1.4.2'
+      - run: bun install --frozen-lockfile
+      - run: npm install --prefix "$RUNNER_TEMP/phase6-checks" --no-save --package-lock=false @electric-sql/pglite@0.5.8 jsdom@26.1.0
+      - run: node tests/private-gatherings.local.mjs "$RUNNER_TEMP/phase6-checks/node_modules/@electric-sql/pglite/dist/index.js"
+      - run: HAVATO_TEST_JSDOM="$RUNNER_TEMP/phase6-checks/node_modules/jsdom/lib/api.js" bun run test -- tests/unit/gathering-coordination.test.ts tests/unit/gathering-coordination.ui.test.ts tests/unit/guest-invitations.test.ts tests/unit/guest-invitations.ui.test.ts tests/unit/private-gatherings.test.ts tests/unit/private-gathering-public.test.ts tests/unit/private-gathering-matching.test.ts tests/unit/private-gatherings.ui.test.ts tests/unit/create-gathering-rules.test.ts tests/unit/life-moments.test.ts tests/unit/gathering-moment.test.ts tests/unit/age.test.ts
+      - run: bunx tsc --noEmit
+      - run: >-
+          bunx eslint src/lib/private-gatherings.ts src/lib/gatherings.ts src/lib/guest-invitations.ts src/lib/guest-invitations.functions.ts src/lib/guest-invitations.server.ts src/components/guest-invitation.tsx src/components/host-guest-invitations.tsx src/components/private-gathering-invitations.tsx src/i18n/guest-invitations.ts src/i18n/private-gatherings.ts src/routes/guest-invite.tsx src/routes/gatherings.\$id.tsx src/routes/_authenticated/my-gatherings.tsx tests/unit/guest-invitations.test.ts tests/unit/guest-invitations.ui.test.ts tests/unit/private-gatherings.test.ts tests/unit/private-gathering-public.test.ts tests/unit/private-gatherings.ui.test.ts tests/private-gatherings.local.mjs tests/guest-invitations.local.mjs --rule 'prettier/prettier: off'
+      - run: bun run build
+      - run: >-
+          bunx eslint src/lib/gathering-coordination.ts src/lib/gathering-coordination.functions.ts src/components/gathering-coordination.tsx src/components/guest-coordination.tsx src/components/gathering-room.tsx src/i18n/gathering-coordination.ts tests/unit/gathering-coordination.test.ts tests/unit/gathering-coordination.ui.test.ts tests/gathering-coordination.local.mjs --rule 'prettier/prettier: off'

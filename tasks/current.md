@@ -1,3 +1,67 @@
+# Current task — IG-016 Havato Phase 6.3 coordination, review-ready
+
+User authorized 2026-10-11: audit/reuse then responsibilities, shared notes and
+expense splitting on existing draft PR #17; target havato. Baseline ba83b382.
+[Approved scope](completed/IG-016-havato-phase6-coordination.md) ·
+[Implementation, tests and release blockers](completed/IG-016-havato-phase6-coordination-report.md).
+Checklist-integrated host assignments/volunteering/completion, versioned notes,
+host-managed integer equal expense splits/balances and explicit per-record Going
+guest sharing implemented. No guest roster/chat/expense/profile/memory permissions.
+Local 74-migration replay/306 DB checks, 126 focused tests, typecheck/build and
+focused lint (zero errors/three existing local warnings) pass. Eight synthetic
+FA/EN host/member mobile/desktop layouts: correct direction/no overflow or console
+errors. Implementation 952985993fddd817d937ed85a54940cc75a1345f passes Linux Phase 6
+review (38088345634) and public review (38088345752); logs inspected. General Linux
+CI (38088345674): 471 passed/16 same baseline rendering failures/34 skipped; later
+general build/smoke steps skipped, not passed. Next: review draft PR and separately
+approve designated staging migration/advisors/cache/types, real mobile flows,
+separate-connection races and ingress/retention review. Migration unapplied to all hosted targets.
+PR #16/Phase 5 excluded. No merge/deploy/hosted writes or idealgathering.com access.
+
+---
+# Historical — IG-015 Havato Phase 6.2 guest invitations, review-ready
+
+User explicitly authorized 2026-10-10: remaining external/private invitation links,
+account-free guest RSVP and host management. Extend draft PR #17 on
+codex/havato-phase6-private-gatherings, targeting havato; PR #16/Phase 5 excluded.
+[Scope](IG-015-havato-phase6-guest-invitations.md) ·
+[Implementation, validation and owner release actions](IG-015-havato-phase6-guest-invitations-report.md).
+Audited/reused IG-014 and IG-001–009. Guest capabilities are separate from member
+attendance/permissions. Hashed 256-bit tokens, expiry/revocation, 18+ attestation,
+Going/Maybe/Declined, combined capacity, privacy/grants, persistent quotas and
+FA/EN mobile guest/host controls implemented. 73 migrations replayed locally;
+179 DB checks, 98 focused tests, typecheck, focused lint and production build pass.
+Execution-time expiry correction adds two regressions; no hosted migration was rewritten. Eight synthetic browser layouts verified. Local dependencies reused; Linux frozen
+install/review CI passes at final implementation f25d769d34364571ef985a546296d5faf5d87fd5
+(run 38084597078); public-site review passes too (38084597137). General CI: 452 passed/
+16 documented baseline failures/25 skipped (38084597411). Built-server guest HTTP smoke:
+20 passing. A final documentation-only checkpoint records these exact-head results.
+No hosted application, merge/deployment,
+external messaging or idealgathering.com access. Next: review guest capability
+contract and approve designated staging checks/migrations separately before release.
+
+---
+# Historical checkpoint — IG-014 Havato Phase 6, first increment review-ready
+
+User-authorized 2026-10-10: Phase 6 precedes Phase 5; audit and incremental implementation.
+Branch codex/havato-phase6-private-gatherings; base havato 755a9ed024f9672dffe5afaea46d109ae899ac49.
+[Draft PR #17](https://github.com/idealgathering-collab/ideal-gathering/pull/17) targets havato.
+[Bounded scope](IG-014-havato-phase6.md) · [Audit](../docs/HAVATO-PHASE6-AUDIT.md) · [Report/checks/gaps](IG-014-havato-phase6-report.md).
+Private creation, member invitations/inbox/Going-Maybe-Declined, revocation, reuse of
+existing room/checklist/history, private projections and durable memory privacy implemented.
+Existing admin approval, beta/email gates and 18+ preserved. No auth/provider edits.
+74 focused unit/DOM checks, 84 disposable PostgreSQL/schema checks after 72-migration
+replay, TypeScript, focused lint (zero errors/two existing i18n warnings), Windows
+production build and 12 FA/EN fixture layouts pass. Dedicated Linux review CI added.
+Linux Phase 6 and public-site CI pass at implementation commit b17b868. General CI
+has 16 FA-default/English-expectation failures, freshly reproduced on unchanged base.
+Whole Phase 6 remains incomplete: expenses/assignments/shared album, external invites,
+host lifecycle UX and real staging/provider/concurrency acceptance are documented gaps.
+Next: review draft PR, inspect designated Havato staging ledger and perform recorded
+acceptance before any separately approved migration/release. PR #16 stays unmerged;
+Phase 5 deferred. No hosted changes, merge/deploy or idealgathering.com operations.
+
+---
 # Current task — IG-012 Havato legal/trust Phase 2, review ready
 
 User-authorized 2026-10-04. [Scope](completed/IG-012-havato-legal-trust.md) ·

@@ -339,6 +339,33 @@ export type Database = {
           },
         ]
       }
+      gathering_invitations: {
+        Row: {
+          gathering_id: string;
+          recipient_id: string;
+          response: string;
+          created_at: string;
+          updated_at: string;
+          revoked_at: string | null;
+        };
+        Insert: {
+          gathering_id: string;
+          recipient_id: string;
+          response?: string;
+          created_at?: string;
+          updated_at?: string;
+          revoked_at?: string | null;
+        };
+        Update: {
+          gathering_id?: string;
+          recipient_id?: string;
+          response?: string;
+          created_at?: string;
+          updated_at?: string;
+          revoked_at?: string | null;
+        };
+        Relationships: [{ foreignKeyName: "gathering_invitations_gathering_id_fkey"; columns: ["gathering_id"]; isOneToOne: false; referencedRelation: "gatherings"; referencedColumns: ["id"] }];
+      };
       gatherings: {
         Row: {
           address: string | null
@@ -359,6 +386,7 @@ export type Database = {
           status: Database["public"]["Enums"]["gathering_status"]
           subject: string
           table_id: string | null
+          visibility: string
           venue_name: string
         }
         Insert: {
@@ -380,6 +408,7 @@ export type Database = {
           status?: Database["public"]["Enums"]["gathering_status"]
           subject: string
           table_id?: string | null
+          visibility?: string
           venue_name: string
         }
         Update: {
@@ -401,6 +430,7 @@ export type Database = {
           status?: Database["public"]["Enums"]["gathering_status"]
           subject?: string
           table_id?: string | null
+          visibility?: string
           venue_name?: string
         }
         Relationships: [
@@ -473,6 +503,7 @@ export type Database = {
           title: string;
           updated_at: string;
           user_id: string;
+          private_gathering: boolean;
           visibility: string;
         };
         Insert: {
@@ -485,6 +516,7 @@ export type Database = {
           title: string;
           updated_at?: string;
           user_id: string;
+          private_gathering?: boolean;
           visibility?: string;
         };
         Update: {
@@ -497,6 +529,7 @@ export type Database = {
           title?: string;
           updated_at?: string;
           user_id?: string;
+          private_gathering?: boolean;
           visibility?: string;
         };
         Relationships: [
@@ -940,6 +973,51 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      gathering_coordination: {
+        Args: { _id: string; _action?: string; _data?: Json }
+        Returns: Json
+      }
+      guest_coordination: {
+        Args: { _hash: string; _adult: boolean; _data?: Json }
+        Returns: Json
+      }
+      guest_invitation_limit: {
+        Args: {
+          _hash: string
+          _ip_hash?: string
+        }
+        Returns: boolean
+      }
+      manage_guest_invitation: {
+        Args: {
+          _id: string
+          _action: string
+          _hash?: string
+          _label?: string
+          _days?: number
+          _invite?: string
+        }
+        Returns: Json
+      }
+      private_gathering_seat_counts: {
+        Args: {
+          _ids: string[]
+        }
+        Returns: Json
+      }
+      use_guest_invitation: {
+        Args: {
+          _hash: string
+          _adult: boolean
+          _response?: string
+          _name?: string
+        }
+        Returns: Json
+      }
+
+      invite_gathering_member: { Args: { _id: string; _email: string }; Returns: undefined };
+      respond_gathering_invitation: { Args: { _id: string; _response: string }; Returns: undefined };
+      revoke_gathering_invitation: { Args: { _id: string; _recipient: string }; Returns: undefined };
       havato_push_event_eligible: { Args: { _id: string }; Returns: boolean }
       havato_claim_push_events: {
         Args: { _lead_minutes?: number }

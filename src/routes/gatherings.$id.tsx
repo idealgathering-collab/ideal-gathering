@@ -5,7 +5,9 @@ import { CalendarClock, MapPin, Users, ArrowLeft, Coffee, Lock, CalendarPlus, Sh
 import { SiteHeader } from "@/components/site-header";
 import { MenuSection } from "@/components/menu-section";
 import { GatheringChat, GatheringChecklist } from "@/components/gathering-room";
+import { GatheringCoordination } from "@/components/gathering-coordination";
 import { GatheringMoment } from "@/components/gathering-moment";
+import { PrivateGatheringInvitations } from "@/components/private-gathering-invitations";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import { VerifyEmailBanner } from "@/components/verify-email-banner";
@@ -53,7 +55,7 @@ function GatheringDetail() {
   const [reportTarget, setReportTarget] = useState<ReportTarget | null>(null);
 
   const { data: g, isLoading } = useQuery({
-    queryKey: ["gathering", id],
+    queryKey: ["gathering", id, user?.id],
     queryFn: () => fetchGathering(id),
   });
 
@@ -68,7 +70,7 @@ function GatheringDetail() {
 
   const { data: fitData } = useQuery({
     queryKey: ["table-fit", user?.id, [id]],
-    enabled: !!user,
+    enabled: !!user && g?.visibility === "public",
     queryFn: () => getTableFit({ data: { gatheringIds: [id] } }),
   });
   const fit = fitData?.fits.find((f) => f.gatheringId === id);
@@ -140,7 +142,7 @@ function GatheringDetail() {
 
   const attendees = (g.gathering_attendees ?? []) as Array<{ user_id: string }>;
   const isAttending = user ? attendees.some((a) => a.user_id === user.id) : false;
-  const seatsLeft = Math.max(0, g.seats - attendees.length);
+  const seatsLeft = Math.max(0, g.seats - g.seats_taken);
   const isHost = user?.id === g.host_id;
   const isMember = isHost || isAttending;
   // Mirror the DB guard: the roster is only actionable inside the check-in window
@@ -203,7 +205,7 @@ function GatheringDetail() {
               <Users className="h-3.5 w-3.5 text-primary" /> {t("create.seats")}
             </div>
             <div className="mt-1 font-display text-lg">
-              {attendees.length} / {g.seats}
+              {g.seats_taken} / {g.seats}
             </div>
             <div className="text-xs text-muted-foreground">
               {seatsLeft > 0 ? t("gd.seatsLeft", { n: seatsLeft }) : t("gd.full")}
@@ -219,6 +221,12 @@ function GatheringDetail() {
             </span>
           </div>
         )}
+
+        {g.visibility === "private" && <>
+          <p className="mt-4 flex items-center gap-2 text-sm text-muted-foreground"><Lock className="h-4 w-4" />{t("private.mode")}</p>
+          {g.address && <p className="mt-2 whitespace-pre-wrap break-words">{g.address}</p>}
+          {user && <PrivateGatheringInvitations key={`${user.id}:${g.id}`} gatheringId={g.id} userId={user.id} isHost={isHost} open={new Date(g.starts_at).getTime() > Date.now() && (isHost ? !["cancelled", "rejected"].includes(g.status) : g.status === "approved")} />}
+        </>}
 
         {fit && (
           <div className="mt-6">
@@ -246,7 +254,7 @@ function GatheringDetail() {
         )}
 
         <div className="mt-6 flex flex-wrap gap-3">
-          {g.status === "approved" && !isHost && !isOwner && (
+          {g.visibility !== "private" && g.status === "approved" && !isHost && !isOwner && (
             isAttending ? (
               <Button variant="outline" size="lg" onClick={leave} className="rounded-full">
                 {t("gd.leave")}
@@ -277,14 +285,14 @@ function GatheringDetail() {
               {t("gd.addToCalendar")}
             </Button>
           )}
-          <Button
+          {g.visibility !== "private" && <Button
             variant="outline"
             className="rounded-full"
             onClick={() => shareGathering(g.subject, g.description ?? "", t("gd.linkCopied"))}
           >
             <Share2 className="me-1.5 h-4 w-4" />
             {t("gd.share")}
-          </Button>
+          </Button>}
           {user && !isHost && (
             <Button
               variant="ghost"
@@ -322,15 +330,16 @@ function GatheringDetail() {
           )}
         </div>
 
-        {user && <GatheringMoment key={`${user.id}:${g.id}`} gatheringId={g.id} userId={user.id} />}
+        {user && <GatheringMoment key={`${user.id}:${g.id}`} gatheringId={g.id} userId={user.id} privateGathering={g.visibility === "private"} />}
 
         {/* Gathering Room */}
         {g.status === "approved" && user && (
           <div className="mt-8">
             <Tabs defaultValue="chat">
-              <TabsList>
+              <TabsList className="h-auto max-w-full flex-wrap">
                 <TabsTrigger value="chat">{t("room.tab.chat")}</TabsTrigger>
                 <TabsTrigger value="checklist">{t("room.tab.checklist")}</TabsTrigger>
+                {g.visibility === "private" && isMember && <TabsTrigger value="coordination">{t("coord.title")}</TabsTrigger>}
                 {isHost && checkinOpen && <TabsTrigger value="attendance">{t("att.tab")}</TabsTrigger>}
               </TabsList>
               <TabsContent value="chat" className="mt-4">
@@ -342,11 +351,12 @@ function GatheringDetail() {
               </TabsContent>
               <TabsContent value="checklist" className="mt-4">
                 {isMember ? (
-                  <GatheringChecklist gatheringId={g.id} currentUserId={user.id} isHost={isHost} />
+                  <GatheringChecklist gatheringId={g.id} currentUserId={user.id} isHost={isHost} privateGathering={g.visibility === "private"} />
                 ) : (
                   <LockedPanel t={t} />
                 )}
               </TabsContent>
+              {g.visibility === "private" && isMember && <TabsContent value="coordination" className="mt-4"><GatheringCoordination key={`${g.id}:${user.id}`} gatheringId={g.id} section="notesExpenses" /></TabsContent>}
               {isHost && checkinOpen && (
                 <TabsContent value="attendance" className="mt-4">
                   <AttendanceRoster gatheringId={g.id} />

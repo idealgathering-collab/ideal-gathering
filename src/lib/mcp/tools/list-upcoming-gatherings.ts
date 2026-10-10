@@ -22,6 +22,7 @@ export default defineTool({
         "id, subject, description, starts_at, seats, business:businesses(id,name,city), table:venue_tables(id,label), gathering_attendees(user_id)",
       )
       .eq("status", "approved")
+      .eq("visibility", "public")
       .gte("starts_at", new Date().toISOString())
       .order("starts_at", { ascending: true })
       .limit(limit ?? 20);

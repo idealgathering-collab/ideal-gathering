@@ -1,5 +1,46 @@
 # Tests
 
+## Havato Phase 6.3 coordination
+The full `private-gatherings.local.mjs` disposable replay now includes
+`gathering-coordination.local.mjs`: 74 migrations / 306 actual PostgreSQL checks.
+New focused files are `tests/unit/gathering-coordination.test.ts` and
+`tests/unit/gathering-coordination.ui.test.ts` (28 tests); dedicated Phase 6 Linux
+review enables jsdom and runs all 126 focused tests. No hosted credentials/data.
+RPC fragments are generated/verified from the replayed catalog; set
+`HAVATO_COORDINATION_TYPES_OUTPUT=<scratch-file>` to regenerate those fragments.
+Visual fixtures `?mode=coord-host&lang=fa` / `en` and `mode=coord-member` render
+real coordination components against synthetic state. These do not certify
+hosted Auth/Realtime, physical devices, or separate-connection PostgreSQL races.
+[Evidence and release checklist](../tasks/completed/IG-016-havato-phase6-coordination-report.md).
+
+## Havato Phase 6 private gatherings
+Phase 6.2 adds `tests/unit/guest-invitations.test.ts` and
+`tests/unit/guest-invitations.ui.test.ts` to the focused suite (98 total).
+The migration-replay command below now runs the external guest checks too:
+73 migrations, 179 checks. No hosted target, auth user or external message.
+RPC types are derived/verified from replayed pg_catalog; to regenerate just these
+fragments set `HAVATO_GUEST_TYPES_OUTPUT=<scratch-file>` for the replay, then
+adopt only that output in `src/integrations/supabase/types.ts` and rerun without
+the environment variable. Synthetic preview `?mode=external&lang=fa` or `en`
+renders the real temporary-guest component; `mode=host` includes host guest controls.
+See [bounded implementation and release actions](../tasks/IG-015-havato-phase6-guest-invitations-report.md).
+`bun run test -- tests/unit/private-gatherings.test.ts tests/unit/private-gathering-public.test.ts tests/unit/private-gathering-matching.test.ts tests/unit/private-gatherings.ui.test.ts tests/unit/create-gathering-rules.test.ts tests/unit/life-moments.test.ts tests/unit/gathering-moment.test.ts tests/unit/age.test.ts`.
+DOM is opt-in with `HAVATO_TEST_JSDOM=<scratch jsdom/lib/api.js>`; CI supplies
+jsdom 26.1.0. No hosted auth, email, push or production data involved.
+
+`node tests/private-gatherings.local.mjs <scratch @electric-sql/pglite/dist/index.js>`
+replays all committed migrations into a fresh in-memory PGlite 0.5.8 engine with
+platform scaffolding and synthetic fixtures; verifies RLS/RPC/capacity rollback,
+revocation/blocking, private snapshots after source deletion, public regressions
+and schema-derived type fragments. Optional third/fourth arguments save scratch
+schema JSON/generated invitation types. Never point at a live database. This is
+not a separate-connection race or hosted Auth/Realtime certification.
+
+`bunx vite --config tests/private-preview/vite.config.ts`: synthetic visual fixture,
+FA/EN via `?lang=fa` / `?lang=en`, invite controls via `&mode=host` / `&mode=guest`.
+These render actual components with fake backend/router/auth. See the
+[verification and staged acceptance](../tasks/IG-014-havato-phase6-report.md).
+
 ## Havato notification preferences / controls
 
 Focused logic/store tests: `bun run test -- tests/unit/notification-preferences.test.ts tests/unit/notification-preferences-store.test.ts`.

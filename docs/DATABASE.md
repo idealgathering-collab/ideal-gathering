@@ -1,5 +1,38 @@
 # Database
 
+## IG-016 Phase 6.3 coordination — review-only, 2026-10-11
+Additive `20261010212832_havato_gathering_coordination.sql` extends existing
+checklist items via private responsibility rows, plus scoped shared notes and
+expense records. All new tables have RLS and revoked direct role privileges;
+private authorized operations/public invoker RPCs recheck adult eligibility,
+Going membership, invite/block/status and explicit guest sharing. Existing
+gathering locks serialize coordination with RSVP. Exact integer equal splits,
+one currency while expenses exist, versioned notes and cascades are locally
+verified. All three Phase 6 migrations remain unapplied to hosted targets.
+[Contract](../tasks/completed/IG-016-havato-phase6-coordination.md) ·
+[Evidence and release checks](../tasks/completed/IG-016-havato-phase6-coordination-report.md).
+
+## IG-015 external guest invitations — review-only, 2026-10-10
+Additive `20261010201750_havato_guest_invitations.sql` follows IG-014. RLS-enabled
+non-exposed private guest/rate tables, hashed expiring bearer capabilities and
+service-only guest RPCs preserve member permissions. The existing capacity trigger
+and gathering locks now count active guest Going reservations; authorized aggregate
+counts expose no guest identity. Guest records never become auth users/attendees.
+No hosted migration. [Contract](../tasks/IG-015-havato-phase6-guest-invitations.md)
+and [verification, bearer limitations and owner rollout](../tasks/IG-015-havato-phase6-guest-invitations-report.md).
+
+## IG-014 private gatherings — review-only, 2026-10-10
+Additive `20261010051239_havato_private_gatherings.sql` supplies immutable gathering
+visibility (existing rows default public), recipient-bound `gathering_invitations`,
+atomic RSVP/revocation RPCs and a durable private-event marker on `life_moments`.
+Existing attendance/capacity locks, room and personal media remain the underlying
+models. Private SELECT restrictions coexist with permissive historical policies;
+privileged public metadata/sitemap/matching callers explicitly exclude private rows.
+No hosted migration. Full disposable replay and 84 checks pass; hosted cache/types,
+separate-connection races and real backend/browser acceptance remain before release.
+See [scope](../tasks/IG-014-havato-phase6.md), [audit](HAVATO-PHASE6-AUDIT.md) and
+[verification/rollout/gaps](../tasks/IG-014-havato-phase6-report.md).
+
 IG-007 adds the own-only `get_my_life_summary()` invoker RPC and
 `life_moments_owner_saved_at` index in `20260926160000_own_life_summary.sql`.
 No table, RLS policy, profile writer or other-user projection changes.
