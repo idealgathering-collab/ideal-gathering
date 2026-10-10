@@ -13,6 +13,7 @@ import { useI18n, useT } from "@/i18n";
 import { useEffect, useState } from "react";
 import { FeedbackDialog, usePendingFeedback } from "@/components/feedback-prompt";
 import type { PendingFeedback } from "@/lib/feedback.functions";
+import { PrivateGatheringInbox } from "@/components/private-gathering-invitations";
 
 export const Route = createFileRoute("/_authenticated/my-gatherings")({
   component: MyGatherings,
@@ -123,15 +124,21 @@ function MyGatherings() {
             <p className="text-sm uppercase tracking-wide text-muted-foreground">{t("myg.eyebrow")}</p>
             <h1 className="font-display text-4xl sm:text-5xl">{t("myg.title")}</h1>
           </div>
+          <div className="flex flex-wrap gap-2">
+          <Button asChild variant="outline" className="rounded-full">
+            <Link to="/create-gathering" search={{ private: true }}>{t("private.mode")}</Link>
+          </Button>
           <Button asChild className="rounded-full">
             <Link to="/create-gathering">
               <Plus className="me-1.5 h-4 w-4" /> {t("dash.propose")}
             </Link>
           </Button>
+          </div>
         </div>
 
         <Section title={t("myg.attending")} empty={t("myg.noAttending")} loading={isLoading} items={data?.attending} />
         <Section title={t("myg.hosting")} empty={t("myg.noHosting")} loading={isLoading} items={data?.hosted} />
+        {user && <PrivateGatheringInbox key={user.id} userId={user.id} />}
         <PastHosted />
         <FeedbackDialog
           item={fbItem}

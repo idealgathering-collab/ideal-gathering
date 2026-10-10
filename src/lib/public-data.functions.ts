@@ -117,6 +117,7 @@ export const getPublicGathering = createServerFn({ method: "GET" })
     const { data: row, error } = await supabaseAdmin
       .from("gatherings")
       .select(PUBLIC_GATHERING_COLS)
+      .eq("visibility", "public")
       .eq("id", data.id)
       .eq("status", "approved")
       .maybeSingle();
@@ -131,6 +132,7 @@ export const listSitemapGatherings = createServerFn({ method: "GET" }).handler(
     const { data, error } = await supabaseAdmin
       .from("gatherings")
       .select("id, starts_at")
+      .eq("visibility", "public")
       .eq("status", "approved")
       .gte("starts_at", new Date().toISOString())
       .order("starts_at", { ascending: true })

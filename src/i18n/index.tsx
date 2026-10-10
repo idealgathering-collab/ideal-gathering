@@ -2,6 +2,7 @@ import { brand, brandText } from "@/config/brand";
 import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from "react";
 import { translations, LANGS, type Lang } from "./translations";
 import { registrationCopy } from "./registration";
+import { privateGatheringCopy } from "./private-gatherings";
 
 type Ctx = {
   lang: Lang;
@@ -62,7 +63,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   const t = useCallback(
     (key: string, vars?: Record<string, string | number>) => {
       const dict = translations[lang];
-      let s = brandText[lang]?.[key] ?? registrationCopy[lang]?.[key] ?? dict[key] ?? registrationCopy.en[key] ?? translations.en[key] ?? key;
+      let s = brandText[lang]?.[key] ?? privateGatheringCopy[lang]?.[key] ?? registrationCopy[lang]?.[key] ?? dict[key] ?? privateGatheringCopy.en[key] ?? registrationCopy.en[key] ?? translations.en[key] ?? key;
       s = s.replaceAll("{brandName}", brand.name);
       if (vars) {
         for (const [k, v] of Object.entries(vars)) {

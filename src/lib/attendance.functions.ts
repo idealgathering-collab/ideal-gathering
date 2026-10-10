@@ -166,8 +166,7 @@ export const myAttendance = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: unknown) => z.object({ gatheringId: z.string().uuid() }).parse(d))
   .handler(async ({ data, context }): Promise<MyAttendance> => {
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { data: g } = await supabaseAdmin
+    const { data: g } = await context.supabase
       .from("gatherings")
       .select("starts_at, ends_at, status")
       .eq("id", data.gatheringId)

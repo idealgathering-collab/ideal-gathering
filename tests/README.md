@@ -1,5 +1,23 @@
 # Tests
 
+## Havato Phase 6 private gatherings
+`bun run test -- tests/unit/private-gatherings.test.ts tests/unit/private-gathering-public.test.ts tests/unit/private-gathering-matching.test.ts tests/unit/private-gatherings.ui.test.ts tests/unit/create-gathering-rules.test.ts tests/unit/life-moments.test.ts tests/unit/gathering-moment.test.ts tests/unit/age.test.ts`.
+DOM is opt-in with `HAVATO_TEST_JSDOM=<scratch jsdom/lib/api.js>`; CI supplies
+jsdom 26.1.0. No hosted auth, email, push or production data involved.
+
+`node tests/private-gatherings.local.mjs <scratch @electric-sql/pglite/dist/index.js>`
+replays all committed migrations into a fresh in-memory PGlite 0.5.8 engine with
+platform scaffolding and synthetic fixtures; verifies RLS/RPC/capacity rollback,
+revocation/blocking, private snapshots after source deletion, public regressions
+and schema-derived type fragments. Optional third/fourth arguments save scratch
+schema JSON/generated invitation types. Never point at a live database. This is
+not a separate-connection race or hosted Auth/Realtime certification.
+
+`bunx vite --config tests/private-preview/vite.config.ts`: synthetic visual fixture,
+FA/EN via `?lang=fa` / `?lang=en`, invite controls via `&mode=host` / `&mode=guest`.
+These render actual components with fake backend/router/auth. See the
+[verification and staged acceptance](../tasks/IG-014-havato-phase6-report.md).
+
 ## Havato notification preferences / controls
 
 Focused logic/store tests: `bun run test -- tests/unit/notification-preferences.test.ts tests/unit/notification-preferences-store.test.ts`.

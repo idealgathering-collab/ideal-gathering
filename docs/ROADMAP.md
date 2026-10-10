@@ -1,5 +1,13 @@
 # Roadmap
 
+## Havato Phase 6 priority — 2026-10-10
+User prioritizes Friends & Family before authentication Phase 5. IG-014 adds a
+review-only first increment: private creation, member invitations/RSVP and reuse
+of existing room/checklist/memories/history. No IG-001–009 rebuilding, merge or
+deployment. Expenses, assigned responsibilities, shared album, external invitations
+and staged acceptance remain gaps; do not mark the whole phase complete.
+See [audit](HAVATO-PHASE6-AUDIT.md) and [progress/next work](../tasks/IG-014-havato-phase6-report.md).
+
 Phases express dependencies and readiness, not arbitrary dates. This is direction, not approval to implement every item.
 
 ## Phase 0 — Durable operating workflow

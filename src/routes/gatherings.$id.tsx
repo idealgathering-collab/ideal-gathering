@@ -6,6 +6,7 @@ import { SiteHeader } from "@/components/site-header";
 import { MenuSection } from "@/components/menu-section";
 import { GatheringChat, GatheringChecklist } from "@/components/gathering-room";
 import { GatheringMoment } from "@/components/gathering-moment";
+import { PrivateGatheringInvitations } from "@/components/private-gathering-invitations";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import { VerifyEmailBanner } from "@/components/verify-email-banner";
@@ -53,7 +54,7 @@ function GatheringDetail() {
   const [reportTarget, setReportTarget] = useState<ReportTarget | null>(null);
 
   const { data: g, isLoading } = useQuery({
-    queryKey: ["gathering", id],
+    queryKey: ["gathering", id, user?.id],
     queryFn: () => fetchGathering(id),
   });
 
@@ -68,7 +69,7 @@ function GatheringDetail() {
 
   const { data: fitData } = useQuery({
     queryKey: ["table-fit", user?.id, [id]],
-    enabled: !!user,
+    enabled: !!user && g?.visibility === "public",
     queryFn: () => getTableFit({ data: { gatheringIds: [id] } }),
   });
   const fit = fitData?.fits.find((f) => f.gatheringId === id);
@@ -220,6 +221,12 @@ function GatheringDetail() {
           </div>
         )}
 
+        {g.visibility === "private" && <>
+          <p className="mt-4 flex items-center gap-2 text-sm text-muted-foreground"><Lock className="h-4 w-4" />{t("private.mode")}</p>
+          {g.address && <p className="mt-2 whitespace-pre-wrap break-words">{g.address}</p>}
+          {user && <PrivateGatheringInvitations key={`${user.id}:${g.id}`} gatheringId={g.id} userId={user.id} isHost={isHost} open={new Date(g.starts_at).getTime() > Date.now() && (isHost ? !["cancelled", "rejected"].includes(g.status) : g.status === "approved")} />}
+        </>}
+
         {fit && (
           <div className="mt-6">
             <TableFitChip fit={fit} />
@@ -246,7 +253,7 @@ function GatheringDetail() {
         )}
 
         <div className="mt-6 flex flex-wrap gap-3">
-          {g.status === "approved" && !isHost && !isOwner && (
+          {g.visibility !== "private" && g.status === "approved" && !isHost && !isOwner && (
             isAttending ? (
               <Button variant="outline" size="lg" onClick={leave} className="rounded-full">
                 {t("gd.leave")}
@@ -277,14 +284,14 @@ function GatheringDetail() {
               {t("gd.addToCalendar")}
             </Button>
           )}
-          <Button
+          {g.visibility !== "private" && <Button
             variant="outline"
             className="rounded-full"
             onClick={() => shareGathering(g.subject, g.description ?? "", t("gd.linkCopied"))}
           >
             <Share2 className="me-1.5 h-4 w-4" />
             {t("gd.share")}
-          </Button>
+          </Button>}
           {user && !isHost && (
             <Button
               variant="ghost"
@@ -322,7 +329,7 @@ function GatheringDetail() {
           )}
         </div>
 
-        {user && <GatheringMoment key={`${user.id}:${g.id}`} gatheringId={g.id} userId={user.id} />}
+        {user && <GatheringMoment key={`${user.id}:${g.id}`} gatheringId={g.id} userId={user.id} privateGathering={g.visibility === "private"} />}
 
         {/* Gathering Room */}
         {g.status === "approved" && user && (

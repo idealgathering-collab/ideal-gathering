@@ -1,3 +1,21 @@
+# Current task — IG-014 Havato Phase 6, first increment review-ready
+
+User-authorized 2026-10-10: Phase 6 precedes Phase 5; audit and incremental implementation.
+Branch codex/havato-phase6-private-gatherings; base havato 755a9ed024f9672dffe5afaea46d109ae899ac49.
+[Bounded scope](IG-014-havato-phase6.md) · [Audit](../docs/HAVATO-PHASE6-AUDIT.md) · [Report/checks/gaps](IG-014-havato-phase6-report.md).
+Private creation, member invitations/inbox/Going-Maybe-Declined, revocation, reuse of
+existing room/checklist/history, private projections and durable memory privacy implemented.
+Existing admin approval, beta/email gates and 18+ preserved. No auth/provider edits.
+74 focused unit/DOM checks, 84 disposable PostgreSQL/schema checks after 72-migration
+replay, TypeScript, focused lint (zero errors/two existing i18n warnings), Windows
+production build and 12 FA/EN fixture layouts pass. Dedicated Linux review CI added.
+Whole Phase 6 remains incomplete: expenses/assignments/shared album, external invites,
+host lifecycle UX and real staging/provider/concurrency acceptance are documented gaps.
+Next: review draft PR, inspect designated Havato staging ledger and perform recorded
+acceptance before any separately approved migration/release. PR #16 stays unmerged;
+Phase 5 deferred. No hosted changes, merge/deploy or idealgathering.com operations.
+
+---
 # Current task — IG-012 Havato legal/trust Phase 2, review ready
 
 User-authorized 2026-10-04. [Scope](completed/IG-012-havato-legal-trust.md) ·

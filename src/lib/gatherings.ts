@@ -51,6 +51,7 @@ export async function fetchApprovedGatherings(city?: string | null, gatheringTyp
       "id, subject, description, starts_at, seats, venue_name, neighborhood, city, lat, lng, gathering_type, business:businesses(id,name,city,cover_url,lat,lng), table:venue_tables(id,label), gathering_attendees(user_id)"
     )
     .eq("status", "approved")
+    .eq("visibility", "public")
     .gte("starts_at", upcomingCutoff());
   if (city) query = query.eq("city", city);
   if (gatheringType) query = query.eq("gathering_type", gatheringType);
@@ -79,6 +80,7 @@ export async function fetchGatheringCities(): Promise<string[]> {
   const { data, error } = await supabase
     .from("gatherings")
     .select("city")
+    .eq("visibility", "public")
     .eq("status", "approved")
     .gte("starts_at", upcomingCutoff())
     .not("city", "is", null);
@@ -95,7 +97,7 @@ export async function fetchGathering(id: string) {
   const { data, error } = await supabase
     .from("gatherings")
     .select(
-      "id, subject, description, starts_at, ends_at, seats, status, host_id, venue_name, neighborhood, gathering_type, business:businesses(id,name,city,address,cover_url), table:venue_tables(id,label,capacity), gathering_attendees(user_id)"
+      "id, subject, description, starts_at, ends_at, seats, status, host_id, visibility, address, venue_name, neighborhood, gathering_type, business:businesses(id,name,city,address,cover_url), table:venue_tables(id,label,capacity), gathering_attendees(user_id)"
     )
     .eq("id", id)
     .maybeSingle();

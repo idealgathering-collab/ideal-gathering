@@ -1,5 +1,17 @@
 # Database
 
+## IG-014 private gatherings — review-only, 2026-10-10
+Additive `20261010051239_havato_private_gatherings.sql` supplies immutable gathering
+visibility (existing rows default public), recipient-bound `gathering_invitations`,
+atomic RSVP/revocation RPCs and a durable private-event marker on `life_moments`.
+Existing attendance/capacity locks, room and personal media remain the underlying
+models. Private SELECT restrictions coexist with permissive historical policies;
+privileged public metadata/sitemap/matching callers explicitly exclude private rows.
+No hosted migration. Full disposable replay and 84 checks pass; hosted cache/types,
+separate-connection races and real backend/browser acceptance remain before release.
+See [scope](../tasks/IG-014-havato-phase6.md), [audit](HAVATO-PHASE6-AUDIT.md) and
+[verification/rollout/gaps](../tasks/IG-014-havato-phase6-report.md).
+
 IG-007 adds the own-only `get_my_life_summary()` invoker RPC and
 `life_moments_owner_saved_at` index in `20260926160000_own_life_summary.sql`.
 No table, RLS policy, profile writer or other-user projection changes.

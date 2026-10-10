@@ -2,6 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { ADD_NEW_LOCATION, createGatheringSchema } from "@/lib/create-gathering-rules";
+import { canUsePrivateGatherings, privateGatheringSchema, privateGatheringError } from "@/lib/private-gatherings";
 import { areaForPoint } from "@/lib/yerevan-areas";
 import { toast } from "sonner";
 import { Sparkles } from "lucide-react";
@@ -28,6 +29,8 @@ import { useT } from "@/i18n";
 import { GATHERING_TYPES, GATHERING_TYPE_CATEGORIES, DEFAULT_GATHERING_TYPE, type GatheringType } from "@/lib/gathering-types";
 
 export const Route = createFileRoute("/_authenticated/create-gathering")({
+  validateSearch: (search: Record<string, unknown>): { private?: boolean } =>
+    search.private === true || search.private === "true" ? { private: true } : {},
   component: CreateGathering,
 });
 
@@ -67,6 +70,18 @@ function CreateGathering() {
   const [addOpen, setAddOpen] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const emailVerified = Boolean(user?.email_confirmed_at);
+  const [privateMode, setPrivateMode] = useState(Route.useSearch().private === true);
+  const [privatePlace, setPrivatePlace] = useState("");
+  const [privateAddress, setPrivateAddress] = useState("");
+  const { data: dob } = useQuery({
+    queryKey: ["private-gathering-dob", user?.id],
+    enabled: !!user,
+    queryFn: async () => {
+      const { data, error } = await supabase.from("profiles").select("date_of_birth").eq("id", user!.id).maybeSingle();
+      if (error) throw error;
+      return data?.date_of_birth ?? null;
+    },
+  });
 
   const { data: profileCountry } = useQuery({
     queryKey: ["profile-country", user?.id],
@@ -160,6 +175,25 @@ function CreateGathering() {
     if (!user) return;
     if (!emailVerified) return toast.error(t("create.verifyFirst"));
     try {
+      if (privateMode) {
+        if (!canUsePrivateGatherings(dob)) return toast.error(t("private.adultRequired"));
+        const at = new Date(form.starts_at);
+        const parsed = privateGatheringSchema.safeParse({
+          subject: form.subject, description: form.description, venue_name: privatePlace,
+          address: privateAddress, starts_at: Number.isFinite(at.getTime()) ? at.toISOString() : "", seats: form.seats,
+        });
+        if (!parsed.success) return toast.error(t("private.invalid"));
+        setLoading(true);
+        const { data, error } = await supabase.from("gatherings").insert({
+          ...parsed.data, host_id: user.id, visibility: "private", status: "proposed",
+          origin: "user_proposed", neighborhood: "",
+        }).select("id").single();
+        if (error) return toast.error(t(privateGatheringError(error)));
+        toast.success(t("create.proposed"));
+        await qc.invalidateQueries({ queryKey: ["my-gatherings"] });
+        navigate({ to: "/gatherings/$id", params: { id: data.id } });
+        return;
+      }
       const parsed = schema.safeParse(form);
       if (!parsed.success) {
         const next: Record<string, string> = {};
@@ -253,6 +287,28 @@ function CreateGathering() {
         )}
 
         <form onSubmit={submit} className="form-panel grid gap-5 p-6">
+          <fieldset className="grid gap-2">
+            <legend className="mb-2 text-sm font-medium">{t("private.visibility")}</legend>
+            {[false, true].map((value) => (
+              <label key={String(value)} className="flex min-h-11 items-center gap-2 rounded-xl border border-border px-3">
+                <input type="radio" name="visibility" checked={privateMode === value} onChange={() => setPrivateMode(value)} />
+                {t(value ? "private.mode" : "private.public")}
+              </label>
+            ))}
+          </fieldset>
+          {privateMode && <>
+            <p className="field-hint">{t("private.hint")}</p>
+            {!canUsePrivateGatherings(dob) && <p role="status" className="field-hint">{t("private.adultRequired")}</p>}
+            <div className="grid gap-2">
+              <Label htmlFor="private-place">{t("private.place")} *</Label>
+              <Input id="private-place" required minLength={2} maxLength={160} value={privatePlace} onChange={(e) => setPrivatePlace(e.target.value)} />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="private-address">{t("private.address")}</Label>
+              <Textarea id="private-address" maxLength={240} value={privateAddress} onChange={(e) => setPrivateAddress(e.target.value)} />
+            </div>
+          </>}
+          {!privateMode && <>
           <div className="grid gap-2">
             <Label>{t("create.location")} *</Label>
             <Select
@@ -298,6 +354,7 @@ function CreateGathering() {
             {errors.location && <p className="field-error">{errors.location}</p>}
             {nothingToPick && <p className="field-hint">{t("create.noLocationsYet")}</p>}
           </div>
+          </>}
 
           <div className="grid gap-2">
             <Label htmlFor="subject">{t("create.subject")} *</Label>

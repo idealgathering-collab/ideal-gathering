@@ -60,18 +60,25 @@ export const getTableFit = createServerFn({ method: "POST" })
 
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
+    // Never aggregate private guest signals through this privileged public matcher.
+    const { data: visible, error: visibilityError } = await supabase
+      .from("gatherings").select("id").in("id", data.gatheringIds).eq("visibility", "public");
+    if (visibilityError) throw new Error("Gatherings unavailable");
+    const publicIds = (visible ?? []).map((g) => g.id);
+    if (!publicIds.length) return { viewerHasTraits, viewerHasSignal, fits: [] };
+
     const { data: attendees } = await supabaseAdmin
       .from("gathering_attendees")
       .select("gathering_id, user_id")
-      .in("gathering_id", data.gatheringIds);
+      .in("gathering_id", publicIds);
 
     const { data: hosts } = await supabaseAdmin
       .from("gatherings")
       .select("id, host_id")
-      .in("id", data.gatheringIds);
+      .in("id", publicIds);
 
     const byGathering = new Map<string, Set<string>>();
-    for (const id of data.gatheringIds) byGathering.set(id, new Set());
+    for (const id of publicIds) byGathering.set(id, new Set());
     for (const row of attendees ?? []) byGathering.get(row.gathering_id)?.add(row.user_id);
     for (const row of hosts ?? []) byGathering.get(row.id)?.add(row.host_id);
 
@@ -183,7 +190,7 @@ export const getTableFit = createServerFn({ method: "POST" })
     const fits = scoreTables({
       viewerId: userId,
       myTraits,
-      gatheringIds: data.gatheringIds,
+      gatheringIds: publicIds,
       membersByGathering: byGathering,
       traitsByUser,
       blockedWith,
