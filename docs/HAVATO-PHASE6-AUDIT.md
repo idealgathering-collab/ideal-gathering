@@ -7,6 +7,18 @@ portability remain reused. Temporary guests stay outside member permissions.
 See [Phase 6.2 evidence and limitations](../tasks/IG-015-havato-phase6-guest-invitations-report.md).
 The inventory below records the first-increment baseline, not the new guest state.
 
+| Existing increment | Current source inspected / reuse boundary |
+| --- | --- |
+| IG-001 | `src/lib/owner.functions.ts`, private role helpers and completed owner spec: retained owner/admin authorization; no role redesign. |
+| IG-002 | `src/lib/profile-data.ts` / `save_my_profile_data`, ownership spec: member DOB remains canonical; temporary guests get no profile/preferences writes. |
+| IG-003 | `life_moments` foundation and `src/lib/life-moments.functions.ts`: existing private media/moment model retained, no guest album or moment identity. |
+| IG-004 | Existing `get_gathering_moment_context` and GatheringMoment: completed member participation remains required, guest RSVP grants no eligibility. |
+| IG-005 | `src/lib/life-profile.functions.ts`, own-profile spec: own gathering/history remains caller scoped; no second profile. |
+| IG-006 | Completed member-profile privacy spec and existing projections: no guest roster/profile exposure; guest endpoint returns event fields/own response only. |
+| IG-007 | `src/lib/life-summary.functions.ts` / `get_my_life_summary`: own summaries retained, temporary guest response is excluded. |
+| IG-008 | Venue dashboard spec and `src/lib/venue-dashboard.functions.ts`: attribution stays on existing member attendance; private gathering shape has no business/table link. |
+| IG-009 | Accepted staging/portability spec, `vite.config.ts`, real Nitro build/server: extend the existing entry and file routing; no second app/build stack. |
+
 Inspected havato `755a9ed024f9672dffe5afaea46d109ae899ac49`. Source/migration evidence, not a live schema or browser certification. PR #16 is excluded.
 
 | Capability | Existing evidence and behavior | Phase 6 gap / reuse decision |

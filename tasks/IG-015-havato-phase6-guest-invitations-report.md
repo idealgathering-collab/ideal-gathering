@@ -94,7 +94,29 @@ are rejected early; ingress must also enforce transport/body/rate protections.
 General CI has 16 previously reproduced base failures in English rendering tests
 receiving the FA-default language (life-profile, life-summary, member-profile,
 venue-value). The earlier baseline evidence remains in the IG-014 report; no new
-full-suite pass is claimed here. Final Linux CI results are recorded after publishing.
+full-suite pass is claimed here.
+
+## Published verification evidence
+Implementation checkpoint `128d414bdae9266cd291ad23259e8c35a727b6f1` includes the
+application/test tree above; a follow-up documentation checkpoint records these results.
+The intervening line-ending preservation commit is a normal fast-forward; no published
+history was rewritten and the local index was verified identical before synchronization.
+
+- [Phase 6 Linux review](https://github.com/idealgathering-collab/ideal-gathering/actions/runs/38084272566):
+  frozen install, all 73 migrations/177 DB checks, all 98 focused tests, typecheck,
+  focused lint and production build pass. Logs inspected, not inferred from old runs.
+- [Public-site review](https://github.com/idealgathering-collab/ideal-gathering/actions/runs/38084272474): pass.
+- [General Portable Node CI](https://github.com/idealgathering-collab/ideal-gathering/actions/runs/38084272476):
+  452 passed, 16 failed, 25 skipped. Inspected each failure: the same four baseline
+  rendering files and 16 cases documented/reproduced on unchanged havato by IG-014.
+  New guest server tests pass; DOM tests are deliberately skipped in general CI and
+  enabled/passing in the dedicated review job.
+- Local built-server smoke (`node work/guest-http-smoke.mjs`, from the task workspace):
+  **20 HTTP/SSR boundary checks pass** with loopback dummy settings. The real built
+  guest route renders a generic FA age gate; page/API no-store/no-referrer/noindex,
+  method/origin/body-size and underage/malformed denials are enforced by the actual
+  server entry. No hosted data, real users or credentials. This scratch smoke is
+  supplementary evidence, not a hosted flow or recurring CI step.
 
 ## Limits and owner release actions
 1. Review the bearer model: each link permits the holder to view/edit one guest
