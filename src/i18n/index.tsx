@@ -4,6 +4,7 @@ import { translations, LANGS, type Lang } from "./translations";
 import { registrationCopy } from "./registration";
 import { privateGatheringCopy } from "./private-gatherings";
 import { guestInvitationCopy } from "./guest-invitations";
+import { coordinationCopy } from "./gathering-coordination";
 
 type Ctx = {
   lang: Lang;
@@ -64,7 +65,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   const t = useCallback(
     (key: string, vars?: Record<string, string | number>) => {
       const dict = translations[lang];
-      let s = brandText[lang]?.[key] ?? guestInvitationCopy[lang]?.[key] ?? privateGatheringCopy[lang]?.[key] ?? registrationCopy[lang]?.[key] ?? dict[key] ?? guestInvitationCopy.en[key] ?? privateGatheringCopy.en[key] ?? registrationCopy.en[key] ?? translations.en[key] ?? key;
+      let s = brandText[lang]?.[key] ?? coordinationCopy[lang]?.[key] ?? guestInvitationCopy[lang]?.[key] ?? privateGatheringCopy[lang]?.[key] ?? registrationCopy[lang]?.[key] ?? dict[key] ?? coordinationCopy.en[key] ?? guestInvitationCopy.en[key] ?? privateGatheringCopy.en[key] ?? registrationCopy.en[key] ?? translations.en[key] ?? key;
       s = s.replaceAll("{brandName}", brand.name);
       if (vars) {
         for (const [k, v] of Object.entries(vars)) {

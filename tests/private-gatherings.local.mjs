@@ -147,6 +147,8 @@ try {
   if (process.argv[3]) await writeFile(process.argv[3],JSON.stringify(columns,null,2));
   const { checkGuestInvitations } = await import('./guest-invitations.local.mjs');
   await checkGuestInvitations({ db, asUser, host, guest, other, outsider, admin, check, deny });
+  const { checkCoordination } = await import('./gathering-coordination.local.mjs');
+  await checkCoordination({ db, asUser, host, guest, other, outsider, admin, check, deny });
   console.log(`${checks} Phase 6 PostgreSQL checks passed (member and external guest invitations)`);
-} catch(error) { console.error(error.message); process.exitCode=1; }
+} catch(error) { console.error(error.stack); process.exitCode=1; }
 finally { await db.close(); }

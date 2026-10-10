@@ -7,6 +7,7 @@ export default defineConfig({
   root: file("./"),
   plugins: [react(), tailwind()],
   resolve: { alias: [
+    { find: "@/lib/gathering-coordination.functions", replacement: file("./coordination-fixtures.tsx") },
     { find: "@tanstack/react-router", replacement: file("./router.tsx") },
     { find: "@/integrations/supabase/client", replacement: file("./fixtures.tsx") },
     { find: "@/hooks/use-session", replacement: file("./fixtures.tsx") },

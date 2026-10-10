@@ -42,7 +42,16 @@ export async function handleGuestInvitation(request: Request): Promise<Response>
     });
     if (result.error) return reply(result.error.message.includes("GATHERING_FULL") ? "full" : "failed",409);
     if (!result.data) return reply("unavailable",404);
-    return Response.json(guestDetails.parse(result.data), { headers });
+    const details = guestDetails.parse(result.data);
+    if (input.coordination) {
+      const coordination = await supabaseAdmin.rpc("guest_coordination", {
+        _hash: hash, _adult: true, _data: input.coordination.operation === "list" ? {} : input.coordination,
+      });
+      if (coordination.error) return reply(coordination.error.message.includes("TASK_TAKEN") ? "taken" : "failed",409);
+      if (!coordination.data) return reply("unavailable",404);
+      details.coordination = coordination.data as typeof details.coordination;
+    }
+    return Response.json(guestDetails.parse(details), { headers });
   } catch {
     // Do not log request bodies, bearer capabilities or backend errors.
     return reply("failed",503);

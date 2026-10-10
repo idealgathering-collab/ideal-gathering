@@ -1,5 +1,20 @@
 # Havato Phase 6 source audit — 2026-10-10
 
+## Phase 6.3 reuse audit — 2026-10-11
+IG-016 at PR #17 baseline ba83b382 audited the existing checklist/chat and notes,
+tasks and related IG-001–009 contracts/implementation before extending them.
+`gathering_checklist_items` labels and per-user checks remain; responsibility state
+references their IDs. `gathering_messages` chat is reused unchanged. Existing
+Life Moments notes remain personal; shared gathering notes need separate scoped
+records. No expense ledger/splitting existed. New coordination is private-event
+only, extends the same detail/checklist and guest endpoint, and preserves owner,
+profile, memory, history, venue and portability boundaries. Guests gain only
+host-shared checklist responsibilities and read-only notes while Going and valid;
+no chat, member roster, expense or profile access. [Contract](../tasks/IG-016-havato-phase6-coordination.md)
+and [evidence/limits](../tasks/IG-016-havato-phase6-coordination-report.md).
+The historical missing-assignment/expense/shared-note rows below describe the
+original baseline, not IG-016's review-only implementation. No live certification.
+
 Follow-up IG-015 audits PR #17 at `0bf49b24` and implements the previously deferred
 external invitation/temporary guest increment by extending its panel, RSVP enum,
 capacity guard/lock and visibility helper. IG-001–009 ownership/profile/memory/venue/

@@ -5,6 +5,7 @@ import { CalendarClock, MapPin, Users, ArrowLeft, Coffee, Lock, CalendarPlus, Sh
 import { SiteHeader } from "@/components/site-header";
 import { MenuSection } from "@/components/menu-section";
 import { GatheringChat, GatheringChecklist } from "@/components/gathering-room";
+import { GatheringCoordination } from "@/components/gathering-coordination";
 import { GatheringMoment } from "@/components/gathering-moment";
 import { PrivateGatheringInvitations } from "@/components/private-gathering-invitations";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -335,9 +336,10 @@ function GatheringDetail() {
         {g.status === "approved" && user && (
           <div className="mt-8">
             <Tabs defaultValue="chat">
-              <TabsList>
+              <TabsList className="h-auto max-w-full flex-wrap">
                 <TabsTrigger value="chat">{t("room.tab.chat")}</TabsTrigger>
                 <TabsTrigger value="checklist">{t("room.tab.checklist")}</TabsTrigger>
+                {g.visibility === "private" && isMember && <TabsTrigger value="coordination">{t("coord.title")}</TabsTrigger>}
                 {isHost && checkinOpen && <TabsTrigger value="attendance">{t("att.tab")}</TabsTrigger>}
               </TabsList>
               <TabsContent value="chat" className="mt-4">
@@ -349,11 +351,12 @@ function GatheringDetail() {
               </TabsContent>
               <TabsContent value="checklist" className="mt-4">
                 {isMember ? (
-                  <GatheringChecklist gatheringId={g.id} currentUserId={user.id} isHost={isHost} />
+                  <GatheringChecklist gatheringId={g.id} currentUserId={user.id} isHost={isHost} privateGathering={g.visibility === "private"} />
                 ) : (
                   <LockedPanel t={t} />
                 )}
               </TabsContent>
+              {g.visibility === "private" && isMember && <TabsContent value="coordination" className="mt-4"><GatheringCoordination key={`${g.id}:${user.id}`} gatheringId={g.id} section="notesExpenses" /></TabsContent>}
               {isHost && checkinOpen && (
                 <TabsContent value="attendance" className="mt-4">
                   <AttendanceRoster gatheringId={g.id} />

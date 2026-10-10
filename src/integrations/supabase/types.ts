@@ -973,6 +973,14 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      gathering_coordination: {
+        Args: { _id: string; _action?: string; _data?: Json }
+        Returns: Json
+      }
+      guest_coordination: {
+        Args: { _hash: string; _adult: boolean; _data?: Json }
+        Returns: Json
+      }
       guest_invitation_limit: {
         Args: {
           _hash: string

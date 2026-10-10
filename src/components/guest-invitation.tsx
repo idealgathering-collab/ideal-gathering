@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { guestToken, guestErrorKey, requestGuestInvitation, type GuestDetails } from "@/lib/guest-invitations";
 import { rsvpResponse } from "@/lib/private-gatherings";
+import { GuestCoordination } from "@/components/guest-coordination";
 
 export function GuestInvitation() {
   const { t, lang, setLang } = useI18n();
@@ -64,6 +65,7 @@ export function GuestInvitation() {
       {busy && <p role="status">{t("common.loading")}</p>}
       {error && <p role="alert">{t(error)}</p>}
     </section>
+    {token && details?.response === "going" && <GuestCoordination token={token} onUnavailable={() => { setDetails(null); setError("guest.unavailable"); }} />}
     <p className="text-sm text-muted-foreground">{t("guest.boundary")}</p>
   </main>;
 }

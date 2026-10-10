@@ -23,6 +23,7 @@ import {
 import { ReportDialog, type ReportTarget } from "@/components/report-dialog";
 import { blockUser, listGatheringMessages } from "@/lib/moderation.functions";
 import { useI18n, useT } from "@/i18n";
+import { GatheringCoordination } from "@/components/gathering-coordination";
 
 type Msg = {
   id: string;
@@ -268,16 +269,19 @@ export function GatheringChecklist({
   gatheringId,
   currentUserId,
   isHost,
+  privateGathering = false,
 }: {
   gatheringId: string;
   currentUserId: string;
   isHost: boolean;
+  privateGathering?: boolean;
 }) {
   const t = useT();
   const [items, setItems] = useState<ChecklistItem[]>([]);
   const [checks, setChecks] = useState<Check[]>([]);
   const [label, setLabel] = useState("");
   const [busy, setBusy] = useState(false);
+  const [revision, setRevision] = useState(0);
 
   async function refresh() {
     const [it, ch] = await Promise.all([
@@ -293,6 +297,7 @@ export function GatheringChecklist({
     else setItems((it.data as ChecklistItem[]) ?? []);
     if (ch.error) toast.error(ch.error.message);
     else setChecks((ch.data as Check[]) ?? []);
+    if (!it.error) setRevision(v => v + 1);
   }
 
   useEffect(() => {
@@ -345,7 +350,7 @@ export function GatheringChecklist({
   }
 
   return (
-    <div className="rounded-2xl border border-border bg-card p-4">
+    <div className="grid gap-4 rounded-2xl border border-border bg-card p-4">
       {items.length === 0 ? (
         <p className="text-sm text-muted-foreground">{t("room.checklist.empty")}</p>
       ) : (
@@ -402,6 +407,7 @@ export function GatheringChecklist({
           </Button>
         </form>
       )}
+      {privateGathering && <GatheringCoordination gatheringId={gatheringId} section="tasks" revision={revision} />}
     </div>
   );
 }
