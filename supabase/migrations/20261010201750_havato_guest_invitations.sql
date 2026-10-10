@@ -29,15 +29,15 @@ ALTER TABLE private.guest_request_limits ENABLE ROW LEVEL SECURITY;
 REVOKE ALL ON private.guest_request_limits FROM PUBLIC, anon, authenticated, service_role;
 
 CREATE FUNCTION private.active_guest_seats(_id uuid) RETURNS integer
-LANGUAGE sql STABLE SECURITY DEFINER SET search_path = '' AS $$
+LANGUAGE sql VOLATILE SECURITY DEFINER SET search_path = '' AS $$
   SELECT count(*)::integer FROM private.gathering_guest_invitations
-  WHERE gathering_id = _id AND response = 'going' AND revoked_at IS NULL AND expires_at > now()
+  WHERE gathering_id = _id AND response = 'going' AND revoked_at IS NULL AND expires_at > clock_timestamp()
 $$;
 REVOKE ALL ON FUNCTION private.active_guest_seats(uuid) FROM PUBLIC, anon, authenticated, service_role;
 
 -- Aggregate capacity only; never expose guest names/links to invited members.
 CREATE FUNCTION private.private_gathering_seat_counts(_ids uuid[]) RETURNS jsonb
-LANGUAGE plpgsql STABLE SECURITY DEFINER SET search_path = '' AS $$
+LANGUAGE plpgsql VOLATILE SECURITY DEFINER SET search_path = '' AS $$
 DECLARE result jsonb;
 BEGIN
   IF auth.uid() IS NULL OR _ids IS NULL OR coalesce(array_length(_ids,1),0)>100 THEN RAISE EXCEPTION 'Forbidden'; END IF;
@@ -90,7 +90,7 @@ BEGIN
   IF auth.uid() IS NULL OR g.host_id IS DISTINCT FROM auth.uid() OR g.visibility <> 'private'
     OR NOT private.private_gathering_eligible(auth.uid()) THEN RAISE EXCEPTION 'Forbidden'; END IF;
   IF _action = 'create' THEN
-    IF g.status IN ('cancelled','rejected') OR g.starts_at <= now() THEN RAISE EXCEPTION 'PRIVATE_CLOSED'; END IF;
+    IF g.status IN ('cancelled','rejected') OR g.starts_at <= clock_timestamp() THEN RAISE EXCEPTION 'PRIVATE_CLOSED'; END IF;
     IF _hash IS NULL OR _hash !~ '^[0-9a-f]{64}$' OR _label IS NULL
       OR char_length(btrim(_label)) NOT BETWEEN 1 AND 80 OR _days IS NULL OR _days NOT IN (1,3,7)
     THEN RAISE EXCEPTION 'Invalid invitation'; END IF;
@@ -104,7 +104,7 @@ BEGIN
     IF (SELECT count(*) FROM private.gathering_guest_invitations i JOIN public.gatherings e ON e.id=i.gathering_id
       WHERE e.host_id=auth.uid() AND i.created_at > now()-interval '1 hour') >= 30
     THEN RAISE EXCEPTION 'GUEST_RATE_LIMIT'; END IF;
-    expiry := least(now()+make_interval(days=>_days),g.starts_at);
+    expiry := least(clock_timestamp()+make_interval(days=>_days),g.starts_at);
     INSERT INTO private.gathering_guest_invitations(gathering_id,token_hash,label,expires_at)
       VALUES (_id,_hash,btrim(_label),expiry) RETURNING jsonb_build_object('id',id,'expires_at',expires_at) INTO result;
     RETURN result;
@@ -172,7 +172,7 @@ BEGIN
   -- Same lock/order as members, host revocation and edits; re-read token after locking.
   SELECT * INTO g FROM public.gatherings WHERE id=event_id FOR UPDATE;
   SELECT * INTO i FROM private.gathering_guest_invitations WHERE token_hash=_hash;
-  IF i.id IS NULL OR i.revoked_at IS NOT NULL OR i.expires_at <= now() OR g.starts_at <= now()
+  IF i.id IS NULL OR i.revoked_at IS NOT NULL OR i.expires_at <= clock_timestamp() OR g.starts_at <= clock_timestamp()
     OR g.visibility <> 'private' OR g.status <> 'approved' OR NOT private.private_gathering_eligible(g.host_id)
   THEN RETURN NULL; END IF;
   IF _response IS NOT NULL THEN

@@ -9,8 +9,8 @@ Audited/reused IG-014 and IG-001–009. Guest capabilities are separate from mem
 attendance/permissions. Hashed 256-bit tokens, expiry/revocation, 18+ attestation,
 Going/Maybe/Declined, combined capacity, privacy/grants, persistent quotas and
 FA/EN mobile guest/host controls implemented. 73 migrations replayed locally;
-177 DB checks, 98 focused tests, typecheck, focused lint and production build pass.
-Eight synthetic browser layouts verified. Local dependencies reused; Linux frozen
+179 DB checks, 98 focused tests, typecheck, focused lint and production build pass.
+Execution-time expiry correction adds two regressions; no hosted migration was rewritten. Eight synthetic browser layouts verified. Local dependencies reused; Linux frozen
 install/review CI passes at implementation 128d414bdae9266cd291ad23259e8c35a727b6f1
 (run 38084272566); public-site review passes too. General CI: 452 passed/16 documented
 baseline failures/25 skipped (38084272476). Built-server guest HTTP smoke: 20 passing.

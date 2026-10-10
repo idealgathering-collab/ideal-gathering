@@ -4,7 +4,7 @@
 Phase 6.2 adds `tests/unit/guest-invitations.test.ts` and
 `tests/unit/guest-invitations.ui.test.ts` to the focused suite (98 total).
 The migration-replay command below now runs the external guest checks too:
-73 migrations, 177 checks. No hosted target, auth user or external message.
+73 migrations, 179 checks. No hosted target, auth user or external message.
 RPC types are derived/verified from replayed pg_catalog; to regenerate just these
 fragments set `HAVATO_GUEST_TYPES_OUTPUT=<scratch-file>` for the replay, then
 adopt only that output in `src/integrations/supabase/types.ts` and rerun without

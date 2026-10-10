@@ -1,5 +1,6 @@
 // Invoked by the full migration replay harness, never uses a hosted database.
 import { readFile, writeFile } from 'node:fs/promises';
+import { setTimeout as delay } from 'node:timers/promises';
 export async function checkGuestInvitations({ db, asUser, host, guest, other, outsider, admin, check, deny }) {
   const event='62000000-0000-4000-8000-000000000001';
   const hash='a'.repeat(64), hash2='b'.repeat(64);
@@ -78,6 +79,21 @@ export async function checkGuestInvitations({ db, asUser, host, guest, other, ou
   check((await use(thirdHash))[0].result,null);
   await deny(manage(host,'create',`,'${'e'.repeat(64)}','Late',1`),/PRIVATE_CLOSED/);
   await asUser(host,`UPDATE public.gatherings SET starts_at=now()+interval '2 days' WHERE id='${event}'`);
+  // Expiry must advance within a transaction begun before expiry (e.g. lock wait).
+  await asUser(guest,`SELECT public.respond_gathering_invitation('${event}','declined')`);
+  await use(thirdHash,true,'declined','Guest Three');
+  const clockHash='7'.repeat(64);
+  const clockInvite=(await manage(host,'create',`,'${clockHash}','Clock guest',1`))[0].result;
+  await use(clockHash,true,'going','Clock guest');
+  await db.transaction(async tx=>{
+    await tx.exec(`UPDATE private.gathering_guest_invitations SET expires_at=clock_timestamp()+interval '100 milliseconds' WHERE id='${clockInvite.id}'`);
+    await tx.exec('SET LOCAL ROLE service_role');
+    await delay(150);
+    check((await tx.query(`SELECT public.use_guest_invitation('${clockHash}',true) AS result`)).rows[0].result,null);
+    await tx.exec('SET LOCAL ROLE authenticated');
+    await tx.query("SELECT set_config('request.jwt.claim.sub',$1,true)",[host]);
+    check((await tx.query(`SELECT public.private_gathering_seat_counts(ARRAY['${event}']::uuid[]) AS counts`)).rows[0].counts,{[event]:1});
+  });
   // Persisted throttles count errors and use database locks/upserts across workers.
   const rateHash='f'.repeat(64);
   for(let n=0;n<30;n++) check((await asUser(null,`SELECT public.guest_invitation_limit('${rateHash}') AS allowed`,'service_role'))[0].allowed,true);

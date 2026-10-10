@@ -54,7 +54,7 @@ Expiry is capped at creation-time gathering start; lookup also checks current
 start and approved status, host eligibility, revocation and expiry. Guest Going,
 member insertion, host revocation and seat edits use the same gathering row lock.
 Only active unexpired Going guests reserve seats. Maybe/Declined, revocation and
-expiry release them; failed capacity updates keep the previous RSVP/name intact.
+expiry release them; execution-time expiry checks remain correct after a transaction or lock wait. Failed capacity updates keep the previous RSVP/name intact.
 Host/member reservations are still the existing attendance records. Removing a
 gathering cascades temporary invitation rows. No hosted data backfill or auth edits.
 
@@ -69,11 +69,11 @@ are rejected early; ingress must also enforce transport/body/rate protections.
 ## Verification
 - `node tests/private-gatherings.local.mjs ../checks/node_modules/@electric-sql/pglite/dist/index.js`:
   all **73 committed migrations replay unchanged** in fresh disposable PGlite
-  0.5.8 with minimal Supabase scaffolding; **177 PostgreSQL/RLS/RPC/type checks pass**.
+  0.5.8 with minimal Supabase scaffolding; **179 PostgreSQL/RLS/RPC/type checks pass**.
   Includes direct role denials, no guest auth creation or attendee membership,
   generic invalid/proposed/revoked/expired/start/cancelled/host-ineligible handling,
   cross-kind last-seat rollback, idempotent Going, seat edits, cascade, quotas,
-  per-token/global/IP throttle and schema-derived RPC type checks.
+  per-token/global/IP throttle, within-transaction expiry advancement and schema-derived RPC type checks.
 - Focused Vitest with scratch jsdom 26.1.0: **98 tests pass** across ten files,
   including 16 new server/client tests and eight new guest/host DOM interactions,
   all 74 preceding focused regressions retained. No mail/push/hosted users involved.
@@ -96,9 +96,9 @@ receiving the FA-default language (life-profile, life-summary, member-profile,
 venue-value). The earlier baseline evidence remains in the IG-014 report; no new
 full-suite pass is claimed here.
 
-## Published verification evidence
+## Published verification evidence before the final execution-time expiry correction
 Implementation checkpoint `128d414bdae9266cd291ad23259e8c35a727b6f1` includes the
-application/test tree above; a follow-up documentation checkpoint records these results.
+application/test tree before the final execution-time expiry correction; 177 DB checks at that checkpoint. The final correction adds two DB regressions (179 total) and uses clock_timestamp after locks. Final-head CI is inspected separately.
 The intervening line-ending preservation commit is a normal fast-forward; no published
 history was rewritten and the local index was verified identical before synchronization.
 
