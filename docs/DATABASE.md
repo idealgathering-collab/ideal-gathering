@@ -1,5 +1,17 @@
 # Database
 
+## IG-016 Phase 6.3 coordination — review-only, 2026-10-11
+Additive `20261010212832_havato_gathering_coordination.sql` extends existing
+checklist items via private responsibility rows, plus scoped shared notes and
+expense records. All new tables have RLS and revoked direct role privileges;
+private authorized operations/public invoker RPCs recheck adult eligibility,
+Going membership, invite/block/status and explicit guest sharing. Existing
+gathering locks serialize coordination with RSVP. Exact integer equal splits,
+one currency while expenses exist, versioned notes and cascades are locally
+verified. All three Phase 6 migrations remain unapplied to hosted targets.
+[Contract](../tasks/completed/IG-016-havato-phase6-coordination.md) ·
+[Evidence and release checks](../tasks/completed/IG-016-havato-phase6-coordination-report.md).
+
 ## IG-015 external guest invitations — review-only, 2026-10-10
 Additive `20261010201750_havato_guest_invitations.sql` follows IG-014. RLS-enabled
 non-exposed private guest/rate tables, hashed expiring bearer capabilities and

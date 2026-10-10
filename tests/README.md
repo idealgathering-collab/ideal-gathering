@@ -1,5 +1,18 @@
 # Tests
 
+## Havato Phase 6.3 coordination
+The full `private-gatherings.local.mjs` disposable replay now includes
+`gathering-coordination.local.mjs`: 74 migrations / 306 actual PostgreSQL checks.
+New focused files are `tests/unit/gathering-coordination.test.ts` and
+`tests/unit/gathering-coordination.ui.test.ts` (28 tests); dedicated Phase 6 Linux
+review enables jsdom and runs all 126 focused tests. No hosted credentials/data.
+RPC fragments are generated/verified from the replayed catalog; set
+`HAVATO_COORDINATION_TYPES_OUTPUT=<scratch-file>` to regenerate those fragments.
+Visual fixtures `?mode=coord-host&lang=fa` / `en` and `mode=coord-member` render
+real coordination components against synthetic state. These do not certify
+hosted Auth/Realtime, physical devices, or separate-connection PostgreSQL races.
+[Evidence and release checklist](../tasks/completed/IG-016-havato-phase6-coordination-report.md).
+
 ## Havato Phase 6 private gatherings
 Phase 6.2 adds `tests/unit/guest-invitations.test.ts` and
 `tests/unit/guest-invitations.ui.test.ts` to the focused suite (98 total).

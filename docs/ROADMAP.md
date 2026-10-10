@@ -1,5 +1,13 @@
 # Roadmap
 
+## Havato Phase 6.3 checkpoint — 2026-10-11
+IG-016 implements assigned/volunteered checklist responsibilities, versioned shared
+notes and integer equal expense splits on draft PR #17, preserving IG-001–009,
+Phase 6.1/6.2 and the existing checklist/chat. Guest access is explicit per record.
+No hosted migrations or release. Shared album and broader lifecycle/history remain
+later increments; staging/concurrency/provider/device acceptance still remains.
+[Evidence and owner checks](../tasks/completed/IG-016-havato-phase6-coordination-report.md).
+
 ## Havato Phase 6 priority — 2026-10-10
 User prioritizes Friends & Family before authentication Phase 5. IG-014 adds a
 review-only first increment: private creation, member invitations/RSVP and reuse

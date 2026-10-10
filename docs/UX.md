@@ -1,5 +1,17 @@
 # UX
 
+## IG-016 Phase 6.3 — review-only, 2026-10-11
+Private gathering checklist keeps its existing personal checkmarks and host item
+controls, with shared responsibilities directly below. Hosts assign, participants
+volunteer/release, assignee/host marks completion. Shared notes and simple equal
+expense splits live in the same room's coordination tab. Persian/RTL is default;
+English and wrapping mobile/keyboard controls are retained. Costs are recorded
+and calculated, with no payments or settlement status. Guests see only explicitly
+host-shared tasks/notes while Going and their link remains valid; they receive no
+member roster/chat/expense access. Notes detect conflicting edits by version.
+Refresh checks current permission/data; stale views are not real-time certification.
+[Verification and remaining acceptance](../tasks/completed/IG-016-havato-phase6-coordination-report.md).
+
 ## IG-012 Havato legal and trust — 2026-10-04
 
 Terms/Privacy retain stable routes, use the Phase 1 public shell, and offer

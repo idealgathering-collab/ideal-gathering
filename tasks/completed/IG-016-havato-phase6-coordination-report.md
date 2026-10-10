@@ -71,6 +71,50 @@ consulted; table exposure changes are handled by explicit grants/wrappers.
 - Browser fixture verification and Linux exact-head results are recorded below
   after inspection. No hosted behavior is claimed by unit/DOM/PGlite evidence.
 
+## Browser and implementation-head Linux verification
+Implementation commit: `952985993fddd817d937ed85a54940cc75a1345f`.
+Eight synthetic host/member × FA/EN × 390/1280 browser layouts inspected: correct
+RTL/LTR, no horizontal overflow, no console warnings/errors. Member ledger guest
+names are generic in both real database checks and the matching preview fixture.
+Shared notes/ledger were visually inspected; DOM tests cover guest interactions.
+This is synthetic component evidence, not real hosted users or a physical phone.
+
+[General Linux CI](https://github.com/idealgathering-collab/ideal-gathering/actions/runs/38088345674)
+completed with **471 passed / 16 failed / 34 skipped**, after frozen install.
+Inspected job logs: same previously reproduced English-expectation vs FA-default
+cases in life-profile (4), life-summary (4), member-profile (2), venue-value (6).
+No coordination failures. General workflow stops at tests, so its later build,
+portable HTTP smoke and optional Lovable build are skipped, not passed.
+Dedicated [Phase 6 review](https://github.com/idealgathering-collab/ideal-gathering/actions/runs/38088345634)
+**passes** frozen install, 74 migration replay / 306 DB checks, 126 focused tests,
+typecheck, both lint steps (zero errors; one existing room warning in Linux), and
+production client/server/Nitro build. Job steps and logs inspected.
+[Public review](https://github.com/idealgathering-collab/ideal-gathering/actions/runs/38088345752)
+**passes** frozen install, public/legal units, PWA checks, typecheck, lint, production
+build and public HTTP smoke. No deploy/container-release job was invoked.
+
+## Files and repeatable checks
+| Files | Responsibility |
+| --- | --- |
+| `src/components/gathering-room.tsx`, `src/routes/gatherings.$id.tsx` | Existing checklist/room integration, no new route or duplicate item table. |
+| `src/components/gathering-coordination.tsx` | Host/member tasks, notes, costs and balances using shared controls. |
+| `src/components/guest-invitation.tsx`, `src/components/guest-coordination.tsx` | Scoped Going guest coordination inside existing invitation page. |
+| `src/lib/gathering-coordination.ts`, `.functions.ts` | Validated commands/projections, numeral parsing/balances, caller RPC. |
+| `src/lib/guest-invitations.ts`, `.server.ts` | Extend existing protected POST and reauthorize guest operation. |
+| `src/i18n/gathering-coordination.ts`, `src/i18n/index.tsx` | FA/EN copy and existing language-provider integration. |
+| Migration and `src/integrations/supabase/types.ts` | Private storage/permissions/atomic operations and catalog-verified RPC types. |
+| `tests/gathering-coordination.local.mjs`, `tests/unit/gathering-coordination*.test.ts` | Actual database permission/function tests, rules/HTTP and DOM interactions. |
+| Existing replay/preview/CI, docs and IG-016 task files | Retain prior regressions, synthetic previews, Linux checks and durable handoff. |
+
+Local commands: `node tests/private-gatherings.local.mjs <scratch-pglite/dist/index.js>`;
+`node node_modules/typescript/bin/tsc --noEmit`; `node node_modules/vite/bin/vite.js build`
+with dummy loopback env; focused `node node_modules/vitest/vitest.mjs run` on the
+12 exact files listed in `.github/workflows/havato-phase6-review.yml` with
+`HAVATO_TEST_JSDOM=<scratch-jsdom/lib/api.js>`; changed-file
+`node node_modules/eslint/bin/eslint.js <changed-source-and-tests> --rule 'prettier/prettier: off'`;
+`git diff --check`. Scratch modules reused from prior local verification. No lockfile
+or application dependency mutation. Linux workflow records exact frozen commands.
+
 ## Remaining release checks and blockers
 1. Owner-approved designated Havato staging only: inspect ledger, apply Phase 6.1,
    6.2 then 6.3, inspect grants/advisors/cache and regenerate/diff hosted types.

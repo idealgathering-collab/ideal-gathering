@@ -10,8 +10,8 @@ records. No expense ledger/splitting existed. New coordination is private-event
 only, extends the same detail/checklist and guest endpoint, and preserves owner,
 profile, memory, history, venue and portability boundaries. Guests gain only
 host-shared checklist responsibilities and read-only notes while Going and valid;
-no chat, member roster, expense or profile access. [Contract](../tasks/IG-016-havato-phase6-coordination.md)
-and [evidence/limits](../tasks/IG-016-havato-phase6-coordination-report.md).
+no chat, member roster, expense or profile access. [Contract](../tasks/completed/IG-016-havato-phase6-coordination.md)
+and [evidence/limits](../tasks/completed/IG-016-havato-phase6-coordination-report.md).
 The historical missing-assignment/expense/shared-note rows below describe the
 original baseline, not IG-016's review-only implementation. No live certification.
 

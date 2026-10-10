@@ -1,16 +1,21 @@
-# Current task — IG-016 Havato Phase 6.3 coordination
+# Current task — IG-016 Havato Phase 6.3 coordination, review-ready
 
 User authorized 2026-10-11: audit/reuse then responsibilities, shared notes and
 expense splitting on existing draft PR #17; target havato. Baseline ba83b382.
-[Approved scope](IG-016-havato-phase6-coordination.md) ·
-[Implementation, tests and release blockers](IG-016-havato-phase6-coordination-report.md).
+[Approved scope](completed/IG-016-havato-phase6-coordination.md) ·
+[Implementation, tests and release blockers](completed/IG-016-havato-phase6-coordination-report.md).
 Checklist-integrated host assignments/volunteering/completion, versioned notes,
 host-managed integer equal expense splits/balances and explicit per-record Going
 guest sharing implemented. No guest roster/chat/expense/profile/memory permissions.
 Local 74-migration replay/306 DB checks, 126 focused tests, typecheck/build and
-focused lint (zero errors/three existing warnings) pass. Browser inspection and
-exact-head Linux CI verification in progress; next step publish review checkpoint,
-inspect Linux jobs, record exact results. Migration unapplied to all hosted targets.
+focused lint (zero errors/three existing local warnings) pass. Eight synthetic
+FA/EN host/member mobile/desktop layouts: correct direction/no overflow or console
+errors. Implementation 952985993fddd817d937ed85a54940cc75a1345f passes Linux Phase 6
+review (38088345634) and public review (38088345752); logs inspected. General Linux
+CI (38088345674): 471 passed/16 same baseline rendering failures/34 skipped; later
+general build/smoke steps skipped, not passed. Next: review draft PR and separately
+approve designated staging migration/advisors/cache/types, real mobile flows,
+separate-connection races and ingress/retention review. Migration unapplied to all hosted targets.
 PR #16/Phase 5 excluded. No merge/deploy/hosted writes or idealgathering.com access.
 
 ---

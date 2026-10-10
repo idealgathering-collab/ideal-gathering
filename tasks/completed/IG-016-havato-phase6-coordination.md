@@ -1,6 +1,6 @@
 # IG-016 — Havato Phase 6.3 Gathering Coordination
 
-Status: Approved / in progress
+Status: Implementation complete / draft review; staging and release acceptance pending
 Owner: product owner
 Approval: explicit user instruction in this chat, 2026-10-11: audit then implement responsibilities/bring-list, host assignment, volunteering, expenses/splitting, shared notes and permissions; update draft PR #17. No merge, deployment or hosted migrations.
 Branch: codex/havato-phase6-private-gatherings; target havato
@@ -63,4 +63,8 @@ No payment processing, custom unequal splits, shared album, host lifecycle redes
 notification delivery, dependency upgrades, production writes or idealgathering.com.
 
 ## Checkpoints
-Audit complete at baseline; implementation and validation in progress. See current.md.
+Audit complete at baseline. Implementation 952985993fddd817d937ed85a54940cc75a1345f
+passes 74 migrations/306 DB checks/126 focused tests/typecheck/lint/build in Linux.
+General CI retains exactly 16 inherited rendering failures. Browser fixtures pass
+eight host/member FA/EN mobile/desktop layouts. See the linked report/current.md for
+precise evidence and staging/concurrency/ingress/retention release checks.
