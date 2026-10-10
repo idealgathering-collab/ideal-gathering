@@ -21,6 +21,7 @@ import { Route as OurStoryRouteImport } from './routes/our-story'
 import { Route as McpRouteImport } from './routes/mcp'
 import { Route as ManifestDotwebmanifestRouteImport } from './routes/manifest[.]webmanifest'
 import { Route as InviteRouteImport } from './routes/invite'
+import { Route as GuestInviteRouteImport } from './routes/guest-invite'
 import { Route as ExploreRouteImport } from './routes/explore'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
@@ -107,6 +108,11 @@ const ManifestDotwebmanifestRoute = ManifestDotwebmanifestRouteImport.update({
 const InviteRoute = InviteRouteImport.update({
   id: '/invite',
   path: '/invite',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GuestInviteRoute = GuestInviteRouteImport.update({
+  id: '/guest-invite',
+  path: '/guest-invite',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ExploreRoute = ExploreRouteImport.update({
@@ -257,6 +263,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/explore': typeof ExploreRoute
+  '/guest-invite': typeof GuestInviteRoute
   '/invite': typeof InviteRoute
   '/manifest.webmanifest': typeof ManifestDotwebmanifestRoute
   '/mcp': typeof McpRoute
@@ -297,6 +304,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/explore': typeof ExploreRoute
+  '/guest-invite': typeof GuestInviteRoute
   '/invite': typeof InviteRoute
   '/manifest.webmanifest': typeof ManifestDotwebmanifestRoute
   '/mcp': typeof McpRoute
@@ -339,6 +347,7 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
   '/explore': typeof ExploreRoute
+  '/guest-invite': typeof GuestInviteRoute
   '/invite': typeof InviteRoute
   '/manifest.webmanifest': typeof ManifestDotwebmanifestRoute
   '/mcp': typeof McpRoute
@@ -381,6 +390,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/explore'
+    | '/guest-invite'
     | '/invite'
     | '/manifest.webmanifest'
     | '/mcp'
@@ -421,6 +431,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/explore'
+    | '/guest-invite'
     | '/invite'
     | '/manifest.webmanifest'
     | '/mcp'
@@ -462,6 +473,7 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/auth'
     | '/explore'
+    | '/guest-invite'
     | '/invite'
     | '/manifest.webmanifest'
     | '/mcp'
@@ -504,6 +516,7 @@ export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
   ExploreRoute: typeof ExploreRoute
+  GuestInviteRoute: typeof GuestInviteRoute
   InviteRoute: typeof InviteRoute
   ManifestDotwebmanifestRoute: typeof ManifestDotwebmanifestRoute
   McpRoute: typeof McpRoute
@@ -611,6 +624,13 @@ declare module '@tanstack/react-router' {
       path: '/invite'
       fullPath: '/invite'
       preLoaderRoute: typeof InviteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/guest-invite': {
+      id: '/guest-invite'
+      path: '/guest-invite'
+      fullPath: '/guest-invite'
+      preLoaderRoute: typeof GuestInviteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/explore': {
@@ -856,6 +876,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
   ExploreRoute: ExploreRoute,
+  GuestInviteRoute: GuestInviteRoute,
   InviteRoute: InviteRoute,
   ManifestDotwebmanifestRoute: ManifestDotwebmanifestRoute,
   McpRoute: McpRoute,

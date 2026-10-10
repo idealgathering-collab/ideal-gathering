@@ -6,6 +6,7 @@ import { pathToFileURL } from "node:url";
 import { privateGatheringCopy } from "@/i18n/private-gatherings";
 const fixture = vi.hoisted(() => ({ lang: "fa", rows: [] as unknown[], readError: false, rpcError: null as unknown, rpc: vi.fn() }));
 vi.mock("@/i18n", () => ({ useT: () => (key: string) => privateGatheringCopy[fixture.lang]?.[key] ?? key }));
+vi.mock("@/components/host-guest-invitations", () => ({ HostGuestInvitations: () => null }));
 vi.mock("@/lib/public-data.functions", () => ({ getPublicProfiles: async () => [{ id: "guest", display_name: "Guest" }] }));
 vi.mock("@tanstack/react-router", () => ({ Link: ({ children }: { children: unknown }) => children }));
 vi.mock("sonner", () => ({ toast: { success: vi.fn(), error: vi.fn() } }));

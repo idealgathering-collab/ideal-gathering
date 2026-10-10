@@ -12,6 +12,7 @@ export default defineConfig({
     { find: "@/hooks/use-session", replacement: file("./fixtures.tsx") },
     { find: "@/components/site-header", replacement: file("./fixtures.tsx") },
     { find: "@/lib/public-data.functions", replacement: file("./fixtures.tsx") },
+    { find: "@/lib/guest-invitations.functions", replacement: file("./guest-fixtures.tsx") },
     { find: "@/components/saved-location-dialog", replacement: file("./fixtures.tsx") },
     { find: "@", replacement: file("../../src") },
   ] },

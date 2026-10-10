@@ -19,6 +19,7 @@ export function MobileTabBar() {
     pathname === "/" ||
     pathname === "/waitlist" ||
     pathname === "/invite" ||
+    pathname === "/guest-invite" ||
     pathname === "/pending" ||
     pathname === "/preview" ||
     pathname.startsWith("/auth") ||

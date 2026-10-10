@@ -973,6 +973,40 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      guest_invitation_limit: {
+        Args: {
+          _hash: string
+          _ip_hash?: string
+        }
+        Returns: boolean
+      }
+      manage_guest_invitation: {
+        Args: {
+          _id: string
+          _action: string
+          _hash?: string
+          _label?: string
+          _days?: number
+          _invite?: string
+        }
+        Returns: Json
+      }
+      private_gathering_seat_counts: {
+        Args: {
+          _ids: string[]
+        }
+        Returns: Json
+      }
+      use_guest_invitation: {
+        Args: {
+          _hash: string
+          _adult: boolean
+          _response?: string
+          _name?: string
+        }
+        Returns: Json
+      }
+
       invite_gathering_member: { Args: { _id: string; _email: string }; Returns: undefined };
       respond_gathering_invitation: { Args: { _id: string; _response: string }; Returns: undefined };
       revoke_gathering_invitation: { Args: { _id: string; _recipient: string }; Returns: undefined };

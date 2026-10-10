@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useT } from "@/i18n";
 import { privateGatheringError, rsvpResponse } from "@/lib/private-gatherings";
+import { HostGuestInvitations } from "@/components/host-guest-invitations";
 
 export function PrivateGatheringInvitations({ gatheringId, userId, isHost, open }: {
   gatheringId: string; userId: string; isHost: boolean; open: boolean;
@@ -46,7 +47,7 @@ export function PrivateGatheringInvitations({ gatheringId, userId, isHost, open 
     } catch (error) { toast.error(t(privateGatheringError(error))); }
     finally { setBusy(false); }
   }
-  return <section className="mt-6 grid gap-3 rounded-2xl border border-border bg-card p-4" aria-label={t("private.responses")}>
+  return <><section className="mt-6 grid gap-3 rounded-2xl border border-border bg-card p-4" aria-label={t("private.responses")}>
     <h2 className="font-display text-xl">{t("private.responses")}</h2>
     {query.isPending && <p role="status">{t("common.loading")}</p>}
     {query.isError && <div role="alert"><p>{t("private.loadFailed")}</p><Button variant="outline" onClick={() => query.refetch()}>{t("private.retry")}</Button></div>}
@@ -68,7 +69,7 @@ export function PrivateGatheringInvitations({ gatheringId, userId, isHost, open 
       <p role="status">{t(own.response === "invited" ? "private.invitedState" : `private.${own.response}`)}</p>
       <div className="flex flex-wrap gap-2">{rsvpResponse.options.map((response) => <Button key={response} variant={own.response === response ? "default" : "outline"} aria-pressed={own.response === response} disabled={busy || !open} onClick={() => void mutate(() => supabase.rpc("respond_gathering_invitation", { _id: gatheringId, _response: response }), "private.saved")}>{t(`private.${response}`)}</Button>)}</div>
     </>}
-  </section>;
+  </section>{isHost && <HostGuestInvitations gatheringId={gatheringId} userId={userId} open={open} />}</>;
 }
 
 export function PrivateGatheringInbox({ userId }: { userId: string }) {

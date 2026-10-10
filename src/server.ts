@@ -85,7 +85,7 @@ function withSecurityHeaders(response: Response): Response {
   if (!headers.has("content-security-policy")) {
     headers.set("content-security-policy", CSP);
   }
-  headers.set("referrer-policy", "strict-origin-when-cross-origin");
+  if (!headers.has("referrer-policy")) headers.set("referrer-policy", "strict-origin-when-cross-origin");
   headers.set("x-content-type-options", "nosniff");
   headers.set("permissions-policy", PERMISSIONS_POLICY);
   headers.set("x-havato-notifications-phase", "4");
@@ -99,13 +99,23 @@ function withSecurityHeaders(response: Response): Response {
 export default {
   async fetch(request: Request, env: unknown, ctx: unknown) {
     try {
+      if (new URL(request.url).pathname === "/api/guest-invitation") {
+        const { handleGuestInvitation } = await import("./lib/guest-invitations.server");
+        return withSecurityHeaders(await handleGuestInvitation(request));
+      }
       if (new URL(request.url).pathname === "/api/push/test") {
         const { handleTestPush } = await import("./lib/push-delivery.server");
         return withSecurityHeaders(await handleTestPush(request));
       }
       const handler = await getServerEntry();
       const response = await handler.fetch(request, env, ctx);
-      return withSecurityHeaders(await normalizeCatastrophicSsrResponse(response));
+      const safe = withSecurityHeaders(await normalizeCatastrophicSsrResponse(response));
+      if (new URL(request.url).pathname === "/guest-invite") {
+        safe.headers.set("cache-control", "no-store, private");
+        safe.headers.set("referrer-policy", "no-referrer");
+        safe.headers.set("x-robots-tag", "noindex, nofollow, noarchive");
+      }
+      return safe;
     } catch (error) {
       console.error(error);
       return withSecurityHeaders(

@@ -1,5 +1,12 @@
 # Havato Phase 6 source audit — 2026-10-10
 
+Follow-up IG-015 audits PR #17 at `0bf49b24` and implements the previously deferred
+external invitation/temporary guest increment by extending its panel, RSVP enum,
+capacity guard/lock and visibility helper. IG-001–009 ownership/profile/memory/venue/
+portability remain reused. Temporary guests stay outside member permissions.
+See [Phase 6.2 evidence and limitations](../tasks/IG-015-havato-phase6-guest-invitations-report.md).
+The inventory below records the first-increment baseline, not the new guest state.
+
 Inspected havato `755a9ed024f9672dffe5afaea46d109ae899ac49`. Source/migration evidence, not a live schema or browser certification. PR #16 is excluded.
 
 | Capability | Existing evidence and behavior | Phase 6 gap / reuse decision |

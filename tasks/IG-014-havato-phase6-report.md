@@ -1,5 +1,9 @@
 # IG-014 — Havato Phase 6 first increment
 
+Historical first-increment report. Remaining external invitations/guest RSVP are
+now addressed by [IG-015 Phase 6.2](IG-015-havato-phase6-guest-invitations-report.md)
+on the same draft PR. The deferred lists below describe the first-increment checkpoint.
+
 Review branch: `codex/havato-phase6-private-gatherings`, based solely on `havato` at `755a9ed024f9672dffe5afaea46d109ae899ac49`. User prioritizes Phase 6 before Phase 5. PR #16 remains open and unmerged; none of its authentication edits are included.
 
 Review: [draft PR #17](https://github.com/idealgathering-collab/ideal-gathering/pull/17), targeting `havato`.

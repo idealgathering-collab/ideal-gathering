@@ -1,5 +1,14 @@
 # Database
 
+## IG-015 external guest invitations — review-only, 2026-10-10
+Additive `20261010201750_havato_guest_invitations.sql` follows IG-014. RLS-enabled
+non-exposed private guest/rate tables, hashed expiring bearer capabilities and
+service-only guest RPCs preserve member permissions. The existing capacity trigger
+and gathering locks now count active guest Going reservations; authorized aggregate
+counts expose no guest identity. Guest records never become auth users/attendees.
+No hosted migration. [Contract](../tasks/IG-015-havato-phase6-guest-invitations.md)
+and [verification, bearer limitations and owner rollout](../tasks/IG-015-havato-phase6-guest-invitations-report.md).
+
 ## IG-014 private gatherings — review-only, 2026-10-10
 Additive `20261010051239_havato_private_gatherings.sql` supplies immutable gathering
 visibility (existing rows default public), recipient-bound `gathering_invitations`,

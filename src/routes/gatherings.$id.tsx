@@ -141,7 +141,7 @@ function GatheringDetail() {
 
   const attendees = (g.gathering_attendees ?? []) as Array<{ user_id: string }>;
   const isAttending = user ? attendees.some((a) => a.user_id === user.id) : false;
-  const seatsLeft = Math.max(0, g.seats - attendees.length);
+  const seatsLeft = Math.max(0, g.seats - g.seats_taken);
   const isHost = user?.id === g.host_id;
   const isMember = isHost || isAttending;
   // Mirror the DB guard: the roster is only actionable inside the check-in window
@@ -204,7 +204,7 @@ function GatheringDetail() {
               <Users className="h-3.5 w-3.5 text-primary" /> {t("create.seats")}
             </div>
             <div className="mt-1 font-display text-lg">
-              {attendees.length} / {g.seats}
+              {g.seats_taken} / {g.seats}
             </div>
             <div className="text-xs text-muted-foreground">
               {seatsLeft > 0 ? t("gd.seatsLeft", { n: seatsLeft }) : t("gd.full")}

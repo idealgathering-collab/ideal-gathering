@@ -1,5 +1,13 @@
 import { supabase } from "@/integrations/supabase/client";
 import { JoinError, classifyJoinError } from "@/lib/join-errors";
+import { z } from "zod";
+
+export async function privateGatheringSeatCounts(ids: string[]) {
+  if (!ids.length) return {} as Record<string,number>;
+  const { data, error } = await supabase.rpc("private_gathering_seat_counts", { _ids: ids });
+  if (error) throw error;
+  return z.record(z.string().uuid(), z.number().int().nonnegative()).parse(data);
+}
 
 
 export type GatheringCard = {
@@ -102,7 +110,9 @@ export async function fetchGathering(id: string) {
     .eq("id", id)
     .maybeSingle();
   if (error) throw error;
-  return data;
+  if (!data) return null;
+  const counts = data.visibility === "private" ? await privateGatheringSeatCounts([id]) : {};
+  return { ...data, seats_taken: counts[id] ?? data.gathering_attendees?.length ?? 0 };
 }
 
 export { JoinError, classifyJoinError } from "@/lib/join-errors";

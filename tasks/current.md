@@ -1,4 +1,23 @@
-# Current task — IG-014 Havato Phase 6, first increment review-ready
+# Current task — IG-015 Havato Phase 6.2 guest invitations, review-ready
+
+User explicitly authorized 2026-10-10: remaining external/private invitation links,
+account-free guest RSVP and host management. Extend draft PR #17 on
+codex/havato-phase6-private-gatherings, targeting havato; PR #16/Phase 5 excluded.
+[Scope](IG-015-havato-phase6-guest-invitations.md) ·
+[Implementation, validation and owner release actions](IG-015-havato-phase6-guest-invitations-report.md).
+Audited/reused IG-014 and IG-001–009. Guest capabilities are separate from member
+attendance/permissions. Hashed 256-bit tokens, expiry/revocation, 18+ attestation,
+Going/Maybe/Declined, combined capacity, privacy/grants, persistent quotas and
+FA/EN mobile guest/host controls implemented. 73 migrations replayed locally;
+177 DB checks, 98 focused tests, typecheck, focused lint and production build pass.
+Eight synthetic browser layouts verified. Local dependencies reused; Linux frozen
+install/review CI inspected after publication. General CI's 16 documented baseline
+rendering failures remain separate. No hosted application, merge/deployment,
+external messaging or idealgathering.com access. Next: review guest capability
+contract and approve designated staging checks/migrations separately before release.
+
+---
+# Historical checkpoint — IG-014 Havato Phase 6, first increment review-ready
 
 User-authorized 2026-10-10: Phase 6 precedes Phase 5; audit and incremental implementation.
 Branch codex/havato-phase6-private-gatherings; base havato 755a9ed024f9672dffe5afaea46d109ae899ac49.

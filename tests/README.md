@@ -1,6 +1,16 @@
 # Tests
 
 ## Havato Phase 6 private gatherings
+Phase 6.2 adds `tests/unit/guest-invitations.test.ts` and
+`tests/unit/guest-invitations.ui.test.ts` to the focused suite (98 total).
+The migration-replay command below now runs the external guest checks too:
+73 migrations, 177 checks. No hosted target, auth user or external message.
+RPC types are derived/verified from replayed pg_catalog; to regenerate just these
+fragments set `HAVATO_GUEST_TYPES_OUTPUT=<scratch-file>` for the replay, then
+adopt only that output in `src/integrations/supabase/types.ts` and rerun without
+the environment variable. Synthetic preview `?mode=external&lang=fa` or `en`
+renders the real temporary-guest component; `mode=host` includes host guest controls.
+See [bounded implementation and release actions](../tasks/IG-015-havato-phase6-guest-invitations-report.md).
 `bun run test -- tests/unit/private-gatherings.test.ts tests/unit/private-gathering-public.test.ts tests/unit/private-gathering-matching.test.ts tests/unit/private-gatherings.ui.test.ts tests/unit/create-gathering-rules.test.ts tests/unit/life-moments.test.ts tests/unit/gathering-moment.test.ts tests/unit/age.test.ts`.
 DOM is opt-in with `HAVATO_TEST_JSDOM=<scratch jsdom/lib/api.js>`; CI supplies
 jsdom 26.1.0. No hosted auth, email, push or production data involved.

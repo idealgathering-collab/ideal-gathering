@@ -6,7 +6,7 @@ import { GatheringCard } from "@/components/gathering-card";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useSession } from "@/hooks/use-session";
-import { formatDateTime, type GatheringCard as GCard } from "@/lib/gatherings";
+import { formatDateTime, privateGatheringSeatCounts, type GatheringCard as GCard } from "@/lib/gatherings";
 import { listHostAttendanceSummary } from "@/lib/attendance.functions";
 import { useServerFn } from "@tanstack/react-start";
 import { useI18n, useT } from "@/i18n";
@@ -26,7 +26,7 @@ export const Route = createFileRoute("/_authenticated/my-gatherings")({
 });
 
 const SELECT =
-  "id, subject, description, starts_at, seats, status, host_id, venue_name, neighborhood, city, business:businesses(id,name,city,cover_url), table:venue_tables(id,label), gathering_attendees(user_id)";
+  "id, subject, description, starts_at, seats, status, host_id, visibility, venue_name, neighborhood, city, business:businesses(id,name,city,cover_url), table:venue_tables(id,label), gathering_attendees(user_id)";
 
 type Row = {
   id: string;
@@ -36,6 +36,7 @@ type Row = {
   seats: number;
   status: string;
   host_id: string;
+  visibility: string;
   venue_name: string | null;
   neighborhood: string | null;
   city: string | null;
@@ -44,7 +45,7 @@ type Row = {
   gathering_attendees: Array<{ user_id: string }> | null;
 };
 
-function toCard(r: Row): GCard {
+function toCard(r: Row, counts: Record<string,number>): GCard {
   return {
     id: r.id,
     subject: r.subject,
@@ -56,7 +57,7 @@ function toCard(r: Row): GCard {
     city: r.city ?? null,
     business: r.business,
     table: r.table,
-    attendee_count: r.gathering_attendees?.length ?? 0,
+    attendee_count: counts[r.id] ?? r.gathering_attendees?.length ?? 0,
   };
 }
 
@@ -108,9 +109,12 @@ function MyGatherings() {
       }
       // Exclude hosted from attending list to avoid duplicates
       const hostedIds = new Set(((hostedRes.data ?? []) as Row[]).map((r) => r.id));
+      const privateIds = [...new Set([...(hostedRes.data ?? []) as Row[],...attended].filter((r) => r.visibility === "private").map((r) => r.id))];
+      const counts: Record<string,number> = {};
+      for (let offset=0; offset<privateIds.length; offset+=100) Object.assign(counts,await privateGatheringSeatCounts(privateIds.slice(offset,offset+100)));
       return {
-        hosted: ((hostedRes.data ?? []) as Row[]).map(toCard),
-        attending: attended.filter((r) => !hostedIds.has(r.id)).map(toCard),
+        hosted: ((hostedRes.data ?? []) as Row[]).map((r) => toCard(r,counts)),
+        attending: attended.filter((r) => !hostedIds.has(r.id)).map((r) => toCard(r,counts)),
       };
     },
   });
