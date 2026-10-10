@@ -2,6 +2,8 @@
 
 Review branch: `codex/havato-phase6-private-gatherings`, based solely on `havato` at `755a9ed024f9672dffe5afaea46d109ae899ac49`. User prioritizes Phase 6 before Phase 5. PR #16 remains open and unmerged; none of its authentication edits are included.
 
+Review: [draft PR #17](https://github.com/idealgathering-collab/ideal-gathering/pull/17), targeting `havato`.
+
 ## Concrete audit
 [Source inventory and reuse decisions](../docs/HAVATO-PHASE6-AUDIT.md) covers creation, private visibility, beta/event invitations, RSVP, chat, checklist, responsibilities, expenses, memories/media, reminders and history. The main missing models were event privacy and event-specific invitations. Existing chat/checklist/attendance, IG-003–007 memories/profile and Phase 3/4 reminders are reused. Expenses, assignment and a shared album are not present and are not falsely reported as implemented.
 
@@ -23,7 +25,12 @@ Review branch: `codex/havato-phase6-private-gatherings`, based solely on `havato
 - Synthetic browser fixture: **12 layouts** (create, host invites, guest RSVP × FA/EN × 390/1280 widths), no page errors/horizontal overflow, correct RTL/LTR. Inspected rendered Persian mobile create and English desktop invite screenshots. Preview mocks auth/backend/router; it does not prove hosted navigation or real Auth behavior.
 - `git diff --check`: pass. New TypeScript fragments are generated/checked from the replayed schema; full hosted regeneration/cache acceptance remains a rollout check.
 
-The restricted Windows sandbox initially prevented Vitest cache renames and Supabase CLI telemetry writes. Local verification succeeded through permitted escalation. No unresolved approval rejection. General inherited CI has historical rendering failures; do not claim a new full-suite pass from these focused results.
+The restricted Windows sandbox initially prevented Vitest cache renames and Supabase CLI telemetry writes. Local verification succeeded through permitted escalation. No unresolved approval rejection.
+
+## Linux CI and baseline evidence
+At implementation commit `b17b8683220f34e86edabd1265eb292cfcc2efdc`, [Phase 6 review](https://github.com/idealgathering-collab/ideal-gathering/actions/runs/38046026442) passed the frozen dependency install, migration replay/database checks, all 74 focused tests (including six DOM interactions), typecheck, focused lint and production build. [Public-site review](https://github.com/idealgathering-collab/ideal-gathering/actions/runs/38046026473) also passed.
+
+[Portable Node CI](https://github.com/idealgathering-collab/ideal-gathering/actions/runs/38046026397) failed its general suite: 436 passed, 16 failed, 17 skipped. The failures are English-text rendering expectations receiving the FA-default output in `life-profile` (4), `life-summary` (4), `member-profile` (2) and `venue-value` (6). All 16 were freshly reproduced on the unchanged base `755a9ed` in an isolated detached checkout with reused local dependencies: 16 failed, 13 passed across those four files. This confirms the baseline issue; no full-suite pass is claimed. The subsequent documentation-only checkpoint does not change application/test/workflow code; final-head CI must still be inspected.
 
 ## Database and rollout
 One additive migration, `20261010051239_havato_private_gatherings.sql`, generated using the Supabase CLI before adding SQL. It adds `gatherings.visibility`, `gathering_invitations`, `life_moments.private_gathering`, constraints/indexes, restrictive RLS, private caller-checked helpers/definers and invoker RPC entry points. New client roles receive SELECT-only invitation grants; writes go through resource-authorized RPCs. No new auth schema, chat/checklist/photo/history tables, enum changes, data backfill beyond the public default, production application or deployment.

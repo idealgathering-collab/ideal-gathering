@@ -2,6 +2,7 @@
 
 User-authorized 2026-10-10: Phase 6 precedes Phase 5; audit and incremental implementation.
 Branch codex/havato-phase6-private-gatherings; base havato 755a9ed024f9672dffe5afaea46d109ae899ac49.
+[Draft PR #17](https://github.com/idealgathering-collab/ideal-gathering/pull/17) targets havato.
 [Bounded scope](IG-014-havato-phase6.md) · [Audit](../docs/HAVATO-PHASE6-AUDIT.md) · [Report/checks/gaps](IG-014-havato-phase6-report.md).
 Private creation, member invitations/inbox/Going-Maybe-Declined, revocation, reuse of
 existing room/checklist/history, private projections and durable memory privacy implemented.
@@ -9,6 +10,8 @@ Existing admin approval, beta/email gates and 18+ preserved. No auth/provider ed
 74 focused unit/DOM checks, 84 disposable PostgreSQL/schema checks after 72-migration
 replay, TypeScript, focused lint (zero errors/two existing i18n warnings), Windows
 production build and 12 FA/EN fixture layouts pass. Dedicated Linux review CI added.
+Linux Phase 6 and public-site CI pass at implementation commit b17b868. General CI
+has 16 FA-default/English-expectation failures, freshly reproduced on unchanged base.
 Whole Phase 6 remains incomplete: expenses/assignments/shared album, external invites,
 host lifecycle UX and real staging/provider/concurrency acceptance are documented gaps.
 Next: review draft PR, inspect designated Havato staging ledger and perform recorded
